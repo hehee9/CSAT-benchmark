@@ -23,6 +23,8 @@
     "modelFilter": "Model Filter",
     "selectAll": "Select All",
     "deselectAll": "Deselect All",
+    "showModelDescription": "Show model description",
+    "hideModelDescription": "Hide model description",
     "sort": "Sort",
     "exportImage": "Export as image",
     "sortOptions": {

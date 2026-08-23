@@ -1,6 +1,6 @@
 /**
  * @file modelMeta.js
- * @brief 모델 메타데이터 유틸리티 (부분 벤치마크, 이미지 미지원, 비표준 설정, 지식 컷오프, 웹 서비스 환경)
+ * @brief 모델 메타데이터 유틸리티 (설명, 부분 벤치마크, 이미지 미지원, 비표준 설정, 지식 컷오프, 웹 서비스 환경)
  */
 
 const PARTIAL_BENCHMARK_MODELS = {
@@ -64,6 +64,18 @@ const POST_EXAM_KNOWLEDGE_CUTOFF_PATTERNS = [
  */
 const NON_STANDARD_MODELS = new Set(Object.keys(PARTIAL_BENCHMARK_MODELS))
 
+/**
+ * @brief 지원하는 언어 태그를 기본 언어 코드로 정규화
+ * @param {string} language - 언어 코드 또는 지역 언어 태그
+ * @return {'ko' | 'en' | null} 정규화된 언어 코드
+ */
+function _normalizeLanguage(language) {
+  if (typeof language !== 'string') return null
+
+  const baseLanguage = language.trim().toLowerCase().split(/[-_]/)[0]
+  return baseLanguage === 'ko' || baseLanguage === 'en' ? baseLanguage : null
+}
+
 export function getModelMeta(modelName) {
   return PARTIAL_BENCHMARK_MODELS[modelName] || null
 }
@@ -82,6 +94,21 @@ export function formatModelDisplayName(modelName) {
 
 export function hasPartialBenchmark(models = []) {
   return models.some(model => isPartialBenchmarkModel(model))
+}
+
+/**
+ * @brief 모델 설명을 요청한 언어로 반환
+ * @param {string} modelName - 모델명
+ * @param {string} language - 언어 코드 또는 지역 언어 태그
+ * @param {Object} modelMetadata - 모델별 메타데이터
+ * @return {string|null} 모델 설명 또는 null
+ */
+export function getModelDescription(modelName, language, modelMetadata = {}) {
+  const normalizedLanguage = _normalizeLanguage(language)
+  const description = modelMetadata?.[modelName]?.description
+  const text = description?.[normalizedLanguage]
+
+  return typeof text === 'string' && text.trim() ? text : null
 }
 
 /**

@@ -23,6 +23,8 @@
     "modelFilter": "모델 필터",
     "selectAll": "전체 선택",
     "deselectAll": "전체 해제",
+    "showModelDescription": "모델 설명 표시",
+    "hideModelDescription": "모델 설명 숨기기",
     "sort": "정렬",
     "exportImage": "이미지로 내보내기",
     "sortOptions": {

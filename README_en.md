@@ -114,7 +114,7 @@ Therefore, **performance may differ from official website or app results.**
 - **OpenAI GPT series**
   - GPT-5.6 Sol (max* / high / none)
   - GPT-5.6 Terra (max* / high / none)
-  - GPT-5.6 Luna (max* / high / none)
+  - GPT-5.6 Luna (max* / high / low / none)
   - GPT-5.5 (xhigh* / high / none)
   - GPT-5.5 Instant
   - GPT-5.4 (xhigh* / high / none)
@@ -232,7 +232,7 @@ Therefore, **performance may differ from official website or app results.**
   - GPT-5.6 Terra Pro (high)
   - GPT-5.6 Terra (high / none)
   - GPT-5.6 Luna Pro (high)
-  - GPT-5.6 Luna (high / none)
+  - GPT-5.6 Luna (high / low / none)
   - GPT-5.5 (high / none)
   - GPT-5.5 Pro (xhigh, GPTs)
   - GPT-5.4 mini (xhigh / none)
