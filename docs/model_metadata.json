@@ -66,11 +66,103 @@
     "supportsVision": true,
     "webServiceNoTools": true
   },
+  "GPT-5.6 Sol (high)": {
+    "description": {
+      "ko": "ChatGPT Plus 사용자용 모델 또는 그와 동급",
+      "en": "For ChatGPT Plus users or an equivalent model"
+    }
+  },
+  "GPT-5.6 Sol Pro (high)": {
+    "description": {
+      "ko": "ChatGPT Pro 사용자용 모델 또는 그와 동급",
+      "en": "For ChatGPT Pro users or an equivalent model"
+    }
+  },
+  "GPT-5.6 Luna (low)": {
+    "description": {
+      "ko": "ChatGPT 무료 사용자용 모델 또는 그와 동급",
+      "en": "For ChatGPT Free users or an equivalent model"
+    }
+  },
+  "Claude Sonnet 5": {
+    "description": {
+      "ko": "Claude 무료 사용자용 모델 또는 그와 동급",
+      "en": "For Claude Free users or an equivalent model"
+    }
+  },
+  "Claude Sonnet 5 (high)": {
+    "description": {
+      "ko": "Claude 무료 사용자용 모델 또는 그와 동급",
+      "en": "For Claude Free users or an equivalent model"
+    }
+  },
+  "Claude Opus 5": {
+    "description": {
+      "ko": "Claude Pro 사용자용 모델 또는 그와 동급",
+      "en": "For Claude Pro users or an equivalent model"
+    }
+  },
+  "Claude Opus 5 (high)": {
+    "description": {
+      "ko": "Claude Pro 사용자용 모델 또는 그와 동급",
+      "en": "For Claude Pro users or an equivalent model"
+    }
+  },
+  "Claude Fable 5 (high)": {
+    "description": {
+      "ko": "Claude Max 사용자용 모델 또는 그와 동급",
+      "en": "For Claude Max users or an equivalent model"
+    }
+  },
+  "Gemini 3.1 Pro (high)": {
+    "description": {
+      "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
+      "en": "Available to both free and paid Gemini users"
+    }
+  },
+  "Gemini 3.1 Pro (low)": {
+    "description": {
+      "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
+      "en": "Available to both free and paid Gemini users"
+    }
+  },
+  "Gemini 3.7 Flash (high)": {
+    "description": {
+      "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
+      "en": "Available to both free and paid Gemini users"
+    }
+  },
+  "Gemini 3.7 Flash (low)": {
+    "description": {
+      "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
+      "en": "Available to both free and paid Gemini users"
+    }
+  },
+  "Gemini 3.5 Flash-Lite (high)": {
+    "description": {
+      "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
+      "en": "Available to both free and paid Gemini users"
+    }
+  },
+  "Gemini 3.5 Flash-Lite (minimal)": {
+    "description": {
+      "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
+      "en": "Available to both free and paid Gemini users"
+    }
+  },
   "DeepSeek V4 Flash 0731 (None)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "description": {
+      "ko": "별도의 유료 DeepSeek 요금제 없음",
+      "en": "No separate paid DeepSeek subscription plan"
+    }
   },
   "DeepSeek V4 Flash 0731 (Max)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "description": {
+      "ko": "별도의 유료 DeepSeek 요금제 없음",
+      "en": "No separate paid DeepSeek subscription plan"
+    }
   },
   "Solar Pro 3 (0126, high)": {
     "supportsVision": false
@@ -115,9 +207,17 @@
     "supportsVision": false
   },
   "DeepSeek V4 Pro 0813 (None)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "description": {
+      "ko": "별도의 유료 DeepSeek 요금제 없음",
+      "en": "No separate paid DeepSeek subscription plan"
+    }
   },
   "DeepSeek V4 Pro 0813 (Max)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "description": {
+      "ko": "별도의 유료 DeepSeek 요금제 없음",
+      "en": "No separate paid DeepSeek subscription plan"
+    }
   }
 }

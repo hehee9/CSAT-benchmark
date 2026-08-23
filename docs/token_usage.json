@@ -9875,6 +9875,93 @@
           "question_count": 20
         }
       }
+    },
+    "GPT-5.6 Luna (low)": {
+      "total_input_tokens": 225851,
+      "total_output_tokens": 149211,
+      "total_tokens": 375062,
+      "question_count": 247,
+      "last_updated": "2026-08-23 17:19:11",
+      "sections": {
+        "국어-화작": {
+          "input_tokens": 17989,
+          "output_tokens": 2684,
+          "total_tokens": 20673,
+          "question_count": 11
+        },
+        "국어-언매": {
+          "input_tokens": 19225,
+          "output_tokens": 6371,
+          "total_tokens": 25596,
+          "question_count": 11
+        },
+        "국어-공통": {
+          "input_tokens": 51886,
+          "output_tokens": 10336,
+          "total_tokens": 62222,
+          "question_count": 34
+        },
+        "수학-미적": {
+          "input_tokens": 2649,
+          "output_tokens": 6959,
+          "total_tokens": 9608,
+          "question_count": 8
+        },
+        "수학-확통": {
+          "input_tokens": 3164,
+          "output_tokens": 5017,
+          "total_tokens": 8181,
+          "question_count": 8
+        },
+        "수학-공통": {
+          "input_tokens": 6600,
+          "output_tokens": 13767,
+          "total_tokens": 20367,
+          "question_count": 22
+        },
+        "수학-기하": {
+          "input_tokens": 5311,
+          "output_tokens": 11041,
+          "total_tokens": 16352,
+          "question_count": 8
+        },
+        "영어-공통": {
+          "input_tokens": 16721,
+          "output_tokens": 6102,
+          "total_tokens": 22823,
+          "question_count": 45
+        },
+        "탐구-화학1": {
+          "input_tokens": 18621,
+          "output_tokens": 22088,
+          "total_tokens": 40709,
+          "question_count": 20
+        },
+        "탐구-물리1": {
+          "input_tokens": 32623,
+          "output_tokens": 24613,
+          "total_tokens": 57236,
+          "question_count": 20
+        },
+        "탐구-생명1": {
+          "input_tokens": 19814,
+          "output_tokens": 23061,
+          "total_tokens": 42875,
+          "question_count": 20
+        },
+        "탐구-사회문화": {
+          "input_tokens": 12517,
+          "output_tokens": 13798,
+          "total_tokens": 26315,
+          "question_count": 20
+        },
+        "한국사-공통": {
+          "input_tokens": 18731,
+          "output_tokens": 3374,
+          "total_tokens": 22105,
+          "question_count": 20
+        }
+      }
     }
   }
 }
