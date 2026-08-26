@@ -192,6 +192,7 @@ Therefore, **performance may differ from official website or app results.**
   - Kimi K2.5 (Thinking / Non-Thinking)
 
 - **Z.ai GLM series**
+  - GLM-5.3 Flash (high)
   - GLM-5.1 (Thinking / Non-Thinking)
   - GLM-5 (Thinking / Non-Thinking)
 
@@ -287,6 +288,7 @@ Therefore, **performance may differ from official website or app results.**
   - MiniMax M3 (Thinking / Non-Thinking)
 
 - **Z.ai GLM series**
+  - GLM-5.3 Flash (high)
   - GLM-5.2 (Thinking / Non-Thinking)
 
 - **Moonshot AI Kimi series**

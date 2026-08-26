@@ -191,6 +191,7 @@ Readme에는 **주요 모델의 성적만**을 표기하고 있으니, **전체 
   - Kimi K2.5 (Thinking / Non-Thinking)
 
 - **Z.ai GLM 시리즈**
+  - GLM-5.3 Flash (high)
   - GLM-5.1 (Thinking / Non-Thinking)
   - GLM-5 (Thinking / Non-Thinking)
 
@@ -286,6 +287,7 @@ Readme에는 **주요 모델의 성적만**을 표기하고 있으니, **전체 
   - MiniMax M3 (Thinking / Non-Thinking)
 
 - **Z.ai GLM 시리즈**
+  - GLM-5.3 Flash (high)
   - GLM-5.2 (Thinking / Non-Thinking)
 
 - **Moonshot AI Kimi 시리즈**
