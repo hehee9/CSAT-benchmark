@@ -56,6 +56,8 @@ const POST_EXAM_KNOWLEDGE_CUTOFF_PATTERNS = [
   /^Claude Sonnet 5\b/,
   /^Grok 4\.5\b/,
   /^Grok 4\.3\b/,
+  /^Solar Pro 4\b/,
+  /^Motif 3\b/,
   /^Muse Spark 1\.2\b/
 ]
 

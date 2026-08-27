@@ -218,6 +218,7 @@ Readme에는 **주요 모델의 성적만**을 표기하고 있으니, **전체 
   - Solar Pro 3 (high / low)
 
 - **Motif 시리즈**
+  - Motif 3 (Thinking)
   - Motif 12.7B (Thinking)
 
 ※ * GPT-5.x (xhigh), Claude Opus 4.7 (max)는 high에서 틀린 문제만 재측정한 것입니다. 성능 향상에 비해 들어가는 시간과 비용이 너무 커져 이 방식으로 처리한 점 양해 바랍니다.
@@ -303,6 +304,10 @@ Readme에는 **주요 모델의 성적만**을 표기하고 있으니, **전체 
 - **Upstage Solar 시리즈**
   - Solar Pro 4 (none / max)
   - Solar Pro 3 (high / low)
+
+- **Motif 시리즈**
+  - Motif 3 (Thinking)
+  - Motif 12.7B (Thinking)
 
 ※ 이미지 인식이 불가능한 모델은 텍스트로만 진행했습니다.
 

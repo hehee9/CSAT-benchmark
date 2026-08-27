@@ -219,6 +219,7 @@ Therefore, **performance may differ from official website or app results.**
   - Solar Pro 3 (high / low)
 
 - **Motif series**
+  - Motif 3 (Thinking)
   - Motif 12.7B (Thinking)
 
 ※ * GPT-5.x (xhigh) and Claude Opus 4.7 (max) were retested only on problems they missed at high. This approach was used because the time and cost became too large relative to the performance gain.
@@ -304,6 +305,10 @@ Therefore, **performance may differ from official website or app results.**
 - **Upstage Solar series**
   - Solar Pro 4 (none / max)
   - Solar Pro 3 (high / low)
+
+- **Motif series**
+  - Motif 3 (Thinking)
+  - Motif 12.7B (Thinking)
 
 ※ Models that cannot recognize images were run with text only.
 
