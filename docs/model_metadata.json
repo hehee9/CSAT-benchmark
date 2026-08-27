@@ -219,5 +219,8 @@
       "ko": "별도의 유료 DeepSeek 요금제 없음",
       "en": "No separate paid DeepSeek subscription plan"
     }
+  },
+  "Motif 3 (Thinking)": {
+    "supportsVision": false
   }
 }
