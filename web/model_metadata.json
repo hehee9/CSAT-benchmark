@@ -222,5 +222,8 @@
   },
   "Motif 3 (Thinking)": {
     "supportsVision": false
+  },
+  "Motif 3 (Non-Thinking)": {
+    "supportsVision": false
   }
 }
