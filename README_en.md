@@ -156,6 +156,7 @@ Therefore, **performance may differ from official website or app results.**
   - Gemma 4 26B A4B (high / minimal)
 
 - **Anthropic Claude series**
+  - Claude Fable 5.1 (high)
   - Claude Fable 5 (high)
   - Claude Opus 4.7 (max* / high / none)
   - Claude Opus 4.5 (32K Thinking / Non-Thinking)
@@ -224,8 +225,6 @@ Therefore, **performance may differ from official website or app results.**
 
 ※ * GPT-5.x (xhigh) and Claude Opus 4.7 (max) were retested only on problems they missed at high. This approach was used because the time and cost became too large relative to the performance gain.
 
-※ Claude Fable 5 received a low score because it triggered safety filtering on many Life Science problems.
-
 ### Hard Mode
 
 - **OpenAI GPT series**
@@ -259,6 +258,7 @@ Therefore, **performance may differ from official website or app results.**
   - Gemma 4 26B A4B (high / minimal)
 
 - **Anthropic Claude series**
+  - Claude Fable 5.1 (high)
   - Claude Fable 5 (high)
   - Claude Opus 5 (high / none)
   - Claude Sonnet 5 (high / none)

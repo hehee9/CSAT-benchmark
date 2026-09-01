@@ -155,6 +155,7 @@ Readme에는 **주요 모델의 성적만**을 표기하고 있으니, **전체 
   - Gemma 4 26B A4B (high / minimal)
 
 - **Anthropic Claude 시리즈**
+  - Claude Fable 5.1 (high)
   - Claude Fable 5 (high)
   - Claude Opus 4.7 (max* / high / none)
   - Claude Opus 4.5 (32K Thinking / Non-Thinking)
@@ -223,8 +224,6 @@ Readme에는 **주요 모델의 성적만**을 표기하고 있으니, **전체 
 
 ※ * GPT-5.x (xhigh), Claude Opus 4.7 (max)는 high에서 틀린 문제만 재측정한 것입니다. 성능 향상에 비해 들어가는 시간과 비용이 너무 커져 이 방식으로 처리한 점 양해 바랍니다.
 
-※ Claude Fable 5는 다수의 생명 문제 풀이 중 검열에 걸려 점수가 낮습니다.
-
 ### 고난도
 
 - **OpenAI GPT 시리즈**
@@ -258,6 +257,7 @@ Readme에는 **주요 모델의 성적만**을 표기하고 있으니, **전체 
   - Gemma 4 26B A4B (high / minimal)
 
 - **Anthropic Claude 시리즈**
+  - Claude Fable 5.1 (high)
   - Claude Fable 5 (high)
   - Claude Opus 5 (high / none)
   - Claude Sonnet 5 (high / none)
