@@ -10223,6 +10223,93 @@
           "question_count": 20
         }
       }
+    },
+    "Claude Fable 5.1 (high)": {
+      "sections": {
+        "국어-화작": {
+          "input_tokens": 30340,
+          "output_tokens": 8610,
+          "total_tokens": 38950,
+          "question_count": 11
+        },
+        "국어-언매": {
+          "input_tokens": 27544,
+          "output_tokens": 10461,
+          "total_tokens": 38005,
+          "question_count": 11
+        },
+        "국어-공통": {
+          "input_tokens": 86028,
+          "output_tokens": 30876,
+          "total_tokens": 116904,
+          "question_count": 34
+        },
+        "수학-기하": {
+          "input_tokens": 6281,
+          "output_tokens": 9586,
+          "total_tokens": 15867,
+          "question_count": 8
+        },
+        "수학-확통": {
+          "input_tokens": 3970,
+          "output_tokens": 5999,
+          "total_tokens": 9969,
+          "question_count": 8
+        },
+        "수학-미적": {
+          "input_tokens": 3346,
+          "output_tokens": 12556,
+          "total_tokens": 15902,
+          "question_count": 8
+        },
+        "수학-공통": {
+          "input_tokens": 8282,
+          "output_tokens": 16643,
+          "total_tokens": 24925,
+          "question_count": 22
+        },
+        "영어-공통": {
+          "input_tokens": 24653,
+          "output_tokens": 18069,
+          "total_tokens": 42722,
+          "question_count": 45
+        },
+        "탐구-물리1": {
+          "input_tokens": 37956,
+          "output_tokens": 42293,
+          "total_tokens": 80249,
+          "question_count": 20
+        },
+        "탐구-화학1": {
+          "input_tokens": 22934,
+          "output_tokens": 22599,
+          "total_tokens": 45533,
+          "question_count": 20
+        },
+        "탐구-사회문화": {
+          "input_tokens": 18255,
+          "output_tokens": 23229,
+          "total_tokens": 41484,
+          "question_count": 20
+        },
+        "탐구-생명1": {
+          "input_tokens": 25250,
+          "output_tokens": 37650,
+          "total_tokens": 62900,
+          "question_count": 20
+        },
+        "한국사-공통": {
+          "input_tokens": 22975,
+          "output_tokens": 5678,
+          "total_tokens": 28653,
+          "question_count": 20
+        }
+      },
+      "total_input_tokens": 317814,
+      "total_output_tokens": 244249,
+      "total_tokens": 562063,
+      "question_count": 247,
+      "last_updated": "2026-09-02 03:31:00"
     }
   }
 }
