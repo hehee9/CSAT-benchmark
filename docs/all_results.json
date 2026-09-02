@@ -45520,6 +45520,658 @@
     ]
   },
   {
+    "sheet_name": "국어-공통",
+    "subject": "국어",
+    "section": "공통",
+    "model_name": "Gemini 3.8 Flash (high)",
+    "score": 76,
+    "total_points": 76,
+    "correct_count": 34,
+    "total_questions": 34,
+    "token_usage": {
+      "input_tokens": 49432,
+      "output_tokens": 58834
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 21,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 22,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 23,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 31,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 32,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 33,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 34,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "국어-공통",
+    "subject": "국어",
+    "section": "공통",
+    "model_name": "Gemini 3.8 Flash (low)",
+    "score": 76,
+    "total_points": 76,
+    "correct_count": 34,
+    "total_questions": 34,
+    "token_usage": {
+      "input_tokens": 49432,
+      "output_tokens": 13147
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 21,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 22,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 23,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 31,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 32,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 33,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 34,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
     "sheet_name": "국어-화작",
     "subject": "국어",
     "section": "화작",
@@ -62060,6 +62712,244 @@
     ]
   },
   {
+    "sheet_name": "국어-화작",
+    "subject": "국어",
+    "section": "화작",
+    "model_name": "Gemini 3.8 Flash (low)",
+    "score": 22,
+    "total_points": 24,
+    "correct_count": 10,
+    "total_questions": 11,
+    "token_usage": {
+      "input_tokens": 15594,
+      "output_tokens": 5209
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 35,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 36,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 37,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 38,
+        "extracted_answer": 3,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 39,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 40,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 41,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 42,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 43,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 44,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 45,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "국어-화작",
+    "subject": "국어",
+    "section": "화작",
+    "model_name": "Gemini 3.8 Flash (high)",
+    "score": 24,
+    "total_points": 24,
+    "correct_count": 11,
+    "total_questions": 11,
+    "token_usage": {
+      "input_tokens": 15594,
+      "output_tokens": 17248
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 35,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 36,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 37,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 38,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 39,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 40,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 41,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 42,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 43,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 44,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 45,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
     "sheet_name": "국어-언매",
     "subject": "국어",
     "section": "언매",
@@ -78496,6 +79386,244 @@
     "price": {
       "input": 10.0,
       "output": 50.0
+    },
+    "results": [
+      {
+        "question_number": 35,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 36,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 37,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 38,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 39,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 40,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 41,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 42,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 43,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 44,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 45,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "국어-언매",
+    "subject": "국어",
+    "section": "언매",
+    "model_name": "Gemini 3.8 Flash (high)",
+    "score": 21,
+    "total_points": 24,
+    "correct_count": 10,
+    "total_questions": 11,
+    "token_usage": {
+      "input_tokens": 15084,
+      "output_tokens": 35855
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 35,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 36,
+        "extracted_answer": 5,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 37,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 38,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 39,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 40,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 41,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 42,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 43,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 44,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 45,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "국어-언매",
+    "subject": "국어",
+    "section": "언매",
+    "model_name": "Gemini 3.8 Flash (low)",
+    "score": 24,
+    "total_points": 24,
+    "correct_count": 11,
+    "total_questions": 11,
+    "token_usage": {
+      "input_tokens": 15084,
+      "output_tokens": 5859
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
     },
     "results": [
       {
@@ -109000,6 +110128,442 @@
     ]
   },
   {
+    "sheet_name": "수학-공통",
+    "subject": "수학",
+    "section": "공통",
+    "model_name": "Gemini 3.8 Flash (low)",
+    "score": 74,
+    "total_points": 74,
+    "correct_count": 22,
+    "total_questions": 22,
+    "token_usage": {
+      "input_tokens": 5251,
+      "output_tokens": 21957
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 9,
+        "correct_answer": 9,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 16,
+        "correct_answer": 16,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 12,
+        "correct_answer": 12,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 15,
+        "correct_answer": 15,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 130,
+        "correct_answer": 130,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 21,
+        "extracted_answer": 65,
+        "correct_answer": 65,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 22,
+        "extracted_answer": 457,
+        "correct_answer": 457,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "수학-공통",
+    "subject": "수학",
+    "section": "공통",
+    "model_name": "Gemini 3.8 Flash (high)",
+    "score": 74,
+    "total_points": 74,
+    "correct_count": 22,
+    "total_questions": 22,
+    "token_usage": {
+      "input_tokens": 5251,
+      "output_tokens": 70800
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 9,
+        "correct_answer": 9,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 16,
+        "correct_answer": 16,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 12,
+        "correct_answer": 12,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 15,
+        "correct_answer": 15,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 130,
+        "correct_answer": 130,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 21,
+        "extracted_answer": 65,
+        "correct_answer": 65,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 22,
+        "extracted_answer": 457,
+        "correct_answer": 457,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
     "sheet_name": "수학-확통",
     "subject": "수학",
     "section": "확통",
@@ -121683,6 +123247,190 @@
     "price": {
       "input": 10.0,
       "output": 50.0
+    },
+    "results": [
+      {
+        "question_number": 23,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 977,
+        "correct_answer": 977,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 262,
+        "correct_answer": 262,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "수학-확통",
+    "subject": "수학",
+    "section": "확통",
+    "model_name": "Gemini 3.8 Flash (high)",
+    "score": 26,
+    "total_points": 26,
+    "correct_count": 8,
+    "total_questions": 8,
+    "token_usage": {
+      "input_tokens": 3442,
+      "output_tokens": 38793
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 23,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 977,
+        "correct_answer": 977,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 262,
+        "correct_answer": 262,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "수학-확통",
+    "subject": "수학",
+    "section": "확통",
+    "model_name": "Gemini 3.8 Flash (low)",
+    "score": 26,
+    "total_points": 26,
+    "correct_count": 8,
+    "total_questions": 8,
+    "token_usage": {
+      "input_tokens": 3442,
+      "output_tokens": 8174
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
     },
     "results": [
       {
@@ -134520,6 +136268,190 @@
     ]
   },
   {
+    "sheet_name": "수학-미적",
+    "subject": "수학",
+    "section": "미적",
+    "model_name": "Gemini 3.8 Flash (low)",
+    "score": 26,
+    "total_points": 26,
+    "correct_count": 8,
+    "total_questions": 8,
+    "token_usage": {
+      "input_tokens": 2435,
+      "output_tokens": 17296
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 23,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 97,
+        "correct_answer": 97,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 11,
+        "correct_answer": 11,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "수학-미적",
+    "subject": "수학",
+    "section": "미적",
+    "model_name": "Gemini 3.8 Flash (high)",
+    "score": 26,
+    "total_points": 26,
+    "correct_count": 8,
+    "total_questions": 8,
+    "token_usage": {
+      "input_tokens": 2435,
+      "output_tokens": 51826
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 23,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 97,
+        "correct_answer": 97,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 11,
+        "correct_answer": 11,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
     "sheet_name": "수학-기하",
     "subject": "수학",
     "section": "기하",
@@ -147203,6 +149135,190 @@
     "price": {
       "input": 10.0,
       "output": 50.0
+    },
+    "results": [
+      {
+        "question_number": 23,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 360,
+        "correct_answer": 360,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 221,
+        "correct_answer": 221,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "수학-기하",
+    "subject": "수학",
+    "section": "기하",
+    "model_name": "Gemini 3.8 Flash (low)",
+    "score": 26,
+    "total_points": 26,
+    "correct_count": 8,
+    "total_questions": 8,
+    "token_usage": {
+      "input_tokens": 4384,
+      "output_tokens": 12068
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 23,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 360,
+        "correct_answer": 360,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 221,
+        "correct_answer": 221,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "수학-기하",
+    "subject": "수학",
+    "section": "기하",
+    "model_name": "Gemini 3.8 Flash (high)",
+    "score": 26,
+    "total_points": 26,
+    "correct_count": 8,
+    "total_questions": 8,
+    "token_usage": {
+      "input_tokens": 4384,
+      "output_tokens": 55145
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
     },
     "results": [
       {
@@ -206660,6 +208776,856 @@
     ]
   },
   {
+    "sheet_name": "영어",
+    "subject": "영어",
+    "section": "영어",
+    "model_name": "Gemini 3.8 Flash (low)",
+    "score": 97,
+    "total_points": 100,
+    "correct_count": 44,
+    "total_questions": 45,
+    "token_usage": {
+      "input_tokens": 15796,
+      "output_tokens": 16064
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 21,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 22,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 23,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 31,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 32,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 33,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 34,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 35,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 36,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 37,
+        "extracted_answer": 3,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 38,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 39,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 40,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 41,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 42,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 43,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 44,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 45,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "영어",
+    "subject": "영어",
+    "section": "영어",
+    "model_name": "Gemini 3.8 Flash (high)",
+    "score": 100,
+    "total_points": 100,
+    "correct_count": 45,
+    "total_questions": 45,
+    "token_usage": {
+      "input_tokens": 15796,
+      "output_tokens": 58194
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 21,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 22,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 23,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 31,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 32,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 33,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 34,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 35,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 36,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 37,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 38,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 39,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 40,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 41,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 42,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 43,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 44,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 45,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
     "sheet_name": "한국사",
     "subject": "한국사",
     "section": "한국사",
@@ -234355,6 +237321,406 @@
     "price": {
       "input": 10.0,
       "output": 50.0
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "한국사",
+    "subject": "한국사",
+    "section": "한국사",
+    "model_name": "Gemini 3.8 Flash (high)",
+    "score": 50,
+    "total_points": 50,
+    "correct_count": 20,
+    "total_questions": 20,
+    "token_usage": {
+      "input_tokens": 13365,
+      "output_tokens": 18639
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "한국사",
+    "subject": "한국사",
+    "section": "한국사",
+    "model_name": "Gemini 3.8 Flash (low)",
+    "score": 50,
+    "total_points": 50,
+    "correct_count": 20,
+    "total_questions": 20,
+    "token_usage": {
+      "input_tokens": 13365,
+      "output_tokens": 7552
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
     },
     "results": [
       {
@@ -262420,6 +265786,406 @@
     ]
   },
   {
+    "sheet_name": "물리1",
+    "subject": "물리1",
+    "section": "탐구",
+    "model_name": "Gemini 3.8 Flash (low)",
+    "score": 45,
+    "total_points": 50,
+    "correct_count": 18,
+    "total_questions": 20,
+    "token_usage": {
+      "input_tokens": 24347,
+      "output_tokens": 34511
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 4,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 2,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "물리1",
+    "subject": "물리1",
+    "section": "탐구",
+    "model_name": "Gemini 3.8 Flash (high)",
+    "score": 47,
+    "total_points": 50,
+    "correct_count": 19,
+    "total_questions": 20,
+    "token_usage": {
+      "input_tokens": 24347,
+      "output_tokens": 235236
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 3,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
     "sheet_name": "화학1",
     "subject": "화학1",
     "section": "탐구",
@@ -290115,6 +293881,406 @@
     "price": {
       "input": 10.0,
       "output": 50.0
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "화학1",
+    "subject": "화학1",
+    "section": "탐구",
+    "model_name": "Gemini 3.8 Flash (high)",
+    "score": 50,
+    "total_points": 50,
+    "correct_count": 20,
+    "total_questions": 20,
+    "token_usage": {
+      "input_tokens": 14691,
+      "output_tokens": 108420
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "화학1",
+    "subject": "화학1",
+    "section": "탐구",
+    "model_name": "Gemini 3.8 Flash (low)",
+    "score": 50,
+    "total_points": 50,
+    "correct_count": 20,
+    "total_questions": 20,
+    "token_usage": {
+      "input_tokens": 14691,
+      "output_tokens": 40052
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
     },
     "results": [
       {
@@ -318180,6 +322346,406 @@
     ]
   },
   {
+    "sheet_name": "생명1",
+    "subject": "생명1",
+    "section": "탐구",
+    "model_name": "Gemini 3.8 Flash (high)",
+    "score": 50,
+    "total_points": 50,
+    "correct_count": 20,
+    "total_questions": 20,
+    "token_usage": {
+      "input_tokens": 20210,
+      "output_tokens": 152728
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "생명1",
+    "subject": "생명1",
+    "section": "탐구",
+    "model_name": "Gemini 3.8 Flash (low)",
+    "score": 50,
+    "total_points": 50,
+    "correct_count": 20,
+    "total_questions": 20,
+    "token_usage": {
+      "input_tokens": 20210,
+      "output_tokens": 69222
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
     "sheet_name": "사회문화",
     "subject": "사회문화",
     "section": "탐구",
@@ -346053,6 +350619,406 @@
         "extracted_answer": 4,
         "correct_answer": 3,
         "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "사회문화",
+    "subject": "사회문화",
+    "section": "탐구",
+    "model_name": "Gemini 3.8 Flash (high)",
+    "score": 45,
+    "total_points": 50,
+    "correct_count": 18,
+    "total_questions": 20,
+    "token_usage": {
+      "input_tokens": 9122,
+      "output_tokens": 81509
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 4,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 4,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      }
+    ]
+  },
+  {
+    "sheet_name": "사회문화",
+    "subject": "사회문화",
+    "section": "탐구",
+    "model_name": "Gemini 3.8 Flash (low)",
+    "score": 47,
+    "total_points": 50,
+    "correct_count": 19,
+    "total_questions": 20,
+    "token_usage": {
+      "input_tokens": 9122,
+      "output_tokens": 33605
+    },
+    "price": {
+      "input": 0.75,
+      "output": 3.75
+    },
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 4,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": null
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
         "points": 2,
         "answer_status": "answered",
         "provider_stop_reason": null
