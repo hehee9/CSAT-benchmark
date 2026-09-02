@@ -136,6 +136,7 @@ Therefore, **performance may differ from official website or app results.**
   - GPT-OSS 120B (high) (via Fireworks AI)
 
 - **Google Gemini series**
+  - Gemini 3.8 Flash (high / low)
   - Gemini 3.7 Flash (high / low)
   - Gemini 3.6 Flash (high / minimal)
   - Gemini 3.5 Flash (high / minimal)
@@ -243,6 +244,7 @@ Therefore, **performance may differ from official website or app results.**
   - GPT-4o (2024-11-20)
 
 - **Google Gemini series**
+  - Gemini 3.8 Flash (high / low)
   - Gemini 3.7 Flash (high / low)
   - Gemini 3.6 Flash (high / minimal)
   - Gemini 3.5 Flash (high / minimal)
