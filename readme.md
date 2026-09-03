@@ -171,6 +171,7 @@ Readme에는 **주요 모델의 성적만**을 표기하고 있으니, **전체 
   - Grok 4
 
 - **Meta Muse Spark 시리즈**
+  - Muse Spark 1.3 (minimal / high)
   - Muse Spark 1.2 (minimal / high)
 
 - **Mistral 시리즈**
@@ -272,6 +273,7 @@ Readme에는 **주요 모델의 성적만**을 표기하고 있으니, **전체 
   - Grok 4.3 (Thinking / Non-Thinking)
 
 - **Meta Muse Spark 시리즈**
+  - Muse Spark 1.3 (minimal / high)
   - Muse Spark 1.2 (minimal / high)
 
 - **DeepSeek 시리즈**

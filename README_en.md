@@ -172,6 +172,7 @@ Therefore, **performance may differ from official website or app results.**
   - Grok 4
 
 - **Meta Muse Spark series**
+  - Muse Spark 1.3 (minimal / high)
   - Muse Spark 1.2 (minimal / high)
 
 - **Mistral series**
@@ -273,6 +274,7 @@ Therefore, **performance may differ from official website or app results.**
   - Grok 4.3 (Thinking / Non-Thinking)
 
 - **Meta Muse Spark series**
+  - Muse Spark 1.3 (minimal / high)
   - Muse Spark 1.2 (minimal / high)
 
 - **DeepSeek series**
