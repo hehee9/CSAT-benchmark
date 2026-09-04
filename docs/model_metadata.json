@@ -74,8 +74,8 @@
   },
   "GPT-6 Astra (high)": {
     "description": {
-      "ko": "ChatGPT Pro 사용자용 모델 또는 그와 동급",
-      "en": "For ChatGPT Pro users or an equivalent model"
+      "ko": "ChatGPT Plus 사용자용 모델 또는 그와 동급",
+      "en": "For ChatGPT Plus users or an equivalent model"
     }
   },
   "GPT-5.6 Sol Pro (high)": {
