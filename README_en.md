@@ -112,6 +112,7 @@ Therefore, **performance may differ from official website or app results.**
 ### Default
 
 - **OpenAI GPT series**
+  - GPT-6 Astra (high)
   - GPT-5.6 Sol (max* / high / none)
   - GPT-5.6 Terra (max* / high / none)
   - GPT-5.6 Luna (max* / high / low / none)
@@ -230,6 +231,7 @@ Therefore, **performance may differ from official website or app results.**
 ### Hard Mode
 
 - **OpenAI GPT series**
+  - GPT-6 Astra (high)
   - GPT-5.6 Sol Pro (high)
   - GPT-5.6 Sol (high / none)
   - GPT-5.6 Terra Pro (high)
