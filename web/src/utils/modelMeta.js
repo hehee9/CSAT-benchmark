@@ -59,6 +59,7 @@ const POST_EXAM_KNOWLEDGE_CUTOFF_PATTERNS = [
   /^Grok 4\.3\b/,
   /^Solar Pro 4\b/,
   /^Motif 3\b/,
+  /^Muse Spark 1\.3\b/,
   /^Muse Spark 1\.2\b/
 ]
 

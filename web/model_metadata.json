@@ -72,6 +72,12 @@
       "en": "For ChatGPT Plus users or an equivalent model"
     }
   },
+  "GPT-6 Astra (high)": {
+    "description": {
+      "ko": "ChatGPT Pro 사용자용 모델 또는 그와 동급",
+      "en": "For ChatGPT Pro users or an equivalent model"
+    }
+  },
   "GPT-5.6 Sol Pro (high)": {
     "description": {
       "ko": "ChatGPT Pro 사용자용 모델 또는 그와 동급",
@@ -126,13 +132,13 @@
       "en": "Available to both free and paid Gemini users"
     }
   },
-  "Gemini 3.7 Flash (high)": {
+  "Gemini 3.8 Flash (high)": {
     "description": {
       "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
       "en": "Available to both free and paid Gemini users"
     }
   },
-  "Gemini 3.7 Flash (low)": {
+  "Gemini 3.8 Flash (low)": {
     "description": {
       "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
       "en": "Available to both free and paid Gemini users"
