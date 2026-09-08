@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "id": "csat-2026",
+  "title": "2026학년도 수능 LLM 벤치마크",
+  "short_name": "2026 수능",
+  "exam_month": "2025-11",
+  "data_dir": "problems",
+  "results_dir": "problems/results/csat-2026",
+  "status": "ready",
+  "publish": true,
+  "sections": [
+    {"target": "국어/공통", "subject": "국어", "section": "공통", "group": "국어", "kind": "common", "questions": "국어/공통/questions.json", "max_points": 76},
+    {"target": "국어/화작", "subject": "국어", "section": "화작", "group": "국어", "kind": "elective", "questions": "국어/화작/questions.json", "max_points": 24},
+    {"target": "국어/언매", "subject": "국어", "section": "언매", "group": "국어", "kind": "elective", "questions": "국어/언매/questions.json", "max_points": 24},
+    {"target": "수학/공통", "subject": "수학", "section": "공통", "group": "수학", "kind": "common", "questions": "수학/공통/questions.json", "max_points": 74},
+    {"target": "수학/확통", "subject": "수학", "section": "확통", "group": "수학", "kind": "elective", "questions": "수학/확통/questions.json", "max_points": 26},
+    {"target": "수학/미적", "subject": "수학", "section": "미적", "group": "수학", "kind": "elective", "questions": "수학/미적/questions.json", "max_points": 26},
+    {"target": "수학/기하", "subject": "수학", "section": "기하", "group": "수학", "kind": "elective", "questions": "수학/기하/questions.json", "max_points": 26},
+    {"target": "영어/전체", "subject": "영어", "section": "영어", "group": "영어", "kind": "subject", "questions": "영어/questions.json", "max_points": 100},
+    {"target": "한국사/전체", "subject": "한국사", "section": "한국사", "group": "한국사", "kind": "subject", "questions": "한국사/questions.json", "max_points": 50},
+    {"target": "탐구/물리1", "subject": "물리1", "section": "탐구", "group": "탐구", "kind": "subject", "questions": "탐구/물리1/questions.json", "max_points": 50},
+    {"target": "탐구/화학1", "subject": "화학1", "section": "탐구", "group": "탐구", "kind": "subject", "questions": "탐구/화학1/questions.json", "max_points": 50},
+    {"target": "탐구/생명1", "subject": "생명1", "section": "탐구", "group": "탐구", "kind": "subject", "questions": "탐구/생명1/questions.json", "max_points": 50},
+    {"target": "탐구/사회문화", "subject": "사회문화", "section": "탐구", "group": "탐구", "kind": "subject", "questions": "탐구/사회문화/questions.json", "max_points": 50}
+  ],
+  "modes": [
+    {"id": "default", "label": "일반", "input_mode": "section", "public_results": "hard_all_results.json", "public_token_usage": "problems/hard_token_usage.json"},
+    {"id": "easy", "label": "쉬움", "input_mode": "question", "public_results": "all_results.json", "public_token_usage": "problems/token_usage.json"}
+  ]
+}

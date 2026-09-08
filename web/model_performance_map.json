@@ -1,0 +1,545 @@
+{
+  "schema_version": 1,
+  "models": {
+    "Claude Fable 5 (high)": {
+      "modelId": "anthropic/claude-fable-5",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Fable 5.1 (high)": {
+      "modelId": "anthropic/claude-fable-5.1",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Haiku 4.5": {
+      "modelId": "anthropic/claude-haiku-4.5",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Haiku 4.5 (32K Thinking)": {
+      "modelId": "anthropic/claude-haiku-4.5",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Opus 4.5": {
+      "modelId": "anthropic/claude-opus-4.5",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Opus 4.5 (32K Thinking)": {
+      "modelId": "anthropic/claude-opus-4.5",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Opus 4.7": {
+      "modelId": "anthropic/claude-opus-4.7",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Opus 4.7 (high)": {
+      "modelId": "anthropic/claude-opus-4.7",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Opus 4.7 (max*)": {
+      "modelId": "anthropic/claude-opus-4.7",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Opus 4.8": {
+      "modelId": "anthropic/claude-opus-4.8",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Opus 4.8 (high)": {
+      "modelId": "anthropic/claude-opus-4.8",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Opus 5": {
+      "modelId": "anthropic/claude-opus-5",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Opus 5 (high)": {
+      "modelId": "anthropic/claude-opus-5",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Sonnet 4.5": {
+      "modelId": "anthropic/claude-sonnet-4.5",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Sonnet 4.5 (32K Thinking)": {
+      "modelId": "anthropic/claude-sonnet-4.5",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Sonnet 4.6": {
+      "modelId": "anthropic/claude-sonnet-4.6",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Sonnet 4.6 (high)": {
+      "modelId": "anthropic/claude-sonnet-4.6",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Sonnet 5": {
+      "modelId": "anthropic/claude-sonnet-5",
+      "officialProvider": "Anthropic"
+    },
+    "Claude Sonnet 5 (high)": {
+      "modelId": "anthropic/claude-sonnet-5",
+      "officialProvider": "Anthropic"
+    },
+    "DeepSeek V3.2 Exp (Non-Thinking)": {
+      "modelId": "deepseek/deepseek-v3.2-exp",
+      "officialProvider": "DeepSeek"
+    },
+    "DeepSeek V3.2 Exp (Thinking)": {
+      "modelId": "deepseek/deepseek-v3.2-exp",
+      "officialProvider": "DeepSeek"
+    },
+    "DeepSeek V4 Flash (Max)": {
+      "modelId": "deepseek/deepseek-v4-flash",
+      "officialProvider": "DeepSeek"
+    },
+    "DeepSeek V4 Flash (None)": {
+      "modelId": "deepseek/deepseek-v4-flash",
+      "officialProvider": "DeepSeek"
+    },
+    "DeepSeek V4 Flash 0731 (Max)": {
+      "modelId": "deepseek/deepseek-v4-flash-0731",
+      "officialProvider": "DeepSeek"
+    },
+    "DeepSeek V4 Flash 0731 (None)": {
+      "modelId": "deepseek/deepseek-v4-flash-0731",
+      "officialProvider": "DeepSeek"
+    },
+    "DeepSeek V4 Flash Vision Exp (Max)": {
+      "modelId": "deepseek/deepseek-v4-flash-vision-exp",
+      "officialProvider": "DeepSeek"
+    },
+    "DeepSeek V4 Flash Vision Exp (None)": {
+      "modelId": "deepseek/deepseek-v4-flash-vision-exp",
+      "officialProvider": "DeepSeek"
+    },
+    "DeepSeek V4 Pro (Max)": {
+      "modelId": "deepseek/deepseek-v4-pro",
+      "officialProvider": "DeepSeek"
+    },
+    "DeepSeek V4 Pro (None)": {
+      "modelId": "deepseek/deepseek-v4-pro",
+      "officialProvider": "DeepSeek"
+    },
+    "DeepSeek V4 Pro 0813 (Max)": {
+      "modelId": "deepseek/deepseek-v4-pro-0813",
+      "officialProvider": "DeepSeek"
+    },
+    "DeepSeek V4 Pro 0813 (None)": {
+      "modelId": "deepseek/deepseek-v4-pro-0813",
+      "officialProvider": "DeepSeek"
+    },
+    "DeepSeek-V3.2 (Non-Thinking)": {
+      "modelId": "deepseek/deepseek-v3.2",
+      "officialProvider": "DeepSeek"
+    },
+    "DeepSeek-V3.2 (Thinking)": {
+      "modelId": "deepseek/deepseek-v3.2",
+      "officialProvider": "DeepSeek"
+    },
+    "Gemini 3 Flash (high)": {
+      "modelId": "google/gemini-3-flash-preview",
+      "officialProvider": "Google"
+    },
+    "Gemini 3 Flash (minimal)": {
+      "modelId": "google/gemini-3-flash-preview",
+      "officialProvider": "Google"
+    },
+    "Gemini 3.1 Flash-Lite (high)": {
+      "modelId": "google/gemini-3.1-flash-lite",
+      "officialProvider": "Google"
+    },
+    "Gemini 3.1 Flash-Lite (minimal)": {
+      "modelId": "google/gemini-3.1-flash-lite",
+      "officialProvider": "Google"
+    },
+    "Gemini 3.1 Pro (high)": {
+      "modelId": "google/gemini-3.1-pro-preview",
+      "officialProvider": "Google"
+    },
+    "Gemini 3.1 Pro (low)": {
+      "modelId": "google/gemini-3.1-pro-preview",
+      "officialProvider": "Google"
+    },
+    "Gemini 3.5 Flash (high)": {
+      "modelId": "google/gemini-3.5-flash",
+      "officialProvider": "Google"
+    },
+    "Gemini 3.5 Flash (minimal)": {
+      "modelId": "google/gemini-3.5-flash",
+      "officialProvider": "Google"
+    },
+    "Gemini 3.5 Flash-Lite (high)": {
+      "modelId": "google/gemini-3.5-flash-lite",
+      "officialProvider": "Google"
+    },
+    "Gemini 3.5 Flash-Lite (minimal)": {
+      "modelId": "google/gemini-3.5-flash-lite",
+      "officialProvider": "Google"
+    },
+    "Gemini 3.6 Flash (high)": {
+      "modelId": "google/gemini-3.6-flash",
+      "officialProvider": "Google"
+    },
+    "Gemini 3.6 Flash (minimal)": {
+      "modelId": "google/gemini-3.6-flash",
+      "officialProvider": "Google"
+    },
+    "Gemini 3.7 Flash (high)": {
+      "modelId": "google/gemini-3.7-flash",
+      "officialProvider": "Google"
+    },
+    "Gemini 3.7 Flash (low)": {
+      "modelId": "google/gemini-3.7-flash",
+      "officialProvider": "Google"
+    },
+    "Gemini 3.8 Flash (high)": {
+      "modelId": "google/gemini-3.8-flash",
+      "officialProvider": "Google"
+    },
+    "Gemini 3.8 Flash (low)": {
+      "modelId": "google/gemini-3.8-flash",
+      "officialProvider": "Google"
+    },
+    "Gemma 4 26B A4B": {
+      "modelId": "google/gemma-4-26b-a4b-it",
+      "officialProvider": "Google"
+    },
+    "Gemma 4 26B A4B (high)": {
+      "modelId": "google/gemma-4-26b-a4b-it",
+      "officialProvider": "Google"
+    },
+    "Gemma 4 31B": {
+      "modelId": "google/gemma-4-31b-it",
+      "officialProvider": "Google"
+    },
+    "Gemma 4 31B (high)": {
+      "modelId": "google/gemma-4-31b-it",
+      "officialProvider": "Google"
+    },
+    "GLM-5 (Non-Thinking)": {
+      "modelId": "z-ai/glm-5",
+      "officialProvider": "Z.AI"
+    },
+    "GLM-5 (Thinking)": {
+      "modelId": "z-ai/glm-5",
+      "officialProvider": "Z.AI"
+    },
+    "GLM-5.1 (Non-Thinking)": {
+      "modelId": "z-ai/glm-5.1",
+      "officialProvider": "Z.AI"
+    },
+    "GLM-5.1 (Thinking)": {
+      "modelId": "z-ai/glm-5.1",
+      "officialProvider": "Z.AI"
+    },
+    "GLM-5.2 (Non-Thinking)": {
+      "modelId": "z-ai/glm-5.2",
+      "officialProvider": "Z.AI"
+    },
+    "GLM-5.2 (Thinking)": {
+      "modelId": "z-ai/glm-5.2",
+      "officialProvider": "Z.AI"
+    },
+    "GLM-5.3 Flash (high)": {
+      "modelId": "z-ai/glm-5.3-flash",
+      "officialProvider": "Z.AI"
+    },
+    "GPT-4.1": {
+      "modelId": "openai/gpt-4.1",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-4.1 mini": {
+      "modelId": "openai/gpt-4.1-mini",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-4.1 nano": {
+      "modelId": "openai/gpt-4.1-nano",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-4o": {
+      "modelId": "openai/gpt-4o-2024-11-20",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-4o mini": {
+      "modelId": "openai/gpt-4o-mini",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5 mini (high)": {
+      "modelId": "openai/gpt-5-mini",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5 nano (high)": {
+      "modelId": "openai/gpt-5-nano",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.1 (high)": {
+      "modelId": "openai/gpt-5.1",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.1 Codex": {
+      "modelId": "openai/gpt-5.1-codex",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.2 (Instant)": {
+      "modelId": "openai/gpt-5.2",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.2 (xhigh)": {
+      "modelId": "openai/gpt-5.2",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.4 (high)": {
+      "modelId": "openai/gpt-5.4",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.4 (none)": {
+      "modelId": "openai/gpt-5.4",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.4 (xhigh*)": {
+      "modelId": "openai/gpt-5.4",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.4 mini (none)": {
+      "modelId": "openai/gpt-5.4-mini",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.4 mini (xhigh)": {
+      "modelId": "openai/gpt-5.4-mini",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.4 nano (none)": {
+      "modelId": "openai/gpt-5.4-nano",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.4 nano (xhigh)": {
+      "modelId": "openai/gpt-5.4-nano",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.5 (high)": {
+      "modelId": "openai/gpt-5.5",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.5 (none)": {
+      "modelId": "openai/gpt-5.5",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.5 (xhigh*)": {
+      "modelId": "openai/gpt-5.5",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.5 Pro": {
+      "modelId": "openai/gpt-5.5-pro",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.6 Luna (high)": {
+      "modelId": "openai/gpt-5.6-luna",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.6 Luna (low)": {
+      "modelId": "openai/gpt-5.6-luna",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.6 Luna (max*)": {
+      "modelId": "openai/gpt-5.6-luna",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.6 Luna (none)": {
+      "modelId": "openai/gpt-5.6-luna",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.6 Luna Pro (high)": {
+      "modelId": "openai/gpt-5.6-luna-pro",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.6 Sol (high)": {
+      "modelId": "openai/gpt-5.6-sol",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.6 Sol (max*)": {
+      "modelId": "openai/gpt-5.6-sol",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.6 Sol (none)": {
+      "modelId": "openai/gpt-5.6-sol",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.6 Sol Pro (high)": {
+      "modelId": "openai/gpt-5.6-sol-pro",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.6 Terra (high)": {
+      "modelId": "openai/gpt-5.6-terra",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.6 Terra (max*)": {
+      "modelId": "openai/gpt-5.6-terra",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.6 Terra (none)": {
+      "modelId": "openai/gpt-5.6-terra",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-5.6 Terra Pro (high)": {
+      "modelId": "openai/gpt-5.6-terra-pro",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-6 Astra (high)": {
+      "modelId": "openai/gpt-6-astra",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-6 Astra (low)": {
+      "modelId": "openai/gpt-6-astra",
+      "officialProvider": "OpenAI"
+    },
+    "GPT-OSS 120B (high)": {
+      "modelId": "openai/gpt-oss-120b",
+      "officialProvider": "OpenAI"
+    },
+    "Grok 4.3 (high)": {
+      "modelId": "x-ai/grok-4.3",
+      "officialProvider": "xAI"
+    },
+    "Grok 4.3 (none)": {
+      "modelId": "x-ai/grok-4.3",
+      "officialProvider": "xAI"
+    },
+    "Grok 4.5 (high)": {
+      "modelId": "x-ai/grok-4.5",
+      "officialProvider": "xAI"
+    },
+    "Kimi K2.5 (Non-Thinking)": {
+      "modelId": "moonshotai/kimi-k2.5",
+      "officialProvider": "Moonshot AI"
+    },
+    "Kimi K2.5 (Thinking)": {
+      "modelId": "moonshotai/kimi-k2.5",
+      "officialProvider": "Moonshot AI"
+    },
+    "Kimi K2.6 (Non-Thinking)": {
+      "modelId": "moonshotai/kimi-k2.6",
+      "officialProvider": "Moonshot AI"
+    },
+    "Kimi K2.6 (Thinking)": {
+      "modelId": "moonshotai/kimi-k2.6",
+      "officialProvider": "Moonshot AI"
+    },
+    "MiniMax M3 (Non-Thinking)": {
+      "modelId": "minimax/minimax-m3",
+      "officialProvider": "Minimax"
+    },
+    "MiniMax M3 (Thinking)": {
+      "modelId": "minimax/minimax-m3",
+      "officialProvider": "Minimax"
+    },
+    "Mistral Small 4 (Non-Thinking)": {
+      "modelId": "mistralai/mistral-small-2603",
+      "officialProvider": "Mistral"
+    },
+    "Mistral Small 4 (Thinking)": {
+      "modelId": "mistralai/mistral-small-2603",
+      "officialProvider": "Mistral"
+    },
+    "Muse Spark 1.2 (high)": {
+      "modelId": "meta/muse-spark-1.2",
+      "officialProvider": "Meta"
+    },
+    "Muse Spark 1.2 (minimal)": {
+      "modelId": "meta/muse-spark-1.2",
+      "officialProvider": "Meta"
+    },
+    "Muse Spark 1.3 (high)": {
+      "modelId": "meta/muse-spark-1.3-contributor",
+      "officialProvider": "Meta"
+    },
+    "Muse Spark 1.3 (minimal)": {
+      "modelId": "meta/muse-spark-1.3-contributor",
+      "officialProvider": "Meta"
+    },
+    "o1 (high)": {
+      "modelId": "openai/o1",
+      "officialProvider": "OpenAI"
+    },
+    "o3 (high)": {
+      "modelId": "openai/o3",
+      "officialProvider": "OpenAI"
+    },
+    "o3-mini (high)": {
+      "modelId": "openai/o3-mini",
+      "officialProvider": "OpenAI"
+    },
+    "o4-mini (high)": {
+      "modelId": "openai/o4-mini",
+      "officialProvider": "OpenAI"
+    },
+    "Qwen3.5 27B (Non-Thinking)": {
+      "modelId": "qwen/qwen3.5-27b",
+      "officialProvider": "Alibaba"
+    },
+    "Qwen3.5 27B (Thinking)": {
+      "modelId": "qwen/qwen3.5-27b",
+      "officialProvider": "Alibaba"
+    },
+    "Qwen3.5 35B A3B (Non-Thinking)": {
+      "modelId": "qwen/qwen3.5-35b-a3b",
+      "officialProvider": "Alibaba"
+    },
+    "Qwen3.5 35B A3B (Thinking)": {
+      "modelId": "qwen/qwen3.5-35b-a3b",
+      "officialProvider": "Alibaba"
+    },
+    "Qwen3.5 397B (Non-Thinking)": {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "officialProvider": "Alibaba"
+    },
+    "Qwen3.5 397B (Thinking)": {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "officialProvider": "Alibaba"
+    },
+    "Qwen3.5 9B (Non-Thinking)": {
+      "modelId": "qwen/qwen3.5-9b",
+      "officialProvider": "Alibaba"
+    },
+    "Qwen3.5 9B (Thinking)": {
+      "modelId": "qwen/qwen3.5-9b",
+      "officialProvider": "Alibaba"
+    },
+    "Qwen3.6 27B (Non-Thinking)": {
+      "modelId": "qwen/qwen3.6-27b",
+      "officialProvider": "Alibaba"
+    },
+    "Qwen3.6 27B (Thinking)": {
+      "modelId": "qwen/qwen3.6-27b",
+      "officialProvider": "Alibaba"
+    },
+    "Qwen3.6 Plus (Non-Thinking)": {
+      "modelId": "qwen/qwen3.6-plus",
+      "officialProvider": "Alibaba"
+    },
+    "Qwen3.6 Plus (Thinking)": {
+      "modelId": "qwen/qwen3.6-plus",
+      "officialProvider": "Alibaba"
+    },
+    "Qwen3.7 Max (Non-Thinking)": {
+      "modelId": "qwen/qwen3.7-max",
+      "officialProvider": "Alibaba"
+    },
+    "Qwen3.7 Max (Thinking)": {
+      "modelId": "qwen/qwen3.7-max",
+      "officialProvider": "Alibaba"
+    },
+    "Solar Pro 3 (high)": {
+      "modelId": "upstage/solar-pro-3",
+      "officialProvider": "Upstage"
+    },
+    "Solar Pro 3 (low)": {
+      "modelId": "upstage/solar-pro-3",
+      "officialProvider": "Upstage"
+    },
+    "Solar Pro 4": {
+      "modelId": "upstage/solar-pro4",
+      "officialProvider": "Upstage"
+    },
+    "Solar Pro 4 (max)": {
+      "modelId": "upstage/solar-pro4",
+      "officialProvider": "Upstage"
+    }
+  }
+}

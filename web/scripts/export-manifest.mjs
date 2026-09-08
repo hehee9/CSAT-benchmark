@@ -7,28 +7,31 @@ const repoRoot = path.resolve(__dirname, '..', '..')
 const imagesDir = path.join(repoRoot, 'docs', 'images')
 export const EXPORT_GROUP_ORDER = ['overview', 'subjects', 'cost']
 
+/** @description 이미지 내보내기 대상 생성 */
 function createImageTarget({ id, group, exportKey, fileName, params }) {
   return {
     id,
     group,
     exportKey,
     outputPath: path.join(imagesDir, fileName),
+    fileName,
     params: {
       theme: 'light',
+      mode: 'default',
       ...params
     }
   }
 }
 
-/** @description Create a hard-mode subject score export target */
-function createHardSubjectTarget({ id, fileName, subjects }) {
+/** @description 쉬움 모드 과목 점수 내보내기 대상 생성 */
+function createEasySubjectTarget({ id, fileName, subjects }) {
   return createImageTarget({
-    id: `hard-${id}`,
+    id: `easy-${id}`,
     group: 'subjects',
     exportKey: 'overview-score-chart',
-    fileName: `고난도_${fileName}`,
+    fileName: `쉬움_${fileName}`,
     params: {
-      mode: 'hard',
+      mode: 'easy',
       tab: 'overview',
       subjects
     }
@@ -120,42 +123,42 @@ export const EXPORT_TARGETS = [
     fileName: '사회문화.png',
     params: { tab: 'overview', subjects: '탐구-사회문화' }
   }),
-  createHardSubjectTarget({
+  createEasySubjectTarget({
     id: 'subject-korean',
     fileName: '국어.png',
     subjects: '국어-화작,국어-언매'
   }),
-  createHardSubjectTarget({
+  createEasySubjectTarget({
     id: 'subject-math',
     fileName: '수학.png',
     subjects: '수학-확통,수학-미적,수학-기하'
   }),
-  createHardSubjectTarget({
+  createEasySubjectTarget({
     id: 'subject-english',
     fileName: '영어.png',
     subjects: '영어'
   }),
-  createHardSubjectTarget({
+  createEasySubjectTarget({
     id: 'subject-history',
     fileName: '한국사.png',
     subjects: '한국사'
   }),
-  createHardSubjectTarget({
+  createEasySubjectTarget({
     id: 'subject-physics1',
     fileName: '물리1.png',
     subjects: '탐구-물리1'
   }),
-  createHardSubjectTarget({
+  createEasySubjectTarget({
     id: 'subject-chemistry1',
     fileName: '화학1.png',
     subjects: '탐구-화학1'
   }),
-  createHardSubjectTarget({
+  createEasySubjectTarget({
     id: 'subject-biology1',
     fileName: '생명1.png',
     subjects: '탐구-생명1'
   }),
-  createHardSubjectTarget({
+  createEasySubjectTarget({
     id: 'subject-society',
     fileName: '사회문화.png',
     subjects: '탐구-사회문화'
@@ -176,10 +179,23 @@ export const EXPORT_TARGETS = [
   })
 ]
 
-export function getExportTargetById(id) {
-  return EXPORT_TARGETS.find(target => target.id === id) || null
+/** @description 지정 출력 경로를 적용한 이미지 내보내기 대상 반환 */
+export function getExportTargets(options = {}) {
+  const outputDir = options.outputDir
+    ? path.resolve(options.outputDir)
+    : imagesDir
+  return EXPORT_TARGETS.map(target => ({
+    ...target,
+    outputPath: path.join(outputDir, target.fileName)
+  }))
 }
 
-export function getExportTargetsByGroup(group) {
-  return EXPORT_TARGETS.filter(target => target.group === group)
+/** @description 지정 출력 경로를 적용한 대상 하나 반환 */
+export function getExportTargetById(id, options = {}) {
+  return getExportTargets(options).find(target => target.id === id) || null
+}
+
+/** @description 지정 출력 경로를 적용한 그룹별 대상 반환 */
+export function getExportTargetsByGroup(group, options = {}) {
+  return getExportTargets(options).filter(target => target.group === group)
 }

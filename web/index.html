@@ -2,16 +2,17 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/CSAT-benchmark/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>2026 수능 LLM 풀이 대시보드</title>
 
     <!-- PWA 메타 태그 -->
-    <link rel="manifest" href="/2026-CSAT/manifest.json" />
+    <link rel="manifest" href="/CSAT-benchmark/manifest.json" />
     <meta name="theme-color" content="#111827" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="apple-touch-icon" href="/2026-CSAT/icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="/CSAT-benchmark/icons/icon-192.png" />
 
     <!-- SEO 메타 태그 -->
     <meta name="description" content="다양한 LLM 모델의 2026 수능 문제 풀이 결과를 비교하는 대시보드" />
@@ -37,7 +38,7 @@
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/2026-CSAT/sw.js')
+          navigator.serviceWorker.register('/CSAT-benchmark/sw.js')
             .then((registration) => {
               console.log('SW registered:', registration.scope);
             })

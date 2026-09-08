@@ -1,0 +1,51 @@
+name: Refresh model performance
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: csat-dashboard-publish
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Refresh OpenRouter throughput snapshot
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: node web/scripts/refresh-model-performance.mjs
+
+      - name: Copy snapshot for Pages
+        run: cp web/model_performance.json docs/model_performance.json
+
+      - name: Publish snapshot
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add web/model_performance.json docs/model_performance.json
+          if git diff --staged --quiet; then
+            echo "No model performance changes"
+            exit 0
+          fi
+          git commit -m "chore: refresh model performance"
+          git push
+
+      - name: Publish updated Pages data
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds"

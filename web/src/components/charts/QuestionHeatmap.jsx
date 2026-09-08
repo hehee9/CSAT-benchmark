@@ -71,7 +71,10 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
   const { isDark: darkMode } = useTheme()
   const [showAnswerNumbers, setShowAnswerNumbers] = useState(false)
   const questions = useMemo(() => getQuestionNumbers(data), [data])
-  const { ref, exportImage, isExporting } = useExportImage({ exportWidth: README_EXPORT_WIDTH })
+  const { ref, exportImage, isExporting } = useExportImage({
+    exportWidth: README_EXPORT_WIDTH,
+    exportProfile: 'questionHeatmap'
+  })
 
   if (!data || !models?.length || !questions.length) {
     return (
@@ -82,26 +85,26 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
   }
 
   const modelColumnStyle = {
-    width: isExporting ? 180 : 144,
-    minWidth: isExporting ? 180 : 144
+    width: isExporting ? 260 : 144,
+    minWidth: isExporting ? 260 : 144
   }
   const questionColumnStyle = {
-    width: isExporting ? 40 : 32,
-    minWidth: isExporting ? 40 : 32
+    width: isExporting ? 44 : 32,
+    minWidth: isExporting ? 44 : 32
   }
   const summaryColumnStyle = {
-    width: isExporting ? 100 : 80,
-    minWidth: isExporting ? 100 : 80
+    width: isExporting ? 140 : 80,
+    minWidth: isExporting ? 140 : 80
   }
 
   return (
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between mb-4">
         {title && (
-          <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+          <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
         )}
         <div className="flex items-start gap-2">
-          <span className="hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
+          <span className="export-role-watermark hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
           <button
             className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
               showAnswerNumbers
@@ -124,7 +127,7 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
           {/* 헤더 행 */}
           <div className="flex border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
             <div
-              className="w-36 p-2 font-semibold text-sm text-gray-700 dark:text-gray-300 shrink-0"
+              className="export-role-table-head w-36 p-2 font-semibold text-sm text-gray-700 dark:text-gray-300 shrink-0"
               style={modelColumnStyle}
             >
               {t('table.model')}
@@ -132,14 +135,14 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
             {questions.map(q => (
               <div
                 key={q}
-                className="w-8 p-1 text-center text-xs font-medium text-gray-600 dark:text-gray-400 shrink-0"
+                className="export-role-table-head w-8 p-1 text-center text-xs font-medium text-gray-600 dark:text-gray-400 shrink-0"
                 style={questionColumnStyle}
               >
                 {q}
               </div>
             ))}
             <div
-              className="w-20 p-2 text-center font-semibold text-sm text-gray-700 dark:text-gray-300 shrink-0"
+              className="export-role-table-head w-20 p-2 text-center font-semibold text-sm text-gray-700 dark:text-gray-300 shrink-0"
               style={summaryColumnStyle}
             >
               {t('heatmap.correctCount')}
@@ -155,7 +158,7 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
                 className="flex items-center border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 <div
-                  className="w-36 p-2 text-xs truncate shrink-0 text-gray-800 dark:text-gray-200"
+                  className={`export-role-table-model w-36 p-2 text-xs shrink-0 text-gray-800 dark:text-gray-200 ${isExporting ? 'whitespace-normal break-words' : 'truncate'}`}
                   style={{
                     ...modelColumnStyle,
                     borderLeft: `3px solid ${getModelColor(model)}`
@@ -180,28 +183,28 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
                   return (
                     <div
                       key={q}
-                      className="w-8 h-8 flex items-center justify-center text-xs shrink-0 border-r border-gray-50 dark:border-gray-700"
+                      className="export-role-table-value w-8 h-8 flex items-center justify-center text-xs shrink-0 border-r border-gray-50 dark:border-gray-700"
                       style={{ ...questionColumnStyle, backgroundColor: bgColor }}
                       title={cellTitle}
                     >
                       {showAnswerNumbers ? (
                         // 답 번호 모드: 숫자 표시
-                        <span className={`font-bold text-xs ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+                        <span className={`export-role-value font-bold text-xs ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
                           {_formatAnswer(cell, t)}
                         </span>
                       ) : (
                         // O/X 모드
                         <>
                           {isRefusal && (
-                            <span className={`font-bold text-xs ${darkMode ? 'text-gray-100' : 'text-purple-900'}`}>
+                            <span className={`export-role-value font-bold text-xs ${darkMode ? 'text-gray-100' : 'text-purple-900'}`}>
                               {t('heatmap.refusalShort')}
                             </span>
                           )}
                           {cell?.isCorrect === true && (
-                            <span className={`font-bold ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>○</span>
+                            <span className={`export-role-value font-bold ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>○</span>
                           )}
                           {cell?.isCorrect === false && !isRefusal && (
-                            <span className={`font-bold ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>✕</span>
+                            <span className={`export-role-value font-bold ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>✕</span>
                           )}
                         </>
                       )}
@@ -209,11 +212,11 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
                   )
                 })}
                 <div
-                  className="w-20 p-2 text-center text-sm font-medium shrink-0 text-gray-800 dark:text-gray-200"
+                  className="export-role-table-value w-20 p-2 text-center text-sm font-medium shrink-0 text-gray-800 dark:text-gray-200"
                   style={summaryColumnStyle}
                 >
                   {accuracy.correct}/{accuracy.total}
-                  <span className="text-gray-400 dark:text-gray-500 text-xs ml-1">
+                  <span className="export-role-value text-gray-400 dark:text-gray-500 text-xs ml-1">
                     ({accuracy.accuracy.toFixed(0)}%)
                   </span>
                 </div>
@@ -224,7 +227,7 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
           {/* 문항별 정답률 행 */}
           <div className="flex items-center border-t-2 border-gray-300 dark:border-gray-600">
             <div
-              className="w-36 p-2 text-xs font-semibold text-gray-700 dark:text-gray-300 shrink-0 bg-gray-100 dark:bg-gray-700"
+              className="export-role-table-head w-36 p-2 text-xs font-semibold text-gray-700 dark:text-gray-300 shrink-0 bg-gray-100 dark:bg-gray-700"
               style={modelColumnStyle}
             >
               {t('heatmap.accuracy')}
@@ -234,11 +237,11 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
               return (
                 <div
                   key={q}
-                  className="w-8 h-8 flex items-center justify-center text-xs shrink-0"
+                  className="export-role-table-value w-8 h-8 flex items-center justify-center text-xs shrink-0"
                   style={{ ...questionColumnStyle, backgroundColor: _getAccuracyColor(qAccuracy, darkMode) }}
                   title={`${t('heatmap.question')} ${q} ${t('heatmap.accuracy')}: ${qAccuracy.toFixed(0)}%`}
                 >
-                  <span className={`font-medium text-xs ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+                  <span className={`export-role-value font-medium text-xs ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
                     {qAccuracy.toFixed(0)}%
                   </span>
                 </div>
@@ -253,7 +256,7 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
       </div>
 
       {/* 범례 */}
-      <div className="flex flex-wrap gap-4 mt-4 text-sm text-gray-600 dark:text-gray-400">
+      <div className="export-role-legend flex flex-wrap gap-4 mt-4 text-sm text-gray-600 dark:text-gray-400">
         <div className="flex items-center gap-1">
           <div className="w-4 h-4 rounded" style={{ backgroundColor: darkMode ? '#16a34a' : '#22c55e' }} />
           <span>{t('heatmap.legend.correctHigh')}</span>

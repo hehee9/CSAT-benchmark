@@ -1,0 +1,168 @@
+{
+  "models": {
+    "GPT-6 Astra (high)": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 19707,
+          "output_tokens": 4280,
+          "total_tokens": 23987,
+          "question_count": 1
+        },
+        "한국지리": {
+          "input_tokens": 21662,
+          "output_tokens": 6787,
+          "total_tokens": 28449,
+          "question_count": 1
+        },
+        "세계사": {
+          "input_tokens": 12581,
+          "output_tokens": 2190,
+          "total_tokens": 14771,
+          "question_count": 1
+        },
+        "수학-공통": {
+          "input_tokens": 4560,
+          "output_tokens": 11574,
+          "total_tokens": 16134,
+          "question_count": 1
+        },
+        "정치와법": {
+          "input_tokens": 8298,
+          "output_tokens": 5476,
+          "total_tokens": 13774,
+          "question_count": 1
+        },
+        "물리1": {
+          "input_tokens": 22492,
+          "output_tokens": 15456,
+          "total_tokens": 37948,
+          "question_count": 1
+        },
+        "지과1": {
+          "input_tokens": 32809,
+          "output_tokens": 11919,
+          "total_tokens": 44728,
+          "question_count": 1
+        },
+        "생명2": {
+          "input_tokens": 11883,
+          "output_tokens": 14363,
+          "total_tokens": 26246,
+          "question_count": 1
+        },
+        "생활과윤리": {
+          "input_tokens": 7242,
+          "output_tokens": 7117,
+          "total_tokens": 14359,
+          "question_count": 1
+        },
+        "한국사-공통": {
+          "input_tokens": 12416,
+          "output_tokens": 1687,
+          "total_tokens": 14103,
+          "question_count": 1
+        },
+        "세계지리": {
+          "input_tokens": 40576,
+          "output_tokens": 5052,
+          "total_tokens": 45628,
+          "question_count": 1
+        },
+        "영어-공통": {
+          "input_tokens": 13637,
+          "output_tokens": 2536,
+          "total_tokens": 16173,
+          "question_count": 1
+        },
+        "경제": {
+          "input_tokens": 13022,
+          "output_tokens": 7627,
+          "total_tokens": 20649,
+          "question_count": 1
+        },
+        "국어-화작": {
+          "input_tokens": 7390,
+          "output_tokens": 1237,
+          "total_tokens": 8627,
+          "question_count": 1
+        },
+        "생명1": {
+          "input_tokens": 18598,
+          "output_tokens": 12485,
+          "total_tokens": 31083,
+          "question_count": 1
+        },
+        "화학2": {
+          "input_tokens": 17652,
+          "output_tokens": 10956,
+          "total_tokens": 28608,
+          "question_count": 1
+        },
+        "수학-미적": {
+          "input_tokens": 3506,
+          "output_tokens": 5641,
+          "total_tokens": 9147,
+          "question_count": 1
+        },
+        "국어-언매": {
+          "input_tokens": 10236,
+          "output_tokens": 3102,
+          "total_tokens": 13338,
+          "question_count": 1
+        },
+        "화학1": {
+          "input_tokens": 10582,
+          "output_tokens": 10089,
+          "total_tokens": 20671,
+          "question_count": 1
+        },
+        "물리2": {
+          "input_tokens": 23254,
+          "output_tokens": 11244,
+          "total_tokens": 34498,
+          "question_count": 1
+        },
+        "동아시아사": {
+          "input_tokens": 17625,
+          "output_tokens": 2777,
+          "total_tokens": 20402,
+          "question_count": 1
+        },
+        "지과2": {
+          "input_tokens": 75167,
+          "output_tokens": 9830,
+          "total_tokens": 84997,
+          "question_count": 1
+        },
+        "수학-기하": {
+          "input_tokens": 3827,
+          "output_tokens": 7997,
+          "total_tokens": 11824,
+          "question_count": 1
+        },
+        "수학-확통": {
+          "input_tokens": 3128,
+          "output_tokens": 4738,
+          "total_tokens": 7866,
+          "question_count": 1
+        },
+        "사회문화": {
+          "input_tokens": 12052,
+          "output_tokens": 9765,
+          "total_tokens": 21817,
+          "question_count": 1
+        },
+        "윤리와사상": {
+          "input_tokens": 9712,
+          "output_tokens": 5330,
+          "total_tokens": 15042,
+          "question_count": 1
+        }
+      },
+      "total_input_tokens": 433614,
+      "total_output_tokens": 191255,
+      "total_tokens": 624869,
+      "question_count": 26
+    }
+  }
+}

@@ -2,17 +2,43 @@
   "header": {
     "title": "2026 CSAT LLM Solution Dashboard",
     "titleShort": "CSAT LLM",
+    "titleSuffix": "LLM Solution Dashboard",
+    "csatName": "CSAT",
+    "mockExamName": "Mock Exam",
+    "mockEvaluationName": "Mock Evaluation",
     "subtitle": "LLM model performance on Korean SAT problems",
-    "modeDefault": "Default",
-    "modeHard": "Hard",
-    "modeDefaultDesc": "Solves each question individually",
-    "modeHardDesc": "Solves all questions in a subject at once"
+    "mockSubtitle": "LLM model performance on mock exam problems",
+    "modeDefault": "Normal",
+    "modeEasy": "Easy",
+    "modeDefaultDesc": "Solves all questions in a subject at once",
+    "modeEasyDesc": "Solves each question individually",
+    "examSelect": "Select exam",
+    "modeSelect": "Select run mode",
+    "scoreBasis": "Score basis",
+    "normalized": "Normalized",
+    "raw": "Raw",
+    "openMenu": "Open menu"
   },
   "tabs": {
     "overview": "Overview",
     "subjects": "Subject Details",
     "compare": "Model Comparison",
-    "cost": "Cost Analysis"
+    "cost": "Detailed Analysis"
+  },
+  "analysis": {
+    "metrics": { "score": "Score", "cost": "Cost", "tokens": "Tokens", "time": "Time" },
+    "units": { "points": "pts", "dollars": "$", "tokens": "tokens", "hours": "hours" },
+    "xAxis": "X-axis metric",
+    "yAxis": "Y-axis metric",
+    "estimatedTime": "Estimated solving time",
+    "noDataForAxes": "No data is available for both selected metrics.",
+    "help": {
+      "title": "How solving time is estimated",
+      "method": "Average output tokens per attempt for the selected subjects, including reasoning, divided by OpenRouter throughput.",
+      "selection": "Uses the official provider's standard endpoint when available, otherwise the median of provider-level medians.",
+      "updated": "Throughput retrieved at",
+      "unavailable": "Unavailable"
+    }
   },
   "sidebar": {
     "settings": "Settings",
@@ -48,7 +74,9 @@
     "modelsSelected": "{{count}} selected",
     "costVsPerformance": "Cost vs Performance",
     "tokenUsage": "Total Token Usage",
+    "tokenUsageAverage": "Average Token Usage per Attempt",
     "costInfo": "Cost Information by Model",
+    "costInfoAverage": "Average Cost per Attempt by Model",
     "modelCompare": "Model Comparison (Normalized by Subject)",
     "showScores": "Show Scores",
     "viewModes": {
@@ -77,8 +105,21 @@
     "mijeok": "Calculus",
     "giha": "Geometry",
     "physics1": "Physics I",
+    "physics2": "Physics II",
     "chemistry1": "Chemistry I",
+    "chemistry2": "Chemistry II",
     "biology1": "Biology I",
+    "biology2": "Biology II",
+    "earthScience1": "Earth Science I",
+    "earthScience2": "Earth Science II",
+    "lifeEthics": "Life and Ethics",
+    "ethicsAndThought": "Ethics and Thought",
+    "koreanGeography": "Korean Geography",
+    "worldGeography": "World Geography",
+    "eastAsianHistory": "East Asian History",
+    "worldHistory": "World History",
+    "economics": "Economics",
+    "politicsAndLaw": "Politics and Law",
     "society": "Society & Culture"
   },
   "table": {
@@ -94,7 +135,10 @@
     "outputPrice": "Output ($/1M)",
     "inputTokens": "Input Tokens",
     "outputTokens": "Output Tokens",
+    "inputTokensAverage": "Average Input Tokens per Attempt",
+    "outputTokensAverage": "Average Output Tokens per Attempt",
     "totalCost": "Total Cost",
+    "averageCost": "Average Cost per Attempt",
     "score": "Score",
     "efficiency": "Efficiency",
     "showDetail": "Show Details",
@@ -143,11 +187,18 @@
     "tokens": "tokens",
     "perMillion": "/M",
     "axisTestCost": "Test Cost ($)",
-    "axisScore": "Score"
+    "axisAverageTestCost": "Average Cost per Attempt ($)",
+    "axisScore": "Score",
+    "attemptDetails": "Token and cost details by attempt",
+    "attempt": "Attempt",
+    "attemptTotal": "Overall Total",
+    "attemptCost": "Cost",
+    "showDetail": "Show Details",
+    "hideDetail": "Hide Details"
   },
   "models": {
     "noVision": "No multimodal support",
-    "nonStandard": "Only wrong answers from high retested with higher reasoning",
+    "nonStandard": "Only incorrect answers are retested with higher reasoning",
     "postExamKnowledgeCutoff": "Possible exposure to exam content",
     "webServiceNoTools": "Web service environment with tools disabled"
   },
@@ -181,6 +232,7 @@
     "loading": "Loading data...",
     "error": "Error occurred",
     "noData": "No data available",
+    "preparingResults": "Results are being prepared.",
     "noCostData": "No cost data available",
     "score": "Score",
     "correct": "Correct",
@@ -198,6 +250,7 @@
     "en": "English"
   },
   "footer": {
+    "supportTests": "Support testing costs",
     "lastUpdated": "Last updated",
     "unofficial": "This is an unofficial project. Not affiliated with KICE."
   }

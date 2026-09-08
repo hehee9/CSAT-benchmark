@@ -13,6 +13,7 @@
     "sync:assets": "npm run build:pages && npm run export:images",
     "sync:assets:one": "node ./scripts/export-readme-images.mjs",
     "sync:assets:group": "node ./scripts/export-readme-images.mjs",
+    "test:pipeline": "node --test ./tests/public-pipeline.test.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },

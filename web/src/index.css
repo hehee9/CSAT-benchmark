@@ -62,12 +62,12 @@ body {
 }
 
 /**
- * @brief 고난도 모드 accent 색상
+ * @brief 2026 일반 모드 accent 색상
  *
- * 기존 컴포넌트의 Tailwind blue accent를 유지하면서, 고난도 모드에서는
+ * 기존 컴포넌트의 Tailwind blue accent를 유지하면서, 2026 일반 모드에서는
  * 활성 버튼/선택/포커스 표시만 어두운 주홍 계열로 치환한다.
  */
-[data-benchmark-mode="hard"] {
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] {
   --benchmark-accent-50: #fef2f2;
   --benchmark-accent-100: #fee2e2;
   --benchmark-accent-200: #fecaca;
@@ -80,93 +80,93 @@ body {
   --benchmark-accent-900: #431407;
 }
 
-[data-benchmark-mode="hard"] .bg-blue-50 {
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .bg-blue-50 {
   background-color: var(--benchmark-accent-50) !important;
 }
 
-[data-benchmark-mode="hard"] .bg-blue-100 {
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .bg-blue-100 {
   background-color: var(--benchmark-accent-100) !important;
 }
 
-[data-benchmark-mode="hard"] .bg-blue-500 {
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .bg-blue-500 {
   background-color: var(--benchmark-accent-500) !important;
 }
 
-[data-benchmark-mode="hard"] .hover\:bg-blue-200:hover {
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .hover\:bg-blue-200:hover {
   background-color: var(--benchmark-accent-200) !important;
 }
 
-[data-benchmark-mode="hard"] .hover\:bg-blue-600:hover {
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .hover\:bg-blue-600:hover {
   background-color: var(--benchmark-accent-600) !important;
 }
 
-[data-benchmark-mode="hard"] .text-blue-400,
-[data-benchmark-mode="hard"] .text-blue-500,
-[data-benchmark-mode="hard"] .text-blue-600,
-[data-benchmark-mode="hard"] .text-blue-700 {
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .text-blue-400,
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .text-blue-500,
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .text-blue-600,
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .text-blue-700 {
   color: var(--benchmark-accent-600) !important;
 }
 
-[data-benchmark-mode="hard"] .hover\:text-blue-700:hover {
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .hover\:text-blue-700:hover {
   color: var(--benchmark-accent-700) !important;
 }
 
-[data-benchmark-mode="hard"] .border-blue-300,
-[data-benchmark-mode="hard"] .border-blue-400,
-[data-benchmark-mode="hard"] .border-blue-500 {
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .border-blue-300,
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .border-blue-400,
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .border-blue-500 {
   border-color: var(--benchmark-accent-400) !important;
 }
 
-[data-benchmark-mode="hard"] .border-t-transparent {
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .border-t-transparent {
   border-top-color: transparent !important;
 }
 
-[data-benchmark-mode="hard"] input[type="checkbox"],
-[data-benchmark-mode="hard"] input[type="radio"] {
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] input[type="checkbox"],
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] input[type="radio"] {
   accent-color: var(--benchmark-accent-600);
 }
 
-[data-benchmark-mode="hard"] .focus\:border-blue-500:focus {
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .focus\:border-blue-500:focus {
   border-color: var(--benchmark-accent-500) !important;
 }
 
-[data-benchmark-mode="hard"] .ring-blue-200,
-[data-benchmark-mode="hard"] .ring-blue-300,
-[data-benchmark-mode="hard"] .focus\:ring-blue-500:focus {
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .ring-blue-200,
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .ring-blue-300,
+[data-exam-id="csat-2026"][data-benchmark-mode="default"] .focus\:ring-blue-500:focus {
   --tw-ring-color: var(--benchmark-accent-300) !important;
 }
 
-.dark [data-benchmark-mode="hard"] .dark\:bg-blue-900\/30 {
+.dark [data-exam-id="csat-2026"][data-benchmark-mode="default"] .dark\:bg-blue-900\/30 {
   background-color: rgb(67 20 7 / 0.3) !important;
 }
 
-.dark [data-benchmark-mode="hard"] .dark\:bg-blue-900\/50 {
+.dark [data-exam-id="csat-2026"][data-benchmark-mode="default"] .dark\:bg-blue-900\/50 {
   background-color: rgb(67 20 7 / 0.5) !important;
 }
 
-.dark [data-benchmark-mode="hard"] .dark\:hover\:bg-blue-800:hover {
+.dark [data-exam-id="csat-2026"][data-benchmark-mode="default"] .dark\:hover\:bg-blue-800:hover {
   background-color: var(--benchmark-accent-800) !important;
 }
 
-.dark [data-benchmark-mode="hard"] .dark\:text-blue-300,
-.dark [data-benchmark-mode="hard"] .dark\:text-blue-400 {
+.dark [data-exam-id="csat-2026"][data-benchmark-mode="default"] .dark\:text-blue-300,
+.dark [data-exam-id="csat-2026"][data-benchmark-mode="default"] .dark\:text-blue-400 {
   color: var(--benchmark-accent-300) !important;
 }
 
-.dark [data-benchmark-mode="hard"] .dark\:hover\:text-blue-300:hover {
+.dark [data-exam-id="csat-2026"][data-benchmark-mode="default"] .dark\:hover\:text-blue-300:hover {
   color: var(--benchmark-accent-200) !important;
 }
 
-.dark [data-benchmark-mode="hard"] .dark\:border-blue-700 {
+.dark [data-exam-id="csat-2026"][data-benchmark-mode="default"] .dark\:border-blue-700 {
   border-color: var(--benchmark-accent-700) !important;
 }
 
-.dark [data-benchmark-mode="hard"] .dark\:border-blue-500 {
+.dark [data-exam-id="csat-2026"][data-benchmark-mode="default"] .dark\:border-blue-500 {
   border-color: var(--benchmark-accent-500) !important;
 }
 
-.dark [data-benchmark-mode="hard"] .dark\:ring-blue-700,
-.dark [data-benchmark-mode="hard"] .dark\:ring-blue-800 {
+.dark [data-exam-id="csat-2026"][data-benchmark-mode="default"] .dark\:ring-blue-700,
+.dark [data-exam-id="csat-2026"][data-benchmark-mode="default"] .dark\:ring-blue-800 {
   --tw-ring-color: var(--benchmark-accent-800) !important;
 }
 

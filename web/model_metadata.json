@@ -1,48 +1,63 @@
 {
   "o3-mini (high)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2023-10"
   },
   "DeepSeek V4 Flash (None)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-05"
   },
   "DeepSeek V4 Flash (Max)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-05"
   },
   "DeepSeek V4 Pro (None)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-05"
   },
   "DeepSeek V4 Pro (Max)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-05"
   },
   "DeepSeek V3.2 (Non-Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-03"
   },
   "DeepSeek V3.2 (Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-03"
   },
   "DeepSeek V3.2 Speciale": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-03"
   },
   "K-EXAONE (Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2024-12"
   },
   "K-EXAONE (Non-Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2024-12"
   },
   "Solar Pro 3 (high)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-03"
   },
   "Solar Pro 3 (low)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-03"
   },
   "GPT-OSS 120B (high)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2024-06"
   },
   "GLM-5 (Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-12"
   },
   "GLM-5 (Non-Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-12"
   },
   "Solar Pro 3 0323 (high)": {
     "supportsVision": false
@@ -51,16 +66,20 @@
     "supportsVision": false
   },
   "Qwen3.7 Max (Non-Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-05"
   },
   "Qwen3.7 Max (Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-05"
   },
   "GLM-5.1 (Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-12"
   },
   "GLM-5.1 (Non-Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-12"
   },
   "GPT-5.5 Pro": {
     "supportsVision": true,
@@ -70,166 +89,563 @@
     "description": {
       "ko": "ChatGPT Plus 사용자용 모델 또는 그와 동급",
       "en": "For ChatGPT Plus users or an equivalent model"
-    }
+    },
+    "knowledgeCutoff": "2026-02"
   },
   "GPT-6 Astra (high)": {
     "description": {
       "ko": "ChatGPT Plus 사용자용 모델 또는 그와 동급",
       "en": "For ChatGPT Plus users or an equivalent model"
-    }
+    },
+    "knowledgeCutoff": "2026-04"
   },
   "GPT-5.6 Sol Pro (high)": {
     "description": {
       "ko": "ChatGPT Pro 사용자용 모델 또는 그와 동급",
       "en": "For ChatGPT Pro users or an equivalent model"
-    }
+    },
+    "knowledgeCutoff": "2026-02"
   },
   "GPT-5.6 Luna (low)": {
     "description": {
       "ko": "ChatGPT 무료 사용자용 모델 또는 그와 동급",
       "en": "For ChatGPT Free users or an equivalent model"
-    }
+    },
+    "knowledgeCutoff": "2026-02"
   },
   "Claude Sonnet 5": {
     "description": {
       "ko": "Claude 무료 사용자용 모델 또는 그와 동급",
       "en": "For Claude Free users or an equivalent model"
-    }
+    },
+    "knowledgeCutoff": "2026-01"
   },
   "Claude Sonnet 5 (high)": {
     "description": {
       "ko": "Claude 무료 사용자용 모델 또는 그와 동급",
       "en": "For Claude Free users or an equivalent model"
-    }
+    },
+    "knowledgeCutoff": "2026-01"
   },
   "Claude Opus 5": {
     "description": {
       "ko": "Claude Pro 사용자용 모델 또는 그와 동급",
       "en": "For Claude Pro users or an equivalent model"
-    }
+    },
+    "knowledgeCutoff": "2026-05"
   },
   "Claude Opus 5 (high)": {
     "description": {
       "ko": "Claude Pro 사용자용 모델 또는 그와 동급",
       "en": "For Claude Pro users or an equivalent model"
-    }
+    },
+    "knowledgeCutoff": "2026-05"
   },
   "Claude Fable 5.1 (high)": {
     "description": {
       "ko": "Claude Max 사용자용 모델 또는 그와 동급",
       "en": "For Claude Max users or an equivalent model"
-    }
+    },
+    "knowledgeCutoff": "2026-06"
   },
   "Gemini 3.1 Pro (high)": {
     "description": {
       "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
       "en": "Available to both free and paid Gemini users"
-    }
+    },
+    "knowledgeCutoff": "2025-01"
   },
   "Gemini 3.1 Pro (low)": {
     "description": {
       "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
       "en": "Available to both free and paid Gemini users"
-    }
+    },
+    "knowledgeCutoff": "2025-01"
   },
   "Gemini 3.8 Flash (high)": {
     "description": {
       "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
       "en": "Available to both free and paid Gemini users"
-    }
+    },
+    "knowledgeCutoff": "2026-03"
   },
   "Gemini 3.8 Flash (low)": {
     "description": {
       "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
       "en": "Available to both free and paid Gemini users"
-    }
+    },
+    "knowledgeCutoff": "2026-03"
   },
   "Gemini 3.5 Flash-Lite (high)": {
     "description": {
       "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
       "en": "Available to both free and paid Gemini users"
-    }
+    },
+    "knowledgeCutoff": "2026-03"
   },
   "Gemini 3.5 Flash-Lite (minimal)": {
     "description": {
       "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
       "en": "Available to both free and paid Gemini users"
-    }
+    },
+    "knowledgeCutoff": "2026-03"
   },
   "DeepSeek V4 Flash 0731 (None)": {
     "supportsVision": false,
     "description": {
       "ko": "별도의 유료 DeepSeek 요금제 없음",
       "en": "No separate paid DeepSeek subscription plan"
-    }
+    },
+    "knowledgeCutoff": "2025-05"
   },
   "DeepSeek V4 Flash 0731 (Max)": {
     "supportsVision": false,
     "description": {
       "ko": "별도의 유료 DeepSeek 요금제 없음",
       "en": "No separate paid DeepSeek subscription plan"
-    }
+    },
+    "knowledgeCutoff": "2025-05"
   },
   "Solar Pro 3 (0126, high)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-03"
   },
   "Solar Pro 3 (0126, low)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-03"
   },
   "GLM-5.2 (Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2026-02"
   },
   "GLM-5.2 (Non-Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2026-02"
   },
   "Motif 12.7B (Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": null
   },
   "Solar Pro 4 (xhigh)": {
     "supportsVision": false
   },
   "Solar Pro 4": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2026-02"
   },
   "Solar Pro 4 (max)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2026-02"
   },
   "EXAONE 4.0 32B (Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2024-11"
   },
   "EXAONE 4.0 32B (Non-Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2024-11"
   },
   "HyperCLOVAX SEED Think 32B": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-05"
   },
   "HyperCLOVAX SEED Think 32B (Non-Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-05"
   },
   "K-EXAONE 2.0 (Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-05"
   },
   "K-EXAONE 2.0 (Non-Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2025-05"
   },
   "DeepSeek V4 Pro 0813 (None)": {
     "supportsVision": false,
     "description": {
       "ko": "별도의 유료 DeepSeek 요금제 없음",
       "en": "No separate paid DeepSeek subscription plan"
-    }
+    },
+    "knowledgeCutoff": "2025-05"
   },
   "DeepSeek V4 Pro 0813 (Max)": {
     "supportsVision": false,
     "description": {
       "ko": "별도의 유료 DeepSeek 요금제 없음",
       "en": "No separate paid DeepSeek subscription plan"
-    }
+    },
+    "knowledgeCutoff": "2025-05"
   },
   "Motif 3 (Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2026-03"
   },
   "Motif 3 (Non-Thinking)": {
-    "supportsVision": false
+    "supportsVision": false,
+    "knowledgeCutoff": "2026-03"
+  },
+  "GPT-6 Astra (low)": {
+    "knowledgeCutoff": "2026-04"
+  },
+  "GPT-6 Sol (high)": {
+    "knowledgeCutoff": "2026-04"
+  },
+  "GPT-6 Sol (none)": {
+    "knowledgeCutoff": null
+  },
+  "GPT-6 Terra (high)": {
+    "knowledgeCutoff": null
+  },
+  "GPT-6 Terra (none)": {
+    "knowledgeCutoff": null
+  },
+  "GPT-6 Luna (high)": {
+    "knowledgeCutoff": null
+  },
+  "GPT-6 Luna (none)": {
+    "knowledgeCutoff": null
+  },
+  "GPT-5.6 Sol (max*)": {
+    "knowledgeCutoff": "2026-02"
+  },
+  "GPT-5.6 Sol (none)": {
+    "knowledgeCutoff": "2026-02"
+  },
+  "GPT-5.6 Terra (max*)": {
+    "knowledgeCutoff": "2026-02"
+  },
+  "GPT-5.6 Terra (high)": {
+    "knowledgeCutoff": "2026-02"
+  },
+  "GPT-5.6 Terra Pro (high)": {
+    "knowledgeCutoff": "2026-02"
+  },
+  "GPT-5.6 Terra (none)": {
+    "knowledgeCutoff": "2026-02"
+  },
+  "GPT-5.6 Luna (max*)": {
+    "knowledgeCutoff": "2026-02"
+  },
+  "GPT-5.6 Luna (high)": {
+    "knowledgeCutoff": "2026-02"
+  },
+  "GPT-5.6 Luna Pro (high)": {
+    "knowledgeCutoff": "2026-02"
+  },
+  "GPT-5.6 Luna (none)": {
+    "knowledgeCutoff": "2026-02"
+  },
+  "GPT-5.5 (xhigh*)": {
+    "knowledgeCutoff": "2025-12"
+  },
+  "GPT-5.5 (high)": {
+    "knowledgeCutoff": "2025-12"
+  },
+  "GPT-5.5 (none)": {
+    "knowledgeCutoff": "2025-12"
+  },
+  "GPT-5.5 Instant": {
+    "knowledgeCutoff": null
+  },
+  "GPT-5.4 (xhigh*)": {
+    "knowledgeCutoff": "2025-08"
+  },
+  "GPT-5.4 (high)": {
+    "knowledgeCutoff": "2025-08"
+  },
+  "GPT-5.4 (none)": {
+    "knowledgeCutoff": "2025-08"
+  },
+  "GPT-5.4 mini (xhigh)": {
+    "knowledgeCutoff": "2025-08"
+  },
+  "GPT-5.4 mini (none)": {
+    "knowledgeCutoff": "2025-08"
+  },
+  "GPT-5.4 nano (xhigh)": {
+    "knowledgeCutoff": "2025-08"
+  },
+  "GPT-5.4 nano (none)": {
+    "knowledgeCutoff": "2025-08"
+  },
+  "GPT-5.2 (xhigh)": {
+    "knowledgeCutoff": "2025-08"
+  },
+  "GPT-5.2 (Instant)": {
+    "knowledgeCutoff": "2025-08"
+  },
+  "GPT-5.1 (high)": {
+    "knowledgeCutoff": "2024-09"
+  },
+  "GPT-5.2 Codex": {
+    "knowledgeCutoff": "2025-08"
+  },
+  "GPT-5.1 Codex": {
+    "knowledgeCutoff": "2024-09"
+  },
+  "GPT-5.1 Chat": {
+    "knowledgeCutoff": "2024-09"
+  },
+  "GPT-5 mini (high)": {
+    "knowledgeCutoff": "2024-05"
+  },
+  "GPT-5 nano (high)": {
+    "knowledgeCutoff": "2024-05"
+  },
+  "o1 (high)": {
+    "knowledgeCutoff": "2023-10"
+  },
+  "o3 (high)": {
+    "knowledgeCutoff": "2024-06"
+  },
+  "o4-mini (high)": {
+    "knowledgeCutoff": "2024-06"
+  },
+  "GPT-4.1": {
+    "knowledgeCutoff": "2024-06"
+  },
+  "GPT-4.1 mini": {
+    "knowledgeCutoff": "2024-06"
+  },
+  "GPT-4.1 nano": {
+    "knowledgeCutoff": "2024-06"
+  },
+  "GPT-4o": {
+    "knowledgeCutoff": "2023-10"
+  },
+  "GPT-4o mini": {
+    "knowledgeCutoff": "2023-10"
+  },
+  "Claude Fable 5 (high)": {
+    "knowledgeCutoff": "2026-01"
+  },
+  "Claude Opus 4.8": {
+    "knowledgeCutoff": "2026-01"
+  },
+  "Claude Opus 4.8 (high)": {
+    "knowledgeCutoff": "2026-01"
+  },
+  "Claude Opus 4.7": {
+    "knowledgeCutoff": "2026-01"
+  },
+  "Claude Opus 4.7 (high)": {
+    "knowledgeCutoff": "2026-01"
+  },
+  "Claude Opus 4.7 (max*)": {
+    "knowledgeCutoff": "2026-01"
+  },
+  "Claude Opus 4.5 (32K Thinking)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Claude Opus 4.5": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Claude Sonnet 4.6": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Claude Sonnet 4.6 (high)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Claude Sonnet 4.5 (32K Thinking)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Claude Sonnet 4.5": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Claude Haiku 4.5 (32K Thinking)": {
+    "knowledgeCutoff": "2025-02"
+  },
+  "Claude Haiku 4.5": {
+    "knowledgeCutoff": "2025-02"
+  },
+  "Gemini 3.1 Flash-Lite (Preview, high)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 3.1 Flash-Lite (Preview, minimal)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 3.1 Flash-Lite (high)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 3.1 Flash-Lite (minimal)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 3 Pro (high)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 3 Pro (low)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 2.5 Pro (32K Thinking)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 3.5 Flash (high)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 3.5 Flash (minimal)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 3.6 Flash (high)": {
+    "knowledgeCutoff": "2026-03"
+  },
+  "Gemini 3.6 Flash (minimal)": {
+    "knowledgeCutoff": "2026-03"
+  },
+  "Gemini 3.7 Flash (high)": {
+    "knowledgeCutoff": "2026-03"
+  },
+  "Gemini 3.7 Flash (low)": {
+    "knowledgeCutoff": "2026-03"
+  },
+  "Gemini 3 Flash (high)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 3 Flash (minimal)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 2.5 Flash (2025-09 Preview, 24K Thinking)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 2.5 Flash (2025-09 Preview, Non-Thinking)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 2.5 Flash Lite (2025-09 Preview, 24K Thinking)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 2.5 Flash Lite (2025-09 Preview, Non-Thinking)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemini 2.0 Flash": {
+    "knowledgeCutoff": "2024-08"
+  },
+  "Gemini 2.0 Flash Lite": {
+    "knowledgeCutoff": "2024-08"
+  },
+  "DeepSeek V4 Flash Vision Exp (None)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "DeepSeek V4 Flash Vision Exp (Max)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Grok 4": {
+    "knowledgeCutoff": "2024-11"
+  },
+  "Grok 4 Fast (Thinking)": {
+    "knowledgeCutoff": null
+  },
+  "Grok 4.1 Fast (Thinking)": {
+    "knowledgeCutoff": null
+  },
+  "Grok 4.1 Fast (Non-Thinking)": {
+    "knowledgeCutoff": null
+  },
+  "Grok 4.20 Multi-Agent Beta (4 Agents)": {
+    "knowledgeCutoff": "2025-09"
+  },
+  "Grok 4.3 (none)": {
+    "knowledgeCutoff": "2025-12"
+  },
+  "Grok 4.3 (high)": {
+    "knowledgeCutoff": "2025-12"
+  },
+  "Grok 4.5 (high)": {
+    "knowledgeCutoff": "2026-02"
+  },
+  "Kimi K2.5 (Thinking)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Kimi K2.5 (Non-Thinking)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Kimi K2.6 (Thinking)": {
+    "knowledgeCutoff": "2025-04"
+  },
+  "Kimi K2.6 (Non-Thinking)": {
+    "knowledgeCutoff": "2025-04"
+  },
+  "Qwen3.5 397B (Non-Thinking)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Qwen3.5 397B (Thinking)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Qwen3.5 27B (Non-Thinking)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Qwen3.5 27B (Thinking)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Qwen3.5 35B A3B (Non-Thinking)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Qwen3.5 35B A3B (Thinking)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Qwen3.5 9B (Non-Thinking)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Qwen3.5 9B (Thinking)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Kanana-o 9.8B": {
+    "knowledgeCutoff": "2024-06"
+  },
+  "MiniMax M3 (Non-Thinking)": {
+    "knowledgeCutoff": "2026-01"
+  },
+  "MiniMax M3 (Thinking)": {
+    "knowledgeCutoff": "2026-01"
+  },
+  "Muse Spark 1.3 (high)": {
+    "knowledgeCutoff": "2026-08"
+  },
+  "Muse Spark 1.3 (minimal)": {
+    "knowledgeCutoff": "2026-08"
+  },
+  "Muse Spark 1.2 (high)": {
+    "knowledgeCutoff": "2026-07"
+  },
+  "Muse Spark 1.2 (minimal)": {
+    "knowledgeCutoff": "2026-07"
+  },
+  "Qwen3.6 Plus (Non-Thinking)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Qwen3.6 Plus (Thinking)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Qwen3.8 Max (xhigh)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Qwen3.6 27B (Non-Thinking)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Qwen3.6 27B (Thinking)": {
+    "knowledgeCutoff": "2025-05"
+  },
+  "Gemma 4 26B A4B": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemma 4 26B A4B (high)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemma 4 31B": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "Gemma 4 31B (high)": {
+    "knowledgeCutoff": "2025-01"
+  },
+  "GLM-5.3 Flash (high)": {
+    "knowledgeCutoff": "2026-02"
+  },
+  "Mistral Small 4 (Thinking)": {
+    "knowledgeCutoff": "2024-11"
+  },
+  "Mistral Small 4 (Non-Thinking)": {
+    "knowledgeCutoff": "2024-11"
+  },
+  "모의 모델": {
+    "knowledgeCutoff": null
   }
 }

@@ -3,13 +3,15 @@
  * @brief 서비스 워커 - 기본 캐싱 전략
  */
 
-const CACHE_NAME = 'csat-llm-v1'
-const BASE_PATH = '/2026-CSAT'
+const CACHE_NAME = 'csat-benchmark-v1'
+const BASE_PATH = '/CSAT-benchmark'
 
 // 캐시할 정적 에셋
 const STATIC_ASSETS = [
   `${BASE_PATH}/`,
   `${BASE_PATH}/index.html`,
+  `${BASE_PATH}/benchmarks.json`,
+  `${BASE_PATH}/model_metadata.json`,
   `${BASE_PATH}/all_results.json`,
   `${BASE_PATH}/token_usage.json`
 ]

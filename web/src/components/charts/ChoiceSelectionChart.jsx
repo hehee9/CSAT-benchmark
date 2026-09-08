@@ -10,7 +10,7 @@ import {
 } from 'recharts'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/hooks/useTheme'
-import { useExportImage } from '@/hooks/useExportImage'
+import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
 import { BenchmarkNote, ExportButton } from '@/components/common'
 
 /**
@@ -87,7 +87,10 @@ function CustomTooltip({ active, payload, label, t }) {
 export default function ChoiceSelectionChart({ data, title }) {
   const { t } = useTranslation()
   const { isDark: darkMode } = useTheme()
-  const { ref, exportImage } = useExportImage()
+  const { ref, exportImage, isExporting } = useExportImage({
+    exportWidth: README_EXPORT_WIDTH,
+    exportProfile: 'choiceSelection'
+  })
 
   // 모바일 감지
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
@@ -106,7 +109,7 @@ export default function ChoiceSelectionChart({ data, title }) {
   }
 
   // 문항 수에 따른 동적 높이 (각 문항당 80px로 증가)
-  const chartHeight = Math.max(400, data.length * 80 + 100)
+  const chartHeight = Math.max(400, data.length * (isExporting ? 150 : 80) + 100)
 
   // 다크모드용 색상
   const gridColor = darkMode ? '#374151' : '#e5e7eb'
@@ -121,10 +124,10 @@ export default function ChoiceSelectionChart({ data, title }) {
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between mb-4">
         {title && (
-          <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+          <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
         )}
         <div className="flex items-start gap-2">
-          <span className="hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
+          <span className="export-role-watermark hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
           <ExportButton
             onClick={() => exportImage(`${t('export.choiceRate')}.png`)}
             exportKey="choice-selection"
@@ -136,7 +139,7 @@ export default function ChoiceSelectionChart({ data, title }) {
         <BarChart
           data={data}
           layout="vertical"
-          margin={{ top: 20, right: 30, left: isMobile ? 10 : 60, bottom: 20 }}
+          margin={{ top: 20, right: isExporting ? 80 : 30, left: isMobile ? 10 : 60, bottom: 20 }}
           barCategoryGap="20%"
         >
           <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={gridColor} />
@@ -144,7 +147,7 @@ export default function ChoiceSelectionChart({ data, title }) {
             type="number"
             domain={[0, 100]}
             tickFormatter={(v) => `${v}%`}
-            tick={{ fill: tickColor }}
+            tick={{ fontSize: isExporting ? 24 : 16, fill: tickColor, className: 'export-role-axis-value' }}
             axisLine={{ stroke: gridColor }}
             tickLine={{ stroke: gridColor }}
           />
@@ -152,33 +155,33 @@ export default function ChoiceSelectionChart({ data, title }) {
             type="category"
             dataKey="question"
             tickFormatter={(v) => `${v}`}
-            width={50}
-            tick={{ fill: tickColor }}
+            width={isExporting ? 80 : 50}
+            tick={{ fontSize: isExporting ? 24 : 16, fill: tickColor, className: 'export-role-axis-label' }}
             axisLine={false}
             tickLine={false}
           />
           <Tooltip content={<CustomTooltip t={t} />} cursor={{ fill: cursorColor }} />
           {/* 5개의 Bar - 각 선지별 */}
-          <Bar dataKey="choice1Pct" name="1" shape={CustomBarShape} barSize={10} isAnimationActive={false}>
-            <LabelList dataKey="choice1Pct" position="right" formatter={(v) => v > 0 ? `${v.toFixed(0)}` : ''} style={{ fontSize: 10, fill: labelColor }} />
+          <Bar dataKey="choice1Pct" name="1" shape={CustomBarShape} barSize={isExporting ? 20 : 10} isAnimationActive={false}>
+            <LabelList className="export-role-value" dataKey="choice1Pct" position="right" formatter={(v) => v > 0 ? `${v.toFixed(0)}` : ''} style={{ fontSize: isExporting ? 24 : 10, fill: labelColor }} />
           </Bar>
-          <Bar dataKey="choice2Pct" name="2" shape={CustomBarShape} barSize={10} isAnimationActive={false}>
-            <LabelList dataKey="choice2Pct" position="right" formatter={(v) => v > 0 ? `${v.toFixed(0)}` : ''} style={{ fontSize: 10, fill: labelColor }} />
+          <Bar dataKey="choice2Pct" name="2" shape={CustomBarShape} barSize={isExporting ? 20 : 10} isAnimationActive={false}>
+            <LabelList className="export-role-value" dataKey="choice2Pct" position="right" formatter={(v) => v > 0 ? `${v.toFixed(0)}` : ''} style={{ fontSize: isExporting ? 24 : 10, fill: labelColor }} />
           </Bar>
-          <Bar dataKey="choice3Pct" name="3" shape={CustomBarShape} barSize={10} isAnimationActive={false}>
-            <LabelList dataKey="choice3Pct" position="right" formatter={(v) => v > 0 ? `${v.toFixed(0)}` : ''} style={{ fontSize: 10, fill: labelColor }} />
+          <Bar dataKey="choice3Pct" name="3" shape={CustomBarShape} barSize={isExporting ? 20 : 10} isAnimationActive={false}>
+            <LabelList className="export-role-value" dataKey="choice3Pct" position="right" formatter={(v) => v > 0 ? `${v.toFixed(0)}` : ''} style={{ fontSize: isExporting ? 24 : 10, fill: labelColor }} />
           </Bar>
-          <Bar dataKey="choice4Pct" name="4" shape={CustomBarShape} barSize={10} isAnimationActive={false}>
-            <LabelList dataKey="choice4Pct" position="right" formatter={(v) => v > 0 ? `${v.toFixed(0)}` : ''} style={{ fontSize: 10, fill: labelColor }} />
+          <Bar dataKey="choice4Pct" name="4" shape={CustomBarShape} barSize={isExporting ? 20 : 10} isAnimationActive={false}>
+            <LabelList className="export-role-value" dataKey="choice4Pct" position="right" formatter={(v) => v > 0 ? `${v.toFixed(0)}` : ''} style={{ fontSize: isExporting ? 24 : 10, fill: labelColor }} />
           </Bar>
-          <Bar dataKey="choice5Pct" name="5" shape={CustomBarShape} barSize={10} isAnimationActive={false}>
-            <LabelList dataKey="choice5Pct" position="right" formatter={(v) => v > 0 ? `${v.toFixed(0)}` : ''} style={{ fontSize: 10, fill: labelColor }} />
+          <Bar dataKey="choice5Pct" name="5" shape={CustomBarShape} barSize={isExporting ? 20 : 10} isAnimationActive={false}>
+            <LabelList className="export-role-value" dataKey="choice5Pct" position="right" formatter={(v) => v > 0 ? `${v.toFixed(0)}` : ''} style={{ fontSize: isExporting ? 24 : 10, fill: labelColor }} />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
 
       {/* 범례 */}
-      <div className="flex flex-wrap gap-4 mt-4 text-sm text-gray-600 dark:text-gray-400">
+      <div className="export-role-legend flex flex-wrap gap-4 mt-4 text-sm text-gray-600 dark:text-gray-400">
         <div className="flex items-center gap-1">
           <div className="w-4 h-4 rounded" style={{ backgroundColor: darkMode ? 'hsl(120, 60%, 40%)' : 'hsl(120, 50%, 50%)' }} />
           <span>{t('choice.legend.correct')}</span>

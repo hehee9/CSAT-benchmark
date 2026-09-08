@@ -1,18 +1,18 @@
 /**
  * @file CostScatterChart.jsx
- * @brief 비용 vs 성능 산점도 차트 컴포넌트
+ * @brief 상세 분석 지표 산점도 차트 컴포넌트
  */
 
-import { useState, useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
-  ScatterChart,
-  Scatter,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
+  ReferenceArea,
   ReferenceLine,
-  ReferenceArea
+  ResponsiveContainer,
+  Scatter,
+  ScatterChart,
+  Tooltip,
+  XAxis,
+  YAxis
 } from 'recharts'
 import { useTranslation } from 'react-i18next'
 import { getModelColor } from '@/utils/colorUtils'
@@ -20,6 +20,16 @@ import { useTheme } from '@/hooks/useTheme'
 import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
 import { BenchmarkNote, ExportButton } from '@/components/common'
 import { formatModelDisplayName } from '@/utils/modelMeta'
+import {
+  ANALYSIS_METRIC_IDS,
+  DEFAULT_ANALYSIS_X,
+  DEFAULT_ANALYSIS_Y,
+  formatAnalysisMetricValue,
+  getAnalysisMetric,
+  getAnalysisMetricDirection,
+  getAnalysisPoints,
+  isAnalysisMetricLog
+} from '@/utils/analysisMetrics'
 
 const COST_POINT_RADIUS = 7
 const EXPORT_LABEL_GAP = 6
@@ -165,6 +175,22 @@ function _getLabelPlacement(record, angle) {
 }
 
 /**
+ * @brief 각도별 라벨 배치를 캐시해 반환
+ * @param {Object} record - 라벨 측정 정보
+ * @param {number} angle - 배치 각도
+ * @return {Object} 캐시된 라벨 배치
+ */
+function _getCachedLabelPlacement(record, angle) {
+  const cacheKey = Math.round(angle * 10) / 10
+  const cachedPlacement = record.placementCache.get(cacheKey)
+  if (cachedPlacement) return cachedPlacement
+
+  const placement = _getLabelPlacement(record, angle)
+  record.placementCache.set(cacheKey, placement)
+  return placement
+}
+
+/**
  * @brief 라벨 후보의 경계·충돌·각도 점수 계산
  * @param {Object} record - 현재 라벨
  * @param {Object} placement - 검사할 배치
@@ -176,21 +202,14 @@ function _getPlacementScore(record, placement, records, bounds) {
   let collisionOverlap = 0
 
   records.forEach(other => {
-    if (other !== record) {
-      collisionOverlap += _getBoxOverlapArea(
-        placement.box,
-        other.placement.box,
-        EXPORT_LABEL_COLLISION_PADDING
-      )
+    if (other === record) return
 
-      const pointRadius = COST_POINT_RADIUS + EXPORT_LABEL_POINT_PADDING
-      collisionOverlap += _getBoxOverlapArea(placement.box, {
-        left: other.pointX - pointRadius,
-        right: other.pointX + pointRadius,
-        top: other.pointY - pointRadius,
-        bottom: other.pointY + pointRadius
-      })
-    }
+    collisionOverlap += _getBoxOverlapArea(
+      placement.box,
+      other.placement.box,
+      EXPORT_LABEL_COLLISION_PADDING
+    )
+    collisionOverlap += _getBoxOverlapArea(placement.box, other.pointBox)
   })
 
   return {
@@ -217,7 +236,7 @@ function _comparePlacementScores(first, second) {
 }
 
 /**
- * @brief 전체 360도에서 가장 좋은 라벨 각도 탐색
+ * @brief 전체 후보에서 가장 좋은 라벨 배치 탐색
  * @param {Object} record - 현재 라벨
  * @param {Object[]} records - 전체 라벨 목록
  * @param {Object} bounds - 차트 경계
@@ -227,20 +246,19 @@ function _findBestLabelPlacement(record, records, bounds) {
   let bestPlacement = null
   let bestScore = null
 
-  for (let angle = 0; angle < 360; angle += EXPORT_LABEL_COARSE_STEP) {
-    const placement = _getLabelPlacement(record, angle)
+  record.coarsePlacements.forEach(placement => {
     const score = _getPlacementScore(record, placement, records, bounds)
     if (!bestScore || _comparePlacementScores(score, bestScore) < 0) {
       bestPlacement = placement
       bestScore = score
     }
-  }
+  })
 
   const coarseAngle = bestPlacement.angle
   const fineSteps = Math.round(EXPORT_LABEL_FINE_RANGE / EXPORT_LABEL_FINE_STEP)
   for (let step = -fineSteps; step <= fineSteps; step += 1) {
     const angle = coarseAngle + step * EXPORT_LABEL_FINE_STEP
-    const placement = _getLabelPlacement(record, angle)
+    const placement = _getCachedLabelPlacement(record, angle)
     const score = _getPlacementScore(record, placement, records, bounds)
     if (_comparePlacementScores(score, bestScore) < 0) {
       bestPlacement = placement
@@ -252,22 +270,27 @@ function _findBestLabelPlacement(record, records, bounds) {
 }
 
 /**
- * @brief 라벨 주변의 다른 모델 밀도 계산
- * @param {Object} record - 현재 라벨
+ * @brief 모든 라벨의 주변 모델 밀도를 한 번 계산
  * @param {Object[]} records - 전체 라벨 목록
- * @return {number} 주변 모델 수
+ * @return {Map<Object, number>} 라벨별 주변 모델 수
  */
-function _getLabelDensity(record, records) {
-  return records.reduce((density, other) => {
-    if (other === record) return density
-    const distance = Math.hypot(record.pointX - other.pointX, record.pointY - other.pointY)
-    const threshold = Math.max(record.width, other.width) / 2 + 48
-    return density + (distance < threshold ? 1 : 0)
-  }, 0)
+function _getLabelDensities(records) {
+  const densities = new Map(records.map(record => [record, 0]))
+  records.forEach((record, index) => {
+    records.slice(index + 1).forEach(other => {
+      const distance = Math.hypot(record.pointX - other.pointX, record.pointY - other.pointY)
+      const threshold = Math.max(record.width, other.width) / 2 + 48
+      if (distance < threshold) {
+        densities.set(record, densities.get(record) + 1)
+        densities.set(other, densities.get(other) + 1)
+      }
+    })
+  })
+  return densities
 }
 
 /**
- * @brief 비용 산점도 라벨을 고정 간격으로 360도 재배치
+ * @brief 상세 분석 산점도 라벨을 360도 재배치
  * @param {HTMLElement} rootElement - 이미지 내보내기 루트
  * @return {function|undefined} 원래 좌표 복원 함수
  */
@@ -294,15 +317,38 @@ function _prepareCostScatterLabels(rootElement) {
   })
 
   let records = []
+  const originalSvgState = {
+    width: svg.getAttribute('width'),
+    height: svg.getAttribute('height'),
+    viewBox: svg.getAttribute('viewBox'),
+    style: svg.style.cssText
+  }
+  const responsiveContainer = svg.closest('.recharts-responsive-container')
+  const chartWrapper = svg.closest('.recharts-wrapper')
+  const originalResponsiveMarginBottom = responsiveContainer?.style.marginBottom
+  const originalWrapperOverflow = chartWrapper?.style.overflow
   const restoreLabels = () => {
     records.forEach((record, index) => {
-      record.element.setAttribute('x', record.originalX)
-      record.element.setAttribute('y', record.originalY)
+      if (record.originalX === null) record.element.removeAttribute('x')
+      else record.element.setAttribute('x', record.originalX)
+      if (record.originalY === null) record.element.removeAttribute('y')
+      else record.element.setAttribute('y', record.originalY)
+      if (record.originalTextAnchor === null) record.element.removeAttribute('text-anchor')
+      else record.element.setAttribute('text-anchor', record.originalTextAnchor)
       record.element.style.display = originalDisplays[index]
     })
     labelElements.slice(records.length).forEach((element, index) => {
       element.style.display = originalDisplays[records.length + index]
     })
+    if (originalSvgState.width === null) svg.removeAttribute('width')
+    else svg.setAttribute('width', originalSvgState.width)
+    if (originalSvgState.height === null) svg.removeAttribute('height')
+    else svg.setAttribute('height', originalSvgState.height)
+    if (originalSvgState.viewBox === null) svg.removeAttribute('viewBox')
+    else svg.setAttribute('viewBox', originalSvgState.viewBox)
+    svg.style.cssText = originalSvgState.style
+    if (responsiveContainer) responsiveContainer.style.marginBottom = originalResponsiveMarginBottom
+    if (chartWrapper) chartWrapper.style.overflow = originalWrapperOverflow
   }
 
   try {
@@ -314,18 +360,28 @@ function _prepareCostScatterLabels(rootElement) {
       const anchorX = Number(originalX)
       const anchorY = Number(originalY)
       const box = element.getBBox()
+      const pointRadius = COST_POINT_RADIUS + EXPORT_LABEL_POINT_PADDING
 
       return {
         element,
         index,
         originalX,
         originalY,
+        originalTextAnchor: element.getAttribute('text-anchor'),
         pointX,
         pointY,
         width: box.width,
         height: box.height,
         anchorOffsetX: box.x + box.width / 2 - anchorX,
         anchorOffsetY: box.y + box.height / 2 - anchorY,
+        pointBox: {
+          left: pointX - pointRadius,
+          right: pointX + pointRadius,
+          top: pointY - pointRadius,
+          bottom: pointY + pointRadius
+        },
+        placementCache: new Map(),
+        coarsePlacements: [],
         placement: null
       }
     })
@@ -341,12 +397,22 @@ function _prepareCostScatterLabels(rootElement) {
       return undefined
     }
 
+    const labelPadding = Math.max(...records.map(record => record.width))
+    bounds.left -= labelPadding
+    bounds.right += labelPadding
+    bounds.top -= labelPadding
+    bounds.bottom += labelPadding
+
     records.forEach(record => {
-      record.placement = _getLabelPlacement(record, EXPORT_LABEL_DEFAULT_ANGLE)
+      for (let angle = 0; angle < 360; angle += EXPORT_LABEL_COARSE_STEP) {
+        record.coarsePlacements.push(_getCachedLabelPlacement(record, angle))
+      }
+      record.placement = _getCachedLabelPlacement(record, EXPORT_LABEL_DEFAULT_ANGLE)
     })
 
+    const densities = _getLabelDensities(records)
     const optimizationOrder = [...records].sort((first, second) => {
-      const densityDifference = _getLabelDensity(second, records) - _getLabelDensity(first, records)
+      const densityDifference = densities.get(second) - densities.get(first)
       return densityDifference || first.index - second.index
     })
 
@@ -362,6 +428,26 @@ function _prepareCostScatterLabels(rootElement) {
       if (!changed) break
     }
 
+    const left = Math.min(viewBox?.x || 0, ...records.map(record => record.placement.box.left - EXPORT_LABEL_BOUNDARY_PADDING))
+    const top = Math.min(viewBox?.y || 0, ...records.map(record => record.placement.box.top - EXPORT_LABEL_BOUNDARY_PADDING))
+    const right = Math.max((viewBox?.x || 0) + width, ...records.map(record => record.placement.box.right + EXPORT_LABEL_BOUNDARY_PADDING))
+    const bottom = Math.max((viewBox?.y || 0) + height, ...records.map(record => record.placement.box.bottom + EXPORT_LABEL_BOUNDARY_PADDING))
+    const expandedWidth = right - left
+    const expandedHeight = bottom - top
+    if (expandedWidth > width || expandedHeight > height) {
+      svg.setAttribute('width', String(expandedWidth))
+      svg.setAttribute('height', String(expandedHeight))
+      svg.setAttribute('viewBox', `${left} ${top} ${expandedWidth} ${expandedHeight}`)
+      svg.style.width = `${expandedWidth}px`
+      svg.style.height = `${expandedHeight}px`
+      svg.style.overflow = 'visible'
+      if (chartWrapper) chartWrapper.style.overflow = 'visible'
+      if (responsiveContainer && expandedHeight > height) {
+        responsiveContainer.style.marginBottom = `${expandedHeight - height}px`
+      }
+
+    }
+
     records.forEach(record => {
       record.element.setAttribute('x', String(record.placement.x))
       record.element.setAttribute('y', String(record.placement.y))
@@ -375,37 +461,171 @@ function _prepareCostScatterLabels(rootElement) {
 }
 
 /**
- * @brief 커스텀 툴팁 컴포넌트
- * @param {Object} props - { active, payload, t }
+ * @brief 지표 표시명 반환
+ * @param {string} metric - 지표 식별자
+ * @param {Function} t - 번역 함수
+ * @return {string} 표시명
  */
-function CustomTooltip({ active, payload, t }) {
+function _getMetricLabel(metric, t) {
+  return t(getAnalysisMetric(metric).labelKey)
+}
+
+/**
+ * @brief 지표 단위 반환
+ * @param {string} metric - 지표 식별자
+ * @param {Function} t - 번역 함수
+ * @return {string} 표시 단위
+ */
+function _getMetricUnit(metric, t) {
+  return t(getAnalysisMetric(metric).unitKey)
+}
+
+/**
+ * @brief 축 눈금용 지표 값 문자열 변환
+ * @param {string} metric - 지표 식별자
+ * @param {number} value - 지표 값
+ * @param {string} locale - 숫자 표시 언어
+ * @return {string} 눈금 문자열
+ */
+function _formatAxisTick(metric, value, locale) {
+  if (metric === 'score') return value.toLocaleString(locale)
+  if (metric === 'cost') return `$${Number(value.toPrecision(12))}`
+  if (metric === 'time') return Number((value / 3600).toPrecision(12)).toLocaleString(locale, { maximumFractionDigits: 6 })
+  if (metric === 'tokens') {
+    if (value >= 1000000) return `${(value / 1000000).toLocaleString(locale, { maximumFractionDigits: 1 })}M`
+    if (value >= 1000) return `${(value / 1000).toLocaleString(locale, { maximumFractionDigits: 1 })}K`
+    return value.toLocaleString(locale, { maximumFractionDigits: 0 })
+  }
+
+  return formatAnalysisMetricValue(metric, value, locale)
+}
+
+/**
+ * @brief 선형 축 눈금과 범위 계산
+ * @param {number[]} values - 지표 값 목록
+ * @param {number} preferredMax - 우선 사용할 최댓값
+ * @return {Object} 선형 범위와 눈금
+ */
+function _getLinearRange(values, preferredMax) {
+  const dataMin = Math.min(...values)
+  const max = Math.max(...values, preferredMax)
+  const rawInterval = (max - dataMin || 50) / 5
+  const magnitude = 10 ** Math.floor(Math.log10(rawInterval))
+  const residual = rawInterval / magnitude
+  const interval = residual <= 1.5
+    ? magnitude
+    : residual <= 3
+      ? 2 * magnitude
+      : residual <= 7
+        ? 5 * magnitude
+        : 10 * magnitude
+  const min = Math.max(0, Math.min(Math.floor(dataMin / interval) * interval, max - interval))
+  const ticks = [min]
+  for (let tick = min + interval; tick < max; tick += interval) ticks.push(tick)
+
+  return { min, max, ticks }
+}
+
+/**
+ * @brief 로그 축 범위와 주요 눈금 계산
+ * @param {number[]} values - 양수 지표 값 목록
+ * @return {Object} 로그 범위와 눈금
+ */
+function _getLogRange(values) {
+  const lowerValue = Math.min(...values) * 0.9
+  const upperValue = Math.max(...values) * 1.1
+  const lowerMagnitude = 10 ** Math.floor(Math.log10(lowerValue))
+  const upperMagnitude = 10 ** Math.floor(Math.log10(upperValue))
+  const min = [5, 2, 1].find(value => value <= lowerValue / lowerMagnitude) * lowerMagnitude
+  const max = [1, 2, 5, 10].find(value => value >= upperValue / upperMagnitude) * upperMagnitude
+  const ticks = [min]
+  for (let exponent = Math.ceil(Math.log10(min)); exponent <= Math.floor(Math.log10(max)); exponent += 1) {
+    const tick = 10 ** exponent
+    if (tick > min && tick < max) ticks.push(tick)
+  }
+  ticks.push(max)
+  return { min, max, ticks }
+}
+
+/**
+ * @brief 지표 축 범위 계산
+ * @param {string} metric - 지표 식별자
+ * @param {number[]} values - 지표 값 목록
+ * @param {number} maxScore - 점수 만점
+ * @return {Object} 축 범위와 눈금
+ */
+function _getAxisRange(metric, values, maxScore) {
+  if (metric === 'time') {
+    const range = _getLogRange(values.map(value => value / 3600))
+    return { min: range.min * 3600, max: range.max * 3600, ticks: range.ticks.map(value => value * 3600) }
+  }
+  return isAnalysisMetricLog(metric)
+    ? _getLogRange(values)
+    : _getLinearRange(values, maxScore)
+}
+
+/**
+ * @brief 축 중앙값 계산
+ * @param {string} metric - 지표 식별자
+ * @param {Object} range - 축 범위
+ * @return {number} 4분면 기준값
+ */
+function _getAxisMidpoint(metric, range) {
+  return isAnalysisMetricLog(metric)
+    ? Math.sqrt(range.min * range.max)
+    : (range.min + range.max) / 2
+}
+
+/**
+ * @brief 지표 방향에 따른 4분면 배경색 결정
+ * @param {string} xMetric - X축 지표
+ * @param {string} yMetric - Y축 지표
+ * @param {boolean} xLow - X축 낮은 영역 여부
+ * @param {boolean} yLow - Y축 낮은 영역 여부
+ * @param {boolean} darkMode - 다크모드 여부
+ * @return {Object} 배경색과 투명도
+ */
+function _getQuadrantStyle(xMetric, yMetric, xLow, yLow, darkMode) {
+  const xGood = xLow === (getAnalysisMetricDirection(xMetric) === 'lower')
+  const yGood = yLow === (getAnalysisMetricDirection(yMetric) === 'lower')
+  const favorableCount = Number(xGood) + Number(yGood)
+
+  if (favorableCount === 2) {
+    return { fill: darkMode ? '#22c55e' : '#bbf7d0', fillOpacity: darkMode ? 0.4 : 0.5 }
+  }
+  if (favorableCount === 0) {
+    return { fill: darkMode ? '#ef4444' : '#fecaca', fillOpacity: darkMode ? 0.4 : 0.5 }
+  }
+  return { fill: 'transparent', fillOpacity: 0 }
+}
+
+/**
+ * @brief 커스텀 툴팁 컴포넌트
+ * @param {Object} props - 툴팁 표시 정보
+ */
+function CustomTooltip({ active, payload, t, isRepeatedRun, locale }) {
   if (!active || !payload?.length) return null
 
   const data = payload[0].payload
 
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
+    <div className="w-max whitespace-nowrap bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
       <p className="font-semibold text-gray-800 dark:text-gray-200 mb-2">{formatModelDisplayName(data.model)}</p>
       <div className="space-y-1 text-sm">
         <p className="text-gray-600 dark:text-gray-400">
-          {t('table.score')}: <span className="font-medium">{data.score?.toFixed(1)}</span>{t('common.points')}
+          {t('table.score')}: <span className="font-medium">{formatAnalysisMetricValue('score', data.score, locale)}</span> {t('common.points')}
         </p>
         <p className="text-gray-600 dark:text-gray-400">
-          {t('cost.testCost')}: <span className="font-medium">${data.totalCost?.toFixed(4)}</span>
+          {t(isRepeatedRun ? 'table.averageCost' : 'cost.testCost')}: <span className="font-medium">{formatAnalysisMetricValue('cost', data.totalCost, locale)}</span>
         </p>
-        {data.inputTokens > 0 && (
-          <p className="text-gray-500 dark:text-gray-400 text-xs">
-            {t('cost.inputTokensShort')}: {(data.inputTokens / 1000).toFixed(1)}K {t('cost.tokens')} (${data.inputPrice}{t('cost.perMillion')})
-          </p>
-        )}
-        {data.outputTokens > 0 && (
-          <p className="text-gray-500 dark:text-gray-400 text-xs">
-            {t('cost.outputTokensShort')}: {(data.outputTokens / 1000).toFixed(1)}K {t('cost.tokens')} (${data.outputPrice}{t('cost.perMillion')})
-          </p>
-        )}
-        <hr className="border-gray-200 dark:border-gray-700 my-1" />
+        <p className="text-gray-600 dark:text-gray-400">
+          {t('token.total')}: <span className="font-medium">{formatAnalysisMetricValue('tokens', data.totalTokens, locale)}</span> {t('cost.tokens')}
+        </p>
+        <p className="text-gray-600 dark:text-gray-400">
+          {t('analysis.estimatedTime')}: <span className="font-medium">{formatAnalysisMetricValue('time', data.estimatedSeconds, locale)}</span>
+        </p>
         <p className="text-gray-700 dark:text-gray-300">
-          {t('table.efficiency')}: <span className="font-medium">{data.efficiency?.toFixed(1)}</span>{t('common.points')}
+          {t('table.efficiency')}: <span className="font-medium">{data.efficiency?.toLocaleString(locale, { maximumFractionDigits: 1 }) ?? '-'}</span>{t('common.points')}
         </p>
       </div>
     </div>
@@ -413,106 +633,64 @@ function CustomTooltip({ active, payload, t }) {
 }
 
 /**
- * @brief 나누어 떨어지는 적절한 Y축 범위 계산
- * @param {number} min - 데이터 최솟값
- * @param {number} max - 데이터 최댓값
- * @param {number} tickCount - 원하는 틱 개수 (기본: 5)
- * @return {Object} { min, max, interval }
+ * @brief 처리량 산정 기준 도움말
+ * @param {Object} props - 지표 데이터와 번역 함수
  */
-function getNiceRange(min, max, tickCount = 5) {
-  const range = max - min
-  if (range === 0) {
-    // 모든 값이 동일한 경우
-    return { min: Math.floor(min / 10) * 10, max: Math.ceil(max / 10) * 10 + 10, interval: 10 }
-  }
+function PerformanceHelp({ modelPerformance, t, locale }) {
+  const updatedAt = modelPerformance?.updatedAt
+  const formattedUpdatedAt = updatedAt
+    ? new Date(updatedAt).toLocaleString(locale)
+    : t('analysis.help.unavailable')
 
-  const rawInterval = range / tickCount
-  const magnitude = Math.pow(10, Math.floor(Math.log10(rawInterval)))
-  const residual = rawInterval / magnitude
-
-  let niceInterval
-  if (residual <= 1.5) niceInterval = 1 * magnitude
-  else if (residual <= 3) niceInterval = 2 * magnitude
-  else if (residual <= 7) niceInterval = 5 * magnitude
-  else niceInterval = 10 * magnitude
-
-  const niceMin = Math.floor(min / niceInterval) * niceInterval
-  const niceMax = Math.ceil(max / niceInterval) * niceInterval
-
-  return { min: niceMin, max: niceMax, interval: niceInterval }
+  return (
+    <details className="mt-3 text-sm text-gray-500 dark:text-gray-400" data-export-hide="true">
+      <summary className="cursor-pointer select-none hover:text-gray-700 dark:hover:text-gray-200">
+        {t('analysis.help.title')}
+      </summary>
+      <div className="mt-2 space-y-1 pl-4">
+        <p>{t('analysis.help.method')}</p>
+        <p>{t('analysis.help.selection')}</p>
+        <p>{t('analysis.help.updated')}: {formattedUpdatedAt}</p>
+      </div>
+    </details>
+  )
 }
 
 /**
- * @brief 10진 로그 비용 축의 범위와 눈금 계산
- * @param {number} min - 양수 비용 최솟값
- * @param {number} max - 양수 비용 최댓값
- * @return {Object} 로그 축 범위와 10진 눈금
- */
-function _getLogCostRange(min, max) {
-  const multipliers = [1, 2, 5]
-  const _getLowerBound = (value) => {
-    const magnitude = 10 ** Math.floor(Math.log10(value))
-    const multiplier = [...multipliers].reverse().find(item => item <= value / magnitude)
-    return (multiplier ?? 0.5) * magnitude
-  }
-  const _getUpperBound = (value) => {
-    const magnitude = 10 ** Math.floor(Math.log10(value))
-    const multiplier = multipliers.find(item => item >= value / magnitude)
-    return (multiplier ?? 10) * magnitude
-  }
-
-  // 데이터와 점 라벨이 축 경계에 붙지 않도록 로그 공간에서 10% 여유를 둔다.
-  const minCost = _getLowerBound(min * 0.9)
-  const maxCost = _getUpperBound(max * 1.1)
-  const minExponent = Math.ceil(Math.log10(minCost))
-  const maxExponent = Math.floor(Math.log10(maxCost))
-
-  // 유동 경계와 그 사이의 10진 주요 눈금만 표시해 모바일 가독성을 유지한다.
-  const ticks = [minCost]
-  for (let exponent = minExponent; exponent <= maxExponent; exponent += 1) {
-    const tick = 10 ** exponent
-    if (tick > minCost && tick < maxCost) ticks.push(tick)
-  }
-  ticks.push(maxCost)
-
-  return {
-    min: minCost,
-    max: maxCost,
-    ticks
-  }
-}
-
-/**
- * @brief 로그 축 비용 눈금을 달러 형식으로 표시
- * @param {number} cost - 비용
- * @return {string} 달러 형식 눈금
- */
-function _formatCostTick(cost) {
-  return `$${Number(cost.toPrecision(12))}`
-}
-
-/**
- * @brief 비용 vs 성능 산점도 차트 컴포넌트
- * @param {Object} props - { data, title, height, maxScore }
- * @param {Array} props.data - getCostData() 반환 형식
- * @param {string} props.title - 차트 제목
- * @param {number} props.height - 차트 높이 (기본: 800)
- * @param {number} props.maxScore - 만점 (기본: 450)
+ * @brief 상세 분석 산점도 차트
+ * @param {Object} props - 차트와 지표 선택 상태
+ * @param {Array} props.data - getCostData() 결과
+ * @param {number} props.height - 차트 높이
+ * @param {number} props.maxScore - 점수 만점
+ * @param {boolean} props.isRepeatedRun - 반복 실행 여부
+ * @param {Object|null} props.modelPerformance - 처리량 스냅샷
+ * @param {string} props.xMetric - X축 지표
+ * @param {string} props.yMetric - Y축 지표
+ * @param {Function} props.onXMetricChange - X축 지표 변경 콜백
+ * @param {Function} props.onYMetricChange - Y축 지표 변경 콜백
  */
 export default function CostScatterChart({
-  data,
-  title,
+  data = [],
   height = 800,
-  maxScore = 450
+  maxScore = 450,
+  isRepeatedRun = false,
+  modelPerformance = null,
+  xMetric = DEFAULT_ANALYSIS_X,
+  yMetric = DEFAULT_ANALYSIS_Y,
+  onXMetricChange,
+  onYMetricChange
 }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { isDark: darkMode } = useTheme()
+  const locale = i18n.language === 'en' ? 'en-US' : 'ko-KR'
+  const resolvedXMetric = xMetric
+  const resolvedYMetric = yMetric
   const { ref, exportImage, isExporting } = useExportImage({
     exportWidth: README_EXPORT_WIDTH,
+    exportProfile: 'costScatter',
     prepareExport: _prepareCostScatterLabels
   })
 
-  // 모바일 감지
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768)
@@ -520,158 +698,191 @@ export default function CostScatterChart({
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // 모바일에서 높이 축소
+  const validData = useMemo(
+    () => getAnalysisPoints(data, resolvedXMetric, resolvedYMetric),
+    [data, resolvedXMetric, resolvedYMetric]
+  )
   const chartHeight = isMobile ? 280 : height
-
-  // 다크모드용 색상
   const axisColor = darkMode ? '#4b5563' : '#e5e7eb'
   const tickColor = darkMode ? '#9ca3af' : '#6b7280'
   const referenceLineColor = darkMode ? '#6b7280' : '#9ca3af'
+  const xLabel = _getMetricLabel(resolvedXMetric, t, isRepeatedRun)
+  const yLabel = _getMetricLabel(resolvedYMetric, t, isRepeatedRun)
+  const xUnit = _getMetricUnit(resolvedXMetric, t)
+  const yUnit = _getMetricUnit(resolvedYMetric, t)
 
-  if (!data?.length) {
-    return (
-      <div className="flex items-center justify-center h-48 text-gray-500 dark:text-gray-400">
-        {t('common.noData')}
-      </div>
-    )
-  }
+  const xValues = validData.map(row => row.xValue)
+  const yValues = validData.map(row => row.yValue)
+  const xRange = validData.length ? _getAxisRange(resolvedXMetric, xValues, maxScore) : null
+  const yRange = validData.length ? _getAxisRange(resolvedYMetric, yValues, maxScore) : null
+  const xMidpoint = xRange ? _getAxisMidpoint(resolvedXMetric, xRange) : null
+  const yMidpoint = yRange ? _getAxisMidpoint(resolvedYMetric, yRange) : null
 
-  // 비용이 있는 데이터만 필터링
-  const validData = data.filter(d => d.totalCost > 0)
-
-  if (!validData.length) {
-    return (
-      <div className="flex items-center justify-center h-48 text-gray-500 dark:text-gray-400">
-        {t('common.noCostData')}
-      </div>
-    )
-  }
-
-  // X축 범위 계산 (10진 로그 축)
-  const dataMinCost = Math.min(...validData.map(d => d.totalCost))
-  const dataMaxCost = Math.max(...validData.map(d => d.totalCost))
-  const { min: minCost, max: maxCost, ticks: xTicks } = _getLogCostRange(dataMinCost, dataMaxCost)
-
-  // Y축 범위 계산 (최대값은 만점 기준, 최소값은 데이터 기반)
-  const dataMinScore = Math.min(...validData.map(d => d.score))
-  const yMax = maxScore
-  // 최소값을 깔끔한 간격으로 계산
-  const { min: yMin, interval: yInterval } = getNiceRange(dataMinScore, maxScore)
-
-  // Y축 틱 생성
-  const yTicks = []
-  for (let i = yMin; i <= yMax; i += yInterval) {
-    yTicks.push(i)
-  }
-
-  // 중앙 기준선 (로그 축에서 중앙이 되는 기하평균)
-  const midCost = Math.sqrt(minCost * maxCost)
-  const midScore = (yMin + yMax) / 2
+  const metricOptions = ANALYSIS_METRIC_IDS.map(metric => ({
+    id: metric,
+    label: _getMetricLabel(metric, t, isRepeatedRun)
+  }))
 
   return (
     <div ref={ref} className="w-full">
-      <div className="flex items-start justify-between mb-4">
-        {title && (
-          <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
-        )}
+      <div className="flex items-start justify-between gap-3 mb-4">
+        <h3 className={`export-role-title flex flex-wrap items-center gap-2 text-xl text-gray-800 dark:text-gray-200 ${isExporting ? 'font-semibold' : 'font-normal'}`}>
+          <span data-export-hide="true">
+            <label htmlFor="analysis-y-metric" className="sr-only">{t('analysis.yAxis')}</label>
+            <select
+              id="analysis-y-metric"
+              value={resolvedYMetric}
+              onChange={event => onYMetricChange(event.target.value)}
+              className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1 text-lg font-normal"
+            >
+              {metricOptions.map(option => <option key={option.id} value={option.id}>{option.label}</option>)}
+            </select>
+          </span>
+          <span className="hidden export-role-title" data-export-show="true">{yLabel}</span>
+          <span aria-hidden="true">vs</span>
+          <span data-export-hide="true">
+            <label htmlFor="analysis-x-metric" className="sr-only">{t('analysis.xAxis')}</label>
+            <select
+              id="analysis-x-metric"
+              value={resolvedXMetric}
+              onChange={event => onXMetricChange(event.target.value)}
+              className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1 text-lg font-normal"
+            >
+              {metricOptions.map(option => <option key={option.id} value={option.id}>{option.label}</option>)}
+            </select>
+          </span>
+          <span className="hidden export-role-title" data-export-show="true">{xLabel}</span>
+        </h3>
         <div className="flex items-start gap-2">
-          <span className="hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
+          <span className="export-role-watermark hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
           <ExportButton
             onClick={() => exportImage(`${t('export.costAnalysis')}.png`)}
             exportKey="cost-scatter"
           />
         </div>
       </div>
-      <ResponsiveContainer width="100%" height={chartHeight}>
-        <ScatterChart
-          key={darkMode ? 'dark' : 'light'}
-          margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-        >
-          {/* 다크모드 차트 영역 배경 (gray-800~900 중간: #182130) */}
-          {darkMode && (
-            <ReferenceArea x1={minCost} x2={maxCost} y1={yMin} y2={yMax} fill="#182130" fillOpacity={1} />
-          )}
-          {/* 4분면 배경색 (다크모드: 투명도 0.4로 대비 강화) */}
-          {/* 좌상: 고성능-저비용 (초록) */}
-          <ReferenceArea x1={minCost} x2={midCost} y1={midScore} y2={yMax} fill={darkMode ? '#22c55e' : '#bbf7d0'} fillOpacity={darkMode ? 0.4 : 0.5} />
-          {/* 우하: 저성능-고비용 (빨강) */}
-          <ReferenceArea x1={midCost} x2={maxCost} y1={yMin} y2={midScore} fill={darkMode ? '#ef4444' : '#fecaca'} fillOpacity={darkMode ? 0.4 : 0.5} />
-          <XAxis
-            type="number"
-            dataKey="totalCost"
-            name={t('cost.testCost')}
-            scale="log"
-            domain={[minCost, maxCost]}
-            ticks={xTicks}
-            interval={0}
-            tickFormatter={_formatCostTick}
-            tickLine={false}
-            axisLine={{ stroke: axisColor }}
-            tick={{ fill: tickColor }}
-            label={{ value: t('cost.axisTestCost'), position: 'bottom', offset: 0, fill: tickColor }}
-          />
-          <YAxis
-            type="number"
-            dataKey="score"
-            name={t('table.score')}
-            domain={[yMin, yMax]}
-            ticks={yTicks}
-            tickLine={false}
-            axisLine={{ stroke: axisColor }}
-            tick={{ fill: tickColor }}
-            label={{ value: t('cost.axisScore'), angle: -90, position: 'insideLeft', fill: tickColor }}
-          />
-          <Tooltip content={<CustomTooltip t={t} />} />
-          {/* 중앙 비용 세로선 */}
-          <ReferenceLine
-            x={midCost}
-            stroke={referenceLineColor}
-            strokeWidth={1}
-          />
-          {/* 중앙 점수 가로선 */}
-          <ReferenceLine
-            y={midScore}
-            stroke={referenceLineColor}
-            strokeWidth={1}
-          />
-          <Scatter
-            data={validData}
-            isAnimationActive={!isExporting}
-            shape={(props) => {
-              const { cx, cy, payload } = props
-              const label = formatModelDisplayName(payload.model)
+
+      {validData.length > 0 && (
+        <ResponsiveContainer width="100%" height={chartHeight}>
+          <ScatterChart
+            key={`${darkMode ? 'dark' : 'light'}-${resolvedXMetric}-${resolvedYMetric}`}
+            margin={isExporting ? { top: 20, right: 30, left: 36, bottom: 34 } : { top: 20, right: 30, left: 20, bottom: 20 }}
+          >
+            {darkMode && (
+              <ReferenceArea x1={xRange.min} x2={xRange.max} y1={yRange.min} y2={yRange.max} fill="#182130" fillOpacity={1} />
+            )}
+            {[
+              { xLow: true, x1: xRange.min, x2: xMidpoint },
+              { xLow: false, x1: xMidpoint, x2: xRange.max }
+            ].flatMap(xSegment => [
+              { yLow: true, y1: yRange.min, y2: yMidpoint },
+              { yLow: false, y1: yMidpoint, y2: yRange.max }
+            ].map(ySegment => {
+              const style = _getQuadrantStyle(resolvedXMetric, resolvedYMetric, xSegment.xLow, ySegment.yLow, darkMode)
               return (
-                <g>
-                  <circle
-                    cx={cx}
-                    cy={cy}
-                    r={7}
-                    fill={getModelColor(payload.model)}
-                    stroke={darkMode ? '#ffffff' : '#000000'}
-                    strokeWidth={0.6}
-                  />
-                  <text
-                    x={cx}
-                    y={cy - 16}
-                    textAnchor="middle"
-                    fill={darkMode ? '#d1d5db' : '#374151'}
-                    fontSize={11}
-                    fontWeight="500"
-                    className="hidden"
-                    data-export-show="true"
-                    data-cost-scatter-label="true"
-                    data-point-x={cx}
-                    data-point-y={cy}
-                  >
-                    {label}
-                  </text>
-                </g>
+                <ReferenceArea
+                  key={`${xSegment.xLow}-${ySegment.yLow}`}
+                  x1={xSegment.x1}
+                  x2={xSegment.x2}
+                  y1={ySegment.y1}
+                  y2={ySegment.y2}
+                  fill={style.fill}
+                  fillOpacity={style.fillOpacity}
+                />
               )
-            }}
-          />
-        </ScatterChart>
-      </ResponsiveContainer>
-      <BenchmarkNote modelNames={validData.map(item => item.model)} />
+            }))}
+            <XAxis
+              type="number"
+              dataKey="xValue"
+              name={xLabel}
+              scale={isAnalysisMetricLog(resolvedXMetric) ? 'log' : 'linear'}
+              domain={[xRange.min, xRange.max]}
+              ticks={xRange.ticks}
+              interval={0}
+              tickFormatter={value => _formatAxisTick(resolvedXMetric, value, locale)}
+              tickLine={false}
+              axisLine={{ stroke: axisColor }}
+              tick={{ fill: tickColor, fontSize: isExporting ? 22 : 16 }}
+              height={isExporting ? 58 : 30}
+              label={{ value: `${xLabel} (${xUnit})`, position: 'bottom', offset: 0, fill: tickColor, fontSize: isExporting ? 22 : 16, className: 'export-role-axis-label' }}
+            />
+            <YAxis
+              type="number"
+              dataKey="yValue"
+              name={yLabel}
+              scale={isAnalysisMetricLog(resolvedYMetric) ? 'log' : 'linear'}
+              domain={[yRange.min, yRange.max]}
+              ticks={yRange.ticks}
+              interval={0}
+              tickFormatter={value => _formatAxisTick(resolvedYMetric, value, locale)}
+              tickLine={false}
+              axisLine={{ stroke: axisColor }}
+              tick={{ fill: tickColor, fontSize: isExporting ? 22 : 16 }}
+              width={isExporting ? 110 : 60}
+              label={{ value: `${yLabel} (${yUnit})`, angle: -90, position: 'insideLeft', fill: tickColor, fontSize: isExporting ? 22 : 16, className: 'export-role-axis-label' }}
+            />
+            <Tooltip
+              content={(
+                <CustomTooltip
+                  t={t}
+                  isRepeatedRun={isRepeatedRun}
+                  locale={locale}
+                />
+              )}
+            />
+            <ReferenceLine x={xMidpoint} stroke={referenceLineColor} strokeWidth={1} />
+            <ReferenceLine y={yMidpoint} stroke={referenceLineColor} strokeWidth={1} />
+            <Scatter
+              data={validData}
+              isAnimationActive={!isExporting}
+              shape={({ cx, cy, payload }) => {
+                const label = formatModelDisplayName(payload.model)
+                return (
+                  <g>
+                    <circle
+                      cx={cx}
+                      cy={cy}
+                      r={COST_POINT_RADIUS}
+                      fill={getModelColor(payload.model)}
+                      stroke={darkMode ? '#ffffff' : '#000000'}
+                      strokeWidth={0.6}
+                    />
+                    <text
+                      className="hidden export-role-model-label"
+                      x={cx}
+                      y={cy - 16}
+                      textAnchor="middle"
+                      fill={darkMode ? '#d1d5db' : '#374151'}
+                      fontSize={isExporting ? 24 : 11}
+                      fontWeight="500"
+                      data-export-show="true"
+                      data-cost-scatter-label="true"
+                      data-point-x={cx}
+                      data-point-y={cy}
+                    >
+                      {label}
+                    </text>
+                  </g>
+                )
+              }}
+            />
+          </ScatterChart>
+        </ResponsiveContainer>
+      )}
+
+      {!data?.length && (
+        <div className="flex items-center justify-center h-48 text-gray-500 dark:text-gray-400">
+          {t('common.noData')}
+        </div>
+      )}
+      {data?.length > 0 && !validData.length && (
+        <div className="flex items-center justify-center h-48 text-gray-500 dark:text-gray-400">
+          {t('analysis.noDataForAxes')}
+        </div>
+      )}
+
+      <PerformanceHelp modelPerformance={modelPerformance} t={t} locale={locale} />
+      {validData.length > 0 && <BenchmarkNote modelNames={validData.map(item => item.model)} />}
     </div>
   )
 }

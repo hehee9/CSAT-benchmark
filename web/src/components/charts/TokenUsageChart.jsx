@@ -18,9 +18,23 @@ import {
 import { useTranslation } from 'react-i18next'
 import { getModelColor, getShortModelName } from '@/utils/colorUtils'
 import { useTheme } from '@/hooks/useTheme'
+import { useData } from '@/hooks/useData'
 import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
+import { useBarChartExportLayout } from '@/hooks/useBarChartExportLayout'
 import { BenchmarkNote, ExportButton } from '@/components/common'
 import { formatModelDisplayName, getModelFlags } from '@/utils/modelMeta'
+
+const EXPORT_AXIS_FONT_SIZE = 24
+const EXPORT_MODEL_FONT_SIZE = 26
+const EXPORT_VALUE_FONT_SIZE = 22
+const EXPORT_X_AXIS_ANGLE = -60
+const EXPORT_X_AXIS_HEIGHT = 460
+const EXPORT_X_AXIS_LABEL_OFFSET = 16
+const EXPORT_LEFT_MARGIN = 100
+const EXPORT_RIGHT_MARGIN = 30
+const EXPORT_VALUE_LABEL_GAP = 4
+const EXPORT_VALUE_CHAR_WIDTH_FACTOR = 0.6
+const EXPORT_CHART_HEIGHT = 830
 
 /**
  * @brief 깔끔한 틱 간격 계산 (100K, 200K, 500K, 1M 등)
@@ -50,6 +64,18 @@ function _getNiceTokenTicks(max, tickCount = 4) {
   }
 
   return { max: niceMax, interval: niceInterval, ticks }
+}
+
+/**
+ * @brief 토큰 사용량을 합산하고 현대 형식의 미상 값을 보존
+ * @param {Array} values - 합산할 토큰 값
+ * @param {boolean} preserveUnknown - null·undefined를 미상으로 보존할지 여부
+ * @return {number|null} 합계 또는 미상
+ */
+function _sumTokenValues(values, preserveUnknown) {
+  if (!preserveUnknown) return values.reduce((sum, value) => sum + (value || 0), 0)
+  if (values.length === 0 || values.some(value => value === null || value === undefined)) return null
+  return values.reduce((sum, value) => sum + value, 0)
 }
 
 /**
@@ -115,11 +141,11 @@ function TokenKnowledgeCutoffGlowDefs({ darkMode }) {
 }
 
 function TokenBarShape(props) {
-  const { x, y, width, height, fill, fillOpacity, payload, modelMetadata = {} } = props
+  const { x, y, width, height, fill, fillOpacity, payload, modelMetadata = {}, examMonth = null } = props
   if (!Number.isFinite(x) || !Number.isFinite(y) || width <= 0 || height <= 0) return null
 
   const color = fill || getModelColor(payload.model)
-  const flags = getModelFlags(payload.model, modelMetadata)
+  const flags = getModelFlags(payload.model, modelMetadata, examMonth)
 
   return (
     <g>
@@ -180,51 +206,106 @@ function getTokenLabel(entry, mode) {
 }
 
 /**
+ * @brief 내보내기 숫자 레이블이 모델 칸을 넘지 않도록 표시 폭 계산
+ * @param {string} label - 표시할 숫자 레이블
+ * @param {number} modelCount - 표시할 모델 수
+ * @return {number} SVG 숫자 레이블 표시 폭
+ */
+function _getExportValueTextLength(label, modelCount) {
+  const slotWidth = (README_EXPORT_WIDTH - EXPORT_LEFT_MARGIN - EXPORT_RIGHT_MARGIN) / modelCount
+  const availableWidth = Math.max(1, slotWidth - EXPORT_VALUE_LABEL_GAP)
+  const estimatedWidth = label.length * EXPORT_VALUE_FONT_SIZE * EXPORT_VALUE_CHAR_WIDTH_FACTOR
+  return Math.min(estimatedWidth, availableWidth)
+}
+
+/**
  * @brief 커스텀 레이블 렌더러
  * @param {Object} props - Recharts LabelList props
  * @param {string} mode - 'total' | 'split' | 'outputRatio' | 'none'
  * @param {boolean} darkMode - 다크모드 여부
  */
-function CustomLabel({ x, y, width, index, mode, chartData, darkMode }) {
+function CustomLabel({ x, y, width, index, mode, chartData, darkMode, exportMode = false }) {
   if (mode === 'none' || index === undefined || !chartData[index]) return null
 
   const entry = chartData[index]
   const label = getTokenLabel(entry, mode)
   if (!label) return null
+  const fontSize = exportMode ? EXPORT_VALUE_FONT_SIZE : 11
+  const lines = exportMode && mode === 'split' ? label.split(' + ') : [label]
+  const lineHeight = fontSize + 2
+  const textY = y - 8 - (lines.length - 1) * lineHeight
 
   return (
     <text
+      className="export-role-value"
       x={x + width / 2}
-      y={y - 8}
+      y={textY}
       textAnchor="middle"
       fill={darkMode ? '#d1d5db' : '#374151'}
-      fontSize={11}
+      fontSize={fontSize}
       fontWeight="500"
+      style={{ ...(exportMode ? { fontSize: `${fontSize}px` } : {}) }}
+    >
+      {lines.map((line, index) => (
+        <tspan
+          key={`${line}-${index}`}
+          x={x + width / 2}
+          dy={index === 0 ? 0 : lineHeight}
+          {...(exportMode ? { textLength: _getExportValueTextLength(line, chartData.length), lengthAdjust: 'spacingAndGlyphs' } : {})}
+        >
+          {line}
+        </tspan>
+      ))}
+    </text>
+  )
+}
+
+function CustomMobileLabel({ x, y, width, height, index, mode, chartData, darkMode, exportMode = false }) {
+  if (mode === 'none' || index === undefined || !chartData[index]) return null
+
+  const entry = chartData[index]
+  const label = getTokenLabel(entry, mode)
+  if (!label) return null
+  const fontSize = exportMode ? EXPORT_VALUE_FONT_SIZE : 9
+
+  return (
+    <text
+      className="export-role-value"
+      x={x + width + 6}
+      y={y + height / 2 + 4}
+      textAnchor="start"
+      fill={darkMode ? '#d1d5db' : '#374151'}
+      fontSize={fontSize}
+      fontWeight="500"
+      style={{ ...(exportMode ? { fontSize: `${fontSize}px` } : {}) }}
     >
       {label}
     </text>
   )
 }
 
-function CustomMobileLabel({ x, y, width, height, index, mode, chartData, darkMode }) {
-  if (mode === 'none' || index === undefined || !chartData[index]) return null
-
-  const entry = chartData[index]
-  const label = getTokenLabel(entry, mode)
-  if (!label) return null
-
-  return (
-    <text
-      x={x + width + 6}
-      y={y + height / 2 + 4}
-      textAnchor="start"
-      fill={darkMode ? '#d1d5db' : '#374151'}
-      fontSize={9}
-      fontWeight="500"
-    >
-      {label}
-    </text>
-  )
+/**
+ * @brief 내보내기용 세로 막대 차트 X축 틱 생성
+ * @param {string} tickColor - 틱 글자 색상
+ * @return {function} Recharts 틱 렌더 함수
+ */
+function createExportXAxisTick(tickColor) {
+  return function ExportXAxisTick({ x, y, payload }) {
+    return (
+      <g transform={`translate(${x},${y + EXPORT_X_AXIS_LABEL_OFFSET})`}>
+        <text
+          className="export-role-model-label"
+          textAnchor="end"
+          transform={`rotate(${EXPORT_X_AXIS_ANGLE})`}
+          fill={tickColor}
+          fontSize={EXPORT_MODEL_FONT_SIZE}
+          style={{ fontSize: `${EXPORT_MODEL_FONT_SIZE}px` }}
+        >
+          {formatModelDisplayName(payload.value)}
+        </text>
+      </g>
+    )
+  }
 }
 
 /**
@@ -242,15 +323,31 @@ export default function TokenUsageChart({
   subjectFilter = [],
   height = 600,
   title,
-  modelMetadata = {}
+  modelMetadata = {},
+  sectionKeysByModel = {}
 }) {
   const { t } = useTranslation()
   const { isDark: darkMode } = useTheme()
-  const { ref, exportImage } = useExportImage({ exportWidth: README_EXPORT_WIDTH })
+  const { exam } = useData()
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+  const {
+    prepareExport,
+    xAxisHeight: exportXAxisHeight,
+    chartHeight: exportChartHeight
+  } = useBarChartExportLayout({
+    enabled: !isMobile,
+    baseXAxisHeight: EXPORT_X_AXIS_HEIGHT,
+    baseChartHeight: EXPORT_CHART_HEIGHT
+  })
+  const { ref, exportImage, isExporting } = useExportImage({
+    exportWidth: README_EXPORT_WIDTH,
+    prepareExport,
+    exportProfile: 'tokenUsage'
+  })
   const [labelMode, setLabelMode] = useState('total')
+  const examMonth = exam?.exam_month
 
   // 모바일 감지
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768)
     window.addEventListener('resize', handleResize)
@@ -283,34 +380,40 @@ export default function TokenUsageChart({
       .filter(([model]) => !models || models.includes(model)) // 모델 필터링
       .map(([model, usage]) => {
         let inputTokens, outputTokens, total
+        const preserveUnknown = usage.attempts > 1
 
         if (subjectFilter.length > 0) {
           // 과목 필터 활성화: sections 데이터 필수
           if (!usage.sections) return null // sections 데이터 없으면 제외
 
           // 선택된 과목들의 토큰만 합산
-          inputTokens = 0
-          outputTokens = 0
+          const selectedKeys = sectionKeysByModel[model] || Object.keys(usage.sections).filter(sectionKey =>
+            subjectFilter.some(subject => sectionKey.startsWith(`${subject}-`) || sectionKey === subject)
+          )
+          inputTokens = _sumTokenValues(
+            selectedKeys.map(sectionKey => usage.sections[sectionKey]?.input_tokens),
+            preserveUnknown
+          )
+          outputTokens = _sumTokenValues(
+            selectedKeys.map(sectionKey => usage.sections[sectionKey]?.output_tokens),
+            preserveUnknown
+          )
 
-          subjectFilter.forEach(subject => {
-            // "국어" → "국어-공통", "국어-화작" 등 모두 포함
-            Object.keys(usage.sections).forEach(sectionKey => {
-              if (sectionKey.startsWith(subject + '-') || sectionKey === subject) {
-                const sectionData = usage.sections[sectionKey]
-                inputTokens += sectionData.input_tokens || 0
-                outputTokens += sectionData.output_tokens || 0
-              }
-            })
-          })
-
-          total = inputTokens + outputTokens
+          total = inputTokens === null || outputTokens === null
+            ? null
+            : inputTokens + outputTokens
           if (total <= 0) return null // 해당 과목 데이터 없음
         } else {
           // 전체 토큰 (필터 없음)
-          inputTokens = usage.total_input_tokens || 0
-          outputTokens = usage.total_output_tokens || 0
-          if (Number.isFinite(usage.total_tokens) && usage.total_tokens <= 0) return null
-          total = usage.total_tokens || inputTokens + outputTokens
+          inputTokens = preserveUnknown ? usage.total_input_tokens : (usage.total_input_tokens || 0)
+          outputTokens = preserveUnknown ? usage.total_output_tokens : (usage.total_output_tokens || 0)
+          if (preserveUnknown) {
+            total = usage.total_tokens
+            if (inputTokens === null || inputTokens === undefined || outputTokens === null || outputTokens === undefined || total === null || total === undefined) return null
+          } else {
+            if (Number.isFinite(usage.total_tokens) && usage.total_tokens <= 0) return null
+            total = usage.total_tokens || inputTokens + outputTokens
+          }
         }
 
         const outputRatio = inputTokens > 0 ? outputTokens / inputTokens : Infinity
@@ -325,7 +428,7 @@ export default function TokenUsageChart({
         if (a.total !== b.total) return a.total - b.total
         return a.model.localeCompare(b.model)
       })
-  }, [data, models, subjectFilter, labelMode])
+  }, [data, models, subjectFilter, sectionKeysByModel, labelMode])
 
   // Y축 최대값 및 틱 계산
   const maxTotal = chartData.length ? Math.max(...chartData.map(d => d.total)) : 0
@@ -342,14 +445,14 @@ export default function TokenUsageChart({
 
   // 레이블 렌더러 메모이제이션
   const renderLabel = useCallback((props) => (
-    <CustomLabel {...props} mode={labelMode} chartData={chartData} darkMode={darkMode} />
-  ), [labelMode, chartData, darkMode])
+    <CustomLabel {...props} mode={labelMode} chartData={chartData} darkMode={darkMode} exportMode={isExporting} />
+  ), [labelMode, chartData, darkMode, isExporting])
   const renderMobileLabel = useCallback((props) => (
-    <CustomMobileLabel {...props} mode={labelMode} chartData={chartData} darkMode={darkMode} />
-  ), [labelMode, chartData, darkMode])
+    <CustomMobileLabel {...props} mode={labelMode} chartData={chartData} darkMode={darkMode} exportMode={isExporting} />
+  ), [labelMode, chartData, darkMode, isExporting])
   const renderTokenBarShape = useCallback((props) => (
-    <TokenBarShape {...props} modelMetadata={modelMetadata} darkMode={darkMode} />
-  ), [modelMetadata, darkMode])
+    <TokenBarShape {...props} modelMetadata={modelMetadata} examMonth={examMonth} darkMode={darkMode} />
+  ), [modelMetadata, examMonth, darkMode])
 
   // 다크모드용 색상
   const axisColor = darkMode ? '#4b5563' : '#e5e7eb'
@@ -368,7 +471,7 @@ export default function TokenUsageChart({
 
   // 모바일: 가로 막대 차트 (ScoreBarChart 스타일)
   if (isMobile) {
-    const mobileHeight = Math.max(300, chartData.length * 45 + 80)
+    const mobileHeight = Math.max(300, chartData.length * (isExporting ? 64 : 45) + (isExporting ? 100 : 80))
 
     // 모바일용 X축 틱 계산 (동적)
     const { max: xMax, ticks: xTicks } = _getNiceTokenTicks(maxTotal)
@@ -377,7 +480,7 @@ export default function TokenUsageChart({
       <div ref={ref} className="w-full">
         <div className="flex items-start justify-between mb-4">
           {title && (
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+            <h3 className="export-role-title text-lg font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
           )}
           <ExportButton
             onClick={() => exportImage(`${t('export.tokenUsage')}.png`)}
@@ -396,18 +499,19 @@ export default function TokenUsageChart({
               domain={[0, xMax]}
               ticks={xTicks}
               tickFormatter={(v) => `${(v / 1000).toLocaleString()}K`}
-              tick={{ fontSize: 10, fill: tickColor }}
+              tick={{ fontSize: 10, fill: tickColor, className: 'export-role-axis-value' }}
               tickLine={false}
               axisLine={{ stroke: axisColor }}
             />
             <YAxis
               type="category"
               dataKey="model"
-              width={100}
+              width={isExporting ? 220 : 100}
               tickLine={false}
               axisLine={false}
               tick={({ x, y, payload }) => (
                 <text
+                  className="export-role-model-label"
                   x={x}
                   y={y}
                   dy={4}
@@ -463,6 +567,7 @@ export default function TokenUsageChart({
               <LabelList
                 dataKey="total"
                 position="right"
+                className="export-role-value"
                 content={renderMobileLabel}
               />
             </Bar>
@@ -478,10 +583,10 @@ export default function TokenUsageChart({
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between mb-2">
         {title && (
-          <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+          <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
         )}
         <div className="flex items-start gap-2">
-          <span className="hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
+          <span className="export-role-watermark hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
           <ExportButton
             onClick={() => exportImage(`${t('export.tokenUsage')}.png`)}
             exportKey="token-usage"
@@ -489,25 +594,25 @@ export default function TokenUsageChart({
         </div>
       </div>
       {renderLabelModeButtons()}
-      <ResponsiveContainer width="100%" height={height}>
+      <ResponsiveContainer width="100%" height={isExporting ? exportChartHeight : height}>
         <BarChart
           data={chartData}
-          margin={{ top: 30, right: 30, left: 20, bottom: 100 }}
+          margin={{ top: 30, right: EXPORT_RIGHT_MARGIN, left: isExporting ? EXPORT_LEFT_MARGIN : 20, bottom: isExporting ? 20 : 100 }}
         >
           <XAxis
             dataKey="model"
             tickFormatter={(value) => formatModelDisplayName(value)}
-            angle={-45}
+            angle={isExporting ? EXPORT_X_AXIS_ANGLE : -45}
             textAnchor="end"
             interval={0}
-            tick={{ fontSize: 11, fill: xTickColor }}
+            tick={isExporting ? createExportXAxisTick(xTickColor) : { fontSize: 11, fill: xTickColor }}
             tickLine={false}
             axisLine={{ stroke: axisColor }}
-            height={100}
+            height={isExporting ? exportXAxisHeight : 100}
           />
           <YAxis
             tickFormatter={(v) => `${(v / 1000).toLocaleString()}K`}
-            tick={{ fontSize: 11, fill: tickColor }}
+            tick={{ fontSize: isExporting ? EXPORT_AXIS_FONT_SIZE : 11, fill: tickColor, className: 'export-role-axis-value' }}
             tickLine={false}
             axisLine={{ stroke: axisColor }}
             domain={[0, yMax]}
@@ -555,6 +660,7 @@ export default function TokenUsageChart({
             <LabelList
               dataKey="total"
               position="top"
+              className="export-role-value"
               content={renderLabel}
             />
           </Bar>

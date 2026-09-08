@@ -19,13 +19,31 @@ import {
 import { useTranslation } from 'react-i18next'
 import { getModelColor, getShortModelName, CHART_COLORS, lightenColor } from '@/utils/colorUtils'
 import { useTheme } from '@/hooks/useTheme'
+import { useData } from '@/hooks/useData'
 import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
+import { useBarChartExportLayout } from '@/hooks/useBarChartExportLayout'
 import { BenchmarkNote, ExportButton } from '@/components/common'
 import { formatModelDisplayName, getModelFlags } from '@/utils/modelMeta'
 
 const MAX_LINE_LENGTH = 21
 const MAX_LINES = 3
 const MOBILE_WRAP_THRESHOLD = 17
+const EXPORT_AXIS_FONT_SIZE = 24
+const EXPORT_MODEL_FONT_SIZE = 22
+const EXPORT_VALUE_FONT_SIZE = 22
+const EXPORT_X_AXIS_ANGLE = -60
+const EXPORT_X_AXIS_HEIGHT = 460
+const EXPORT_X_AXIS_LABEL_OFFSET = 16
+const EXPORT_MOBILE_LABEL_LINE_HEIGHT = 32
+const EXPORT_LEFT_MARGIN = 100
+const EXPORT_RIGHT_MARGIN = 30
+const EXPORT_VALUE_LABEL_GAP = 4
+const EXPORT_VALUE_CHAR_WIDTH_FACTOR = 0.6
+const EXPORT_BEST_WORST_BAR_SIZE = 44
+const EXPORT_BEST_WORST_BAR_GAP = 8
+const EXPORT_BEST_WORST_GROUP_SLOT = 122
+const EXPORT_Y_AXIS_WIDTH = 60
+const EXPORT_CHART_HEIGHT = 830
 
 /**
  * @brief 보기 모드 정의
@@ -180,7 +198,7 @@ function HatchPatternDefs({ darkMode }) {
 /**
  * @brief 모델 플래그를 반영한 막대 렌더링 헬퍼
  * @param {Object} props - Recharts shape props (x, y, width, height, payload)
- * @param {Object} options - { hoveredModel, darkMode, radius, colorOverride }
+ * @param {Object} options - { hoveredModel, radius, colorOverride, modelMetadata, examMonth }
  * @return {JSX.Element} SVG <g> 또는 <Rectangle>
  */
 /**
@@ -232,14 +250,14 @@ function _WebServiceNoToolsChecker({ x, y, width, height, radius }) {
   )
 }
 
-function _renderBar(props, { hoveredModel, radius = [4, 4, 0, 0], colorOverride, modelMetadata = {} }) {
+function _renderBar(props, { hoveredModel, radius = [4, 4, 0, 0], colorOverride, modelMetadata = {}, examMonth = null }) {
   const { x, y, width, height, payload } = props
   const color = colorOverride || payload.color || getModelColor(payload.model)
   const isHovered = hoveredModel === payload.model
   const hasHover = hoveredModel !== null
   const opacity = hasHover ? (isHovered ? 1 : 0.3) : 1
 
-  const flags = getModelFlags(payload.model, modelMetadata)
+  const flags = getModelFlags(payload.model, modelMetadata, examMonth)
   const transitionStyle = { transition: 'opacity 0.15s ease-in-out' }
 
   if (flags.noVision || flags.nonStandard || flags.postExamKnowledgeCutoff || flags.webServiceNoTools) {
@@ -277,7 +295,7 @@ function _renderBar(props, { hoveredModel, radius = [4, 4, 0, 0], colorOverride,
  * @param {boolean} isMobile - 모바일 여부
  * @return {function} Recharts tick 렌더 함수
  */
-function createCustomYAxisTick(hoveredModel, onModelHover, darkMode, isMobile) {
+function createCustomYAxisTick(hoveredModel, onModelHover, darkMode, isMobile, exportMode = false) {
   const defaultColor = darkMode ? '#d1d5db' : '#374151'
   const hoverColor = darkMode ? '#60a5fa' : '#1d4ed8'
 
@@ -285,7 +303,8 @@ function createCustomYAxisTick(hoveredModel, onModelHover, darkMode, isMobile) {
     // 모바일에서는 짧은 모델명 사용 + 17자 이상 시 중간 공백에서 줄바꿈
     const displayName = isMobile ? getShortModelName(payload.value) : formatModelDisplayName(payload.value)
     const lines = isMobile ? _wrapAtMiddle(displayName) : _wrapText(displayName, MAX_LINE_LENGTH)
-    const lineHeight = 14
+    const fontSize = exportMode ? EXPORT_MODEL_FONT_SIZE : 12
+    const lineHeight = exportMode ? EXPORT_MOBILE_LABEL_LINE_HEIGHT : 14
     const startY = -((lines.length - 1) * lineHeight) / 2 + 3
     const isHovered = hoveredModel === payload.value
     const hasHover = hoveredModel !== null
@@ -305,13 +324,15 @@ function createCustomYAxisTick(hoveredModel, onModelHover, darkMode, isMobile) {
           fill="transparent"
         />
         <text
+          className="export-role-model-label"
           x={x}
           y={y}
           textAnchor="end"
-          fontSize={12}
+          fontSize={fontSize}
           fill={isHovered ? hoverColor : defaultColor}
           fontWeight={isHovered ? 600 : 400}
           style={{
+            ...(exportMode ? { fontSize: `${fontSize}px` } : {}),
             opacity: hasHover ? (isHovered ? 1 : 0.5) : 1,
             transition: 'opacity 0.15s ease-in-out'
           }}
@@ -325,6 +346,128 @@ function createCustomYAxisTick(hoveredModel, onModelHover, darkMode, isMobile) {
       </g>
     )
   }
+}
+
+/**
+ * @brief 내보내기용 세로 막대 차트 X축 모델명 틱 생성
+ * @param {string} tickColor - 틱 글자 색상
+ * @return {function} Recharts 틱 렌더 함수
+ */
+function createExportXAxisTick(tickColor) {
+  return function ExportXAxisTick({ x, y, payload }) {
+    return (
+      <g transform={`translate(${x},${y + EXPORT_X_AXIS_LABEL_OFFSET})`}>
+        <text
+          className="export-role-model-label"
+          textAnchor="end"
+          dominantBaseline="central"
+          transform={`rotate(${EXPORT_X_AXIS_ANGLE})`}
+          fill={tickColor}
+          fontSize={EXPORT_MODEL_FONT_SIZE}
+          style={{ fontSize: `${EXPORT_MODEL_FONT_SIZE}px` }}
+        >
+          {formatModelDisplayName(payload.value)}
+        </text>
+      </g>
+    )
+  }
+}
+
+/**
+ * @brief 내보내기 숫자 레이블이 모델 칸을 넘지 않도록 표시 폭 계산
+ * @param {string} label - 표시할 숫자 레이블
+ * @param {number} modelCount - 표시할 모델 수
+ * @return {number} SVG 숫자 레이블 표시 폭
+ */
+function _getExportValueTextLength(label, modelCount) {
+  const slotWidth = (README_EXPORT_WIDTH - EXPORT_LEFT_MARGIN - EXPORT_RIGHT_MARGIN) / modelCount
+  const availableWidth = Math.max(1, slotWidth - EXPORT_VALUE_LABEL_GAP * 2)
+  const estimatedWidth = label.length * EXPORT_VALUE_FONT_SIZE * EXPORT_VALUE_CHAR_WIDTH_FACTOR
+  return Math.min(estimatedWidth, availableWidth)
+}
+
+/**
+ * @brief 점수 차트 내보내기 숫자 레이블 렌더러
+ * @param {Object} props - Recharts LabelList 속성
+ * @param {function} formatter - 숫자 표시 형식 함수
+ * @param {number} modelCount - 표시할 모델 수
+ * @param {string} fill - 글자 색상
+ * @return {JSX.Element|null} 숫자 레이블
+ */
+function ExportScoreLabel({ x, y, width, value, formatter, modelCount, fill }) {
+  if (value === undefined || value === null) return null
+
+  const label = formatter(value)
+  const textLength = _getExportValueTextLength(label, modelCount)
+
+  return (
+    <text
+      className="export-role-value"
+      x={x + width / 2}
+      y={y - 8}
+      textAnchor="middle"
+      fill={fill}
+      fontSize={EXPORT_VALUE_FONT_SIZE}
+      fontWeight="500"
+      textLength={textLength}
+      lengthAdjust="spacingAndGlyphs"
+      style={{ fontSize: `${EXPORT_VALUE_FONT_SIZE}px` }}
+    >
+      {label}
+    </text>
+  )
+}
+
+/**
+ * @brief bestWorst 내보내기용 최고·최저 점수 한 줄 렌더링
+ * @param {Object} props - Recharts LabelList 속성
+ * @param {Object[]} data - 모델별 최고·최저 점수 데이터
+ * @param {function} formatter - 숫자 표시 형식 함수
+ * @param {string} fill - 글자 색상
+ * @return {JSX.Element|null} 한 줄 숫자 레이블
+ */
+function ExportBestWorstScoreLabels({ x, y, width, value, index, data, formatter, fill }) {
+  if (value === undefined || value === null) return null
+
+  const bestLabel = formatter(value)
+  const worstLabel = formatter(data[index].worst)
+  const longestLabelLength = Math.max(bestLabel.length, worstLabel.length)
+  const availableLabelWidth = width + EXPORT_BEST_WORST_BAR_GAP - EXPORT_VALUE_LABEL_GAP
+  const fontSize = Math.min(
+    EXPORT_VALUE_FONT_SIZE,
+    availableLabelWidth / (longestLabelLength * EXPORT_VALUE_CHAR_WIDTH_FACTOR)
+  )
+  const labelY = y - 8
+  const labelStyle = { '--export-value-size': `${fontSize}px` }
+
+  return (
+    <g>
+      <text
+        className="export-role-value"
+        x={x + width / 2}
+        y={labelY}
+        textAnchor="middle"
+        fill={fill}
+        fontSize={fontSize}
+        fontWeight="500"
+        style={labelStyle}
+      >
+        {bestLabel}
+      </text>
+      <text
+        className="export-role-value"
+        x={x + width / 2 + width + EXPORT_BEST_WORST_BAR_GAP}
+        y={labelY}
+        textAnchor="middle"
+        fill={fill}
+        fontSize={fontSize}
+        fontWeight="500"
+        style={labelStyle}
+      >
+        {worstLabel}
+      </text>
+    </g>
+  )
 }
 
 /**
@@ -374,6 +517,7 @@ function CustomTooltip({ active, payload, t }) {
  * @param {string} props.viewMode - 보기 모드 ('average' | 'bestWorst' | 'withImage' | 'withoutImage')
  * @param {function} props.onViewModeChange - 보기 모드 변경 콜백
  * @param {boolean} props.showViewModeButtons - 보기 모드 버튼 표시 여부
+ * @param {boolean} props.allowBestWorst - 최고/최저 보기 모드 허용 여부
  */
 export default function ScoreBarChart({
   data,
@@ -386,15 +530,40 @@ export default function ScoreBarChart({
   viewMode = 'average',
   onViewModeChange,
   showViewModeButtons = false,
+  allowBestWorst = true,
   modelMetadata = {}
 }) {
   const { t } = useTranslation()
   const { isDark: darkMode } = useTheme()
-  const { ref, exportImage, isExporting } = useExportImage({ exportWidth: README_EXPORT_WIDTH })
+  const { exam } = useData()
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+  const {
+    prepareExport,
+    xAxisHeight: exportXAxisHeight,
+    chartHeight: exportChartHeight
+  } = useBarChartExportLayout({
+    enabled: !isMobile,
+    baseXAxisHeight: EXPORT_X_AXIS_HEIGHT,
+    baseChartHeight: EXPORT_CHART_HEIGHT
+  })
+  const exportWidth = !isMobile && viewMode === 'bestWorst'
+    ? Math.max(
+      README_EXPORT_WIDTH,
+      (data?.length ?? 0) * EXPORT_BEST_WORST_GROUP_SLOT
+        + EXPORT_LEFT_MARGIN
+        + EXPORT_RIGHT_MARGIN
+        + EXPORT_Y_AXIS_WIDTH
+    )
+    : README_EXPORT_WIDTH
+  const { ref, exportImage, isExporting } = useExportImage({
+    exportWidth,
+    prepareExport,
+    exportProfile: 'overviewScore'
+  })
   const [showLabels, setShowLabels] = useState(true)
+  const examMonth = exam?.exam_month
 
   // 모바일 감지
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768)
     window.addEventListener('resize', handleResize)
@@ -420,17 +589,17 @@ export default function ScoreBarChart({
 
   // 모바일: 가로 막대 차트
   if (isMobile) {
-    const dynamicHeight = Math.max(height, data.length * 40 + 60)
+    const dynamicHeight = Math.max(height, data.length * (isExporting ? 64 : 40) + (isExporting ? 100 : 60))
 
     return (
       <div ref={ref} className="w-full">
         <div className="flex items-start justify-between mb-4">
           <div>
             {title && (
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+              <h3 className="export-role-title text-lg font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
             )}
             {subtitle && (
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>
+              <p className="export-role-subtitle text-sm text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>
             )}
           </div>
           <ExportButton
@@ -459,15 +628,15 @@ export default function ScoreBarChart({
               domain={[0, computedMaxScore]}
               tickLine={false}
               axisLine={{ stroke: axisColor }}
-              tick={{ fill: tickColor }}
+              tick={{ ...(isExporting ? { fontSize: EXPORT_AXIS_FONT_SIZE } : {}), fill: tickColor, className: 'export-role-axis-value' }}
             />
             <YAxis
               type="category"
               dataKey="model"
               tickLine={false}
               axisLine={false}
-              width={100}
-              tick={createCustomYAxisTick(hoveredModel, onModelHover, darkMode, true)}
+              width={isExporting ? 220 : 100}
+              tick={createCustomYAxisTick(hoveredModel, onModelHover, darkMode, true, isExporting)}
             />
             <Tooltip content={<CustomTooltip t={t} />} cursor={{ fill: cursorColor }} />
             <ReferenceLine
@@ -480,7 +649,7 @@ export default function ScoreBarChart({
             <Bar
               dataKey="score"
               barSize={24}
-              shape={(props) => _renderBar(props, { hoveredModel, radius: [0, 4, 4, 0], modelMetadata })}
+              shape={(props) => _renderBar(props, { hoveredModel, radius: [0, 4, 4, 0], modelMetadata, examMonth })}
             />
           </BarChart>
         </ResponsiveContainer>
@@ -492,26 +661,27 @@ export default function ScoreBarChart({
   // 모델 수에 따른 레이블 글자 크기 (적을수록 크게)
   const labelFontSize = data.length <= 15 ? 12 : 10
   const desktopChartMargin = {
-    top: 30,
+    top: isExporting && viewMode === 'bestWorst' ? 70 : 30,
     right: 30,
-    left: 20,
+    left: isExporting ? EXPORT_LEFT_MARGIN : 20,
     bottom: isExporting ? 20 : 100
   }
-  const desktopXAxisHeight = isExporting ? 135 : 100
+  const desktopXAxisHeight = isExporting ? exportXAxisHeight : 100
+  const desktopChartHeight = isExporting ? exportChartHeight : 600
 
   return (
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between mb-2">
         <div>
           {title && (
-            <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+            <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
           )}
           {subtitle && (
-            <p className="text-base text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>
+            <p className="export-role-subtitle text-base text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>
           )}
         </div>
         <div className="flex items-start gap-2">
-          <span className="hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
+          <span className="export-role-watermark hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
           <ExportButton
             onClick={() => exportImage(`${subtitle || t('common.all')}.png`)}
             exportKey="overview-score-chart"
@@ -522,7 +692,7 @@ export default function ScoreBarChart({
       <div className="flex items-center gap-2 mb-4 flex-wrap" data-export-hide="true">
         {showViewModeButtons && (
           <div className="flex gap-1 mr-2">
-            {VIEW_MODES.map(mode => (
+            {VIEW_MODES.filter(mode => allowBestWorst || mode.key !== 'bestWorst').map(mode => (
               <button
                 key={mode.key}
                 onClick={() => onViewModeChange?.(mode.key)}
@@ -550,12 +720,13 @@ export default function ScoreBarChart({
           </button>
         )}
       </div>
-      <ResponsiveContainer width="100%" height={600}>
+      <ResponsiveContainer width="100%" height={desktopChartHeight}>
         {viewMode === 'bestWorst' ? (
           /* 최고/최저 모드: 모델당 두 개 막대 */
           <BarChart
             key={`bestWorst-${data.map(d => d.model).join(',')}`}
             data={data}
+            barGap={isExporting ? EXPORT_BEST_WORST_BAR_GAP : undefined}
             margin={desktopChartMargin}
             onMouseMove={(state) => {
               if (state?.activeTooltipIndex !== undefined) {
@@ -570,10 +741,10 @@ export default function ScoreBarChart({
             <XAxis
               dataKey="model"
               tickFormatter={(value) => formatModelDisplayName(value)}
-              angle={-45}
+              angle={isExporting ? EXPORT_X_AXIS_ANGLE : -45}
               textAnchor="end"
               interval={0}
-              tick={{ fontSize: 11, fill: xTickColor }}
+              tick={isExporting ? createExportXAxisTick(xTickColor) : { fontSize: 11, fill: xTickColor }}
               tickLine={false}
               axisLine={{ stroke: axisColor }}
               height={desktopXAxisHeight}
@@ -582,7 +753,7 @@ export default function ScoreBarChart({
               domain={[0, computedMaxScore]}
               tickLine={false}
               axisLine={{ stroke: axisColor }}
-              tick={{ fill: tickColor }}
+              tick={{ ...(isExporting ? { fontSize: EXPORT_AXIS_FONT_SIZE } : {}), fill: tickColor, className: 'export-role-axis-value' }}
             />
             <CartesianGrid
               horizontal={true}
@@ -618,28 +789,39 @@ export default function ScoreBarChart({
             <Bar
               dataKey="best"
               name={t('charts.bestScore')}
+              barSize={isExporting ? EXPORT_BEST_WORST_BAR_SIZE : undefined}
               isAnimationActive={false}
-              shape={(props) => _renderBar(props, { hoveredModel, modelMetadata })}
+              shape={(props) => _renderBar(props, { hoveredModel, modelMetadata, examMonth })}
             >
               {showLabels && (
                 <LabelList
                   dataKey="best"
                   position="top"
+                  className="export-role-value"
                   formatter={(v) => v?.toFixed(1)}
-                  style={{ fontSize: 9, fill: xTickColor, fontWeight: 500 }}
+                  content={isExporting ? (props) => (
+                    <ExportBestWorstScoreLabels
+                      {...props}
+                      data={data}
+                      formatter={(v) => v?.toFixed(1)}
+                      fill={xTickColor}
+                    />
+                  ) : undefined}
+                  style={{ fontSize: isExporting ? EXPORT_VALUE_FONT_SIZE : 9, fill: xTickColor, fontWeight: 500 }}
                 />
               )}
             </Bar>
             <Bar
               dataKey="worst"
               name={t('charts.worstScore')}
+              barSize={isExporting ? EXPORT_BEST_WORST_BAR_SIZE : undefined}
               isAnimationActive={false}
               shape={(props) => {
                 const baseColor = props.payload.color || getModelColor(props.payload.model)
-                return _renderBar(props, { hoveredModel, colorOverride: lightenColor(baseColor, 0.5), modelMetadata })
+                return _renderBar(props, { hoveredModel, colorOverride: lightenColor(baseColor, 0.5), modelMetadata, examMonth })
               }}
             >
-              {showLabels && (
+              {showLabels && !isExporting && (
                 <LabelList
                   dataKey="worst"
                   position="top"
@@ -668,10 +850,10 @@ export default function ScoreBarChart({
             <XAxis
               dataKey="model"
               tickFormatter={(value) => formatModelDisplayName(value)}
-              angle={-45}
+              angle={isExporting ? EXPORT_X_AXIS_ANGLE : -45}
               textAnchor="end"
               interval={0}
-              tick={{ fontSize: 11, fill: xTickColor }}
+              tick={isExporting ? createExportXAxisTick(xTickColor) : { fontSize: 11, fill: xTickColor }}
               tickLine={false}
               axisLine={{ stroke: axisColor }}
               height={desktopXAxisHeight}
@@ -680,7 +862,7 @@ export default function ScoreBarChart({
               domain={[0, 100]}
               tickLine={false}
               axisLine={{ stroke: axisColor }}
-              tick={{ fill: tickColor }}
+              tick={{ ...(isExporting ? { fontSize: EXPORT_AXIS_FONT_SIZE } : {}), fill: tickColor, className: 'export-role-axis-value' }}
               tickFormatter={(v) => `${v}%`}
             />
             <CartesianGrid
@@ -717,14 +899,23 @@ export default function ScoreBarChart({
             <Bar
               dataKey="rate"
               isAnimationActive={false}
-              shape={(props) => _renderBar(props, { hoveredModel, modelMetadata })}
+              shape={(props) => _renderBar(props, { hoveredModel, modelMetadata, examMonth })}
             >
-              <LabelList
-                dataKey="rate"
-                position="top"
-                formatter={(v) => `${v?.toFixed(1)}%`}
-                style={{ fontSize: labelFontSize, fill: xTickColor, fontWeight: 500 }}
-              />
+                <LabelList
+                  dataKey="rate"
+                  position="top"
+                  className="export-role-value"
+                  formatter={(v) => `${v?.toFixed(1)}%`}
+                  content={isExporting ? (props) => (
+                    <ExportScoreLabel
+                      {...props}
+                      formatter={(v) => `${v?.toFixed(1)}%`}
+                      modelCount={data.length}
+                      fill={xTickColor}
+                    />
+                  ) : undefined}
+                  style={{ fontSize: isExporting ? EXPORT_VALUE_FONT_SIZE : labelFontSize, fill: xTickColor, fontWeight: 500 }}
+                />
             </Bar>
           </BarChart>
         ) : (
@@ -746,10 +937,10 @@ export default function ScoreBarChart({
             <XAxis
               dataKey="model"
               tickFormatter={(value) => formatModelDisplayName(value)}
-              angle={-45}
+              angle={isExporting ? EXPORT_X_AXIS_ANGLE : -45}
               textAnchor="end"
               interval={0}
-              tick={{ fontSize: 11, fill: xTickColor }}
+              tick={isExporting ? createExportXAxisTick(xTickColor) : { fontSize: 11, fill: xTickColor }}
               tickLine={false}
               axisLine={{ stroke: axisColor }}
               height={desktopXAxisHeight}
@@ -758,7 +949,7 @@ export default function ScoreBarChart({
               domain={[0, computedMaxScore]}
               tickLine={false}
               axisLine={{ stroke: axisColor }}
-              tick={{ fill: tickColor }}
+              tick={{ ...(isExporting ? { fontSize: EXPORT_AXIS_FONT_SIZE } : {}), fill: tickColor, className: 'export-role-axis-value' }}
             />
             <CartesianGrid
               horizontal={true}
@@ -771,14 +962,23 @@ export default function ScoreBarChart({
             <Bar
               dataKey="score"
               isAnimationActive={false}
-              shape={(props) => _renderBar(props, { hoveredModel, modelMetadata })}
+              shape={(props) => _renderBar(props, { hoveredModel, modelMetadata, examMonth })}
             >
               {showLabels && (
                 <LabelList
                   dataKey="score"
                   position="top"
+                  className="export-role-value"
                   formatter={(v) => v.toFixed(1)}
-                  style={{ fontSize: labelFontSize, fill: xTickColor, fontWeight: 500 }}
+                  content={isExporting ? (props) => (
+                    <ExportScoreLabel
+                      {...props}
+                      formatter={(v) => v.toFixed(1)}
+                      modelCount={data.length}
+                      fill={xTickColor}
+                    />
+                  ) : undefined}
+                  style={{ fontSize: isExporting ? EXPORT_VALUE_FONT_SIZE : labelFontSize, fill: xTickColor, fontWeight: 500 }}
                 />
               )}
             </Bar>

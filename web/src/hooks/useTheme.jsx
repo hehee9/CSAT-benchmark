@@ -4,7 +4,6 @@
  */
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
-import { getForcedThemeFromUrl } from '@/utils/urlState'
 
 const ThemeContext = createContext(null)
 
@@ -21,11 +20,8 @@ function _getSystemPreference() {
  * @param {Object} props - { children }
  */
 export function ThemeProvider({ children }) {
-  const forcedTheme = getForcedThemeFromUrl()
-
   // 'light' | 'dark' | 'system'
   const [themeMode, setThemeMode] = useState(() => {
-    if (forcedTheme) return forcedTheme
     const saved = localStorage.getItem('theme')
     return saved || 'system'
   })

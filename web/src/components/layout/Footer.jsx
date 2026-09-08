@@ -98,13 +98,22 @@ export default function Footer() {
         {/* 링크 영역 */}
         <div className="flex justify-center items-center gap-6 mb-3">
           <a
-            href="https://github.com/hehee9/2026-CSAT"
+            href="https://github.com/hehee9/CSAT-benchmark"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
           >
             <GitHubIcon />
             <span>GitHub</span>
+          </a>
+          <a
+            href="https://ko-fi.com/hehee9"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+          >
+            <span aria-hidden="true" className="text-lg leading-none">☕</span>
+            <span>{t('footer.supportTests')}</span>
           </a>
         </div>
 

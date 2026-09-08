@@ -67,6 +67,14 @@ dev-debug.log
 node_modules/
 # Environment variables
 .env
+.env.*
+!.env.example
+
+# Private benchmark runs and generated outputs
+problems/results/
+problems/batch_inputs/
+problems/batch_results/
+problems/_generated/
 # Editor directories and files
 .idea
 .vscode
@@ -83,9 +91,13 @@ tasks/
 .taskmaster/
 
 # Generated web mirror data
+web/public/benchmarks.json
+web/public/benchmarks/
 web/public/all_results.json
 web/public/token_usage.json
 web/public/model_metadata.json
+web/.tmp/
+web/.playwright-cli/
 
 # Unfinished PDF to Markdown extraction tooling
 scripts/import_suneung_pdfs*.py

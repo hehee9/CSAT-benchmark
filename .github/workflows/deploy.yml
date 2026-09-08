@@ -8,8 +8,13 @@ on:
       - 'images/**'
   workflow_dispatch:
 
+concurrency:
+  group: csat-dashboard-publish
+  cancel-in-progress: false
+
 permissions:
   contents: write
+  pages: write
 
 jobs:
   build-and-deploy:
@@ -42,5 +47,14 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add docs -f
-          git diff --staged --quiet || git commit -m "chore: sync dashboard assets [skip ci]"
-          git push || echo "Nothing to push"
+          if git diff --staged --quiet; then
+            echo "No generated Pages changes"
+            exit 0
+          fi
+          git commit -m "chore: sync dashboard assets [skip ci]"
+          git push
+
+      - name: Publish updated Pages data
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds"

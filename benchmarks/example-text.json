@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "id": "example-text",
+  "title": "공개 텍스트 문항 예시",
+  "short_name": "공개 텍스트 문항 예시",
+  "exam_month": null,
+  "data_dir": "examples/sample_data",
+  "results_dir": "problems/results/example-text",
+  "status": "ready",
+  "publish": false,
+  "sections": [
+    {"target": "국어/예시", "subject": "국어", "section": "예시", "group": "국어", "kind": "common", "questions": "questions.json", "max_points": 2}
+  ],
+  "modes": [
+    {"id": "default", "label": "일반", "input_mode": "section"}
+  ]
+}

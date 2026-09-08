@@ -14,13 +14,6 @@ import en from './locales/en.json'
  * @return {string} 언어 코드 ('ko' | 'en')
  */
 function _getInitialLanguage() {
-  if (typeof window !== 'undefined') {
-    const urlLang = new URLSearchParams(window.location.search).get('lang')
-    if (urlLang === 'ko' || urlLang === 'en') {
-      return urlLang
-    }
-  }
-
   const saved = localStorage.getItem('language')
   if (saved) return saved
 

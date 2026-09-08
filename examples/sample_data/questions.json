@@ -1,0 +1,15 @@
+{
+  "subject": "국어",
+  "section": "예시",
+  "questions": [
+    {
+      "number": 1,
+      "type": "multiple_choice",
+      "choices": [1, 2, 3, 4, 5],
+      "correct_answer": 2,
+      "points": 2,
+      "question_path": "1.txt",
+      "image_paths": []
+    }
+  ]
+}

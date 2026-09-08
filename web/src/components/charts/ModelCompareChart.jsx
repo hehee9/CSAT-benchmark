@@ -20,17 +20,29 @@ import { useTheme } from '@/hooks/useTheme'
 import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
 import { BenchmarkNote, ExportButton } from '@/components/common'
 import { formatModelDisplayName } from '@/utils/modelMeta'
+import { addHoveredModelRadarData } from '@/utils/radarTransform'
 
 /**
  * @brief 과목별 정규화 기준
  */
-const SUBJECTS = [
+const LEGACY_RADAR_GROUPS = [
   { nameKey: 'subjects.korean', key: 'korean', maxScore: 100 },
   { nameKey: 'subjects.math', key: 'math', maxScore: 100 },
   { nameKey: 'subjects.english', key: 'english', maxScore: 100 },
   { nameKey: 'subjects.history', key: 'history', maxScore: 50 },
   { nameKey: 'subjects.exploration', key: 'exploration', maxScore: 100 }
 ]
+
+/** @description 그룹명 번역 키 반환 */
+function _getGroupNameKey(group) {
+  return {
+    국어: 'subjects.korean',
+    수학: 'subjects.math',
+    영어: 'subjects.english',
+    한국사: 'subjects.history',
+    탐구: 'subjects.exploration'
+  }[group] || group
+}
 
 /**
  * @brief 커스텀 툴팁 컴포넌트
@@ -61,6 +73,7 @@ function CustomTooltip({ active, payload, label, t }) {
  * @param {Array} props.allScores - 전체 모델 점수 데이터 (호버된 모델 표시용)
  * @param {string} props.title - 차트 제목
  * @param {number} props.height - 차트 높이 (기본: 400)
+ * @param {string} props.scoreBasis - 레이더 점수 기준
  * @param {string} props.hoveredModel - 현재 호버된 모델명
  * @param {Function} props.onModelHover - 모델 호버 콜백
  */
@@ -70,44 +83,49 @@ export default function ModelCompareChart({
   allScores,
   title,
   height = 400,
+  scoreBasis = 'normalized',
   hoveredModel,
   onModelHover
 }) {
   const { t } = useTranslation()
   const { isDark } = useTheme()
-  const { ref, exportImage } = useExportImage({ exportWidth: README_EXPORT_WIDTH })
+  const { ref, exportImage, isExporting } = useExportImage({
+    exportWidth: README_EXPORT_WIDTH,
+    exportProfile: 'modelCompare'
+  })
 
   // 다크모드용 색상
   const gridColor = isDark ? '#4b5563' : '#e5e7eb'
   const tickColor = isDark ? '#d1d5db' : '#374151'
   const radiusTickColor = isDark ? '#9ca3af' : '#9ca3af'
 
-  // 기본 차트 데이터 (빈 오각형용 - 그리드 렌더링을 위한 더미 값 포함)
+  // 동적 그룹 정보를 사용하고, 데이터가 없을 때만 기존 5개 그룹을 사용한다.
   const baseData = useMemo(() => {
-    return SUBJECTS.map(({ nameKey }) => ({ subject: t(nameKey), _grid: 100 }))
-  }, [t])
+    if (data?.length) return data
+
+    const dynamicGroups = allScores?.[0]?.groupDetails || []
+    if (dynamicGroups.length) {
+      return dynamicGroups.map(detail => ({
+        subject: t(_getGroupNameKey(detail.group)),
+        group: detail.group,
+        maxScore: scoreBasis === 'raw' ? detail.rawMaxScore : detail.normalizedMaxScore,
+        _grid: 100
+      }))
+    }
+
+    return LEGACY_RADAR_GROUPS.map(({ nameKey, key, maxScore }) => ({
+      subject: t(nameKey),
+      group: key,
+      maxScore,
+      _grid: 100
+    }))
+  }, [data, allScores, scoreBasis, t])
 
   // 호버된 모델이 선택되지 않은 경우, 데이터에 추가
   const chartData = useMemo(() => {
-    // 기본 데이터 사용 (선택된 모델이 없을 때)
     const sourceData = data?.length ? data : baseData
-
-    if (!hoveredModel || selectedModels?.includes(hoveredModel)) return sourceData
-
-    // 호버된 모델의 점수 찾기
-    const modelScore = allScores?.find(s => s.model === hoveredModel)
-    if (!modelScore) return sourceData
-
-    // 기존 데이터에 호버된 모델 점수 추가
-    return sourceData.map((row, idx) => {
-      const { key, maxScore } = SUBJECTS[idx]
-      const rawScore = modelScore[key] ?? 0
-      return {
-        ...row,
-        [hoveredModel]: (rawScore / maxScore) * 100
-      }
-    })
-  }, [data, baseData, hoveredModel, selectedModels, allScores])
+    return addHoveredModelRadarData(sourceData, hoveredModel, selectedModels, allScores, scoreBasis)
+  }, [data, baseData, hoveredModel, selectedModels, allScores, scoreBasis])
 
   // 호버된 모델이 선택되지 않은 경우 표시할지 여부
   const showHoveredModel = hoveredModel && !selectedModels?.includes(hoveredModel)
@@ -124,27 +142,27 @@ export default function ModelCompareChart({
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between mb-4">
         {title && (
-          <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+          <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
         )}
         <div className="flex items-start gap-2">
-          <span className="hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
+          <span className="export-role-watermark hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
           <ExportButton
             onClick={() => exportImage(`${t('export.heatmap')}.png`)}
             exportKey="model-compare"
           />
         </div>
       </div>
-      <ResponsiveContainer width="100%" height={height}>
+      <ResponsiveContainer width="100%" height={isExporting ? Math.max(height, 520) : height}>
         <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
           <PolarGrid stroke={gridColor} />
           <PolarAngleAxis
             dataKey="subject"
-            tick={{ fontSize: 12, fill: tickColor }}
+            tick={{ fontSize: isExporting ? 24 : 12, fill: tickColor, className: 'export-role-axis-label' }}
           />
           <PolarRadiusAxis
-            angle={90}
+            angle={isExporting ? 54 : 90}
             domain={[0, 100]}
-            tick={{ fontSize: 10, fill: radiusTickColor }}
+            tick={{ fontSize: isExporting ? 24 : 10, fill: isExporting ? (isDark ? '#e5e7eb' : '#4b5563') : radiusTickColor, className: 'export-role-axis-value' }}
             axisLine={false}
           />
           <Tooltip content={<CustomTooltip t={t} />} />
@@ -168,6 +186,7 @@ export default function ModelCompareChart({
               strokeWidth={2}
               strokeOpacity={0.6}
               strokeDasharray="5 5"
+              isAnimationActive={!isExporting}
               animationDuration={300}
             />
           )}
@@ -185,6 +204,7 @@ export default function ModelCompareChart({
               }
               strokeWidth={hoveredModel === model ? 3 : 2}
               strokeOpacity={hoveredModel && hoveredModel !== model ? 0.3 : 1}
+              isAnimationActive={!isExporting}
               animationDuration={500}
             />
           ))}
@@ -194,7 +214,7 @@ export default function ModelCompareChart({
                 {payload.filter(entry => entry.dataKey !== '_grid').map((entry) => (
                   <span
                     key={entry.dataKey}
-                    className={`cursor-pointer transition-opacity text-sm ${
+                    className={`export-role-legend cursor-pointer transition-opacity text-sm ${
                       hoveredModel && hoveredModel !== entry.dataKey ? 'opacity-40' : ''
                     }`}
                     style={{ color: entry.color }}

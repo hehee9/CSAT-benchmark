@@ -1,0 +1,2250 @@
+{
+  "schema_version": 1,
+  "updatedAt": "2026-09-07T18:31:39.449Z",
+  "models": {
+    "Claude Fable 5 (high)": {
+      "modelId": "anthropic/claude-fable-5",
+      "tokensPerSecond": 8,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Fable 5.1 (high)": {
+      "modelId": "anthropic/claude-fable-5.1",
+      "tokensPerSecond": 44,
+      "providers": [
+        "Anthropic",
+        "Azure",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Haiku 4.5": {
+      "modelId": "anthropic/claude-haiku-4.5",
+      "tokensPerSecond": 71,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Haiku 4.5 (32K Thinking)": {
+      "modelId": "anthropic/claude-haiku-4.5",
+      "tokensPerSecond": 71,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Opus 4.5": {
+      "modelId": "anthropic/claude-opus-4.5",
+      "tokensPerSecond": 33,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Opus 4.5 (32K Thinking)": {
+      "modelId": "anthropic/claude-opus-4.5",
+      "tokensPerSecond": 33,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Opus 4.7": {
+      "modelId": "anthropic/claude-opus-4.7",
+      "tokensPerSecond": 46,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Opus 4.7 (high)": {
+      "modelId": "anthropic/claude-opus-4.7",
+      "tokensPerSecond": 46,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Opus 4.7 (max*)": {
+      "modelId": "anthropic/claude-opus-4.7",
+      "tokensPerSecond": 46,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Opus 4.8": {
+      "modelId": "anthropic/claude-opus-4.8",
+      "tokensPerSecond": 59,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Opus 4.8 (high)": {
+      "modelId": "anthropic/claude-opus-4.8",
+      "tokensPerSecond": 59,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Opus 5": {
+      "modelId": "anthropic/claude-opus-5",
+      "tokensPerSecond": 59,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Opus 5 (high)": {
+      "modelId": "anthropic/claude-opus-5",
+      "tokensPerSecond": 59,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Sonnet 4.5": {
+      "modelId": "anthropic/claude-sonnet-4.5",
+      "tokensPerSecond": 37,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Sonnet 4.5 (32K Thinking)": {
+      "modelId": "anthropic/claude-sonnet-4.5",
+      "tokensPerSecond": 37,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Sonnet 4.6": {
+      "modelId": "anthropic/claude-sonnet-4.6",
+      "tokensPerSecond": 33,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Sonnet 4.6 (high)": {
+      "modelId": "anthropic/claude-sonnet-4.6",
+      "tokensPerSecond": 33,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Sonnet 5": {
+      "modelId": "anthropic/claude-sonnet-5",
+      "tokensPerSecond": 67,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "Claude Sonnet 5 (high)": {
+      "modelId": "anthropic/claude-sonnet-5",
+      "tokensPerSecond": 67,
+      "providers": [
+        "Amazon Bedrock",
+        "Anthropic",
+        "Azure",
+        "Claude Platform on AWS",
+        "Google"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Anthropic",
+        "tag": "anthropic"
+      }
+    },
+    "DeepSeek V3.2 Exp (Non-Thinking)": {
+      "modelId": "deepseek/deepseek-v3.2-exp",
+      "tokensPerSecond": 26,
+      "providers": [
+        "AtlasCloud",
+        "Novita",
+        "SiliconFlow"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "DeepSeek V3.2 Exp (Thinking)": {
+      "modelId": "deepseek/deepseek-v3.2-exp",
+      "tokensPerSecond": 26,
+      "providers": [
+        "AtlasCloud",
+        "Novita",
+        "SiliconFlow"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "DeepSeek V4 Flash (Max)": {
+      "modelId": "deepseek/deepseek-v4-flash",
+      "tokensPerSecond": 46,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "Azure",
+        "Baidu",
+        "DeepInfra",
+        "DigitalOcean",
+        "GMICloud",
+        "Mancer 2",
+        "NextBit",
+        "Novita",
+        "Parasail",
+        "Phala",
+        "SiliconFlow",
+        "StreamLake",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "DeepSeek V4 Flash (None)": {
+      "modelId": "deepseek/deepseek-v4-flash",
+      "tokensPerSecond": 46,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "Azure",
+        "Baidu",
+        "DeepInfra",
+        "DigitalOcean",
+        "GMICloud",
+        "Mancer 2",
+        "NextBit",
+        "Novita",
+        "Parasail",
+        "Phala",
+        "SiliconFlow",
+        "StreamLake",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "DeepSeek V4 Flash 0731 (Max)": {
+      "modelId": "deepseek/deepseek-v4-flash-0731",
+      "tokensPerSecond": 81,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "Baidu",
+        "BaseTen",
+        "Cloudflare",
+        "CoreWeave",
+        "DeepInfra",
+        "DeepSeek",
+        "DigitalOcean",
+        "Fireworks",
+        "GMICloud",
+        "Inceptron",
+        "Makora",
+        "Mancer 2",
+        "Morph",
+        "NextBit",
+        "Novita",
+        "OpenInference",
+        "Parasail",
+        "Phala",
+        "Reka",
+        "Relace",
+        "Sail Research",
+        "SiliconFlow",
+        "StreamLake",
+        "Together",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "DeepSeek",
+        "tag": "deepseek"
+      }
+    },
+    "DeepSeek V4 Flash 0731 (None)": {
+      "modelId": "deepseek/deepseek-v4-flash-0731",
+      "tokensPerSecond": 81,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "Baidu",
+        "BaseTen",
+        "Cloudflare",
+        "CoreWeave",
+        "DeepInfra",
+        "DeepSeek",
+        "DigitalOcean",
+        "Fireworks",
+        "GMICloud",
+        "Inceptron",
+        "Makora",
+        "Mancer 2",
+        "Morph",
+        "NextBit",
+        "Novita",
+        "OpenInference",
+        "Parasail",
+        "Phala",
+        "Reka",
+        "Relace",
+        "Sail Research",
+        "SiliconFlow",
+        "StreamLake",
+        "Together",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "DeepSeek",
+        "tag": "deepseek"
+      }
+    },
+    "DeepSeek V4 Flash Vision Exp (Max)": {
+      "modelId": "deepseek/deepseek-v4-flash-vision-exp",
+      "tokensPerSecond": 93,
+      "providers": [
+        "AtlasCloud",
+        "DeepInfra",
+        "DeepSeek",
+        "Fireworks",
+        "Novita",
+        "SiliconFlow"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "DeepSeek",
+        "tag": "deepseek"
+      }
+    },
+    "DeepSeek V4 Flash Vision Exp (None)": {
+      "modelId": "deepseek/deepseek-v4-flash-vision-exp",
+      "tokensPerSecond": 93,
+      "providers": [
+        "AtlasCloud",
+        "DeepInfra",
+        "DeepSeek",
+        "Fireworks",
+        "Novita",
+        "SiliconFlow"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "DeepSeek",
+        "tag": "deepseek"
+      }
+    },
+    "DeepSeek V4 Pro (Max)": {
+      "modelId": "deepseek/deepseek-v4-pro",
+      "tokensPerSecond": 35.5,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "Azure",
+        "Baidu",
+        "BaseTen",
+        "DeepInfra",
+        "DigitalOcean",
+        "GMICloud",
+        "NextBit",
+        "Novita",
+        "Parasail",
+        "SiliconFlow",
+        "StreamLake",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "DeepSeek V4 Pro (None)": {
+      "modelId": "deepseek/deepseek-v4-pro",
+      "tokensPerSecond": 35.5,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "Azure",
+        "Baidu",
+        "BaseTen",
+        "DeepInfra",
+        "DigitalOcean",
+        "GMICloud",
+        "NextBit",
+        "Novita",
+        "Parasail",
+        "SiliconFlow",
+        "StreamLake",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "DeepSeek V4 Pro 0813 (Max)": {
+      "modelId": "deepseek/deepseek-v4-pro-0813",
+      "tokensPerSecond": 23,
+      "providers": [
+        "Alibaba",
+        "Baidu",
+        "BaseTen",
+        "Cloudflare",
+        "CoreWeave",
+        "DeepInfra",
+        "DeepSeek",
+        "DigitalOcean",
+        "Fireworks",
+        "GMICloud",
+        "Ionstream",
+        "NextBit",
+        "Novita",
+        "Parasail",
+        "Phala",
+        "Sail Research",
+        "SiliconFlow",
+        "StreamLake",
+        "Together"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "DeepSeek",
+        "tag": "deepseek"
+      }
+    },
+    "DeepSeek V4 Pro 0813 (None)": {
+      "modelId": "deepseek/deepseek-v4-pro-0813",
+      "tokensPerSecond": 23,
+      "providers": [
+        "Alibaba",
+        "Baidu",
+        "BaseTen",
+        "Cloudflare",
+        "CoreWeave",
+        "DeepInfra",
+        "DeepSeek",
+        "DigitalOcean",
+        "Fireworks",
+        "GMICloud",
+        "Ionstream",
+        "NextBit",
+        "Novita",
+        "Parasail",
+        "Phala",
+        "Sail Research",
+        "SiliconFlow",
+        "StreamLake",
+        "Together"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "DeepSeek",
+        "tag": "deepseek"
+      }
+    },
+    "DeepSeek-V3.2 (Non-Thinking)": {
+      "modelId": "deepseek/deepseek-v3.2",
+      "tokensPerSecond": 26,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "Baidu",
+        "DeepInfra",
+        "DigitalOcean",
+        "Friendli",
+        "GMICloud",
+        "Google",
+        "Mara",
+        "Novita",
+        "Phala",
+        "SambaNova",
+        "SiliconFlow",
+        "StreamLake",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "DeepSeek-V3.2 (Thinking)": {
+      "modelId": "deepseek/deepseek-v3.2",
+      "tokensPerSecond": 26,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "Baidu",
+        "DeepInfra",
+        "DigitalOcean",
+        "Friendli",
+        "GMICloud",
+        "Google",
+        "Mara",
+        "Novita",
+        "Phala",
+        "SambaNova",
+        "SiliconFlow",
+        "StreamLake",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "Gemini 3 Flash (high)": {
+      "modelId": "google/gemini-3-flash-preview",
+      "tokensPerSecond": 66,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3 Flash (minimal)": {
+      "modelId": "google/gemini-3-flash-preview",
+      "tokensPerSecond": 66,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3.1 Flash-Lite (high)": {
+      "modelId": "google/gemini-3.1-flash-lite",
+      "tokensPerSecond": 76,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3.1 Flash-Lite (minimal)": {
+      "modelId": "google/gemini-3.1-flash-lite",
+      "tokensPerSecond": 76,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3.1 Pro (high)": {
+      "modelId": "google/gemini-3.1-pro-preview",
+      "tokensPerSecond": 106,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3.1 Pro (low)": {
+      "modelId": "google/gemini-3.1-pro-preview",
+      "tokensPerSecond": 106,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3.5 Flash (high)": {
+      "modelId": "google/gemini-3.5-flash",
+      "tokensPerSecond": 126,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3.5 Flash (minimal)": {
+      "modelId": "google/gemini-3.5-flash",
+      "tokensPerSecond": 126,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3.5 Flash-Lite (high)": {
+      "modelId": "google/gemini-3.5-flash-lite",
+      "tokensPerSecond": 78,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3.5 Flash-Lite (minimal)": {
+      "modelId": "google/gemini-3.5-flash-lite",
+      "tokensPerSecond": 78,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3.6 Flash (high)": {
+      "modelId": "google/gemini-3.6-flash",
+      "tokensPerSecond": 128,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3.6 Flash (minimal)": {
+      "modelId": "google/gemini-3.6-flash",
+      "tokensPerSecond": 128,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3.7 Flash (high)": {
+      "modelId": "google/gemini-3.7-flash",
+      "tokensPerSecond": 85,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3.7 Flash (low)": {
+      "modelId": "google/gemini-3.7-flash",
+      "tokensPerSecond": 85,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3.8 Flash (high)": {
+      "modelId": "google/gemini-3.8-flash",
+      "tokensPerSecond": 79,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemini 3.8 Flash (low)": {
+      "modelId": "google/gemini-3.8-flash",
+      "tokensPerSecond": 79,
+      "providers": [
+        "Google",
+        "Google AI Studio"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemma 4 26B A4B": {
+      "modelId": "google/gemma-4-26b-a4b-it",
+      "tokensPerSecond": 26,
+      "providers": [
+        "Cloudflare",
+        "Darkbloom",
+        "DeepInfra",
+        "Google",
+        "NextBit",
+        "Novita",
+        "Parasail",
+        "SiliconFlow",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemma 4 26B A4B (high)": {
+      "modelId": "google/gemma-4-26b-a4b-it",
+      "tokensPerSecond": 26,
+      "providers": [
+        "Cloudflare",
+        "Darkbloom",
+        "DeepInfra",
+        "Google",
+        "NextBit",
+        "Novita",
+        "Parasail",
+        "SiliconFlow",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Google",
+        "tag": "google-vertex/global"
+      }
+    },
+    "Gemma 4 31B": {
+      "modelId": "google/gemma-4-31b-it",
+      "tokensPerSecond": 30,
+      "providers": [
+        "Cerebras",
+        "Chutes",
+        "CoreWeave",
+        "Crusoe",
+        "DeepInfra",
+        "Friendli",
+        "ModelRun",
+        "Novita",
+        "Parasail",
+        "SambaNova",
+        "SiliconFlow",
+        "Together",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "Gemma 4 31B (high)": {
+      "modelId": "google/gemma-4-31b-it",
+      "tokensPerSecond": 30,
+      "providers": [
+        "Cerebras",
+        "Chutes",
+        "CoreWeave",
+        "Crusoe",
+        "DeepInfra",
+        "Friendli",
+        "ModelRun",
+        "Novita",
+        "Parasail",
+        "SambaNova",
+        "SiliconFlow",
+        "Together",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "GLM-5 (Non-Thinking)": {
+      "modelId": "z-ai/glm-5",
+      "tokensPerSecond": 55,
+      "providers": [
+        "Amazon Bedrock",
+        "Baidu",
+        "DeepInfra",
+        "DigitalOcean",
+        "GMICloud",
+        "Novita",
+        "SiliconFlow",
+        "StreamLake",
+        "Venice",
+        "Z.AI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Z.AI",
+        "tag": "z-ai/fp8"
+      }
+    },
+    "GLM-5 (Thinking)": {
+      "modelId": "z-ai/glm-5",
+      "tokensPerSecond": 55,
+      "providers": [
+        "Amazon Bedrock",
+        "Baidu",
+        "DeepInfra",
+        "DigitalOcean",
+        "GMICloud",
+        "Novita",
+        "SiliconFlow",
+        "StreamLake",
+        "Venice",
+        "Z.AI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Z.AI",
+        "tag": "z-ai/fp8"
+      }
+    },
+    "GLM-5.1 (Non-Thinking)": {
+      "modelId": "z-ai/glm-5.1",
+      "tokensPerSecond": 23,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "Baidu",
+        "Chutes",
+        "Crusoe",
+        "DeepInfra",
+        "DigitalOcean",
+        "Friendli",
+        "GMICloud",
+        "Nebius",
+        "Novita",
+        "Phala",
+        "SiliconFlow",
+        "StreamLake",
+        "Venice",
+        "Z.AI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Z.AI",
+        "tag": "z-ai/fp8"
+      }
+    },
+    "GLM-5.1 (Thinking)": {
+      "modelId": "z-ai/glm-5.1",
+      "tokensPerSecond": 23,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "Baidu",
+        "Chutes",
+        "Crusoe",
+        "DeepInfra",
+        "DigitalOcean",
+        "Friendli",
+        "GMICloud",
+        "Nebius",
+        "Novita",
+        "Phala",
+        "SiliconFlow",
+        "StreamLake",
+        "Venice",
+        "Z.AI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Z.AI",
+        "tag": "z-ai/fp8"
+      }
+    },
+    "GLM-5.2 (Non-Thinking)": {
+      "modelId": "z-ai/glm-5.2",
+      "tokensPerSecond": 30,
+      "providers": [
+        "Alibaba",
+        "Ambient",
+        "AtlasCloud",
+        "Baidu",
+        "BaseTen",
+        "Cloudflare",
+        "CoreWeave",
+        "Crusoe",
+        "DeepInfra",
+        "DigitalOcean",
+        "Fireworks",
+        "Friendli",
+        "GMICloud",
+        "Inceptron",
+        "Mistral",
+        "Novita",
+        "Parasail",
+        "Phala",
+        "SiliconFlow",
+        "StreamLake",
+        "Together",
+        "Venice",
+        "Z.AI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Z.AI",
+        "tag": "z-ai/fp8"
+      }
+    },
+    "GLM-5.2 (Thinking)": {
+      "modelId": "z-ai/glm-5.2",
+      "tokensPerSecond": 30,
+      "providers": [
+        "Alibaba",
+        "Ambient",
+        "AtlasCloud",
+        "Baidu",
+        "BaseTen",
+        "Cloudflare",
+        "CoreWeave",
+        "Crusoe",
+        "DeepInfra",
+        "DigitalOcean",
+        "Fireworks",
+        "Friendli",
+        "GMICloud",
+        "Inceptron",
+        "Mistral",
+        "Novita",
+        "Parasail",
+        "Phala",
+        "SiliconFlow",
+        "StreamLake",
+        "Together",
+        "Venice",
+        "Z.AI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Z.AI",
+        "tag": "z-ai/fp8"
+      }
+    },
+    "GLM-5.3 Flash (high)": {
+      "modelId": "z-ai/glm-5.3-flash",
+      "tokensPerSecond": 35,
+      "providers": [
+        "BaseTen",
+        "Cloudflare",
+        "CoreWeave",
+        "DeepInfra",
+        "DigitalOcean",
+        "Fireworks",
+        "Friendli",
+        "GMICloud",
+        "Io Net",
+        "Makora",
+        "Modal",
+        "Morph",
+        "NextBit",
+        "Novita",
+        "Parasail",
+        "Reka",
+        "Relace",
+        "Sail Research",
+        "SiliconFlow",
+        "StreamLake",
+        "Together",
+        "Venice",
+        "Wafer",
+        "Z.AI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Z.AI",
+        "tag": "z-ai/fp8"
+      }
+    },
+    "GPT-4.1": {
+      "modelId": "openai/gpt-4.1",
+      "tokensPerSecond": 56,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-4.1 mini": {
+      "modelId": "openai/gpt-4.1-mini",
+      "tokensPerSecond": 29,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-4.1 nano": {
+      "modelId": "openai/gpt-4.1-nano",
+      "tokensPerSecond": 62,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-4o": {
+      "modelId": "openai/gpt-4o-2024-11-20",
+      "tokensPerSecond": 42.5,
+      "providers": [
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-4o mini": {
+      "modelId": "openai/gpt-4o-mini",
+      "tokensPerSecond": 41,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5 mini (high)": {
+      "modelId": "openai/gpt-5-mini",
+      "tokensPerSecond": 71,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5 nano (high)": {
+      "modelId": "openai/gpt-5-nano",
+      "tokensPerSecond": 102,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.1 (high)": {
+      "modelId": "openai/gpt-5.1",
+      "tokensPerSecond": 54,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.1 Codex": {
+      "modelId": "openai/gpt-5.1-codex",
+      "tokensPerSecond": 40.5,
+      "providers": [
+        "Azure"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "GPT-5.2 (Instant)": {
+      "modelId": "openai/gpt-5.2",
+      "tokensPerSecond": 47,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.2 (xhigh)": {
+      "modelId": "openai/gpt-5.2",
+      "tokensPerSecond": 47,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.4 (high)": {
+      "modelId": "openai/gpt-5.4",
+      "tokensPerSecond": 40,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.4 (none)": {
+      "modelId": "openai/gpt-5.4",
+      "tokensPerSecond": 40,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.4 (xhigh*)": {
+      "modelId": "openai/gpt-5.4",
+      "tokensPerSecond": 40,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.4 mini (none)": {
+      "modelId": "openai/gpt-5.4-mini",
+      "tokensPerSecond": 64,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.4 mini (xhigh)": {
+      "modelId": "openai/gpt-5.4-mini",
+      "tokensPerSecond": 64,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.4 nano (none)": {
+      "modelId": "openai/gpt-5.4-nano",
+      "tokensPerSecond": 65,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.4 nano (xhigh)": {
+      "modelId": "openai/gpt-5.4-nano",
+      "tokensPerSecond": 65,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.5 (high)": {
+      "modelId": "openai/gpt-5.5",
+      "tokensPerSecond": 55,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.5 (none)": {
+      "modelId": "openai/gpt-5.5",
+      "tokensPerSecond": 55,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.5 (xhigh*)": {
+      "modelId": "openai/gpt-5.5",
+      "tokensPerSecond": 55,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.5 Pro": {
+      "modelId": "openai/gpt-5.5-pro",
+      "tokensPerSecond": 4,
+      "providers": [
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.6 Luna (high)": {
+      "modelId": "openai/gpt-5.6-luna",
+      "tokensPerSecond": 77,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.6 Luna (low)": {
+      "modelId": "openai/gpt-5.6-luna",
+      "tokensPerSecond": 77,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.6 Luna (max*)": {
+      "modelId": "openai/gpt-5.6-luna",
+      "tokensPerSecond": 77,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.6 Luna (none)": {
+      "modelId": "openai/gpt-5.6-luna",
+      "tokensPerSecond": 77,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.6 Luna Pro (high)": {
+      "modelId": "openai/gpt-5.6-luna-pro",
+      "tokensPerSecond": 118,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.6 Sol (high)": {
+      "modelId": "openai/gpt-5.6-sol",
+      "tokensPerSecond": 42,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.6 Sol (max*)": {
+      "modelId": "openai/gpt-5.6-sol",
+      "tokensPerSecond": 42,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.6 Sol (none)": {
+      "modelId": "openai/gpt-5.6-sol",
+      "tokensPerSecond": 42,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.6 Sol Pro (high)": {
+      "modelId": "openai/gpt-5.6-sol-pro",
+      "tokensPerSecond": 75,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.6 Terra (high)": {
+      "modelId": "openai/gpt-5.6-terra",
+      "tokensPerSecond": 50,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.6 Terra (max*)": {
+      "modelId": "openai/gpt-5.6-terra",
+      "tokensPerSecond": 50,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.6 Terra (none)": {
+      "modelId": "openai/gpt-5.6-terra",
+      "tokensPerSecond": 50,
+      "providers": [
+        "Amazon Bedrock",
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-5.6 Terra Pro (high)": {
+      "modelId": "openai/gpt-5.6-terra-pro",
+      "tokensPerSecond": 104,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-6 Astra (high)": {
+      "modelId": "openai/gpt-6-astra",
+      "tokensPerSecond": 29,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-6 Astra (low)": {
+      "modelId": "openai/gpt-6-astra",
+      "tokensPerSecond": 29,
+      "providers": [
+        "Azure",
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "GPT-OSS 120B (high)": {
+      "modelId": "openai/gpt-oss-120b",
+      "tokensPerSecond": 98.25,
+      "providers": [
+        "AkashML",
+        "Amazon Bedrock",
+        "BaseTen",
+        "Cerebras",
+        "CoreWeave",
+        "DeepInfra",
+        "DigitalOcean",
+        "Google",
+        "Groq",
+        "Mancer 2",
+        "Mara",
+        "Nebius",
+        "Novita",
+        "Parasail",
+        "Phala",
+        "SambaNova",
+        "SiliconFlow",
+        "Together"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "Grok 4.3 (high)": {
+      "modelId": "x-ai/grok-4.3",
+      "tokensPerSecond": 89,
+      "providers": [
+        "xAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "xAI",
+        "tag": "xai"
+      }
+    },
+    "Grok 4.3 (none)": {
+      "modelId": "x-ai/grok-4.3",
+      "tokensPerSecond": 89,
+      "providers": [
+        "xAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "xAI",
+        "tag": "xai"
+      }
+    },
+    "Grok 4.5 (high)": {
+      "modelId": "x-ai/grok-4.5",
+      "tokensPerSecond": 45,
+      "providers": [
+        "xAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "xAI",
+        "tag": "xai"
+      }
+    },
+    "Kimi K2.5 (Non-Thinking)": {
+      "modelId": "moonshotai/kimi-k2.5",
+      "tokensPerSecond": 29,
+      "providers": [
+        "Amazon Bedrock",
+        "AtlasCloud",
+        "DigitalOcean",
+        "Novita",
+        "Phala",
+        "SiliconFlow",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "Kimi K2.5 (Thinking)": {
+      "modelId": "moonshotai/kimi-k2.5",
+      "tokensPerSecond": 29,
+      "providers": [
+        "Amazon Bedrock",
+        "AtlasCloud",
+        "DigitalOcean",
+        "Novita",
+        "Phala",
+        "SiliconFlow",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "Kimi K2.6 (Non-Thinking)": {
+      "modelId": "moonshotai/kimi-k2.6",
+      "tokensPerSecond": 38,
+      "providers": [
+        "AtlasCloud",
+        "Baidu",
+        "BaseTen",
+        "Chutes",
+        "Cloudflare",
+        "CoreWeave",
+        "Crusoe",
+        "Decart",
+        "DeepInfra",
+        "DigitalOcean",
+        "Fireworks",
+        "Inceptron",
+        "Moonshot AI",
+        "Novita",
+        "Parasail",
+        "SiliconFlow",
+        "StreamLake",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Moonshot AI",
+        "tag": "moonshotai/int4"
+      }
+    },
+    "Kimi K2.6 (Thinking)": {
+      "modelId": "moonshotai/kimi-k2.6",
+      "tokensPerSecond": 38,
+      "providers": [
+        "AtlasCloud",
+        "Baidu",
+        "BaseTen",
+        "Chutes",
+        "Cloudflare",
+        "CoreWeave",
+        "Crusoe",
+        "Decart",
+        "DeepInfra",
+        "DigitalOcean",
+        "Fireworks",
+        "Inceptron",
+        "Moonshot AI",
+        "Novita",
+        "Parasail",
+        "SiliconFlow",
+        "StreamLake",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Moonshot AI",
+        "tag": "moonshotai/int4"
+      }
+    },
+    "MiniMax M3 (Non-Thinking)": {
+      "modelId": "minimax/minimax-m3",
+      "tokensPerSecond": 78,
+      "providers": [
+        "AtlasCloud",
+        "CoreWeave",
+        "DeepInfra",
+        "GMICloud",
+        "Minimax",
+        "ModelRun",
+        "Novita",
+        "Parasail",
+        "SambaNova",
+        "StreamLake",
+        "Together",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Minimax",
+        "tag": "minimax/fp8"
+      }
+    },
+    "MiniMax M3 (Thinking)": {
+      "modelId": "minimax/minimax-m3",
+      "tokensPerSecond": 78,
+      "providers": [
+        "AtlasCloud",
+        "CoreWeave",
+        "DeepInfra",
+        "GMICloud",
+        "Minimax",
+        "ModelRun",
+        "Novita",
+        "Parasail",
+        "SambaNova",
+        "StreamLake",
+        "Together",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Minimax",
+        "tag": "minimax/fp8"
+      }
+    },
+    "Mistral Small 4 (Non-Thinking)": {
+      "modelId": "mistralai/mistral-small-2603",
+      "tokensPerSecond": 119,
+      "providers": [
+        "Mistral",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Mistral",
+        "tag": null
+      }
+    },
+    "Mistral Small 4 (Thinking)": {
+      "modelId": "mistralai/mistral-small-2603",
+      "tokensPerSecond": 119,
+      "providers": [
+        "Mistral",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Mistral",
+        "tag": null
+      }
+    },
+    "Muse Spark 1.2 (high)": {
+      "modelId": "meta/muse-spark-1.2",
+      "tokensPerSecond": 76,
+      "providers": [
+        "Meta"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Meta",
+        "tag": "meta"
+      }
+    },
+    "Muse Spark 1.2 (minimal)": {
+      "modelId": "meta/muse-spark-1.2",
+      "tokensPerSecond": 76,
+      "providers": [
+        "Meta"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Meta",
+        "tag": "meta"
+      }
+    },
+    "Muse Spark 1.3 (high)": {
+      "modelId": "meta/muse-spark-1.3-contributor",
+      "tokensPerSecond": 89,
+      "providers": [
+        "Meta"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Meta",
+        "tag": "meta"
+      }
+    },
+    "Muse Spark 1.3 (minimal)": {
+      "modelId": "meta/muse-spark-1.3-contributor",
+      "tokensPerSecond": 89,
+      "providers": [
+        "Meta"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Meta",
+        "tag": "meta"
+      }
+    },
+    "o1 (high)": {
+      "modelId": "openai/o1",
+      "tokensPerSecond": 15,
+      "providers": [
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "o3 (high)": {
+      "modelId": "openai/o3",
+      "tokensPerSecond": 81,
+      "providers": [
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "o3-mini (high)": {
+      "modelId": "openai/o3-mini",
+      "tokensPerSecond": 94,
+      "providers": [
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "o4-mini (high)": {
+      "modelId": "openai/o4-mini",
+      "tokensPerSecond": 126,
+      "providers": [
+        "OpenAI"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "OpenAI",
+        "tag": "openai"
+      }
+    },
+    "Qwen3.5 27B (Non-Thinking)": {
+      "modelId": "qwen/qwen3.5-27b",
+      "tokensPerSecond": 75,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "DeepInfra",
+        "Novita",
+        "Phala",
+        "SiliconFlow"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Alibaba",
+        "tag": "alibaba"
+      }
+    },
+    "Qwen3.5 27B (Thinking)": {
+      "modelId": "qwen/qwen3.5-27b",
+      "tokensPerSecond": 75,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "DeepInfra",
+        "Novita",
+        "Phala",
+        "SiliconFlow"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Alibaba",
+        "tag": "alibaba"
+      }
+    },
+    "Qwen3.5 35B A3B (Non-Thinking)": {
+      "modelId": "qwen/qwen3.5-35b-a3b",
+      "tokensPerSecond": 130,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "Darkbloom",
+        "DeepInfra",
+        "Parasail",
+        "SiliconFlow",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Alibaba",
+        "tag": "alibaba"
+      }
+    },
+    "Qwen3.5 35B A3B (Thinking)": {
+      "modelId": "qwen/qwen3.5-35b-a3b",
+      "tokensPerSecond": 130,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "Darkbloom",
+        "DeepInfra",
+        "Parasail",
+        "SiliconFlow",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Alibaba",
+        "tag": "alibaba"
+      }
+    },
+    "Qwen3.5 397B (Non-Thinking)": {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "tokensPerSecond": 55,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "DeepInfra",
+        "DigitalOcean",
+        "GMICloud",
+        "Novita",
+        "Parasail",
+        "Phala",
+        "StreamLake",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Alibaba",
+        "tag": "alibaba"
+      }
+    },
+    "Qwen3.5 397B (Thinking)": {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "tokensPerSecond": 55,
+      "providers": [
+        "Alibaba",
+        "AtlasCloud",
+        "DeepInfra",
+        "DigitalOcean",
+        "GMICloud",
+        "Novita",
+        "Parasail",
+        "Phala",
+        "StreamLake",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Alibaba",
+        "tag": "alibaba"
+      }
+    },
+    "Qwen3.5 9B (Non-Thinking)": {
+      "modelId": "qwen/qwen3.5-9b",
+      "tokensPerSecond": 38.5,
+      "providers": [
+        "Darkbloom",
+        "DeepInfra",
+        "Parasail",
+        "SiliconFlow",
+        "Together",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "Qwen3.5 9B (Thinking)": {
+      "modelId": "qwen/qwen3.5-9b",
+      "tokensPerSecond": 38.5,
+      "providers": [
+        "Darkbloom",
+        "DeepInfra",
+        "Parasail",
+        "SiliconFlow",
+        "Together",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "provider-median",
+        "provider": null,
+        "tag": null
+      }
+    },
+    "Qwen3.6 27B (Non-Thinking)": {
+      "modelId": "qwen/qwen3.6-27b",
+      "tokensPerSecond": 53,
+      "providers": [
+        "Alibaba",
+        "Chutes",
+        "DeepInfra",
+        "Phala",
+        "SiliconFlow",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Alibaba",
+        "tag": "alibaba"
+      }
+    },
+    "Qwen3.6 27B (Thinking)": {
+      "modelId": "qwen/qwen3.6-27b",
+      "tokensPerSecond": 53,
+      "providers": [
+        "Alibaba",
+        "Chutes",
+        "DeepInfra",
+        "Phala",
+        "SiliconFlow",
+        "Venice"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Alibaba",
+        "tag": "alibaba"
+      }
+    },
+    "Qwen3.6 Plus (Non-Thinking)": {
+      "modelId": "qwen/qwen3.6-plus",
+      "tokensPerSecond": 37,
+      "providers": [
+        "Alibaba"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Alibaba",
+        "tag": "alibaba"
+      }
+    },
+    "Qwen3.6 Plus (Thinking)": {
+      "modelId": "qwen/qwen3.6-plus",
+      "tokensPerSecond": 37,
+      "providers": [
+        "Alibaba"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Alibaba",
+        "tag": "alibaba"
+      }
+    },
+    "Qwen3.7 Max (Non-Thinking)": {
+      "modelId": "qwen/qwen3.7-max",
+      "tokensPerSecond": 55,
+      "providers": [
+        "Alibaba"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Alibaba",
+        "tag": "alibaba"
+      }
+    },
+    "Qwen3.7 Max (Thinking)": {
+      "modelId": "qwen/qwen3.7-max",
+      "tokensPerSecond": 55,
+      "providers": [
+        "Alibaba"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Alibaba",
+        "tag": "alibaba"
+      }
+    },
+    "Solar Pro 3 (high)": {
+      "modelId": "upstage/solar-pro-3",
+      "tokensPerSecond": 15,
+      "providers": [
+        "Upstage"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Upstage",
+        "tag": "upstage"
+      }
+    },
+    "Solar Pro 3 (low)": {
+      "modelId": "upstage/solar-pro-3",
+      "tokensPerSecond": 15,
+      "providers": [
+        "Upstage"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Upstage",
+        "tag": "upstage"
+      }
+    },
+    "Solar Pro 4": {
+      "modelId": "upstage/solar-pro4",
+      "tokensPerSecond": 25,
+      "providers": [
+        "Upstage"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Upstage",
+        "tag": "upstage"
+      }
+    },
+    "Solar Pro 4 (max)": {
+      "modelId": "upstage/solar-pro4",
+      "tokensPerSecond": 25,
+      "providers": [
+        "Upstage"
+      ],
+      "selection": {
+        "strategy": "official",
+        "provider": "Upstage",
+        "tag": "upstage"
+      }
+    }
+  }
+}

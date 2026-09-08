@@ -1,16 +1,16 @@
 # 2026 CSAT LLM Solving Records
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20this%20project-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/hehee9)
 
 **Korean version: [readme.md](readme.md)**
 
 <div align="center">
 
-### [**Interactive Dashboard**](https://hehee9.github.io/2026-CSAT/)
+### [**Interactive Dashboard**](https://hehee9.github.io/CSAT-benchmark/)
 
-[![Dashboard](https://img.shields.io/badge/Dashboard-Live-brightgreen?style=for-the-badge&logo=github)](https://hehee9.github.io/2026-CSAT/)
+[![Dashboard](https://img.shields.io/badge/Dashboard-Live-brightgreen?style=for-the-badge&logo=github)](https://hehee9.github.io/CSAT-benchmark/)
 
 **Use the link above to view model scores, subject-level accuracy, and cost analysis in a readable dashboard.**
 
@@ -24,9 +24,11 @@ This dataset records and summarizes the results of various LLM models solving th
 The test covers all Korean and Math sections, English, Korean History, and
 four inquiry subjects that were widely considered relatively difficult in this year's CSAT: Life Science I, Physics I, Chemistry I, and Society & Culture.
 
-The README shows **only the scores of major models**, so please check the **full results on the [dashboard](https://hehee9.github.io/2026-CSAT/)**.
+The README shows **only the scores of major models**, so please check the **full results on the [dashboard](https://hehee9.github.io/CSAT-benchmark/)**.
 
-For **Hard Mode**, added after 2026-06-28, enable the **[Hard](https://hehee9.github.io/2026-CSAT/?mode=hard)** button on the dashboard.
+Section-bundled 2026 records are shown in the dashboard's **[Normal](https://hehee9.github.io/CSAT-benchmark/?exam=csat-2026&mode=default&scoreBasis=normalized)** mode, and question-by-question records are shown in **[Easy](https://hehee9.github.io/CSAT-benchmark/?exam=csat-2026&mode=easy&scoreBasis=normalized)** mode.
+
+To run the benchmark directly, see the [usage guide](guides/usage.md).
 
 **As of 2026-04-25, I found that the images for Physics I questions 16 and 17 had been attached in reverse order, so only those two questions were fully retried.**
 
@@ -34,7 +36,7 @@ For **Hard Mode**, added after 2026-06-28, enable the **[Hard](https://hehee9.gi
 
 ## Overall Scores for Major Subjects
 
-![Overall total score comparison](https://hehee9.github.io/2026-CSAT/images/전체.png)
+![Overall total score comparison](https://hehee9.github.io/CSAT-benchmark/images/전체.png)
 
 > 📊 **Evaluated subjects**: Korean, Math, English, Korean History, Inquiry subjects (Physics I, Chemistry I, Life Science I, Society & Culture), for a total of 450 points.
 >
@@ -44,7 +46,7 @@ For **Hard Mode**, added after 2026-06-28, enable the **[Hard](https://hehee9.gi
 > - English and Korean History: full score
 > - Inquiry: converted as two selected subjects from four subjects (average of four subjects × 2)
 
-![Best/worst total score combination comparison](https://hehee9.github.io/2026-CSAT/images/최고_최저.png)
+![Best/worst total score combination comparison](https://hehee9.github.io/CSAT-benchmark/images/최고_최저.png)
 
 > 📊 **Evaluated subjects**: Same as above, for a total of 450 points.
 >
@@ -56,9 +58,9 @@ For **Hard Mode**, added after 2026-06-28, enable the **[Hard](https://hehee9.gi
 
 ### Image-attached Questions vs Text-only Questions
 
-![Score rate for questions with images](https://hehee9.github.io/2026-CSAT/images/이미지O.png)
+![Score rate for questions with images](https://hehee9.github.io/CSAT-benchmark/images/이미지O.png)
 
-![Score rate for questions without images](https://hehee9.github.io/2026-CSAT/images/이미지X.png)
+![Score rate for questions without images](https://hehee9.github.io/CSAT-benchmark/images/이미지X.png)
 
 > 📊 **Evaluation range**: All subjects (Korean, Math, English, Korean History, Inquiry)
 >
@@ -71,12 +73,12 @@ For **Hard Mode**, added after 2026-06-28, enable the **[Hard](https://hehee9.gi
 
 ## Test Environment and Notes
 
-**Important: This test was conducted through API environments.**
+**Important: Except for GPT-5.5 Pro, this test was conducted through each model's official API.**
 
 > However, GPT-5.5 Pro was run in a tools-disabled web environment through [custom GPTs](https://chatgpt.com/g/g-69ecacbb8fac8191b0eb07e39c62496c-gpt-pro).
 
 ### Test Environment
-- **Execution method**: Tested through each model's official API.
+- **Execution method**: Each model except GPT-5.5 Pro was tested through its official API.
 - **Reasoning settings**: Maximum output tokens and reasoning budgets were set sufficiently high.
 - **System prompt**: No separate system prompt was provided.
 - **External tools**: No external tools such as search or calculators were **provided**.
@@ -103,19 +105,22 @@ Therefore, **performance may differ from official website or app results.**
 - **Image handling**: Only images included in the problem, such as graphs, tables, and figures, were separately captured and provided.
 - **Original preservation**: The PDF file itself or full-page screenshots were not provided.
 - This was done so that the models would use only text understanding and visual-material interpretation abilities.
-- **Hard Mode**: Each section (subject) is solved all at once.
+- **Normal Mode**: Every question in a section is solved in one request.
+- **Easy Mode**: Each question is solved once in its own request.
 
 ---
 
 ## Tested Models
 
-### Default
-
 - **OpenAI GPT series**
   - GPT-6 Astra (high / low)
+  - GPT-5.6 Sol Pro (high)
   - GPT-5.6 Sol (max* / high / none)
+  - GPT-5.6 Terra Pro (high)
   - GPT-5.6 Terra (max* / high / none)
+  - GPT-5.6 Luna Pro (high)
   - GPT-5.6 Luna (max* / high / low / none)
+  - GPT-5.5 Pro (xhigh, GPTs)
   - GPT-5.5 (xhigh* / high / none)
   - GPT-5.5 Instant
   - GPT-5.4 (xhigh* / high / none)
@@ -142,7 +147,6 @@ Therefore, **performance may differ from official website or app results.**
   - Gemini 3.6 Flash (high / minimal)
   - Gemini 3.5 Flash (high / minimal)
   - Gemini 3.5 Flash-Lite (high / minimal)
-  - Gemini 3.5 Flash (high / minimal)
   - Gemini 3.1 Pro (high / low)
   - Gemini 3.1 Flash-Lite (high / minimal)
   - Gemini 3 Pro (high / low)
@@ -160,14 +164,18 @@ Therefore, **performance may differ from official website or app results.**
 - **Anthropic Claude series**
   - Claude Fable 5.1 (high)
   - Claude Fable 5 (high)
+  - Claude Opus 5 (high / none)
+  - Claude Sonnet 5 (high / none)
+  - Claude Opus 4.8 (high / none)
   - Claude Opus 4.7 (max* / high / none)
+  - Claude Sonnet 4.6 (high / none)
   - Claude Opus 4.5 (32K Thinking / Non-Thinking)
   - Claude Sonnet 4.5 (32K Thinking / Non-Thinking)
   - Claude Haiku 4.5 (32K Thinking / Non-Thinking)
 
 - **xAI Grok series**
   - Grok 4.5 (high)
-  - Grok 4.3
+  - Grok 4.3 (Thinking / Non-Thinking)
   - Grok 4.1 Fast (Thinking / Non-Thinking)
   - Grok 4 Fast (Thinking)
   - Grok 4
@@ -195,8 +203,12 @@ Therefore, **performance may differ from official website or app results.**
   - Kimi K2.6 (Thinking / Non-Thinking)
   - Kimi K2.5 (Thinking / Non-Thinking)
 
+- **MiniMax series**
+  - MiniMax M3 (Thinking / Non-Thinking)
+
 - **Z.ai GLM series**
   - GLM-5.3 Flash (high)
+  - GLM-5.2 (Thinking / Non-Thinking)
   - GLM-5.1 (Thinking / Non-Thinking)
   - GLM-5 (Thinking / Non-Thinking)
 
@@ -228,135 +240,47 @@ Therefore, **performance may differ from official website or app results.**
 
 ※ * GPT-5.x (xhigh) and Claude Opus 4.7 (max) were retested only on problems they missed at high. This approach was used because the time and cost became too large relative to the performance gain.
 
-### Hard Mode
-
-- **OpenAI GPT series**
-  - GPT-6 Astra (high / low)
-  - GPT-5.6 Sol Pro (high)
-  - GPT-5.6 Sol (high / none)
-  - GPT-5.6 Terra Pro (high)
-  - GPT-5.6 Terra (high / none)
-  - GPT-5.6 Luna Pro (high)
-  - GPT-5.6 Luna (high / low / none)
-  - GPT-5.5 (high / none)
-  - GPT-5.5 Pro (xhigh, GPTs)
-  - GPT-5.4 mini (xhigh / none)
-  - GPT-5.4 nano (xhigh / none)
-  - o1 (high)
-  - GPT-4.1
-  - GPT-4o (2024-11-20)
-
-- **Google Gemini series**
-  - Gemini 3.8 Flash (high / low)
-  - Gemini 3.7 Flash (high / low)
-  - Gemini 3.6 Flash (high / minimal)
-  - Gemini 3.5 Flash (high / minimal)
-  - Gemini 3.5 Flash-Lite (high / minimal)
-  - Gemini 3.5 Flash (high / minimal)
-  - Gemini 3.1 Pro (high / low)
-  - Gemini 3.1 Flash-Lite (high / minimal)
-  - Gemini 3 Flash (high / minimal)
-  - Gemini 2.5 Pro (32K Thinking)
-
-- **Google Gemma series**
-  - Gemma 4 31B (high / minimal)
-  - Gemma 4 26B A4B (high / minimal)
-
-- **Anthropic Claude series**
-  - Claude Fable 5.1 (high)
-  - Claude Fable 5 (high)
-  - Claude Opus 5 (high / none)
-  - Claude Sonnet 5 (high / none)
-  - Claude Opus 4.8 (high / none)
-  - Claude Sonnet 4.6 (high / none)
-  - Claude Haiku 4.5 (32K Thinking / Non-Thinking)
-
-- **xAI Grok series**
-  - Grok 4.5 (high)
-  - Grok 4.3 (Thinking / Non-Thinking)
-
-- **Meta Muse Spark series**
-  - Muse Spark 1.3 (minimal / high)
-  - Muse Spark 1.2 (minimal / high)
-
-- **DeepSeek series**
-  - DeepSeek V4 Flash Vision Exp (None / Max)
-  - DeepSeek V4 Flash 0731 (None / Max)
-  - DeepSeek V4 Flash (Max / None)
-  - DeepSeek V4 Pro 0813 (Max / None)
-  - DeepSeek V4 Pro (Max / None)
-
-- **Alibaba Cloud Qwen series**
-  - Qwen3.8 Max (xhigh)
-  - Qwen3.7 Max (Thinking / Non-Thinking)
-  - Qwen3.6 27B (Thinking / Non-Thinking)
-
-- **MiniMax series**
-  - MiniMax M3 (Thinking / Non-Thinking)
-
-- **Z.ai GLM series**
-  - GLM-5.3 Flash (high)
-  - GLM-5.2 (Thinking / Non-Thinking)
-
-- **Moonshot AI Kimi series**
-  - Kimi K2.6 (Thinking / Non-Thinking)
-
-- **LGAI EXAONE series**
-  - K-EXAONE 2.0 (Thinking / Non-Thinking)
-  - K-EXAONE (Thinking / Non-Thinking)
-
-- **Kakao Kanana series**
-  - Kanana-o 9.8B
-
-- **Upstage Solar series**
-  - Solar Pro 4 (none / max)
-  - Solar Pro 3 (high / low)
-
-- **Motif series**
-  - Motif 3 (Thinking)
-  - Motif 12.7B (Thinking)
-
 ※ Models that cannot recognize images were run with text only.
 
 ---
 
 ## Korean Section
 
-### Model Scores (100 points)
-![Korean 2](https://hehee9.github.io/2026-CSAT/images/국어.png)
+### Easy Mode (100 points)
+![Korean easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_국어.png)
 
-### Hard Mode
-![Korean hard mode](https://hehee9.github.io/2026-CSAT/images/고난도_국어.png)
+### Normal Mode (100 points)
+![Korean normal mode](https://hehee9.github.io/CSAT-benchmark/images/국어.png)
 
 ---
 
 ## Math Section
 
-### Model Scores (100 points)
-![Math 2](https://hehee9.github.io/2026-CSAT/images/수학.png)
+### Easy Mode (100 points)
+![Math easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_수학.png)
 
-### Hard Mode
-![Math hard mode](https://hehee9.github.io/2026-CSAT/images/고난도_수학.png)
+### Normal Mode (100 points)
+![Math normal mode](https://hehee9.github.io/CSAT-benchmark/images/수학.png)
 
 ---
 
 ## English Section
 
-### Model Scores (100 points)
-![English 2](https://hehee9.github.io/2026-CSAT/images/영어.png)
+### Easy Mode (100 points)
+![English easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_영어.png)
 
-### Hard Mode
-![English hard mode](https://hehee9.github.io/2026-CSAT/images/고난도_영어.png)
+### Normal Mode (100 points)
+![English normal mode](https://hehee9.github.io/CSAT-benchmark/images/영어.png)
 
 ---
 
 ## Korean History Section
 
-### Model Scores (50 points)
-![Korean History 2](https://hehee9.github.io/2026-CSAT/images/한국사.png)
+### Easy Mode (50 points)
+![Korean History easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_한국사.png)
 
-### Hard Mode
-![Korean History hard mode](https://hehee9.github.io/2026-CSAT/images/고난도_한국사.png)
+### Normal Mode (50 points)
+![Korean History normal mode](https://hehee9.github.io/CSAT-benchmark/images/한국사.png)
 
 ---
 
@@ -364,25 +288,25 @@ Therefore, **performance may differ from official website or app results.**
 
 ### Physics I
 
-![Physics I 2](https://hehee9.github.io/2026-CSAT/images/물리1.png)
-![Physics I hard mode](https://hehee9.github.io/2026-CSAT/images/고난도_물리1.png)
+![Physics I easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_물리1.png)
+![Physics I normal mode](https://hehee9.github.io/CSAT-benchmark/images/물리1.png)
 
 > ※ The average score is low because many wrong answers occurred on questions containing visual materials with many lines or arrows.
 
 ### Chemistry I
 
-![Chemistry I 2](https://hehee9.github.io/2026-CSAT/images/화학1.png)
-![Chemistry I hard mode](https://hehee9.github.io/2026-CSAT/images/고난도_화학1.png)
+![Chemistry I easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_화학1.png)
+![Chemistry I normal mode](https://hehee9.github.io/CSAT-benchmark/images/화학1.png)
 
 ### Life Science I
 
-![Life Science I 2](https://hehee9.github.io/2026-CSAT/images/생명1.png)
-![Life Science I hard mode](https://hehee9.github.io/2026-CSAT/images/고난도_생명1.png)
+![Life Science I easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_생명1.png)
+![Life Science I normal mode](https://hehee9.github.io/CSAT-benchmark/images/생명1.png)
 
 ### Society & Culture
 
-![Society & Culture 2](https://hehee9.github.io/2026-CSAT/images/사회문화.png)
-![Society & Culture hard mode](https://hehee9.github.io/2026-CSAT/images/고난도_사회문화.png)
+![Society & Culture easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_사회문화.png)
+![Society & Culture normal mode](https://hehee9.github.io/CSAT-benchmark/images/사회문화.png)
 
 ---
 
@@ -392,7 +316,7 @@ This section analyzes the correlation between API cost (token usage) and score.
 
 ### Cost vs Performance
 
-![Cost efficiency](https://hehee9.github.io/2026-CSAT/images/비용_분석.png)
+![Cost efficiency](https://hehee9.github.io/CSAT-benchmark/images/비용_분석.png)
 
 For models without an official provider, the measurement is based on OpenRouter's average pricing.
 
@@ -408,13 +332,13 @@ For models without an official provider, the measurement is based on OpenRouter'
 
 ### Token Usage
 
-![Token usage](https://hehee9.github.io/2026-CSAT/images/토큰_사용량.png)
+![Token usage](https://hehee9.github.io/CSAT-benchmark/images/토큰_사용량.png)
 
 ---
 
 ## Support
 
-All tests in this project are conducted through actual APIs, and token usage and costs are transparently disclosed.
+Tests for models other than GPT-5.5 Pro were conducted through actual APIs, and token usage and costs are transparently disclosed.
 
 Since every subject is tested each time a new model is released, significant API costs are incurred. If you'd like to help maintain this project, please consider supporting via Ko-fi!
 
@@ -424,54 +348,26 @@ Since every subject is tested each time a new model is released, significant API
 
 ## Evaluation Targets in Detail
 
-### Korean Section
-- **Evaluation target**: 2026 Korean CSAT Korean section
-  - Common questions: 34 questions (76 points)
-  - Electives: Speech & Writing (11 questions, 24 points) / Language & Media (11 questions, 24 points)
-- **Total score**: 100 points (76 common points + 24 elective points)
+### 2026 Korean CSAT
 
-### Math Section
-- **Evaluation target**: 2026 Korean CSAT Math section
-  - Common questions: 22 questions (74 points)
-  - Electives: Probability & Statistics (8 questions, 26 points) / Calculus (8 questions, 26 points) / Geometry (8 questions, 26 points)
-- **Total score**: 100 points (74 common points + 26 elective points)
+- Korean: 34 common questions (76 points); Speech & Writing and Language & Media electives: 11 questions each (24 points each); 100 points total
+- Math: 22 common questions (74 points); Probability & Statistics, Calculus, and Geometry electives: 8 questions each (26 points each); 100 points total
+- English: 45 questions; listening replaced with a transcript (100 points)
+- Korean History: 20 questions (50 points; mandatory section)
+- Inquiry: Physics I, Chemistry I, Life Science I, and Society & Culture: 20 questions each (50 points each)
 
-### English Section
-- **Evaluation target**: 2026 Korean CSAT English section
-  - Total questions: 45 questions
-- **Total score**: 100 points
-
-### Korean History Section
-- **Evaluation target**: 2026 Korean CSAT Korean History section
-  - Total questions: 20 questions
-- **Total score**: 50 points (mandatory section)
-
-### Inquiry Section - Physics I
-- **Evaluation target**: 2026 Korean CSAT Physics I
-  - Total questions: 20 questions
-- **Total score**: 50 points
-
-### Inquiry Section - Chemistry I
-- **Evaluation target**: 2026 Korean CSAT Chemistry I
-  - Total questions: 20 questions
-- **Total score**: 50 points
-
-### Inquiry Section - Life Science I
-- **Evaluation target**: 2026 Korean CSAT Life Science I
-  - Total questions: 20 questions
-- **Total score**: 50 points
-
-### Inquiry Section - Society & Culture
-- **Evaluation target**: 2026 Korean CSAT Society & Culture
-  - Total questions: 20 questions
-- **Total score**: 50 points
+### 2027 Korean CSAT preparation
+- The exam manifest is being prepared for Korean, Math, English, Korean History, and 17 inquiry subjects.
+- Social studies: Economics, East Asian History, Society & Culture, Ethics and Life, World History, World Geography, Ethics and Thought, Politics and Law, Korean Geography
+- Science studies: Physics I, Physics II, Chemistry I, Chemistry II, Life Science I, Life Science II, Earth Science I, Earth Science II
+- Question files are not included yet. Once they are ready, the manifest's default Normal mode will be used.
 
 ## Detailed Evaluation Method
 
 The problems were first extracted into text using OCR, and incorrectly extracted parts were manually corrected.
 
-Each problem was entered individually into the prompt with only the minimum required information.
-If one passage had multiple linked questions, the input was structured as passage + individual question.
+In Easy Mode, each problem was entered individually into the prompt with only the minimum required information.
+In Easy Mode, when one passage had multiple linked questions, each input was structured as passage + individual question.
 
 Formulas were converted to LaTeX to prevent the model from misunderstanding the formulas themselves. Recognizing text from images is also a performance metric, but I judged that wrong answers caused by misrecognizing the problem text did not fit the direction of this project.
 

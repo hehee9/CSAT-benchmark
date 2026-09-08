@@ -1,20 +1,21 @@
 /**
  * @file dataTransform.js
- * @brief 데이터 변환 및 점수 계산 유틸리티
+ * @brief 시험 정의 기반 점수·비용 데이터 변환
  *
- * 점수 계산 방식 (450점 만점):
- * - 국어: 공통(76점) + 선택과목(화작/언매) 평균(24점)
- * - 수학: 공통(74점) + 선택과목(확통/미적/기하) 평균(26점)
- * - 영어: 전체 점수 (100점)
- * - 한국사: 전체 점수 (50점)
- * - 탐구: 4과목 평균 × 2 (각 50점, 환산 100점)
+ * 기본 점수 기준은 정규화 점수(450점)이며, 원점수 기준은 각 섹션을 한 번씩
+ * 더한 값이다. 시험 정의가 전달되면 섹션 목록과 배점을 모두 시험 정의에서
+ * 읽고, 전달되지 않은 기존 호출은 현재 2026 수능 데이터 계약을 사용한다.
  */
 
 import { getModelData } from './dataLoader'
 
-/**
- * @brief 과목별 만점 (필터용)
- */
+/** @brief 지원 점수 기준 */
+export const SCORE_BASIS = Object.freeze({
+  NORMALIZED: 'normalized',
+  RAW: 'raw'
+})
+
+/** @brief 기존 2026 대시보드의 과목별 정규화 만점 */
 export const SUBJECT_MAX_SCORES = {
   '국어': 100,
   '수학': 100,
@@ -23,350 +24,546 @@ export const SUBJECT_MAX_SCORES = {
   '탐구': 100
 }
 
-/**
- * @brief 과목명 → 점수 필드명 매핑
- */
-const SUBJECT_TO_FIELD = {
-  '국어': 'korean',
-  '수학': 'math',
-  '영어': 'english',
-  '한국사': 'history',
-  '탐구': 'exploration'
-}
-
-/**
- * @brief 세부 과목 → 만점 매핑
- * - 국어/수학 선택과목: 공통 + 선택 = 100점
- * - 탐구 개별과목: 50점 × 2 = 100점
- */
-const ELECTIVE_MAX_SCORES = {
-  '국어-화작': 100,
-  '국어-언매': 100,
-  '수학-확통': 100,
-  '수학-미적': 100,
-  '수학-기하': 100,
-  '탐구-물리1': 100,
-  '탐구-화학1': 100,
-  '탐구-생명1': 100,
-  '탐구-사문': 100
-}
-
-/**
- * @brief 세부 과목 이름 매핑 (필터명 → 데이터 내 이름)
- */
-const ELECTIVE_NAME_MAP = {
+/** @brief 기존 2026 데이터의 세부 과목명 매핑 */
+const LEGACY_NAME_MAP = {
   '사문': '사회문화'
 }
 
 /**
- * @brief 필터 정규화 (복수 세부과목 → 상위과목 통합)
- * - 같은 상위 과목의 세부가 2개 이상 → 상위 과목으로 통합
- * - 세부 1개만 → 세부 과목 유지
- * @param {Array} subjectFilter - 선택된 과목 배열
- * @return {Array} 정규화된 배열
+ * @brief 인자가 옵션 객체인지 판별
+ * @param {any} value - 검사할 값
+ * @return {boolean} 옵션 객체 여부
  */
-function _normalizeSubjectFilter(subjectFilter) {
-  if (!subjectFilter || subjectFilter.length === 0) {
-    return []
+function _isOptions(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value)
+}
+
+/**
+ * @brief 점수 기준 옵션 정규화
+ * @param {Object} options - { exam, scoreBasis }
+ * @return {Object} 정규화된 옵션
+ */
+function _normalizeOptions(options = {}) {
+  const scoreBasis = options.scoreBasis ?? SCORE_BASIS.NORMALIZED
+  if (scoreBasis !== SCORE_BASIS.NORMALIZED && scoreBasis !== SCORE_BASIS.RAW) {
+    throw new Error(`지원하지 않는 점수 기준입니다: ${scoreBasis}`)
   }
 
-  // 상위 과목별 세부 과목 수집
-  const parentToChildren = {}
-  const parentSubjects = new Set()
+  return {
+    exam: options.exam ?? null,
+    scoreBasis,
+    modelPerformance: options.modelPerformance ?? null
+  }
+}
 
-  subjectFilter.forEach(subject => {
-    if (subject.includes('-')) {
-      const [parent, child] = subject.split('-')
-      if (!parentToChildren[parent]) {
-        parentToChildren[parent] = []
+/**
+ * @brief 기존 배열 인자와 새 옵션 객체 인자 분리
+ * @param {Array|string[]|Object} subjectFilter - 과목 필터 또는 옵션
+ * @param {Object} options - 점수 기준 옵션
+ * @return {Object} { subjectFilter, options }
+ */
+function _resolveFilterArgs(subjectFilter = [], options = {}) {
+  if (_isOptions(subjectFilter)) {
+    return {
+      subjectFilter: subjectFilter.subjectFilter ?? [],
+      options: subjectFilter
+    }
+  }
+
+  return {
+    subjectFilter: subjectFilter ?? [],
+    options
+  }
+}
+
+/**
+ * @brief 현재 2026 수능의 고정 시험 정의
+ * @return {Object} 2026 수능 시험 정의
+ */
+function _getLegacyExam() {
+  return {
+    id: 'csat-2026',
+    title: '2026 수능',
+    sections: [
+      { target: '국어/공통', subject: '국어', section: '공통', group: '국어', kind: 'common', questions: 34, max_points: 76 },
+      { target: '국어/화작', subject: '국어', section: '화작', group: '국어', kind: 'elective', questions: 11, max_points: 24 },
+      { target: '국어/언매', subject: '국어', section: '언매', group: '국어', kind: 'elective', questions: 11, max_points: 24 },
+      { target: '수학/공통', subject: '수학', section: '공통', group: '수학', kind: 'common', questions: 22, max_points: 74 },
+      { target: '수학/확통', subject: '수학', section: '확통', group: '수학', kind: 'elective', questions: 8, max_points: 26 },
+      { target: '수학/미적', subject: '수학', section: '미적', group: '수학', kind: 'elective', questions: 8, max_points: 26 },
+      { target: '수학/기하', subject: '수학', section: '기하', group: '수학', kind: 'elective', questions: 8, max_points: 26 },
+      { target: '영어/영어', subject: '영어', section: '영어', group: '영어', kind: 'subject', questions: 45, max_points: 100 },
+      { target: '한국사/한국사', subject: '한국사', section: '한국사', group: '한국사', kind: 'subject', questions: 20, max_points: 50 },
+      { target: '탐구/물리1', subject: '물리1', section: '탐구', group: '탐구', kind: 'subject', questions: 20, max_points: 50 },
+      { target: '탐구/화학1', subject: '화학1', section: '탐구', group: '탐구', kind: 'subject', questions: 20, max_points: 50 },
+      { target: '탐구/생명1', subject: '생명1', section: '탐구', group: '탐구', kind: 'subject', questions: 20, max_points: 50 },
+      { target: '탐구/사회문화', subject: '사회문화', section: '탐구', group: '탐구', kind: 'subject', questions: 20, max_points: 50 }
+    ]
+  }
+}
+
+/**
+ * @brief 실제 결과 배열에서 현재 시험 정의 추론
+ * @param {Array} data - all_results.json 배열
+ * @return {Object} 추론한 시험 정의
+ */
+function _inferExamFromData(data) {
+  if (!Array.isArray(data) || data.length === 0) {
+    return _getLegacyExam()
+  }
+
+  const sectionMap = new Map()
+  data.forEach(entry => {
+    if (entry.subject == null || entry.section == null) return
+    const key = `${entry.subject}\u0000${entry.section}`
+    if (sectionMap.has(key)) return
+
+    const group = entry.section === '탐구' ? '탐구' : entry.subject
+    const kind = (group === '국어' || group === '수학')
+      ? (entry.section === '공통' ? 'common' : 'elective')
+      : 'subject'
+    const target = group === '탐구'
+      ? `${group}/${entry.subject}`
+      : `${group}/${entry.section}`
+
+    sectionMap.set(key, {
+      target,
+      subject: entry.subject,
+      section: entry.section,
+      group,
+      kind,
+      questions: entry.total_questions ?? 0,
+      max_points: entry.total_points ?? 0
+    })
+  })
+
+  if (sectionMap.size === 0) return _getLegacyExam()
+  return {
+    id: 'inferred-exam',
+    title: '추론된 시험',
+    sections: [...sectionMap.values()]
+  }
+}
+
+/**
+ * @brief 시험 정의 해석
+ * @param {Array} data - 결과 배열
+ * @param {Object|null} exam - 명시적 시험 정의
+ * @return {Object} 사용할 시험 정의
+ */
+function _resolveExam(data, exam) {
+  return exam ?? _inferExamFromData(data)
+}
+
+/**
+ * @brief 시험 정의의 섹션을 그룹별로 묶음
+ * @param {Object} exam - 시험 정의
+ * @return {Array} 그룹별 섹션 배열
+ */
+function _groupSections(exam) {
+  const groups = new Map()
+  exam.sections.forEach(section => {
+    const group = section.group
+    if (!groups.has(group)) groups.set(group, [])
+    groups.get(group).push(section)
+  })
+  return [...groups.entries()].map(([group, sections]) => ({ group, sections }))
+}
+
+/**
+ * @brief 섹션의 기존 필터 키 생성
+ * @param {Object} section - 시험 섹션
+ * @return {string} 기존 과목 필터 키
+ */
+function _getLegacySectionKey(section) {
+  const child = section.group === '탐구' ? section.subject : section.section
+  return `${section.group}-${child}`
+}
+
+/**
+ * @brief 섹션에 대응하는 필터 키 목록 생성
+ * @param {Object} section - 시험 섹션
+ * @return {Set<string>} 필터 키 집합
+ */
+function _getSectionFilterKeys(section) {
+  const legacyShortName = Object.entries(LEGACY_NAME_MAP)
+    .find(([, fullName]) => fullName === section.subject)?.[0]
+  return new Set([
+    section.group,
+    section.target,
+    _getLegacySectionKey(section),
+    `${section.group}/${section.section}`,
+    `${section.subject}-${section.section}`,
+    legacyShortName ? `${section.group}-${legacyShortName}` : null
+  ].filter(Boolean))
+}
+
+/**
+ * @brief 필터에 해당하는 섹션 목록 선택
+ * @param {Array} sections - 시험 섹션 배열
+ * @param {Array} subjectFilter - 과목 필터 배열
+ * @return {Array} 중복 제거된 선택 섹션 배열
+ */
+function _selectSections(sections, subjectFilter) {
+  if (!subjectFilter || subjectFilter.length === 0) return sections
+
+  const selected = new Set()
+  sections.forEach((section, index) => {
+    const keys = _getSectionFilterKeys(section)
+    if (subjectFilter.some(filter => keys.has(filter))) selected.add(index)
+  })
+
+  // 선택 과목만 고른 경우에도 공통 섹션은 한 번만 포함한다.
+  sections.forEach((section, index) => {
+    if (!selected.has(index) || section.kind !== 'elective') return
+    sections.forEach((candidate, candidateIndex) => {
+      if (candidate.group === section.group && candidate.kind === 'common') {
+        selected.add(candidateIndex)
       }
-      parentToChildren[parent].push(child)
-    } else {
-      parentSubjects.add(subject)
-    }
+    })
   })
 
-  const result = []
-
-  // 상위 과목 추가
-  parentSubjects.forEach(parent => result.push(parent))
-
-  // 세부 과목 처리: 같은 상위의 세부가 2개 이상이면 상위로 통합
-  Object.entries(parentToChildren).forEach(([parent, children]) => {
-    if (parentSubjects.has(parent)) {
-      // 이미 상위 과목이 선택됨 → 세부 무시
-      return
-    }
-    if (children.length >= 2) {
-      // 복수 세부 선택 → 상위 과목으로 통합
-      result.push(parent)
-    } else {
-      // 단일 세부 선택 → 세부 과목 유지
-      result.push(`${parent}-${children[0]}`)
-    }
-  })
-
-  return result
+  return sections.filter((_, index) => selected.has(index))
 }
 
 /**
- * @brief 세부 과목 점수 계산
- * @param {Object} scoreObj - calculateOverallScore 결과
- * @param {string} elective - 세부 과목명 (예: '국어-언매')
- * @return {number} 점수
+ * @brief 섹션 점수 레코드 생성
+ * @param {Array} modelData - 모델별 결과 배열
+ * @param {Object} section - 시험 섹션
+ * @return {Object} 섹션 점수 레코드
  */
-function _getElectiveScore(scoreObj, elective) {
-  const [parent, child] = elective.split('-')
-  const childName = ELECTIVE_NAME_MAP[child] || child
-
-  if (parent === '국어') {
-    const detail = scoreObj.koreanDetail
-    const electiveScore = detail.electives.find(e => e.name === childName)?.score || 0
-    return detail.common + electiveScore
+function _createSectionScore(modelData, section) {
+  const entry = modelData.find(d => d.subject === section.subject && d.section === section.section)
+  return {
+    target: section.target,
+    subject: section.subject,
+    section: section.section,
+    group: section.group,
+    kind: section.kind,
+    name: section.group === '탐구' ? section.subject : section.section,
+    score: entry?.score ?? 0,
+    maxScore: section.max_points,
+    available: Boolean(entry)
   }
-
-  if (parent === '수학') {
-    const detail = scoreObj.mathDetail
-    const electiveScore = detail.electives.find(e => e.name === childName)?.score || 0
-    return detail.common + electiveScore
-  }
-
-  if (parent === '탐구') {
-    const detail = scoreObj.explorationDetail
-    const subjectScore = detail.subjects.find(s => s.name === childName)?.score || 0
-    return subjectScore * 2  // 2과목 선택 환산
-  }
-
-  return 0
 }
 
 /**
- * @brief 과목 필터에 따른 만점 계산 (복수 세부과목 지원)
- * @param {Array} subjectFilter - 선택된 과목 배열 (빈 배열이면 전체)
+ * @brief 그룹 섹션의 점수와 만점 계산
+ * @param {Object} groupInfo - { group, sections }
+ * @param {Array} sectionScores - 섹션 점수 배열
+ * @param {string} scoreBasis - normalized 또는 raw
+ * @return {Object} 그룹 상세 점수
+ */
+function _calculateGroupDetail(groupInfo, sectionScores, scoreBasis) {
+  const commonSections = sectionScores.filter(section => section.kind === 'common')
+  const electiveSections = sectionScores.filter(section => section.kind === 'elective')
+  const subjectSections = sectionScores.filter(section => section.kind === 'subject')
+  const common = commonSections.reduce((sum, section) => sum + section.score, 0)
+  const commonMax = commonSections.reduce((sum, section) => sum + section.maxScore, 0)
+  const electiveSum = electiveSections.reduce((sum, section) => sum + section.score, 0)
+  const electiveMaxSum = electiveSections.reduce((sum, section) => sum + section.maxScore, 0)
+  const electiveAvg = electiveSections.length > 0 ? electiveSum / electiveSections.length : 0
+  const electiveAvgMax = electiveSections.length > 0 ? electiveMaxSum / electiveSections.length : 0
+  const subjectSum = subjectSections.reduce((sum, section) => sum + section.score, 0)
+  const subjectMaxSum = subjectSections.reduce((sum, section) => sum + section.maxScore, 0)
+  const explorationAverage = subjectSections.length > 0 ? subjectSum / subjectSections.length : 0
+  const explorationAverageMax = subjectSections.length > 0 ? subjectMaxSum / subjectSections.length : 0
+
+  let normalizedTotal
+  let normalizedMax
+  if (groupInfo.group === '탐구') {
+    normalizedTotal = explorationAverage * 2
+    normalizedMax = explorationAverageMax * 2
+  } else if (commonSections.length > 0 || electiveSections.length > 0) {
+    normalizedTotal = common + electiveAvg
+    normalizedMax = commonMax + electiveAvgMax
+  } else {
+    normalizedTotal = subjectSum
+    normalizedMax = subjectMaxSum
+  }
+
+  const rawTotal = sectionScores.reduce((sum, section) => sum + section.score, 0)
+  const rawMax = sectionScores.reduce((sum, section) => sum + section.maxScore, 0)
+  const total = scoreBasis === SCORE_BASIS.RAW ? rawTotal : normalizedTotal
+  const maxScore = scoreBasis === SCORE_BASIS.RAW ? rawMax : normalizedMax
+
+  return {
+    group: groupInfo.group,
+    total,
+    maxScore,
+    normalizedTotal,
+    normalizedMaxScore: normalizedMax,
+    rawTotal,
+    rawMaxScore: rawMax,
+    common,
+    commonMaxScore: commonMax,
+    electives: electiveSections,
+    electiveAvg,
+    electiveAvgMaxScore: electiveAvgMax,
+    subjects: subjectSections,
+    average: explorationAverage,
+    averageMaxScore: explorationAverageMax,
+    sections: sectionScores
+  }
+}
+
+/**
+ * @brief 선택 섹션들의 그룹별 점수 계산
+ * @param {Object} exam - 시험 정의
+ * @param {Array} sectionScores - 전체 섹션 점수 배열
+ * @param {Array} selectedSections - 선택 섹션 정의 배열
+ * @param {string} scoreBasis - 점수 기준
+ * @return {Object} { details, total, maxScore }
+ */
+function _calculateSelectedGroups(exam, sectionScores, selectedSections, scoreBasis) {
+  const selectedTargets = new Set(selectedSections.map(section => section.target))
+  const details = _groupSections(exam)
+    .map(groupInfo => {
+      const selectedScores = sectionScores.filter(score =>
+        score.group === groupInfo.group && selectedTargets.has(score.target)
+      )
+      return _calculateGroupDetail(groupInfo, selectedScores, scoreBasis)
+    })
+    .filter(detail => detail.sections.length > 0)
+
+  return {
+    details,
+    total: details.reduce((sum, detail) => sum + detail.total, 0),
+    maxScore: details.reduce((sum, detail) => sum + detail.maxScore, 0)
+  }
+}
+
+/**
+ * @brief 점수 객체에서 지정 기준의 전체 점수 추출
+ * @param {Object} score - 종합 점수 객체
+ * @param {string} scoreBasis - 점수 기준
+ * @return {number} 지정 기준 총점
+ */
+function _getScoreTotalForBasis(score, scoreBasis) {
+  if (score.scoreBasis === scoreBasis) return score.total
+  const exam = score.exam
+  if (!exam || !score.sectionScores) return score.total
+  return _calculateSelectedGroups(
+    exam,
+    score.sectionScores,
+    exam.sections,
+    scoreBasis
+  ).total
+}
+
+/**
+ * @brief 시험 정의의 그룹별 필터·만점 정보 생성
+ * @param {Object|null} exam - 시험 정의
+ * @param {Array} data - 시험 정의가 없을 때 사용할 결과 배열
+ * @return {Array} 그룹·하위 섹션·정규화/원점수 만점 정보
+ */
+export function getSubjectFilterGroups(exam = null, data = []) {
+  const resolvedExam = _resolveExam(data, exam)
+  return _groupSections(resolvedExam).map(groupInfo => {
+    const allScores = groupInfo.sections.map(section => ({
+      target: section.target,
+      subject: section.subject,
+      section: section.section,
+      group: section.group,
+      kind: section.kind,
+      name: section.group === '탐구' ? section.subject : section.section,
+      score: 0,
+      maxScore: section.max_points,
+      available: true
+    }))
+    const detail = _calculateGroupDetail(groupInfo, allScores, SCORE_BASIS.NORMALIZED)
+    const rawDetail = _calculateGroupDetail(groupInfo, allScores, SCORE_BASIS.RAW)
+    const children = groupInfo.sections
+      .filter(section => section.kind !== 'common')
+      .map(section => {
+        const normalizedKey = section.target
+        const childMaxNormalized = _calculateSelectedGroups(
+          resolvedExam,
+          allScores,
+          _selectSections(resolvedExam.sections, [normalizedKey]),
+          SCORE_BASIS.NORMALIZED
+        ).maxScore
+        const childMaxRaw = _calculateSelectedGroups(
+          resolvedExam,
+          allScores,
+          _selectSections(resolvedExam.sections, [normalizedKey]),
+          SCORE_BASIS.RAW
+        ).maxScore
+        return {
+          key: normalizedKey,
+          target: normalizedKey,
+          legacyKey: _getLegacySectionKey(section),
+          name: section.group === '탐구' ? section.subject : section.section,
+          subject: section.subject,
+          section: section.section,
+          kind: section.kind,
+          max_points: section.max_points,
+          maxScores: {
+            normalized: childMaxNormalized,
+            raw: childMaxRaw
+          },
+          maxScore: childMaxNormalized
+        }
+      })
+
+    return {
+      group: groupInfo.group,
+      name: groupInfo.group,
+      key: groupInfo.group,
+      sections: groupInfo.sections,
+      children,
+      maxScores: {
+        normalized: detail.normalizedMaxScore,
+        raw: rawDetail.rawMaxScore
+      },
+      maxScore: detail.normalizedMaxScore
+    }
+  })
+}
+
+/**
+ * @brief 시험 정의의 전체 만점 계산
+ * @param {Object} exam - 시험 정의
+ * @param {Array} subjectFilter - 과목 필터
+ * @param {string} scoreBasis - 점수 기준
+ * @return {number} 필터 만점
+ */
+function _calculateMaxFromExam(exam, subjectFilter, scoreBasis) {
+  const selectedSections = _selectSections(exam.sections, subjectFilter)
+  const zeroScores = selectedSections.map(section => ({
+    target: section.target,
+    subject: section.subject,
+    section: section.section,
+    group: section.group,
+    kind: section.kind,
+    name: section.group === '탐구' ? section.subject : section.section,
+    score: 0,
+    maxScore: section.max_points,
+    available: true
+  }))
+  return _calculateSelectedGroups(exam, zeroScores, selectedSections, scoreBasis).maxScore
+}
+
+/**
+ * @brief 과목 필터에 따른 만점 계산
+ * @param {Array|Object} subjectFilter - 과목 필터 배열 또는 { exam, scoreBasis, subjectFilter }
+ * @param {Object} options - { exam, scoreBasis }
  * @return {number} 만점
  */
-export function getMaxScore(subjectFilter = []) {
-  if (!subjectFilter || subjectFilter.length === 0) {
-    return 450 // 전체 만점
-  }
-
-  // 상위 과목과 세부 과목 분리
-  const parents = subjectFilter.filter(s => !s.includes('-'))
-  const childrenByParent = {}
-
-  subjectFilter.forEach(s => {
-    if (s.includes('-')) {
-      const [parent] = s.split('-')
-      if (!parents.includes(parent)) {
-        if (!childrenByParent[parent]) childrenByParent[parent] = []
-        childrenByParent[parent].push(s)
-      }
-    }
-  })
-
-  // 상위 과목 만점 합산
-  let sum = parents.reduce((s, p) => s + (SUBJECT_MAX_SCORES[p] || 0), 0)
-
-  // 세부 과목 그룹 처리
-  Object.keys(childrenByParent).forEach(parent => {
-    if (parent === '탐구') {
-      // 탐구: 1개=50점, 2개+=100점
-      const count = childrenByParent[parent].length
-      sum += count === 1 ? 50 : 100
-    } else {
-      // 국어, 수학 등: 상위 과목 만점
-      sum += SUBJECT_MAX_SCORES[parent] || 0
-    }
-  })
-
-  return sum
+export function getMaxScore(subjectFilter = [], options = {}) {
+  const args = _resolveFilterArgs(subjectFilter, options)
+  const resolvedOptions = _normalizeOptions(args.options)
+  const exam = _resolveExam([], resolvedOptions.exam)
+  return _calculateMaxFromExam(exam, args.subjectFilter, resolvedOptions.scoreBasis)
 }
 
 /**
- * @brief 과목 필터에 따른 총점 계산 (복수 세부과목 지원)
- * @param {Object} scoreObj - calculateOverallScore 결과 객체
- * @param {Array} subjectFilter - 선택된 과목 배열 (빈 배열이면 전체)
- * @return {number} 필터된 총점
- */
-export function getFilteredTotal(scoreObj, subjectFilter = []) {
-  if (!subjectFilter || subjectFilter.length === 0) {
-    return scoreObj.total
-  }
-
-  let sum = 0
-  const processedParents = new Set()
-
-  // 상위 과목과 세부 과목 분리
-  const parents = subjectFilter.filter(s => !s.includes('-'))
-  const childrenByParent = {}
-
-  subjectFilter.forEach(s => {
-    if (s.includes('-')) {
-      const [parent, child] = s.split('-')
-      if (!childrenByParent[parent]) childrenByParent[parent] = []
-      childrenByParent[parent].push(child)
-    }
-  })
-
-  // 상위 과목 처리
-  parents.forEach(parent => {
-    const field = SUBJECT_TO_FIELD[parent]
-    sum += scoreObj[field] || 0
-    processedParents.add(parent)
-  })
-
-  // 세부 과목 그룹 처리 (상위가 이미 처리되지 않은 경우만)
-  Object.entries(childrenByParent).forEach(([parent, children]) => {
-    if (processedParents.has(parent)) return
-
-    if (parent === '국어' || parent === '수학') {
-      // 공통 + 선택한 세부들 평균
-      const detail = parent === '국어' ? scoreObj.koreanDetail : scoreObj.mathDetail
-      const electiveSum = children.reduce((s, c) => {
-        const name = ELECTIVE_NAME_MAP[c] || c
-        return s + (detail.electives.find(e => e.name === name)?.score || 0)
-      }, 0)
-      sum += detail.common + (electiveSum / children.length)
-    } else if (parent === '탐구') {
-      // 탐구: 1개=원점수, 2개+=평균×2
-      const detail = scoreObj.explorationDetail
-      const subjectSum = children.reduce((s, c) => {
-        const name = ELECTIVE_NAME_MAP[c] || c
-        return s + (detail.subjects.find(sub => sub.name === name)?.score || 0)
-      }, 0)
-      if (children.length === 1) {
-        sum += subjectSum  // 1개: 원점수
-      } else {
-        sum += (subjectSum / children.length) * 2  // 2개+: 평균×2
-      }
-    }
-  })
-
-  return sum
-}
-
-/**
- * @brief 특정 과목/섹션의 점수 조회
- * @param {Array} modelData - 특정 모델의 데이터 배열
- * @param {string} subject - 과목명
- * @param {string} section - 섹션명
- * @return {number} 점수 (없으면 0)
- */
-function _getScore(modelData, subject, section) {
-  const item = modelData.find(d => d.subject === subject && d.section === section)
-  return item?.score ?? 0
-}
-
-/**
- * @brief 국어/수학 점수 계산 (공통 + 선택과목 평균)
- * @param {Array} modelData - 특정 모델의 데이터 배열
- * @param {string} subject - 과목명 ('국어' 또는 '수학')
- * @return {Object} { common, electives, electiveAvg, total }
- */
-function _calculateSubjectScore(modelData, subject) {
-  const common = _getScore(modelData, subject, '공통')
-
-  // 선택과목 목록
-  const electiveNames = subject === '국어'
-    ? ['화작', '언매']
-    : ['확통', '미적', '기하']
-
-  const electives = electiveNames.map(sect => ({
-    name: sect,
-    score: _getScore(modelData, subject, sect)
-  }))
-
-  // 선택과목 평균은 0점도 실제 성적으로 포함한다.
-  const electiveAvg = electives.reduce((sum, e) => sum + e.score, 0) / electiveNames.length
-
-  return {
-    common,
-    electives,
-    electiveAvg,
-    total: common + electiveAvg
-  }
-}
-
-/**
- * @brief 탐구 점수 계산 (4과목 평균 × 2)
- * @param {Array} modelData - 특정 모델의 데이터 배열
- * @return {Object} { subjects, average, total }
- */
-function _calculateExplorationScore(modelData) {
-  const explorationSubjects = ['물리1', '화학1', '생명1', '사회문화']
-
-  const subjects = explorationSubjects.map(subj => ({
-    name: subj,
-    score: _getScore(modelData, subj, '탐구')
-  }))
-
-  // 총점 계산은 응시 가능 탐구 4과목 전체를 기준으로 한다.
-  const average = subjects.reduce((sum, s) => sum + s.score, 0) / explorationSubjects.length
-
-  return {
-    subjects,
-    average,
-    total: average * 2  // 2과목 선택 환산
-  }
-}
-
-/**
- * @brief 모델별 종합 점수 계산 (450점 만점)
- * @param {Array} data - all_results.json 전체 데이터
+ * @brief 모델의 전체 점수 계산
+ * @param {Array} data - all_results.json 배열
  * @param {string} modelName - 모델명
- * @return {Object} 과목별 점수 및 총점
+ * @param {Object} options - { exam, scoreBasis, subjectFilter }
+ * @return {Object} 과목별 점수와 만점·섹션 상세
  */
-export function calculateOverallScore(data, modelName) {
+export function calculateOverallScore(data, modelName, options = {}) {
+  const resolvedOptions = _normalizeOptions(options)
+  const exam = _resolveExam(data, resolvedOptions.exam)
   const modelData = getModelData(data, modelName)
-
-  const korean = _calculateSubjectScore(modelData, '국어')
-  const math = _calculateSubjectScore(modelData, '수학')
-  const english = _getScore(modelData, '영어', '영어')
-  const history = _getScore(modelData, '한국사', '한국사')
-  const exploration = _calculateExplorationScore(modelData)
-
-  const total = korean.total + math.total + english + history + exploration.total
+  const sectionScores = exam.sections.map(section => _createSectionScore(modelData, section))
+  const allSelected = _calculateSelectedGroups(exam, sectionScores, exam.sections, resolvedOptions.scoreBasis)
+  const filter = options.subjectFilter ?? []
+  const selectedSections = _selectSections(exam.sections, filter)
+  const selected = filter.length > 0
+    ? _calculateSelectedGroups(exam, sectionScores, selectedSections, resolvedOptions.scoreBasis)
+    : allSelected
+  const detailsByGroup = new Map(allSelected.details.map(detail => [detail.group, detail]))
+  const groupMaxScores = {}
+  const groupDetails = allSelected.details.map(detail => {
+    groupMaxScores[detail.group] = {
+      normalized: detail.normalizedMaxScore,
+      raw: detail.rawMaxScore
+    }
+    return detail
+  })
 
   return {
     model: modelName,
-    korean: korean.total,
-    koreanDetail: korean,
-    math: math.total,
-    mathDetail: math,
-    english,
-    history,
-    exploration: exploration.total,
-    explorationDetail: exploration,
-    total
+    scoreBasis: resolvedOptions.scoreBasis,
+    maxScore: filter.length > 0 ? selected.maxScore : allSelected.maxScore,
+    korean: detailsByGroup.get('국어')?.total ?? 0,
+    koreanDetail: detailsByGroup.get('국어') ?? null,
+    math: detailsByGroup.get('수학')?.total ?? 0,
+    mathDetail: detailsByGroup.get('수학') ?? null,
+    english: detailsByGroup.get('영어')?.total ?? 0,
+    englishDetail: detailsByGroup.get('영어') ?? null,
+    history: detailsByGroup.get('한국사')?.total ?? 0,
+    historyDetail: detailsByGroup.get('한국사') ?? null,
+    exploration: detailsByGroup.get('탐구')?.total ?? 0,
+    explorationDetail: detailsByGroup.get('탐구') ?? null,
+    groupDetails,
+    groupMaxScores,
+    sectionScores,
+    exam,
+    total: selected.total
   }
 }
 
 /**
- * @brief 전체 모델의 종합 점수 계산
- * @param {Array} data - all_results.json 전체 데이터
+ * @brief 모델별 전체 점수 계산
+ * @param {Array} data - all_results.json 배열
  * @param {Array} models - 모델명 배열
- * @param {Array} subjectFilter - 과목 필터 (빈 배열이면 전체)
- * @return {Array} 모델별 종합 점수 배열 (총점 내림차순)
+ * @param {Array|Object} subjectFilter - 과목 필터 또는 옵션
+ * @param {Object} options - { exam, scoreBasis }
+ * @return {Array} 총점 내림차순 모델 점수 배열
  */
-export function calculateAllModelScores(data, models, subjectFilter = []) {
-  return models
-    .map(model => {
-      const scores = calculateOverallScore(data, model)
-      // 필터가 있으면 필터된 총점으로 교체
-      if (subjectFilter && subjectFilter.length > 0) {
-        scores.total = getFilteredTotal(scores, subjectFilter)
-      }
-      return scores
-    })
-    .sort((a, b) => b.total - a.total)
+export function calculateAllModelScores(data, models, subjectFilter = [], options = {}) {
+  const args = _resolveFilterArgs(subjectFilter, options)
+  const resolvedOptions = _normalizeOptions(args.options)
+  const scores = models.map(model => {
+    const score = calculateOverallScore(data, model, resolvedOptions)
+    if (args.subjectFilter.length > 0) {
+      score.total = getFilteredTotal(score, args.subjectFilter, resolvedOptions)
+      score.maxScore = getMaxScore(args.subjectFilter, resolvedOptions)
+    }
+    score.subjectFilter = args.subjectFilter
+    return score
+  })
+
+  return scores.sort((a, b) => b.total - a.total)
 }
 
 /**
- * @brief 과목별 점수 데이터 추출 (차트용)
- * @param {Array} data - all_results.json 전체 데이터
+ * @brief 모델 점수 객체에서 필터 총점 계산
+ * @param {Object} scoreObj - calculateOverallScore 결과
+ * @param {Array|Object} subjectFilter - 과목 필터 또는 옵션
+ * @param {Object} options - { exam, scoreBasis }
+ * @return {number} 필터 총점
+ */
+export function getFilteredTotal(scoreObj, subjectFilter = [], options = {}) {
+  const args = _resolveFilterArgs(subjectFilter, options)
+  const resolvedOptions = _normalizeOptions({
+    exam: args.options.exam ?? scoreObj.exam,
+    scoreBasis: args.options.scoreBasis ?? scoreObj.scoreBasis
+  })
+  const exam = _resolveExam([], resolvedOptions.exam)
+  if (args.subjectFilter.length === 0) return scoreObj.total
+
+  const sectionScores = scoreObj.sectionScores ?? []
+  if (sectionScores.length === 0) return 0
+  const selectedSections = _selectSections(exam.sections, args.subjectFilter)
+  return _calculateSelectedGroups(
+    exam,
+    sectionScores,
+    selectedSections,
+    resolvedOptions.scoreBasis
+  ).total
+}
+
+/**
+ * @brief 특정 과목·섹션의 점수 데이터 추출
+ * @param {Array} data - all_results.json 배열
  * @param {string} subject - 과목명
  * @param {string} section - 섹션명
- * @return {Array} [{ model, score, totalPoints }] 형태 배열
+ * @return {Array} 차트용 점수 배열
  */
 export function getSubjectScores(data, subject, section) {
   return data
@@ -380,128 +577,115 @@ export function getSubjectScores(data, subject, section) {
 }
 
 /**
- * @brief 최고/최저점 조합 점수 계산 (generate_charts.py create_overall_best_worst_chart 참조)
- * @param {Array} data - all_results.json 전체 데이터
+ * @brief 최고·최저 선택 조합 점수 계산
+ * @param {Array} data - all_results.json 배열
  * @param {Array} models - 모델명 배열
- * @return {Array} [{ model, best, worst, color }] 형태 배열
+ * @param {Object} options - { exam }
+ * @return {Array} [{ model, best, worst, scoreBasis, maxScore }]
  */
-export function calculateBestWorstScores(data, models) {
+export function calculateBestWorstScores(data, models, options = {}) {
+  const resolvedOptions = _normalizeOptions({ ...options, scoreBasis: SCORE_BASIS.NORMALIZED })
+  const exam = _resolveExam(data, resolvedOptions.exam)
+  const maxScore = _calculateMaxFromExam(exam, [], SCORE_BASIS.NORMALIZED)
+
   return models
     .map(model => {
       const modelData = getModelData(data, model)
+      const sectionScores = exam.sections.map(section => _createSectionScore(modelData, section))
+      let best = 0
+      let worst = 0
 
-      // 고정 점수 (영어, 한국사)
-      const english = _getScore(modelData, '영어', '영어')
-      const history = _getScore(modelData, '한국사', '한국사')
-      const fixedTotal = english + history
+      _groupSections(exam).forEach(groupInfo => {
+        const groupScores = sectionScores.filter(score => score.group === groupInfo.group)
+        const common = groupScores
+          .filter(score => score.kind === 'common')
+          .reduce((sum, score) => sum + score.score, 0)
+        const electives = groupScores.filter(score => score.kind === 'elective').map(score => score.score)
+        const subjects = groupScores.filter(score => score.kind === 'subject').map(score => score.score)
 
-      // 국어: 공통 + max/min(화작, 언매)
-      const koreanCommon = _getScore(modelData, '국어', '공통')
-      const koreanElectives = ['화작', '언매']
-        .map(e => _getScore(modelData, '국어', e))
-      const koreanBest = koreanCommon + (koreanElectives.length > 0 ? Math.max(...koreanElectives) : 0)
-      const koreanWorst = koreanCommon + (koreanElectives.length > 0 ? Math.min(...koreanElectives) : 0)
-
-      // 수학: 공통 + max/min(확통, 미적, 기하)
-      const mathCommon = _getScore(modelData, '수학', '공통')
-      const mathElectives = ['확통', '미적', '기하']
-        .map(e => _getScore(modelData, '수학', e))
-      const mathBest = mathCommon + (mathElectives.length > 0 ? Math.max(...mathElectives) : 0)
-      const mathWorst = mathCommon + (mathElectives.length > 0 ? Math.min(...mathElectives) : 0)
-
-      // 탐구: 0점도 실제 성적이므로 4과목 모두를 2과목 조합 후보로 사용
-      const explorationSubjects = ['물리1', '화학1', '생명1', '사회문화']
-      const explorationScores = explorationSubjects
-        .map(s => _getScore(modelData, s, '탐구'))
-
-      let scienceBest = 0
-      let scienceWorst = 0
-
-      if (explorationScores.length >= 2) {
-        // 모든 2과목 조합
-        const combos = []
-        for (let i = 0; i < explorationScores.length; i++) {
-          for (let j = i + 1; j < explorationScores.length; j++) {
-            combos.push(explorationScores[i] + explorationScores[j])
+        if (groupInfo.group === '탐구') {
+          if (subjects.length >= 2) {
+            const combinations = []
+            for (let i = 0; i < subjects.length; i++) {
+              for (let j = i + 1; j < subjects.length; j++) {
+                combinations.push(subjects[i] + subjects[j])
+              }
+            }
+            best += Math.max(...combinations)
+            worst += Math.min(...combinations)
+          } else if (subjects.length === 1) {
+            best += subjects[0] * 2
+            worst += subjects[0] * 2
           }
+          return
         }
-        scienceBest = Math.max(...combos)
-        scienceWorst = Math.min(...combos)
-      } else if (explorationScores.length === 1) {
-        scienceBest = scienceWorst = explorationScores[0]
-      }
+
+        if (electives.length > 0 || groupScores.some(score => score.kind === 'common')) {
+          best += common + (electives.length > 0 ? Math.max(...electives) : 0)
+          worst += common + (electives.length > 0 ? Math.min(...electives) : 0)
+          return
+        }
+
+        const subjectTotal = subjects.reduce((sum, score) => sum + score, 0)
+        best += subjectTotal
+        worst += subjectTotal
+      })
 
       return {
         model,
-        best: fixedTotal + koreanBest + mathBest + scienceBest,
-        worst: fixedTotal + koreanWorst + mathWorst + scienceWorst
+        best,
+        worst,
+        scoreBasis: SCORE_BASIS.NORMALIZED,
+        maxScore
       }
     })
-    .sort((a, b) => b.best - a.best)  // 최고점 기준 정렬
+    .sort((a, b) => b.best - a.best)
 }
 
 /**
- * @brief 이미지 기반 득점률 계산 (generate_charts.py calculate_image_based_scores 참조)
- * @param {Array} data - all_results.json 전체 데이터
- * @param {Object} questionsMetadata - questions_metadata.json 데이터
+ * @brief 이미지 포함 여부별 득점률 계산
+ * @param {Array} data - all_results.json 배열
+ * @param {Object} questionsMetadata - 문제 메타데이터
  * @param {Array} models - 모델명 배열
- * @param {boolean} hasImage - true: 이미지 있는 문제, false: 이미지 없는 문제
- * @return {Array} [{ model, rate }] 형태 배열 (득점률 내림차순)
+ * @param {boolean} hasImage - 이미지 포함 여부
+ * @return {Array} 모델별 득점률 배열
  */
 export function calculateImageBasedScores(data, questionsMetadata, models, hasImage) {
-  if (!questionsMetadata || Object.keys(questionsMetadata).length === 0) {
-    return []
-  }
+  if (!questionsMetadata || Object.keys(questionsMetadata).length === 0) return []
 
   const modelStats = {}
-
-  // 모델별 통계 초기화
   models.forEach(model => {
     modelStats[model] = { totalScore: 0, totalMax: 0 }
   })
 
-  // 각 과목-섹션별로 계산
   Object.entries(questionsMetadata).forEach(([key, questions]) => {
-    // key 형식: "국어-공통", "물리1-탐구" 등
     const [subject, section] = key.split('-')
-
-    // 이미지 있는/없는 문제 분류
-    const filteredQuestions = Object.entries(questions).filter(([, q]) =>
-      hasImage ? q.hasImage : !q.hasImage
+    const filteredQuestions = Object.entries(questions).filter(([, question]) =>
+      hasImage ? question.hasImage : !question.hasImage
     )
-
     if (filteredQuestions.length === 0) return
 
-    // 해당 섹션의 만점 계산
-    const maxScore = filteredQuestions.reduce((sum, [, q]) => sum + (q.points || 0), 0)
+    const maxScore = filteredQuestions.reduce((sum, [, question]) => sum + (question.points || 0), 0)
     if (maxScore === 0) return
 
-    // 각 모델의 해당 섹션 데이터 조회
     models.forEach(model => {
       const modelSectionData = data.find(d =>
-        d.model_name === model &&
-        d.subject === subject &&
-        d.section === section
+        d.model_name === model && d.subject === subject && d.section === section
       )
-
       if (!modelSectionData?.results) return
 
-      // 해당 문제들의 득점 계산
       let score = 0
-      filteredQuestions.forEach(([qNumStr, qMeta]) => {
-        const qNum = parseInt(qNumStr)
-        const result = modelSectionData.results.find(r => r.question_number === qNum)
-        if (result?.is_correct) {
-          score += qMeta.points || 0
-        }
+      filteredQuestions.forEach(([questionNumber, question]) => {
+        const result = modelSectionData.results.find(item =>
+          item.question_number === parseInt(questionNumber)
+        )
+        if (result?.is_correct) score += question.points || 0
       })
-
       modelStats[model].totalScore += score
       modelStats[model].totalMax += maxScore
     })
   })
 
-  // 득점률 계산 및 정렬
   return Object.entries(modelStats)
     .map(([model, stats]) => ({
       model,
@@ -509,98 +693,292 @@ export function calculateImageBasedScores(data, questionsMetadata, models, hasIm
       score: stats.totalScore,
       maxScore: stats.totalMax
     }))
-    .filter(m => m.maxScore > 0)  // 데이터가 있는 모델만
-    .sort((a, b) => b.rate - a.rate)  // 득점률 내림차순
+    .filter(item => item.maxScore > 0)
+    .sort((a, b) => b.rate - a.rate)
 }
 
 /**
- * @brief 비용 데이터 추출 (실제 토큰 사용량 기반)
- * @param {Array} data - all_results.json 전체 데이터
- * @param {Array} overallScores - calculateAllModelScores 결과 또는 filteredScores
- * @param {Object} tokenUsage - token_usage.json의 models 객체
- * @param {Array} subjectFilter - 선택된 과목 배열 (빈 배열이면 전체)
- * @return {Array} 비용 및 효율성 데이터
+ * @brief 사용량 섹션 키 별칭 생성
+ * @param {Object} section - 시험 섹션
+ * @return {Array} 토큰 사용량 키 별칭
  */
-export function getCostData(data, overallScores, tokenUsage = {}, subjectFilter = []) {
-  // 모델별 가격 정보 수집 ($/1M 토큰)
+function _getUsageSectionAliases(section) {
+  return [
+    section.target,
+    _getLegacySectionKey(section),
+    `${section.subject}-${section.section}`,
+    `${section.group}-공통`,
+    section.group === section.subject ? section.subject : null,
+    section.section === section.subject ? section.section : null
+  ].filter(Boolean)
+}
+
+/**
+ * @brief 여러 회차 사용량인지 판별
+ * @param {Object} usage - 모델별 토큰 사용량
+ * @return {boolean} 여러 회차 사용량 여부
+ */
+function _isRepeatedUsage(usage) {
+  return usage.attempts > 1
+}
+
+/**
+ * @brief 사용량 값을 합산하고 현대 형식의 미상 값을 보존
+ * @param {Array} values - 합산할 토큰 값
+ * @param {boolean} preserveUnknown - null·undefined를 미상으로 보존할지 여부
+ * @return {number|null} 합계 또는 미상
+ */
+function _sumUsageValues(values, preserveUnknown) {
+  if (!preserveUnknown) return values.reduce((sum, value) => sum + (value || 0), 0)
+  if (values.length === 0 || values.some(value => value === null || value === undefined)) return null
+  return values.reduce((sum, value) => sum + value, 0)
+}
+
+/**
+ * @brief 토큰 수와 단가로 비용 계산
+ * @param {number|null} tokens - 토큰 수
+ * @param {number|null} price - 백만 토큰당 단가
+ * @param {boolean} preserveUnknown - 미상 값을 보존할지 여부
+ * @return {number|null} 비용 또는 미상
+ */
+function _calculateTokenCost(tokens, price, preserveUnknown) {
+  if (preserveUnknown) {
+    if (tokens === null || tokens === undefined || price === null || price === undefined) return null
+    if (tokens === 0) return 0
+  }
+  return tokens * (price / 1000000)
+}
+
+/**
+ * @brief 필터된 토큰 사용량 계산
+ * @param {Object} usage - 모델별 토큰 사용량
+ * @param {Object} exam - 시험 정의
+ * @param {Array} subjectFilter - 과목 필터
+ * @return {Object} input/output 토큰과 선택 키
+ */
+function _getFilteredUsage(usage, exam, subjectFilter) {
+  const preserveUnknown = _isRepeatedUsage(usage)
+  if (!subjectFilter || subjectFilter.length === 0) {
+    return {
+      inputTokens: preserveUnknown
+        ? (usage.total_input_tokens ?? null)
+        : (usage.total_input_tokens || 0),
+      outputTokens: preserveUnknown
+        ? (usage.total_output_tokens ?? null)
+        : (usage.total_output_tokens || 0),
+      sectionKeys: [],
+      attemptDetails: usage.attempt_details,
+      attemptTotals: usage.attempt_totals
+    }
+  }
+
+  if (!usage.sections) {
+    return {
+      inputTokens: preserveUnknown ? null : 0,
+      outputTokens: preserveUnknown ? null : 0,
+      sectionKeys: [],
+      attemptDetails: usage.attempt_details,
+      attemptTotals: usage.attempt_totals
+    }
+  }
+
+  const selectedSections = _selectSections(exam.sections, subjectFilter)
+  const aliases = new Set(selectedSections.flatMap(_getUsageSectionAliases))
+  const sectionKeys = []
+  const selectedUsage = Object.entries(usage.sections).filter(([key]) => aliases.has(key))
+  selectedUsage.forEach(([key]) => sectionKeys.push(key))
+  const inputTokens = _sumUsageValues(
+    selectedUsage.map(([, section]) => section.input_tokens),
+    preserveUnknown
+  )
+  const outputTokens = _sumUsageValues(
+    selectedUsage.map(([, section]) => section.output_tokens),
+    preserveUnknown
+  )
+
+  return {
+    inputTokens,
+    outputTokens,
+    sectionKeys,
+    attemptDetails: usage.attempt_details,
+    attemptTotals: usage.attempt_totals
+  }
+}
+
+/**
+ * @brief 선택 범위의 토큰 합계가 완전한지 확인
+ * @param {Object} usage - 모델별 토큰 사용량
+ * @param {Object} exam - 시험 정의
+ * @param {Array} subjectFilter - 과목 필터
+ * @param {Object} filteredUsage - 필터된 사용량
+ * @return {Object} 입력·출력 토큰 합계 또는 미상
+ */
+function _getKnownPerformanceTokens(usage, exam, subjectFilter, filteredUsage) {
+  if (!subjectFilter || subjectFilter.length === 0) {
+    const inputTokens = typeof usage.total_input_tokens === 'number' && Number.isFinite(usage.total_input_tokens)
+      ? usage.total_input_tokens
+      : null
+    const outputTokens = typeof usage.total_output_tokens === 'number' && Number.isFinite(usage.total_output_tokens)
+      ? usage.total_output_tokens
+      : null
+    return { inputTokens, outputTokens }
+  }
+
+  if (!usage.sections || filteredUsage.sectionKeys.length === 0) {
+    return { inputTokens: null, outputTokens: null }
+  }
+
+  const selectedSections = _selectSections(exam.sections, subjectFilter)
+  const selectedKeys = new Set(filteredUsage.sectionKeys)
+  const aggregateGroups = new Set(
+    selectedSections
+      .map(section => section.group)
+      .filter(group => selectedKeys.has(group))
+  )
+  const complete = selectedSections.every(section => {
+    if (aggregateGroups.has(section.group)) return true
+    const hasCommonSection = exam.sections.some(candidate =>
+      candidate.group === section.group && candidate.kind === 'common'
+    )
+    return _getUsageSectionAliases(section)
+      .filter(key => key !== `${section.group}-공통` || section.kind === 'common' || !hasCommonSection)
+      .some(key => selectedKeys.has(key))
+  })
+  if (!complete) return { inputTokens: null, outputTokens: null }
+  const selectedEntries = Object.entries(usage.sections)
+    .filter(([key]) => selectedKeys.has(key))
+  const inputTokens = selectedEntries.every(([, section]) => Number.isFinite(section.input_tokens))
+    ? filteredUsage.inputTokens
+    : null
+  const outputTokens = selectedEntries.every(([, section]) => Number.isFinite(section.output_tokens))
+    ? filteredUsage.outputTokens
+    : null
+  return { inputTokens, outputTokens }
+}
+
+/**
+ * @brief 토큰 사용량과 현재 처리량으로 예상 소요 시간 계산
+ * @param {Object} usage - 모델별 토큰 사용량
+ * @param {Object} exam - 시험 정의
+ * @param {Array} subjectFilter - 과목 필터
+ * @param {Object} filteredUsage - 필터된 사용량
+ * @param {Object|null} modelPerformance - 모델별 처리량 스냅샷
+ * @param {string} model - 모델 표시명
+ * @return {Object} 시간·토큰·처리량 지표
+ */
+function _getPerformanceMetrics(usage, exam, subjectFilter, filteredUsage, modelPerformance, model) {
+  const tokens = _getKnownPerformanceTokens(usage, exam, subjectFilter, filteredUsage)
+  const totalTokens = tokens.inputTokens !== null && tokens.outputTokens !== null
+    ? tokens.inputTokens + tokens.outputTokens
+    : null
+  const performance = modelPerformance?.models?.[model] ?? null
+  const tokensPerSecond = typeof performance?.tokensPerSecond === 'number' &&
+      Number.isFinite(performance.tokensPerSecond) && performance.tokensPerSecond > 0
+    ? performance.tokensPerSecond
+    : null
+  const estimatedSeconds = tokens.outputTokens !== null && tokensPerSecond !== null
+    ? tokens.outputTokens / tokensPerSecond
+    : null
+  const provider = typeof performance?.selection?.provider === 'string'
+    ? performance.selection.provider
+    : null
+
+  return {
+    totalTokens,
+    estimatedSeconds,
+    tokensPerSecond,
+    provider,
+    performance
+  }
+}
+
+/**
+ * @brief 실제 토큰 사용량 기반 비용·효율성 계산
+ * @param {Array} data - all_results.json 배열
+ * @param {Array} overallScores - calculateAllModelScores 결과
+ * @param {Object} tokenUsage - 모델별 토큰 사용량
+ * @param {Array|Object} subjectFilter - 과목 필터 또는 옵션
+ * @param {Object} options - { exam, scoreBasis }
+ * @return {Array} 비용·효율성 데이터
+ */
+export function getCostData(data, overallScores, tokenUsage = {}, subjectFilter = [], options = {}) {
+  const args = _resolveFilterArgs(subjectFilter, options)
+  const inferredBasis = overallScores[0]?.scoreBasis
+  const resolvedOptions = _normalizeOptions({
+    ...args.options,
+    scoreBasis: args.options.scoreBasis ?? inferredBasis
+  })
+  const exam = _resolveExam(data, resolvedOptions.exam)
   const priceMap = {}
-  data.forEach(d => {
-    if (!priceMap[d.model_name] && d.price) {
-      priceMap[d.model_name] = {
-        input: d.price.input ?? 0,
-        output: d.price.output ?? 0
+  data.forEach(entry => {
+    if (!priceMap[entry.model_name] && entry.price) {
+      priceMap[entry.model_name] = {
+        input: entry.price.input,
+        output: entry.price.output
       }
     }
   })
 
-  // 1단계: 기본 데이터 계산
   const results = overallScores.map(score => {
-    const price = priceMap[score.model] || { input: 0, output: 0 }
     const usage = tokenUsage[score.model] || {}
-
-    // 토큰 계산: 과목 필터 적용
-    let inputTokens, outputTokens
-
-    if (subjectFilter.length > 0) {
-      // 과목 필터 활성화
-      if (!usage.sections) {
-        // sections 데이터 없으면 토큰 0으로 설정 (테이블에는 표시)
-        inputTokens = 0
-        outputTokens = 0
-      } else {
-        // 선택된 과목들의 토큰만 합산
-        inputTokens = 0
-        outputTokens = 0
-
-        subjectFilter.forEach(subject => {
-          // "국어" → "국어-공통", "국어-화작" 등 모두 포함
-          Object.keys(usage.sections).forEach(sectionKey => {
-            if (sectionKey.startsWith(subject + '-') || sectionKey === subject) {
-              const section = usage.sections[sectionKey]
-              inputTokens += section.input_tokens || 0
-              outputTokens += section.output_tokens || 0
-            }
-          })
-        })
+    const preserveUnknown = _isRepeatedUsage(usage)
+    const storedPrice = priceMap[score.model]
+    const price = preserveUnknown
+      ? {
+        input: storedPrice?.input ?? null,
+        output: storedPrice?.output ?? null
       }
-    } else {
-      // 전체 토큰
-      inputTokens = usage.total_input_tokens || 0
-      outputTokens = usage.total_output_tokens || 0
-    }
-
-    // 실제 비용 계산: 토큰 수 × (가격 / 1M)
-    const inputCostActual = inputTokens * (price.input / 1000000)
-    const outputCostActual = outputTokens * (price.output / 1000000)
-    const totalCost = inputCostActual + outputCostActual
+      : {
+        input: storedPrice?.input ?? 0,
+        output: storedPrice?.output ?? 0
+      }
+    const filteredUsage = _getFilteredUsage(usage, exam, args.subjectFilter)
+    const inputCostActual = _calculateTokenCost(filteredUsage.inputTokens, price.input, preserveUnknown)
+    const outputCostActual = _calculateTokenCost(filteredUsage.outputTokens, price.output, preserveUnknown)
+    const totalCost = preserveUnknown && (inputCostActual === null || outputCostActual === null)
+      ? null
+      : inputCostActual + outputCostActual
+    const scoreValue = args.subjectFilter.length > 0
+      ? getFilteredTotal(score, args.subjectFilter, resolvedOptions)
+      : _getScoreTotalForBasis(score, resolvedOptions.scoreBasis)
+    const performanceMetrics = _getPerformanceMetrics(
+      usage,
+      exam,
+      args.subjectFilter,
+      filteredUsage,
+      resolvedOptions.modelPerformance,
+      score.model
+    )
 
     return {
       model: score.model,
-      score: score.total,
-      inputPrice: price.input,       // $/1M 토큰 가격
-      outputPrice: price.output,     // $/1M 토큰 가격
-      inputTokens,
-      outputTokens,
-      totalCost                      // 실제 테스트 비용 ($)
+      score: scoreValue,
+      maxScore: getMaxScore(args.subjectFilter, resolvedOptions),
+      scoreBasis: resolvedOptions.scoreBasis,
+      inputPrice: price.input,
+      outputPrice: price.output,
+      inputTokens: filteredUsage.inputTokens,
+      outputTokens: filteredUsage.outputTokens,
+      totalCost,
+      tokenUsage: usage,
+      tokenSectionKeys: filteredUsage.sectionKeys,
+      attempts: usage.attempts,
+      attemptDetails: filteredUsage.attemptDetails,
+      attemptTotals: filteredUsage.attemptTotals,
+      ...performanceMetrics
     }
-  }).filter(Boolean) // sections 데이터 없는 모델 제외
+  })
 
-  // 2단계: 효율성 계산 (좌표 기반)
-  // 좌상단(고점수-저비용)일수록 높은 효율
-  const maxCost = Math.max(...results.map(r => r.totalCost).filter(c => c > 0), 1)
-  const SCORE_MAX = getMaxScore(subjectFilter)
+  const maxCost = Math.max(...results.map(result => result.totalCost).filter(cost => cost > 0), 1)
+  const scoreMax = getMaxScore(args.subjectFilter, resolvedOptions)
+  return results.map(result => {
+    if (result.totalCost <= 0) return { ...result, efficiency: 0 }
 
-  return results.map(r => {
-    if (r.totalCost <= 0) {
-      return { ...r, efficiency: 0 }
-    }
-    // 점수 정규화: 0~1 (높을수록 좋음, 0~maxScore 기준)
-    const scoreNorm = Math.max(0, Math.min(1, r.score / SCORE_MAX))
-    // 비용 정규화: 0~1 (낮을수록 좋음, 반전하여 높을수록 좋음)
-    const costNorm = r.totalCost / maxCost
-    // 효율성: 0~100 (성능 70%, 비용 30% 가중치)
+    const scoreNorm = scoreMax > 0
+      ? Math.max(0, Math.min(1, result.score / scoreMax))
+      : 0
+    const costNorm = result.totalCost / maxCost
     const efficiency = (scoreNorm * 0.7 + (1 - costNorm) * 0.3) * 100
-
-    return { ...r, efficiency }
+    return { ...result, efficiency }
   })
 }

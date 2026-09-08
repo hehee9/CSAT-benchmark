@@ -41,29 +41,6 @@ const MODEL_DISPLAY_NAMES = {
 }
 
 /**
- * @brief 수능 이후 지식 컷오프 모델 패턴
- */
-const POST_EXAM_KNOWLEDGE_CUTOFF_PATTERNS = [
-  /^GPT-6 Astra\b/,
-  /^GPT-5\.6\b/,
-  /^GPT-5\.5\b/,
-  /^Gemini 3\.7 Flash\b/,
-  /^Gemini 3\.6 Flash\b/,
-  /^Gemini 3\.5 Flash-Lite\b/,
-  /^Claude Fable 5\b/,
-  /^Claude Opus 5\b/,
-  /^Claude Opus 4\.8\b/,
-  /^Claude Opus 4\.7\b/,
-  /^Claude Sonnet 5\b/,
-  /^Grok 4\.5\b/,
-  /^Grok 4\.3\b/,
-  /^Solar Pro 4\b/,
-  /^Motif 3\b/,
-  /^Muse Spark 1\.3\b/,
-  /^Muse Spark 1\.2\b/
-]
-
-/**
  * @brief 비표준 설정 모델 (부분 벤치마크 모델과 동일)
  */
 const NON_STANDARD_MODELS = new Set(Object.keys(PARTIAL_BENCHMARK_MODELS))
@@ -137,10 +114,13 @@ export function isNonStandard(modelName) {
 /**
  * @brief 지식 컷오프가 수능 이후인 모델 여부
  * @param {string} modelName - 모델명
+ * @param {Object} modelMetadata - 모델별 메타데이터
+ * @param {string|null} examMonth - 시험 시행 월 (YYYY-MM)
  * @return {boolean}
  */
-export function hasPostExamKnowledgeCutoff(modelName) {
-  return POST_EXAM_KNOWLEDGE_CUTOFF_PATTERNS.some(p => p.test(modelName))
+export function hasPostExamKnowledgeCutoff(modelName, modelMetadata = {}, examMonth = null) {
+  const knowledgeCutoff = modelMetadata?.[modelName]?.knowledgeCutoff
+  return typeof knowledgeCutoff === 'string' && typeof examMonth === 'string' && knowledgeCutoff > examMonth
 }
 
 /**
@@ -157,13 +137,14 @@ export function hasWebServiceNoTools(modelName, modelMetadata = {}) {
  * @brief 모델의 시각적 플래그 반환
  * @param {string} modelName - 모델명
  * @param {Object} modelMetadata - 모델별 메타데이터
+ * @param {string|null} examMonth - 시험 시행 월 (YYYY-MM)
  * @return {{ noVision: boolean, nonStandard: boolean, postExamKnowledgeCutoff: boolean, webServiceNoTools: boolean }}
  */
-export function getModelFlags(modelName, modelMetadata = {}) {
+export function getModelFlags(modelName, modelMetadata = {}, examMonth = null) {
   return {
     noVision: hasNoVision(modelName, modelMetadata),
     nonStandard: isNonStandard(modelName),
-    postExamKnowledgeCutoff: hasPostExamKnowledgeCutoff(modelName),
+    postExamKnowledgeCutoff: hasPostExamKnowledgeCutoff(modelName, modelMetadata, examMonth),
     webServiceNoTools: hasWebServiceNoTools(modelName, modelMetadata)
   }
 }
@@ -172,13 +153,14 @@ export function getModelFlags(modelName, modelMetadata = {}) {
  * @brief 모델 목록에 플래그가 있는 모델이 포함되어 있는지 확인
  * @param {string[]} models - 모델명 배열
  * @param {Object} modelMetadata - 모델별 메타데이터
+ * @param {string|null} examMonth - 시험 시행 월 (YYYY-MM)
  * @return {{ hasNoVision: boolean, hasNonStandard: boolean, hasPostExamKnowledgeCutoff: boolean, hasWebServiceNoTools: boolean }}
  */
-export function getAnyModelFlags(models = [], modelMetadata = {}) {
+export function getAnyModelFlags(models = [], modelMetadata = {}, examMonth = null) {
   return {
     hasNoVision: models.some(model => hasNoVision(model, modelMetadata)),
     hasNonStandard: models.some(isNonStandard),
-    hasPostExamKnowledgeCutoff: models.some(hasPostExamKnowledgeCutoff),
+    hasPostExamKnowledgeCutoff: models.some(model => hasPostExamKnowledgeCutoff(model, modelMetadata, examMonth)),
     hasWebServiceNoTools: models.some(model => hasWebServiceNoTools(model, modelMetadata))
   }
 }

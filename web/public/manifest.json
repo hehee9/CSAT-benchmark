@@ -1,9 +1,9 @@
 {
-  "name": "2026 수능 LLM 풀이 대시보드",
+  "name": "수능 LLM 벤치마크 대시보드",
   "short_name": "수능 LLM",
   "description": "다양한 LLM 모델의 수능 문제 풀이 결과 대시보드",
-  "start_url": "/2026-CSAT/",
-  "scope": "/2026-CSAT/",
+  "start_url": "/CSAT-benchmark/",
+  "scope": "/CSAT-benchmark/",
   "display": "standalone",
   "background_color": "#111827",
   "theme_color": "#111827",
@@ -11,13 +11,13 @@
   "lang": "ko",
   "icons": [
     {
-      "src": "/2026-CSAT/icons/icon-192.png",
+      "src": "/CSAT-benchmark/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/2026-CSAT/icons/icon-512.png",
+      "src": "/CSAT-benchmark/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

@@ -108,14 +108,14 @@ export default function BenchmarkNote({
   modelMetadata
 }) {
   const { t } = useTranslation()
-  const { modelMetadata: contextModelMetadata } = useData()
-  const flags = getAnyModelFlags(modelNames, modelMetadata ?? contextModelMetadata)
+  const { exam, modelMetadata: contextModelMetadata } = useData()
+  const flags = getAnyModelFlags(modelNames, modelMetadata ?? contextModelMetadata, exam?.exam_month)
 
   return (
-    <div className={className}>
+    <div className={`${className} export-role-note`}>
       <p>{t('benchmark.noExternalSearch')}</p>
       {(flags.hasNoVision || flags.hasNonStandard || flags.hasPostExamKnowledgeCutoff || flags.hasWebServiceNoTools) && (
-        <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
+        <div className="export-role-legend mt-1 flex flex-wrap gap-x-4 gap-y-1">
           {flags.hasNoVision && (
             <span className="inline-flex items-center">
               <_LegendSwatch type="noVision" />

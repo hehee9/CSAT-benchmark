@@ -14,6 +14,7 @@ import { ThemeToggle, LanguageSwitcher } from '@/components/common'
 export default function Sidebar({
   filters,
   onFilterChange,
+  subjectFilterGroups = [],
   hoveredModel,
   onModelHover,
   isOpen = false,
@@ -87,6 +88,7 @@ export default function Sidebar({
           selected={filters.subjects}
           onChange={(subjects) => onFilterChange({ ...filters, subjects })}
           showDetail={filters.showDetail}
+          groups={subjectFilterGroups}
         />
         <ModelFilter
           selected={filters.models}

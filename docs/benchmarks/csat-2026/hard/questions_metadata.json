@@ -1,0 +1,1016 @@
+{
+  "국어-공통": {
+    "1": {
+      "hasImage": false,
+      "points": 2
+    },
+    "2": {
+      "hasImage": false,
+      "points": 2
+    },
+    "3": {
+      "hasImage": false,
+      "points": 3
+    },
+    "4": {
+      "hasImage": false,
+      "points": 2
+    },
+    "5": {
+      "hasImage": false,
+      "points": 2
+    },
+    "6": {
+      "hasImage": false,
+      "points": 2
+    },
+    "7": {
+      "hasImage": false,
+      "points": 2
+    },
+    "8": {
+      "hasImage": false,
+      "points": 3
+    },
+    "9": {
+      "hasImage": false,
+      "points": 2
+    },
+    "10": {
+      "hasImage": true,
+      "points": 2
+    },
+    "11": {
+      "hasImage": false,
+      "points": 2
+    },
+    "12": {
+      "hasImage": true,
+      "points": 3
+    },
+    "13": {
+      "hasImage": false,
+      "points": 2
+    },
+    "14": {
+      "hasImage": false,
+      "points": 2
+    },
+    "15": {
+      "hasImage": false,
+      "points": 2
+    },
+    "16": {
+      "hasImage": false,
+      "points": 2
+    },
+    "17": {
+      "hasImage": false,
+      "points": 3
+    },
+    "18": {
+      "hasImage": false,
+      "points": 2
+    },
+    "19": {
+      "hasImage": false,
+      "points": 2
+    },
+    "20": {
+      "hasImage": false,
+      "points": 2
+    },
+    "21": {
+      "hasImage": false,
+      "points": 3
+    },
+    "22": {
+      "hasImage": false,
+      "points": 2
+    },
+    "23": {
+      "hasImage": false,
+      "points": 3
+    },
+    "24": {
+      "hasImage": false,
+      "points": 2
+    },
+    "25": {
+      "hasImage": false,
+      "points": 2
+    },
+    "26": {
+      "hasImage": false,
+      "points": 2
+    },
+    "27": {
+      "hasImage": false,
+      "points": 2
+    },
+    "28": {
+      "hasImage": false,
+      "points": 2
+    },
+    "29": {
+      "hasImage": false,
+      "points": 2
+    },
+    "30": {
+      "hasImage": false,
+      "points": 3
+    },
+    "31": {
+      "hasImage": false,
+      "points": 2
+    },
+    "32": {
+      "hasImage": false,
+      "points": 2
+    },
+    "33": {
+      "hasImage": false,
+      "points": 2
+    },
+    "34": {
+      "hasImage": false,
+      "points": 3
+    }
+  },
+  "국어-화작": {
+    "35": {
+      "hasImage": false,
+      "points": 2
+    },
+    "36": {
+      "hasImage": true,
+      "points": 2
+    },
+    "37": {
+      "hasImage": false,
+      "points": 2
+    },
+    "38": {
+      "hasImage": false,
+      "points": 2
+    },
+    "39": {
+      "hasImage": false,
+      "points": 2
+    },
+    "40": {
+      "hasImage": false,
+      "points": 3
+    },
+    "41": {
+      "hasImage": false,
+      "points": 2
+    },
+    "42": {
+      "hasImage": false,
+      "points": 2
+    },
+    "43": {
+      "hasImage": false,
+      "points": 2
+    },
+    "44": {
+      "hasImage": false,
+      "points": 2
+    },
+    "45": {
+      "hasImage": true,
+      "points": 3
+    }
+  },
+  "국어-언매": {
+    "35": {
+      "hasImage": false,
+      "points": 2
+    },
+    "36": {
+      "hasImage": true,
+      "points": 3
+    },
+    "37": {
+      "hasImage": false,
+      "points": 2
+    },
+    "38": {
+      "hasImage": false,
+      "points": 2
+    },
+    "39": {
+      "hasImage": false,
+      "points": 2
+    },
+    "40": {
+      "hasImage": false,
+      "points": 2
+    },
+    "41": {
+      "hasImage": false,
+      "points": 2
+    },
+    "42": {
+      "hasImage": true,
+      "points": 3
+    },
+    "43": {
+      "hasImage": false,
+      "points": 2
+    },
+    "44": {
+      "hasImage": true,
+      "points": 2
+    },
+    "45": {
+      "hasImage": false,
+      "points": 2
+    }
+  },
+  "수학-공통": {
+    "1": {
+      "hasImage": false,
+      "points": 2
+    },
+    "2": {
+      "hasImage": false,
+      "points": 2
+    },
+    "3": {
+      "hasImage": false,
+      "points": 3
+    },
+    "4": {
+      "hasImage": false,
+      "points": 3
+    },
+    "5": {
+      "hasImage": false,
+      "points": 3
+    },
+    "6": {
+      "hasImage": false,
+      "points": 3
+    },
+    "7": {
+      "hasImage": true,
+      "points": 3
+    },
+    "8": {
+      "hasImage": false,
+      "points": 3
+    },
+    "9": {
+      "hasImage": false,
+      "points": 4
+    },
+    "10": {
+      "hasImage": false,
+      "points": 4
+    },
+    "11": {
+      "hasImage": false,
+      "points": 4
+    },
+    "12": {
+      "hasImage": false,
+      "points": 4
+    },
+    "13": {
+      "hasImage": false,
+      "points": 4
+    },
+    "14": {
+      "hasImage": true,
+      "points": 4
+    },
+    "15": {
+      "hasImage": false,
+      "points": 4
+    },
+    "16": {
+      "hasImage": false,
+      "points": 3
+    },
+    "17": {
+      "hasImage": false,
+      "points": 3
+    },
+    "18": {
+      "hasImage": false,
+      "points": 3
+    },
+    "19": {
+      "hasImage": false,
+      "points": 3
+    },
+    "20": {
+      "hasImage": false,
+      "points": 4
+    },
+    "21": {
+      "hasImage": false,
+      "points": 4
+    },
+    "22": {
+      "hasImage": false,
+      "points": 4
+    }
+  },
+  "수학-확통": {
+    "23": {
+      "hasImage": false,
+      "points": 2
+    },
+    "24": {
+      "hasImage": false,
+      "points": 3
+    },
+    "25": {
+      "hasImage": true,
+      "points": 3
+    },
+    "26": {
+      "hasImage": false,
+      "points": 3
+    },
+    "27": {
+      "hasImage": false,
+      "points": 3
+    },
+    "28": {
+      "hasImage": true,
+      "points": 4
+    },
+    "29": {
+      "hasImage": false,
+      "points": 4
+    },
+    "30": {
+      "hasImage": false,
+      "points": 4
+    }
+  },
+  "수학-미적": {
+    "23": {
+      "hasImage": false,
+      "points": 2
+    },
+    "24": {
+      "hasImage": false,
+      "points": 3
+    },
+    "25": {
+      "hasImage": false,
+      "points": 3
+    },
+    "26": {
+      "hasImage": true,
+      "points": 3
+    },
+    "27": {
+      "hasImage": false,
+      "points": 3
+    },
+    "28": {
+      "hasImage": false,
+      "points": 4
+    },
+    "29": {
+      "hasImage": false,
+      "points": 4
+    },
+    "30": {
+      "hasImage": false,
+      "points": 4
+    }
+  },
+  "수학-기하": {
+    "23": {
+      "hasImage": false,
+      "points": 2
+    },
+    "24": {
+      "hasImage": false,
+      "points": 3
+    },
+    "25": {
+      "hasImage": false,
+      "points": 3
+    },
+    "26": {
+      "hasImage": false,
+      "points": 3
+    },
+    "27": {
+      "hasImage": true,
+      "points": 3
+    },
+    "28": {
+      "hasImage": true,
+      "points": 4
+    },
+    "29": {
+      "hasImage": true,
+      "points": 4
+    },
+    "30": {
+      "hasImage": false,
+      "points": 4
+    }
+  },
+  "영어-영어": {
+    "1": {
+      "hasImage": false,
+      "points": 2
+    },
+    "2": {
+      "hasImage": false,
+      "points": 2
+    },
+    "3": {
+      "hasImage": false,
+      "points": 2
+    },
+    "4": {
+      "hasImage": true,
+      "points": 2
+    },
+    "5": {
+      "hasImage": false,
+      "points": 2
+    },
+    "6": {
+      "hasImage": false,
+      "points": 2
+    },
+    "7": {
+      "hasImage": false,
+      "points": 2
+    },
+    "8": {
+      "hasImage": false,
+      "points": 2
+    },
+    "9": {
+      "hasImage": false,
+      "points": 2
+    },
+    "10": {
+      "hasImage": false,
+      "points": 2
+    },
+    "11": {
+      "hasImage": false,
+      "points": 2
+    },
+    "12": {
+      "hasImage": false,
+      "points": 3
+    },
+    "13": {
+      "hasImage": false,
+      "points": 3
+    },
+    "14": {
+      "hasImage": false,
+      "points": 3
+    },
+    "15": {
+      "hasImage": false,
+      "points": 2
+    },
+    "16": {
+      "hasImage": false,
+      "points": 2
+    },
+    "17": {
+      "hasImage": false,
+      "points": 2
+    },
+    "18": {
+      "hasImage": false,
+      "points": 2
+    },
+    "19": {
+      "hasImage": false,
+      "points": 2
+    },
+    "20": {
+      "hasImage": false,
+      "points": 2
+    },
+    "21": {
+      "hasImage": false,
+      "points": 2
+    },
+    "22": {
+      "hasImage": false,
+      "points": 2
+    },
+    "23": {
+      "hasImage": false,
+      "points": 2
+    },
+    "24": {
+      "hasImage": false,
+      "points": 3
+    },
+    "25": {
+      "hasImage": true,
+      "points": 2
+    },
+    "26": {
+      "hasImage": false,
+      "points": 2
+    },
+    "27": {
+      "hasImage": false,
+      "points": 2
+    },
+    "28": {
+      "hasImage": false,
+      "points": 2
+    },
+    "29": {
+      "hasImage": false,
+      "points": 2
+    },
+    "30": {
+      "hasImage": false,
+      "points": 3
+    },
+    "31": {
+      "hasImage": false,
+      "points": 2
+    },
+    "32": {
+      "hasImage": false,
+      "points": 3
+    },
+    "33": {
+      "hasImage": false,
+      "points": 2
+    },
+    "34": {
+      "hasImage": false,
+      "points": 3
+    },
+    "35": {
+      "hasImage": false,
+      "points": 2
+    },
+    "36": {
+      "hasImage": false,
+      "points": 2
+    },
+    "37": {
+      "hasImage": false,
+      "points": 3
+    },
+    "38": {
+      "hasImage": false,
+      "points": 2
+    },
+    "39": {
+      "hasImage": false,
+      "points": 3
+    },
+    "40": {
+      "hasImage": false,
+      "points": 2
+    },
+    "41": {
+      "hasImage": false,
+      "points": 3
+    },
+    "42": {
+      "hasImage": false,
+      "points": 2
+    },
+    "43": {
+      "hasImage": false,
+      "points": 2
+    },
+    "44": {
+      "hasImage": false,
+      "points": 2
+    },
+    "45": {
+      "hasImage": false,
+      "points": 2
+    }
+  },
+  "한국사-한국사": {
+    "1": {
+      "hasImage": true,
+      "points": 2
+    },
+    "2": {
+      "hasImage": true,
+      "points": 2
+    },
+    "3": {
+      "hasImage": false,
+      "points": 3
+    },
+    "4": {
+      "hasImage": false,
+      "points": 2
+    },
+    "5": {
+      "hasImage": false,
+      "points": 3
+    },
+    "6": {
+      "hasImage": true,
+      "points": 2
+    },
+    "7": {
+      "hasImage": false,
+      "points": 3
+    },
+    "8": {
+      "hasImage": true,
+      "points": 2
+    },
+    "9": {
+      "hasImage": false,
+      "points": 3
+    },
+    "10": {
+      "hasImage": true,
+      "points": 3
+    },
+    "11": {
+      "hasImage": true,
+      "points": 3
+    },
+    "12": {
+      "hasImage": false,
+      "points": 2
+    },
+    "13": {
+      "hasImage": true,
+      "points": 2
+    },
+    "14": {
+      "hasImage": false,
+      "points": 2
+    },
+    "15": {
+      "hasImage": true,
+      "points": 3
+    },
+    "16": {
+      "hasImage": false,
+      "points": 2
+    },
+    "17": {
+      "hasImage": false,
+      "points": 3
+    },
+    "18": {
+      "hasImage": false,
+      "points": 3
+    },
+    "19": {
+      "hasImage": false,
+      "points": 2
+    },
+    "20": {
+      "hasImage": false,
+      "points": 3
+    }
+  },
+  "물리1-탐구": {
+    "1": {
+      "hasImage": true,
+      "points": 3
+    },
+    "2": {
+      "hasImage": true,
+      "points": 2
+    },
+    "3": {
+      "hasImage": false,
+      "points": 2
+    },
+    "4": {
+      "hasImage": true,
+      "points": 3
+    },
+    "5": {
+      "hasImage": true,
+      "points": 2
+    },
+    "6": {
+      "hasImage": true,
+      "points": 3
+    },
+    "7": {
+      "hasImage": true,
+      "points": 2
+    },
+    "8": {
+      "hasImage": true,
+      "points": 2
+    },
+    "9": {
+      "hasImage": true,
+      "points": 3
+    },
+    "10": {
+      "hasImage": true,
+      "points": 3
+    },
+    "11": {
+      "hasImage": true,
+      "points": 2
+    },
+    "12": {
+      "hasImage": false,
+      "points": 3
+    },
+    "13": {
+      "hasImage": true,
+      "points": 2
+    },
+    "14": {
+      "hasImage": true,
+      "points": 3
+    },
+    "15": {
+      "hasImage": true,
+      "points": 3
+    },
+    "16": {
+      "hasImage": true,
+      "points": 2
+    },
+    "17": {
+      "hasImage": true,
+      "points": 2
+    },
+    "18": {
+      "hasImage": true,
+      "points": 2
+    },
+    "19": {
+      "hasImage": true,
+      "points": 3
+    },
+    "20": {
+      "hasImage": true,
+      "points": 3
+    }
+  },
+  "화학1-탐구": {
+    "1": {
+      "hasImage": true,
+      "points": 2
+    },
+    "2": {
+      "hasImage": false,
+      "points": 3
+    },
+    "3": {
+      "hasImage": true,
+      "points": 2
+    },
+    "4": {
+      "hasImage": false,
+      "points": 2
+    },
+    "5": {
+      "hasImage": true,
+      "points": 3
+    },
+    "6": {
+      "hasImage": false,
+      "points": 2
+    },
+    "7": {
+      "hasImage": false,
+      "points": 3
+    },
+    "8": {
+      "hasImage": false,
+      "points": 2
+    },
+    "9": {
+      "hasImage": true,
+      "points": 2
+    },
+    "10": {
+      "hasImage": false,
+      "points": 3
+    },
+    "11": {
+      "hasImage": true,
+      "points": 2
+    },
+    "12": {
+      "hasImage": false,
+      "points": 3
+    },
+    "13": {
+      "hasImage": true,
+      "points": 3
+    },
+    "14": {
+      "hasImage": false,
+      "points": 2
+    },
+    "15": {
+      "hasImage": false,
+      "points": 3
+    },
+    "16": {
+      "hasImage": true,
+      "points": 2
+    },
+    "17": {
+      "hasImage": false,
+      "points": 3
+    },
+    "18": {
+      "hasImage": true,
+      "points": 3
+    },
+    "19": {
+      "hasImage": false,
+      "points": 2
+    },
+    "20": {
+      "hasImage": false,
+      "points": 3
+    }
+  },
+  "생명1-탐구": {
+    "1": {
+      "hasImage": true,
+      "points": 2
+    },
+    "2": {
+      "hasImage": false,
+      "points": 2
+    },
+    "3": {
+      "hasImage": true,
+      "points": 3
+    },
+    "4": {
+      "hasImage": false,
+      "points": 3
+    },
+    "5": {
+      "hasImage": true,
+      "points": 2
+    },
+    "6": {
+      "hasImage": true,
+      "points": 2
+    },
+    "7": {
+      "hasImage": true,
+      "points": 2
+    },
+    "8": {
+      "hasImage": false,
+      "points": 2
+    },
+    "9": {
+      "hasImage": false,
+      "points": 2
+    },
+    "10": {
+      "hasImage": true,
+      "points": 3
+    },
+    "11": {
+      "hasImage": false,
+      "points": 3
+    },
+    "12": {
+      "hasImage": true,
+      "points": 3
+    },
+    "13": {
+      "hasImage": true,
+      "points": 2
+    },
+    "14": {
+      "hasImage": false,
+      "points": 3
+    },
+    "15": {
+      "hasImage": true,
+      "points": 3
+    },
+    "16": {
+      "hasImage": false,
+      "points": 2
+    },
+    "17": {
+      "hasImage": false,
+      "points": 3
+    },
+    "18": {
+      "hasImage": false,
+      "points": 2
+    },
+    "19": {
+      "hasImage": true,
+      "points": 3
+    },
+    "20": {
+      "hasImage": true,
+      "points": 3
+    }
+  },
+  "사회문화-탐구": {
+    "1": {
+      "hasImage": false,
+      "points": 2
+    },
+    "2": {
+      "hasImage": false,
+      "points": 3
+    },
+    "3": {
+      "hasImage": false,
+      "points": 3
+    },
+    "4": {
+      "hasImage": false,
+      "points": 2
+    },
+    "5": {
+      "hasImage": false,
+      "points": 3
+    },
+    "6": {
+      "hasImage": false,
+      "points": 2
+    },
+    "7": {
+      "hasImage": false,
+      "points": 2
+    },
+    "8": {
+      "hasImage": false,
+      "points": 3
+    },
+    "9": {
+      "hasImage": false,
+      "points": 3
+    },
+    "10": {
+      "hasImage": true,
+      "points": 2
+    },
+    "11": {
+      "hasImage": true,
+      "points": 2
+    },
+    "12": {
+      "hasImage": false,
+      "points": 3
+    },
+    "13": {
+      "hasImage": false,
+      "points": 2
+    },
+    "14": {
+      "hasImage": false,
+      "points": 3
+    },
+    "15": {
+      "hasImage": false,
+      "points": 3
+    },
+    "16": {
+      "hasImage": false,
+      "points": 2
+    },
+    "17": {
+      "hasImage": false,
+      "points": 3
+    },
+    "18": {
+      "hasImage": false,
+      "points": 2
+    },
+    "19": {
+      "hasImage": false,
+      "points": 3
+    },
+    "20": {
+      "hasImage": false,
+      "points": 2
+    }
+  }
+}

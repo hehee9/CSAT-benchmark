@@ -2,17 +2,43 @@
   "header": {
     "title": "2026 수능 LLM 풀이 대시보드",
     "titleShort": "수능 LLM",
+    "titleSuffix": "LLM 풀이 대시보드",
+    "csatName": "수능",
+    "mockExamName": "모의고사",
+    "mockEvaluationName": "모의평가",
     "subtitle": "다양한 LLM 모델의 수능 문제 풀이 결과",
-    "modeDefault": "기본",
-    "modeHard": "고난도",
-    "modeDefaultDesc": "모든 문제를 1개씩 따로 해결합니다",
-    "modeHardDesc": "과목 단위로 모든 문제를 동시에 해결합니다"
+    "mockSubtitle": "다양한 LLM 모델의 모의고사 문제 풀이 결과",
+    "modeDefault": "일반",
+    "modeEasy": "쉬움",
+    "modeDefaultDesc": "과목 단위로 모든 문제를 한 번에 해결합니다",
+    "modeEasyDesc": "모든 문제를 하나씩 따로 해결합니다",
+    "examSelect": "시험 선택",
+    "modeSelect": "실행 모드 선택",
+    "scoreBasis": "점수 기준",
+    "normalized": "정규화",
+    "raw": "원점수",
+    "openMenu": "메뉴 열기"
   },
   "tabs": {
     "overview": "종합 대시보드",
     "subjects": "과목별 상세",
     "compare": "모델 비교",
-    "cost": "비용 분석"
+    "cost": "상세 분석"
+  },
+  "analysis": {
+    "metrics": { "score": "성적", "cost": "비용", "tokens": "토큰", "time": "시간" },
+    "units": { "points": "점", "dollars": "$", "tokens": "토큰", "hours": "시간" },
+    "xAxis": "가로축 지표",
+    "yAxis": "세로축 지표",
+    "estimatedTime": "예상 풀이 시간",
+    "noDataForAxes": "선택한 두 지표를 함께 표시할 수 있는 데이터가 없습니다.",
+    "help": {
+      "title": "예상 풀이 시간 산정 기준",
+      "method": "선택한 과목의 1회 평균 출력 토큰(추론 포함)을 OpenRouter 처리 속도로 나눈 예상 시간입니다.",
+      "selection": "공식 공급자의 일반 경로를 우선하며, 없으면 공급자별 중앙값을 사용합니다.",
+      "updated": "처리 속도 조회 시각",
+      "unavailable": "정보 없음"
+    }
   },
   "sidebar": {
     "settings": "설정",
@@ -48,7 +74,9 @@
     "modelsSelected": "{{count}}개 선택됨",
     "costVsPerformance": "비용 vs 성능",
     "tokenUsage": "총 토큰 사용량",
+    "tokenUsageAverage": "회차당 평균 토큰 사용량",
     "costInfo": "모델별 비용 정보",
+    "costInfoAverage": "모델별 회차당 평균 비용",
     "modelCompare": "모델 비교 (과목별 정규화 점수)",
     "showScores": "점수 표시",
     "viewModes": {
@@ -77,8 +105,21 @@
     "mijeok": "미적",
     "giha": "기하",
     "physics1": "물리1",
+    "physics2": "물리2",
     "chemistry1": "화학1",
+    "chemistry2": "화학2",
     "biology1": "생명1",
+    "biology2": "생명2",
+    "earthScience1": "지구1",
+    "earthScience2": "지구2",
+    "lifeEthics": "생활과 윤리",
+    "ethicsAndThought": "윤리와 사상",
+    "koreanGeography": "한국지리",
+    "worldGeography": "세계지리",
+    "eastAsianHistory": "동아시아사",
+    "worldHistory": "세계사",
+    "economics": "경제",
+    "politicsAndLaw": "정치와 법",
     "society": "사회문화"
   },
   "table": {
@@ -94,7 +135,10 @@
     "outputPrice": "출력 ($/1M)",
     "inputTokens": "입력 토큰",
     "outputTokens": "출력 토큰",
+    "inputTokensAverage": "회차당 평균 입력 토큰",
+    "outputTokensAverage": "회차당 평균 출력 토큰",
     "totalCost": "총 비용",
+    "averageCost": "회차당 평균 비용",
     "score": "총점",
     "efficiency": "효율",
     "showDetail": "세부 점수 표시",
@@ -143,11 +187,18 @@
     "tokens": "토큰",
     "perMillion": "/M",
     "axisTestCost": "테스트 비용 ($)",
-    "axisScore": "총점"
+    "axisAverageTestCost": "회차당 평균 비용 ($)",
+    "axisScore": "총점",
+    "attemptDetails": "시도별 토큰·비용 상세",
+    "attempt": "시도",
+    "attemptTotal": "전체 합계",
+    "attemptCost": "비용",
+    "showDetail": "상세 정보 표시",
+    "hideDetail": "상세 정보 숨기기"
   },
   "models": {
     "noVision": "멀티모달 미지원",
-    "nonStandard": "high에서 틀린 문항만 더 높은 추론으로 처리",
+    "nonStandard": "틀린 문항만 더 높은 추론으로 재실행",
     "postExamKnowledgeCutoff": "문제 학습 가능성 있음",
     "webServiceNoTools": "도구 차단한 웹 서비스 환경"
   },
@@ -181,6 +232,7 @@
     "loading": "데이터 로드 중...",
     "error": "오류 발생",
     "noData": "데이터가 없습니다",
+    "preparingResults": "시험 결과를 준비 중입니다.",
     "noCostData": "비용 데이터가 없습니다",
     "score": "점수",
     "correct": "정답",
@@ -198,6 +250,7 @@
     "en": "English"
   },
   "footer": {
+    "supportTests": "테스트 비용 지원",
     "lastUpdated": "최종 업데이트",
     "unofficial": "비공식 프로젝트입니다. 한국교육과정평가원과 관련이 없습니다."
   }

@@ -1,0 +1,171 @@
+/**
+ * @file export-image.css
+ * @brief 이미지 내보내기 전용 글꼴·간격 프로필
+ */
+
+.export-profile-default,
+.export-profile-overview-score,
+.export-profile-token-usage,
+.export-profile-model-compare,
+.export-profile-question-heatmap,
+.export-profile-choice-selection,
+.export-profile-score-table,
+.export-profile-score-card,
+.export-profile-cost-scatter,
+.export-profile-cost-table {
+  font-family: 'Pretendard', system-ui, -apple-system, sans-serif;
+}
+
+.export-profile-default {
+  --export-title-size: 32px;
+  --export-subtitle-size: 24px;
+  --export-model-size: 24px;
+  --export-axis-size: 22px;
+  --export-value-size: 22px;
+  --export-legend-size: 22px;
+  --export-note-size: 22px;
+}
+
+.export-profile-overview-score,
+.export-profile-token-usage,
+.export-profile-model-compare,
+.export-profile-choice-selection {
+  --export-title-size: 36px;
+  --export-subtitle-size: 26px;
+  --export-model-size: 26px;
+  --export-axis-size: 24px;
+  --export-value-size: 24px;
+  --export-legend-size: 24px;
+  --export-note-size: 24px;
+}
+
+.export-profile-overview-score,
+.export-profile-token-usage {
+  --export-model-size: 26px;
+  --export-axis-size: 24px;
+  --export-value-size: 22px;
+}
+
+.export-profile-overview-score {
+  --export-model-size: 22px;
+}
+
+.export-profile-question-heatmap {
+  --export-title-size: 36px;
+  --export-subtitle-size: 26px;
+  --export-model-size: 24px;
+  --export-axis-size: 22px;
+  --export-value-size: 22px;
+  --export-legend-size: 22px;
+  --export-note-size: 22px;
+}
+
+.export-profile-score-table,
+.export-profile-score-card,
+.export-profile-cost-scatter,
+.export-profile-cost-table {
+  --export-title-size: 36px;
+  --export-subtitle-size: 26px;
+  --export-model-size: 24px;
+  --export-axis-size: 22px;
+  --export-value-size: 24px;
+  --export-legend-size: 22px;
+  --export-note-size: 22px;
+}
+
+[class*='export-profile-'] .export-role-title {
+  font-size: var(--export-title-size) !important;
+  line-height: 1.2 !important;
+}
+
+[class*='export-profile-'] .export-role-subtitle {
+  font-size: var(--export-subtitle-size) !important;
+  line-height: 1.25 !important;
+}
+
+[class*='export-profile-'] .export-role-model-label,
+[class*='export-profile-'] .export-role-model {
+  font-size: var(--export-model-size) !important;
+  line-height: 1.2 !important;
+}
+
+[class*='export-profile-'] .export-role-axis-label,
+[class*='export-profile-'] .export-role-axis-value {
+  font-size: var(--export-axis-size) !important;
+}
+
+[class*='export-profile-'] .export-role-value {
+  font-size: var(--export-value-size) !important;
+}
+
+[class*='export-profile-'] .export-role-legend {
+  font-size: var(--export-legend-size) !important;
+  line-height: 1.3 !important;
+}
+
+[class*='export-profile-'] .export-role-note {
+  font-size: var(--export-note-size) !important;
+  line-height: 1.35 !important;
+}
+
+[class*='export-profile-'] .export-role-watermark {
+  font-size: 24px !important;
+}
+
+[class*='export-profile-'] .export-role-table-head {
+  font-size: var(--export-axis-size) !important;
+  line-height: 1.25 !important;
+}
+
+[class*='export-profile-'] .export-role-table-model {
+  font-size: var(--export-model-size) !important;
+  line-height: 1.25 !important;
+}
+
+[class*='export-profile-'] .export-role-table-value {
+  font-size: var(--export-value-size) !important;
+  line-height: 1.25 !important;
+}
+
+[class*='export-profile-'] .recharts-cartesian-axis-tick-label,
+[class*='export-profile-'] text.recharts-cartesian-axis-tick-value,
+[class*='export-profile-'] .recharts-polar-angle-axis-tick-label,
+[class*='export-profile-'] text.recharts-polar-angle-axis-tick-value,
+[class*='export-profile-'] .recharts-polar-radius-axis-tick-label,
+[class*='export-profile-'] text.recharts-polar-radius-axis-tick-value {
+  font-size: var(--export-axis-size) !important;
+}
+
+[class*='export-profile-'] .export-role-value,
+[class*='export-profile-'] .export-role-value text,
+[class*='export-profile-'] text.export-role-value,
+[class*='export-profile-'] .recharts-label-list text {
+  font-size: var(--export-value-size) !important;
+}
+
+.export-profile-score-table table {
+  table-layout: auto;
+}
+
+.export-profile-score-table th,
+.export-profile-score-table td {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  vertical-align: middle;
+}
+
+.export-profile-score-table th:first-child,
+.export-profile-score-table td:first-child {
+  white-space: nowrap;
+}
+
+.export-profile-score-card .export-role-table-model {
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.export-profile-overview-score .export-role-axis-label,
+.export-profile-token-usage .export-role-axis-label {
+  white-space: pre-line;
+}

@@ -1,23 +1,8 @@
-"""
-Excel-JSON 양방향 동기화 스크립트
-
-기능:
-- Export: Excel 데이터를 results_verified.json 형식으로 내보내기
-- Import: results_verified.json을 읽어 Excel에 새 모델 컬럼 추가
-
-사용법:
-    python sync_data.py export --sheet 국어-공통 --model "GPT-5.1"
-    python sync_data.py export --sheet 국어-공통 --all-models
-    python sync_data.py export --all-sheets                      # 모든 과목을 하나의 JSON 배열로 출력
-    python sync_data.py export --all-sheets --output results.json
-    python sync_data.py import --json problems/국어/공통/results_verified.json
-    python sync_data.py import --all
-    python sync_data.py list
-    python sync_data.py validate
-"""
+"""@description Excel·JSON 양방향 동기화"""
 
 import json
 import argparse
+import sys
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
@@ -29,6 +14,16 @@ from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Alignment, PatternFill
 from openpyxl.styles.colors import Color
 
+from csat_benchmark.evaluation import EvaluationError, resolve_run
+from csat_benchmark.configuration import load_config
+from csat_benchmark.exams import load_exam
+from csat_benchmark.exports import (
+    export_run_to_excel,
+    import_excel_corrections,
+    publish_run,
+)
+from csat_benchmark.metadata import sync_model_metadata
+
 
 REFUSAL_ANSWER = -2
 NO_ANSWER = -1
@@ -38,51 +33,132 @@ DEFAULT_HARD_EXCEL_PATH = Path('2026 수능 LLM 풀이 hard.xlsx')
 DEFAULT_MODEL_METADATA_PATH = Path(__file__).resolve().parent / 'web' / 'model_metadata.json'
 
 
+def _config_project_root(config_path: Path) -> Path:
+    """@description 설정 파일 기준 저장소·작업 루트 탐색"""
+    for parent in (config_path.parent, *config_path.parent.parents):
+        if (parent / '.env').is_file() or (parent / '.git').exists():
+            return parent
+    return config_path.parent
+
+
+def _metadata_path_for_config(config_path: str | Path) -> Path:
+    """@description 설정 파일 기준 모델 메타데이터 경로 반환"""
+    resolved = Path(config_path).expanduser().resolve()
+    return _config_project_root(resolved) / 'web' / 'model_metadata.json'
+
+
+def _generic_sync_main(arguments: List[str]) -> int:
+    """@description 시험·쉬움 모드 기준 공개·Excel 동기화 처리"""
+    parser = argparse.ArgumentParser(
+        description="시험 실행 결과 공개·Excel 동기화",
+        allow_abbrev=False,
+    )
+    subparsers = parser.add_subparsers(dest="command", required=True)
+    for command, help_text in (
+        ("publish", "완료된 실행을 공개 경로에 병합"),
+        ("import", "비공개 검증 결과를 Excel로 가져오기"),
+        ("export", "Excel 수동 답안을 비공개 검증 결과에 반영"),
+    ):
+        command_parser = subparsers.add_parser(command, help=help_text, allow_abbrev=False)
+        command_parser.add_argument("--exam", required=True, help="시험 ID 또는 매니페스트 경로")
+        command_parser.add_argument("--easy", action="store_true", help="쉬움 모드 선택")
+        command_parser.add_argument("--excel", help="Excel 파일 경로")
+        command_parser.add_argument("--output", help="verified 결과 출력 경로")
+        command_parser.add_argument("--published-dir", help="공개 산출물 경로 재정의")
+        command_parser.add_argument("--config", help="공개 메타데이터 설정 경로")
+        command_parser.add_argument("--models", nargs="+", help="대상 모델 이름")
+        command_parser.add_argument("--targets", nargs="+", help="시험 target 목록")
+        command_parser.add_argument("--subject", help="한 섹션을 고를 과목")
+        command_parser.add_argument("--section", help="한 섹션을 고를 영역")
+        command_parser.add_argument("--subjects", nargs="+", help="과목 또는 탐구 영역 목록")
+        command_parser.add_argument("--question-numbers", nargs="+", type=int, help="문항 번호")
+        command_parser.add_argument("--benchmark-all", action="store_true", help="시험의 모든 섹션 선택")
+    args = parser.parse_args(arguments)
+    if (args.subject is None) != (args.section is None):
+        parser.error("--subject와 --section은 함께 지정해야 합니다.")
+    if args.command == "publish" and args.output:
+        parser.error("publish 명령에는 --output을 사용할 수 없습니다.")
+    if args.command == "publish" and args.excel:
+        parser.error("publish 명령에는 --excel을 사용할 수 없습니다.")
+    if args.command != "publish" and args.published_dir:
+        parser.error(f"{args.command} 명령에는 --published-dir를 사용할 수 없습니다.")
+    try:
+        exam_argument = Path(args.exam).expanduser()
+        exam_input = (
+            load_exam(exam_argument, project_root=exam_argument.resolve().parent)
+            if exam_argument.is_file()
+            else args.exam
+        )
+        exam, _mode, run, run_path = resolve_run(
+            exam_input,
+            easy=args.easy,
+            model_names=args.models,
+        )
+        excel_path = (
+            Path(args.excel).expanduser().resolve()
+            if args.excel
+            else exam.project_root / (DEFAULT_EXCEL_PATH if args.easy else DEFAULT_HARD_EXCEL_PATH)
+        )
+        common = {
+            "model_names": args.models,
+            "targets": args.targets,
+            "subject": args.subject,
+            "section": args.section,
+            "subjects": args.subjects,
+            "benchmark_all": args.benchmark_all,
+            "question_numbers": args.question_numbers,
+        }
+        if args.command == "publish":
+            paths = publish_run(
+                exam,
+                run_path,
+                run_path,
+                output_dir=args.published_dir,
+                config_path=args.config,
+                **common,
+            )
+            for name, path in paths.items():
+                print(f"{name}: {path}")
+            return 0
+        if args.command == "import":
+            output = export_run_to_excel(
+                run_path,
+                excel_path,
+                run=run_path,
+                exam=exam,
+                **common,
+            )
+            print(f"Excel 가져오기 완료: {output}")
+            return 0
+        result = import_excel_corrections(
+            run_path,
+            excel_path,
+            output_path=args.output or run_path,
+            run=run_path,
+            exam=exam,
+            **common,
+        )
+        print(f"Excel 수동 답안 반영 완료: {result['path']} (변경 {result['changed']}건)")
+        return 0
+    except (OSError, ValueError, EvaluationError) as error:
+        print(f"오류: {error}", file=sys.stderr)
+        return 2
+
+
 def _sync_model_metadata(model_config: Dict[str, Dict],
                          metadata_path: Path = DEFAULT_MODEL_METADATA_PATH) -> bool:
     """
-    @brief 모델 설정의 시각 입력 지원 여부를 대시보드 메타데이터에 동기화한다.
+    @description 모델 설정·시각 입력 지원 여부 대시보드 메타데이터 동기화
 
-    @param model_config 모델 이름을 키로 하는 설정 매핑
+    @param model_config 모델 이름별 설정 매핑
     @param metadata_path 대시보드 메타데이터 파일 경로
-    @return 파일 내용이 변경되었는지 여부
+    @return 파일 내용 변경 여부
     """
-    if not model_config:
-        return False
-
-    if metadata_path.exists():
-        original_text = metadata_path.read_text(encoding='utf-8')
-        metadata = json.loads(original_text)
-        if not isinstance(metadata, dict):
-            raise ValueError(f"모델 메타데이터가 JSON 객체가 아닙니다: {metadata_path}")
-    else:
-        original_text = ''
-        metadata = {}
-
-    for model_name, config in model_config.items():
-        if model_name in metadata and not isinstance(metadata[model_name], dict):
-            raise ValueError(f"모델 메타데이터 항목이 JSON 객체가 아닙니다: {model_name}")
-
-        if config.get('supports_vision') is False:
-            metadata.setdefault(model_name, {})['supportsVision'] = False
-            continue
-
-        model_metadata = metadata.get(model_name)
-        if model_metadata and 'supportsVision' in model_metadata:
-            del model_metadata['supportsVision']
-            if not model_metadata:
-                del metadata[model_name]
-
-    updated_text = f"{json.dumps(metadata, ensure_ascii=False, indent=2)}\n"
-    if updated_text == original_text:
-        return False
-
-    metadata_path.write_text(updated_text, encoding='utf-8')
-    return True
+    return sync_model_metadata(model_config, metadata_path)
 
 
 def normalize_answer_value(answer):
-    """답안 값을 JSON 채점용 숫자와 상태로 변환한다."""
+    """@description 답안 값 → JSON 채점용 숫자·상태 변환"""
     if answer is None or answer == '' or str(answer).strip() == '':
         return NO_ANSWER, 'no_answer'
 
@@ -99,7 +175,7 @@ def normalize_answer_value(answer):
 
 
 def _create_hard_excel_template(source_path: Path, target_path: Path):
-    """기존 Excel에서 정답 구조만 남긴 hard 전용 템플릿을 만든다."""
+    """@description 정답 구조 기반 hard용 Excel 템플릿 생성"""
     if not source_path.exists():
         raise FileNotFoundError(f"hard Excel 템플릿 원본을 찾을 수 없습니다: {source_path}")
 
@@ -132,9 +208,9 @@ def _create_hard_excel_template(source_path: Path, target_path: Path):
 
 
 class PathMapper:
-    """Excel 시트명과 JSON 경로 간 매핑"""
+    """@description Excel 시트명·JSON 경로 매핑"""
 
-    # 시트명 -> JSON 경로 매핑
+    # 시트명 → JSON 경로 매핑
     SHEET_TO_JSON = {
         '국어-공통': 'problems/국어/공통',
         '국어-화작': 'problems/국어/화작',
@@ -157,13 +233,13 @@ class PathMapper:
         self._json_to_sheet = {v: k for k, v in self.SHEET_TO_JSON.items()}
 
     def sheet_to_json_path(self, sheet_name: str) -> Optional[Path]:
-        """시트 이름으로 JSON 폴더 경로 반환"""
+        """@description 시트 이름 기준 JSON 폴더 경로 반환"""
         if sheet_name in self.SHEET_TO_JSON:
             return self.base_dir / self.SHEET_TO_JSON[sheet_name]
         return None
 
     def json_to_sheet_name(self, json_path: Path) -> Optional[str]:
-        """JSON 경로로 시트 이름 반환"""
+        """@description JSON 경로 기준 시트 이름 반환"""
         # 경로 정규화
         rel_path = str(json_path).replace('\\', '/')
         # results_verified.json 제거
@@ -179,11 +255,11 @@ class PathMapper:
         return None
 
     def get_all_sheets(self) -> List[str]:
-        """모든 시트 이름 반환"""
+        """@description 전체 시트 이름 반환"""
         return list(self.SHEET_TO_JSON.keys())
 
     def get_subject_section(self, sheet_name: str) -> Tuple[str, str]:
-        """시트 이름에서 과목, 섹션 추출"""
+        """@description 시트 이름 기준 과목·섹션 추출"""
         if '-' in sheet_name:
             parts = sheet_name.split('-', 1)
             return parts[0].strip(), parts[1].strip()
@@ -191,7 +267,7 @@ class PathMapper:
 
 
 class ModelNameMapper:
-    """모델 이름 매핑 (JSON 이름 <-> Excel 이름)"""
+    """@description JSON·Excel 모델 이름 매핑"""
 
     def __init__(self, mapping_file: Path = None):
         self.mapping_file = mapping_file or Path('model_mapping.json')
@@ -199,22 +275,22 @@ class ModelNameMapper:
         self._load_mapping()
 
     def _load_mapping(self):
-        """매핑 파일 로드"""
+        """@description 매핑 파일 로드"""
         if self.mapping_file.exists():
             with open(self.mapping_file, 'r', encoding='utf-8') as f:
                 self.mapping = json.load(f)
 
     def save_mapping(self):
-        """매핑 파일 저장"""
+        """@description 매핑 파일 저장"""
         with open(self.mapping_file, 'w', encoding='utf-8') as f:
             json.dump(self.mapping, f, ensure_ascii=False, indent=2)
 
     def json_to_excel(self, json_name: str) -> str:
-        """JSON 모델 이름을 Excel 컬럼 이름으로 변환"""
+        """@description JSON 모델 이름 → Excel 열 이름 변환"""
         return self.mapping.get(json_name, json_name)
 
     def excel_to_json(self, excel_name: str) -> str:
-        """Excel 컬럼 이름을 JSON 모델 이름으로 변환"""
+        """@description Excel 열 이름 → JSON 모델 이름 변환"""
         # 역방향 검색
         for json_name, mapped_excel in self.mapping.items():
             if mapped_excel == excel_name:
@@ -222,12 +298,12 @@ class ModelNameMapper:
         return excel_name
 
     def add_mapping(self, json_name: str, excel_name: str):
-        """새 매핑 추가"""
+        """@description 모델 이름 매핑 추가"""
         self.mapping[json_name] = excel_name
 
 
 class ExcelHandler:
-    """Excel 파일 읽기/쓰기"""
+    """@description Excel 파일 읽기·쓰기"""
 
     def __init__(self, excel_path: Path):
         self.excel_path = Path(excel_path)
@@ -235,17 +311,17 @@ class ExcelHandler:
         self._header_row_cache = {}
 
     def _load_workbook(self):
-        """워크북 로드 (lazy loading)"""
+        """@description 첫 접근 시 통합 문서 로드"""
         if self.workbook is None:
             self.workbook = load_workbook(self.excel_path)
 
     def get_sheet_names(self) -> List[str]:
-        """모든 시트 이름 반환"""
+        """@description 전체 시트 이름 반환"""
         self._load_workbook()
         return self.workbook.sheetnames
 
     def _find_header_row(self, sheet_name: str) -> int:
-        """헤더 행 번호 찾기 (1-based)"""
+        """@description 헤더 행 번호 조회 (1-based)"""
         if sheet_name in self._header_row_cache:
             return self._header_row_cache[sheet_name]
 
@@ -261,7 +337,7 @@ class ExcelHandler:
         raise ValueError(f"'{sheet_name}' 시트에서 헤더 행을 찾을 수 없습니다.")
 
     def _find_score_row(self, sheet_name: str) -> int:
-        """총점 행 번호 찾기 (1-based)"""
+        """@description 총점 행 번호 조회 (1-based)"""
         self._load_workbook()
         ws = self.workbook[sheet_name]
         header_row = self._find_header_row(sheet_name)
@@ -274,7 +350,7 @@ class ExcelHandler:
         raise ValueError(f"'{sheet_name}' 시트에서 총점 행을 찾을 수 없습니다.")
 
     def get_model_columns(self, sheet_name: str) -> Dict[str, int]:
-        """모델 컬럼 이름과 열 번호 반환 (1-based)"""
+        """@description 모델 열 이름·열 번호 반환 (1-based)"""
         self._load_workbook()
         ws = self.workbook[sheet_name]
         header_row = self._find_header_row(sheet_name)
@@ -284,7 +360,7 @@ class ExcelHandler:
             cell_value = ws.cell(row=header_row, column=col_idx).value
             if cell_value:
                 col_str = str(cell_value).strip()
-                # 불필요한 컬럼 제외
+                # 불필요한 열 제외
                 if col_str in ['문항 번호', '정답', 'nan', '']:
                     continue
                 if 'Unnamed' in col_str:
@@ -294,7 +370,7 @@ class ExcelHandler:
         return models
 
     def get_model_answers(self, sheet_name: str, model_name: str) -> Dict[int, any]:
-        """특정 모델의 문항별 답 추출"""
+        """@description 모델별 문항 답 추출"""
         self._load_workbook()
         ws = self.workbook[sheet_name]
         header_row = self._find_header_row(sheet_name)
@@ -321,7 +397,7 @@ class ExcelHandler:
         return answers
 
     def calculate_score_from_answers(self, sheet_name: str, answers: Dict[int, any]) -> int:
-        """문항별 답안으로 총점 계산"""
+        """@description 문항 답 기준 총점 계산"""
         self._load_workbook()
         correct_answers = self._get_correct_answers(sheet_name)
         questions_data = self._load_questions_for_sheet(sheet_name)
@@ -340,7 +416,7 @@ class ExcelHandler:
         return score
 
     def _load_questions_for_sheet(self, sheet_name: str) -> Dict:
-        """시트에 대응하는 questions.json 로드"""
+        """@description 시트 대응 questions.json 로드"""
         json_path = PathMapper(base_dir=Path('.')).sheet_to_json_path(sheet_name)
         if not json_path:
             raise ValueError(f"'{sheet_name}' 시트에 대한 경로 매핑을 찾을 수 없습니다.")
@@ -353,7 +429,7 @@ class ExcelHandler:
             return json.load(f)
 
     def get_model_score(self, sheet_name: str, model_name: str) -> Optional[int]:
-        """특정 모델의 총점 반환"""
+        """@description 특정 모델 총점 반환"""
         self._load_workbook()
         ws = self.workbook[sheet_name]
         score_row = self._find_score_row(sheet_name)
@@ -371,7 +447,7 @@ class ExcelHandler:
             return None
 
     def get_max_score(self, sheet_name: str) -> int:
-        """만점 반환 (정답 열의 총점)"""
+        """@description 정답 열 총점 기준 만점 반환"""
         self._load_workbook()
         ws = self.workbook[sheet_name]
         header_row = self._find_header_row(sheet_name)
@@ -390,7 +466,7 @@ class ExcelHandler:
         return 100  # 기본값
 
     def _find_answer_column(self, sheet_name: str) -> int:
-        """정답 열 번호 찾기 (1-based)"""
+        """@description 정답 열 번호 조회(1-based)"""
         self._load_workbook()
         ws = self.workbook[sheet_name]
         header_row = self._find_header_row(sheet_name)
@@ -403,7 +479,7 @@ class ExcelHandler:
         return 2  # 기본값
 
     def _get_correct_answers(self, sheet_name: str) -> Dict[int, any]:
-        """정답 데이터 추출 {문항번호: 정답}"""
+        """@description 정답 데이터 추출({문항번호: 정답})"""
         self._load_workbook()
         ws = self.workbook[sheet_name]
         header_row = self._find_header_row(sheet_name)
@@ -428,18 +504,14 @@ class ExcelHandler:
                          position: Optional[int] = None,
                          after_model: Optional[str] = None) -> int:
         """
-        새 모델 컬럼 추가
-
-        Args:
-            sheet_name: 시트 이름
-            model_name: 모델 이름
-            answers: {문항번호: 답} 딕셔너리
-            score: 총점
-            position: 삽입할 열 번호 (1-based, None이면 마지막)
-            after_model: 이 모델 다음에 삽입
-
-        Returns:
-            삽입된 열 번호
+        @description 새 모델 열 추가
+        @param sheet_name 시트 이름
+        @param model_name 모델 이름
+        @param answers {문항번호: 답} dict
+        @param score 총점
+        @param position 삽입 열 번호(1-based, None 시 마지막)
+        @param after_model 삽입 기준 모델 이름
+        @return 삽입 열 번호
         """
         self._load_workbook()
         ws = self.workbook[sheet_name]
@@ -448,7 +520,7 @@ class ExcelHandler:
 
         model_columns = self.get_model_columns(sheet_name)
 
-        # 이미 존재하는 모델인지 확인
+        # 대상 모델 존재 여부 확인
         if model_name in model_columns:
             raise ValueError(f"'{model_name}' 모델이 이미 존재합니다. --update 옵션을 사용하세요.")
 
@@ -458,7 +530,7 @@ class ExcelHandler:
         elif position is not None:
             insert_col = position
         else:
-            # 마지막 모델 컬럼 다음
+            # 마지막 모델 열 다음
             if model_columns:
                 insert_col = max(model_columns.values()) + 1
             else:
@@ -474,7 +546,7 @@ class ExcelHandler:
         red_bold_font = Font(color='FF0000', bold=True)
         purple_font = Font(color='7C3AED')
 
-        # 정답 데이터 가져오기
+        # 정답 데이터 조회
         correct_answers = self._get_correct_answers(sheet_name)
 
         # 헤더 설정 (볼드 + 중앙정렬)
@@ -510,7 +582,7 @@ class ExcelHandler:
                             except (ValueError, TypeError):
                                 pass
                     else:
-                        # answers에 없는 문항도 포기 처리
+                        # answers 미포함 문항 포기 처리
                         cell.value = "(포기)"
                         cell.font = red_font
 
@@ -528,7 +600,7 @@ class ExcelHandler:
 
     def update_model_column(self, sheet_name: str, model_name: str,
                             answers: Dict[int, any], score: int):
-        """기존 모델 컬럼 업데이트"""
+        """@description 모델 열 업데이트"""
         self._load_workbook()
         ws = self.workbook[sheet_name]
         header_row = self._find_header_row(sheet_name)
@@ -546,7 +618,7 @@ class ExcelHandler:
         red_font = Font(color='FF0000')
         purple_font = Font(color='7C3AED')
 
-        # 정답 데이터 가져오기
+        # 정답 데이터 조회
         correct_answers = self._get_correct_answers(sheet_name)
 
         # 헤더 스타일 (볼드 + 중앙정렬)
@@ -562,7 +634,7 @@ class ExcelHandler:
                     q_num = int(q_num)
                     cell = ws.cell(row=row_idx, column=col_idx)
                     cell.alignment = center_align
-                    cell.font = Font()  # 기본 폰트로 초기화
+                    cell.font = Font()  # 기본 폰트 초기화
 
                     if q_num in answers:
                         answer = answers[q_num]
@@ -594,21 +666,21 @@ class ExcelHandler:
         score_cell.alignment = center_align
 
     def save(self):
-        """변경사항 저장"""
+        """@description 변경 사항 저장"""
         if self.workbook:
             self.workbook.save(self.excel_path)
             print(f"저장 완료: {self.excel_path}")
 
 
 class DataConverter:
-    """데이터 변환 로직"""
+    """@description 데이터 변환"""
 
     def __init__(self, path_mapper: PathMapper, model_mapper: ModelNameMapper):
         self.path_mapper = path_mapper
         self.model_mapper = model_mapper
 
     def load_questions(self, sheet_name: str) -> Dict:
-        """questions.json 로드"""
+        """@description questions.json 로드"""
         json_path = self.path_mapper.sheet_to_json_path(sheet_name)
         if not json_path:
             raise ValueError(f"'{sheet_name}' 시트에 대한 경로 매핑을 찾을 수 없습니다.")
@@ -622,17 +694,14 @@ class DataConverter:
 
     def excel_to_json(self, sheet_name: str, model_name: str,
                       answers: Dict[int, any], excel_handler: ExcelHandler) -> Dict:
-        """
-        Excel의 한 모델 컬럼 데이터를 results_verified.json 형식으로 변환
+        """@description Excel 모델 열 데이터 → results_verified.json 형식 변환
 
-        Args:
-            sheet_name: 시트 이름
-            model_name: Excel의 모델 이름
-            answers: {문항번호: 답}
-            excel_handler: ExcelHandler 인스턴스
+        @param sheet_name 시트 이름
+        @param model_name Excel 모델 이름
+        @param answers {문항번호: 답}
+        @param excel_handler ExcelHandler 인스턴스
 
-        Returns:
-            results_verified.json 형식의 딕셔너리
+        @return results_verified.json 형식 dict
         """
         questions_data = self.load_questions(sheet_name)
         subject, section = self.path_mapper.get_subject_section(sheet_name)
@@ -683,15 +752,12 @@ class DataConverter:
         }
 
     def json_to_excel(self, json_data: Dict, target_model: str = None) -> List[Tuple[str, Dict[int, any], int]]:
-        """
-        results_verified.json 데이터를 Excel 형식으로 변환
+        """@description results_verified.json 데이터 → Excel 형식 변환
 
-        Args:
-            json_data: results_verified.json 데이터
-            target_model: 특정 모델만 변환 (None이면 모든 모델)
+        @param json_data results_verified.json 데이터
+        @param target_model 특정 모델 변환(None 시 전체 모델)
 
-        Returns:
-            [(model_name, {문항번호: 답}, 총점), ...] 리스트
+        @return [(model_name, {문항번호: 답}, 총점), ...] 목록
         """
         model_scores = json_data.get('model_scores', {})
         if not model_scores:
@@ -700,7 +766,7 @@ class DataConverter:
         results_list = []
 
         for json_model_name, score in model_scores.items():
-            # 특정 모델만 처리
+            # 특정 모델 처리
             if target_model and json_model_name != target_model:
                 continue
 
@@ -753,24 +819,23 @@ class SyncManager:
         self.converter = DataConverter(self.path_mapper, self.model_mapper)
         self._token_usage = self._load_token_usage()
         self._model_config = self._load_model_config()
+        self.model_metadata_path = _metadata_path_for_config(self.problems_dir / 'config.json')
 
     def _load_model_config(self) -> Dict[str, Dict]:
-        """모델 설정 파일 로드 (이름 -> 설정 매핑)"""
+        """@description 모델 설정 파일 로드 (이름 -> 설정 매핑)"""
         config_file = self.problems_dir / 'config.json'
         if config_file.exists():
-            with open(config_file, 'r', encoding='utf-8') as f:
-                config = json.load(f)
-            # name을 key로 하는 딕셔너리로 변환
+            config = load_config(config_file, resolve_secrets=False)
             return {model['name']: model for model in config.get('models', [])}
         return {}
 
     def _get_model_price(self, model_name: str) -> Optional[Dict[str, float]]:
-        """특정 모델의 가격 정보 조회"""
+        """@description 모델 가격 정보 조회"""
         model_config = self._model_config.get(model_name, {})
         return model_config.get('price')
 
     def _load_token_usage(self) -> Dict:
-        """토큰 사용량 파일 로드"""
+        """@description 토큰 사용량 파일 로드"""
         token_file = self.problems_dir / self.token_usage_filename
         if token_file.exists():
             with open(token_file, 'r', encoding='utf-8') as f:
@@ -778,7 +843,7 @@ class SyncManager:
         return {}
 
     def _get_token_usage(self, model_name: str, sheet_name: str) -> Optional[Dict[str, int]]:
-        """특정 모델-시트의 토큰 사용량 조회"""
+        """@description 모델·시트별 토큰 사용량 조회"""
         models = self._token_usage.get('models', {})
         model_data = models.get(model_name, {})
         sections = model_data.get('sections', {})
@@ -801,16 +866,13 @@ class SyncManager:
 
     def export_to_json(self, sheet_name: str, model_name: str,
                        output_path: Path = None) -> Path:
-        """
-        Excel -> JSON 내보내기
+        """@description Excel -> JSON 내보내기
 
-        Args:
-            sheet_name: 시트 이름
-            model_name: 모델 이름
-            output_path: 출력 경로 (None이면 기본 경로)
+        @param sheet_name 시트 이름
+        @param model_name 모델 이름
+        @param output_path 출력 경로(None 시 기본 경로)
 
-        Returns:
-            저장된 파일 경로
+        @return 저장 파일 경로
         """
         # 답안 추출
         answers = self.excel_handler.get_model_answers(sheet_name, model_name)
@@ -827,16 +889,16 @@ class SyncManager:
                 raise ValueError(f"'{sheet_name}'에 대한 경로 매핑이 없습니다.")
             output_path = json_dir / self.verified_filename
 
-        # 기존 파일이 있으면 병합
+        # 출력 파일 존재 시 병합
         if output_path.exists():
             with open(output_path, 'r', encoding='utf-8') as f:
                 existing_data = json.load(f)
 
-            # 기존 모델 점수와 결과 병합
+            # 모델 점수·결과 병합
             json_model_name = self.model_mapper.excel_to_json(model_name)
             existing_data['model_scores'][json_model_name] = json_data['model_scores'][json_model_name]
 
-            # 기존 results에서 같은 모델 결과 제거 후 추가
+            # results 같은 모델 결과 제거 후 추가
             existing_data['results'] = [
                 r for r in existing_data['results']
                 if r['model_name'] != json_model_name
@@ -860,19 +922,16 @@ class SyncManager:
                          update_existing: bool = False,
                          excel_name: Optional[str] = None,
                          base_model: Optional[str] = None) -> bool:
-        """
-        JSON -> Excel 가져오기
+        """@description JSON -> Excel 가져오기
 
-        Args:
-            json_path: results_verified.json 경로
-            position: 삽입할 열 위치
-            after_model: 이 모델 다음에 삽입
-            update_existing: 기존 데이터 업데이트 여부
-            excel_name: Excel에서 사용할 모델 이름 (None이면 매핑 사용)
-            base_model: Excel에서 복사해 올 베이스 모델 이름
+        @param json_path results_verified.json 경로
+        @param position 삽입 열 위치
+        @param after_model 대상 모델 다음 삽입
+        @param update_existing 기존 데이터 갱신 여부
+        @param excel_name Excel 모델 이름(None 시 매핑 사용)
+        @param base_model Excel 복사 기준 모델 이름
 
-        Returns:
-            성공 여부
+        @return 성공 여부
         """
         json_path = Path(json_path)
         if not json_path.exists():
@@ -887,7 +946,7 @@ class SyncManager:
         sheet_name = self.path_mapper.json_to_sheet_name(json_path)
         if not sheet_name:
             print(f"경고: '{json_path}'에 대한 시트 매핑을 찾을 수 없습니다.")
-            # subject/section으로 시트 이름 추론
+            # subject/section 기준 시트 이름 추론
             subject = json_data.get('subject', '')
             section = json_data.get('section', '')
             if subject and section and subject != section:
@@ -903,12 +962,12 @@ class SyncManager:
             print(f"시트를 찾을 수 없습니다: {sheet_name}")
             return False
 
-        # 데이터 변환 (모든 모델 처리)
+        # 전체 모델 데이터 변환
         model_data_list = self.converter.json_to_excel(json_data)
 
         success_count = 0
         for model_name, answers, score in model_data_list:
-            # Excel 모델 이름 결정 (excel_name이 지정되면 첫 번째 모델에만 적용)
+            # Excel 모델 이름 결정(excel_name 지정 시 첫 모델 적용)
             if excel_name and success_count == 0:
                 model_name = excel_name
 
@@ -922,7 +981,7 @@ class SyncManager:
                 merged_answers.update(answers)
                 score = self.excel_handler.calculate_score_from_answers(sheet_name, merged_answers)
 
-            # 기존 모델 확인
+            # 대상 모델 존재 여부 확인
             existing_models = self.excel_handler.get_model_columns(sheet_name)
 
             if model_name in existing_models:
@@ -943,7 +1002,7 @@ class SyncManager:
         return success_count > 0
 
     def _infer_wrong_only_base_model(self, json_data: Dict, sheet_name: str) -> Optional[str]:
-        """부분 검증 wrong-only 파일이면 Excel 베이스 모델을 추론한다."""
+        """@description 오답 재평가 결과 파일 기반 Excel 기준 모델 추론"""
         model_scores = json_data.get('model_scores', {})
         if len(model_scores) != 1:
             return None
@@ -963,7 +1022,7 @@ class SyncManager:
         if total_points is not None and total_points < max_score:
             return base_model
 
-        # 점수 합은 우연히 만점과 같을 수 있으니 문항 수도 함께 방어적으로 확인
+        # 점수 합 만점 충족 가능성 기준 문항 수 병행 확인
         try:
             questions = self.excel_handler._load_questions_for_sheet(sheet_name)
             expected_count = len(questions.get('questions', []))
@@ -975,12 +1034,11 @@ class SyncManager:
         return None
 
     def _materialize_missing_wrong_only_targets(self) -> int:
-        """wrong-only target 모델이 없는 시트에는 base 모델 답안을 복사해 채운다.
+        """@description 오답 재평가 대상 모델 누락 시트 보완(기준 모델 답안 복사)
 
-        GPT-5.5 (xhigh*)처럼 틀린 문항만 재실행한 모델은 오답이 없던 과목의
-        JSON 결과가 따로 생기지 않는다. 하지만 Excel/dashboard에서는 하나의
-        전체 모델처럼 보여야 하므로, target 모델이 적어도 한 시트에 존재하면
-        나머지 시트는 base 모델 컬럼을 그대로 복사한다.
+        오답 부재 과목: 오답 재평가 결과 JSON 생성 생략
+        대상 모델 열 존재 시트 확인 후 나머지 시트 기준 모델 열 복사
+        Excel·대시보드 전체 과목 표시용 답안 보완
         """
         materialized_count = 0
         sheets = self.path_mapper.get_all_sheets()
@@ -1019,13 +1077,13 @@ class SyncManager:
                 print(f"wrong-only 보정 추가: {sheet_name} / {target_model} <= {base_model} ({score}점)")
                 materialized_count += 1
 
-                # 다음 target 처리에서 최신 컬럼 상태를 보도록 갱신
+                # 다음 target 처리용 최신 열 상태 갱신
                 sheet_models[sheet_name] = self.excel_handler.get_model_columns(sheet_name)
 
         return materialized_count
 
     def import_all(self, update_existing: bool = False) -> int:
-        """모든 검증 결과 JSON 가져오기"""
+        """@description 전체 검증 결과 JSON 가져오기"""
         count = 0
         for sheet_name in self.path_mapper.get_all_sheets():
             json_dir = self.path_mapper.sheet_to_json_path(sheet_name)
@@ -1069,15 +1127,11 @@ class SyncManager:
                                      model_name: str = None,
                                      all_models: bool = False) -> Path:
         """
-        모든 시트를 하나의 JSON 파일로 내보내기 (객체 배열 형태)
-
-        Args:
-            output_path: 출력 경로 (None이면 all_results.json)
-            model_name: 특정 모델만 내보내기
-            all_models: 모든 모델 내보내기
-
-        Returns:
-            저장된 파일 경로
+        @description 전체 시트 단일 JSON 파일 내보내기(객체 배열)
+        @param output_path 출력 경로(None 시 all_results.json)
+        @param model_name 특정 모델 내보내기
+        @param all_models 전체 모델 내보내기
+        @return 저장 파일 경로
         """
         all_data = []
 
@@ -1106,9 +1160,9 @@ class SyncManager:
                         json_data = self.converter.excel_to_json(
                             sheet_name, model, answers, self.excel_handler
                         )
-                        # 깔끔한 형태로 재구성
+                        # 공개 결과 형식 재구성
                         json_model_name = list(json_data['model_scores'].keys())[0]
-                        # results에서 불필요한 필드 제거
+                # results 불필요 필드 제거
                         clean_results = [
                             {
                                 'question_number': r['question_number'],
@@ -1131,11 +1185,11 @@ class SyncManager:
                             'correct_count': json_data['correct_count'],
                             'total_questions': json_data['total_verified'],
                         }
-                        # 토큰 사용량 추가 (있는 경우에만)
+                        # 토큰 사용량 추가 (존재 시)
                         token_usage = self._get_token_usage(json_model_name, sheet_name)
                         if token_usage:
                             clean_data['token_usage'] = token_usage
-                        # 가격 정보 추가 (있는 경우에만)
+                        # 가격 정보 추가 (존재 시)
                         price = self._get_model_price(json_model_name)
                         if price:
                             clean_data['price'] = price
@@ -1155,8 +1209,8 @@ class SyncManager:
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump(all_data, f, ensure_ascii=False, indent=2)
 
-        if _sync_model_metadata(self._model_config):
-            print(f"모델 메타데이터 동기화 완료: {DEFAULT_MODEL_METADATA_PATH}")
+        if _sync_model_metadata(self._model_config, self.model_metadata_path):
+            print(f"모델 메타데이터 동기화 완료: {self.model_metadata_path}")
 
         print(f"내보내기 완료: {output_path} ({len(all_data)}개 항목)")
         return output_path
@@ -1164,10 +1218,9 @@ class SyncManager:
     def export_hard_all_sections_to_json(self, output_path: Path = None,
                                          model_name: str = None) -> Path:
         """
-        hard Excel의 모든 모델 컬럼을 hard_all_results.json 형식으로 내보내기
-
-        hard_results*.json은 개별 실행 결과 원본이므로 전체 집계의 기준으로 사용하지 않는다.
-        대시보드용 전체 집계는 hard Excel을 정본으로 삼아 기존 모델을 누락하지 않는다.
+        @description hard Excel 전체 모델 열 → hard_all_results.json 형식 내보내기
+        hard_results*.json 개별 실행 원본 → 전체 집계 기준 제외
+        대시보드 전체 집계: hard Excel 전체 모델 기준
         """
         return self.export_all_sheets_to_json(
             output_path=output_path,
@@ -1176,7 +1229,7 @@ class SyncManager:
         )
 
     def list_models(self, sheet_name: str = None) -> Dict[str, List[str]]:
-        """모델 목록 반환"""
+        """@description 모델 목록 반환"""
         result = {}
 
         if sheet_name:
@@ -1195,7 +1248,7 @@ class SyncManager:
         return result
 
     def validate(self, sheet_name: str = None) -> List[str]:
-        """데이터 일관성 검증"""
+        """@description 데이터 일관성 검증"""
         issues = []
 
         if sheet_name:
@@ -1242,6 +1295,36 @@ class SyncManager:
 
 
 def main():
+    """@description 시험·쉬움 모드 동기화와 모델 메타데이터 명령 실행"""
+    arguments = sys.argv[1:]
+    if arguments and arguments[0] == "metadata":
+        parser = argparse.ArgumentParser(
+            description="모델 공개 메타데이터 동기화", allow_abbrev=False
+        )
+        parser.add_argument("metadata")
+        parser.add_argument("--config", required=True, help="모델 설정 파일 경로")
+        parser.add_argument("--output", help="모델 메타데이터 출력 경로")
+        args = parser.parse_args(arguments)
+        try:
+            config = load_config(args.config, resolve_secrets=False)
+            models = {model["name"]: model for model in config.get("models", [])}
+            output_path = (
+                Path(args.output).expanduser().resolve()
+                if args.output
+                else _metadata_path_for_config(args.config)
+            )
+            changed = _sync_model_metadata(models, output_path)
+            state = "변경" if changed else "변경 없음"
+            print(f"모델 메타데이터 동기화 완료 ({state}): {output_path}")
+            return 0
+        except (OSError, ValueError) as error:
+            print(f"오류: {error}", file=sys.stderr)
+            return 2
+    return _generic_sync_main(arguments)
+
+    arguments = sys.argv[1:]
+    if any(argument == '--exam' or argument.startswith('--exam=') for argument in arguments):
+        return _generic_sync_main(arguments)
     parser = argparse.ArgumentParser(
         description='Excel-JSON 양방향 동기화 도구',
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -1303,6 +1386,10 @@ def main():
     validate_parser.add_argument('--sheet', help='특정 시트만')
     validate_parser.add_argument('--hard', action='store_true', help='hard 전용 Excel/JSON 파일 사용')
 
+    metadata_parser = subparsers.add_parser('metadata', help='모델 공개 메타데이터 동기화')
+    metadata_parser.add_argument('--config', required=True, help='모델 설정 파일 경로')
+    metadata_parser.add_argument('--output', help='모델 메타데이터 출력 경로')
+
     # 공통 옵션
     parser.add_argument('--excel', default=None,
                         help='Excel 파일 경로')
@@ -1314,6 +1401,23 @@ def main():
     if not args.command:
         parser.print_help()
         return
+
+    if args.command == 'metadata':
+        try:
+            config = load_config(args.config, resolve_secrets=False)
+            models = {model['name']: model for model in config.get('models', [])}
+            output_path = (
+                Path(args.output).expanduser().resolve()
+                if args.output
+                else _metadata_path_for_config(args.config)
+            )
+            changed = _sync_model_metadata(models, output_path)
+            state = '변경' if changed else '변경 없음'
+            print(f'모델 메타데이터 동기화 완료 ({state}): {output_path}')
+            return 0
+        except (OSError, ValueError) as error:
+            print(f'오류: {error}', file=sys.stderr)
+            return 2
 
     hard_mode = getattr(args, 'hard', False)
     excel_path = Path(args.excel) if args.excel else (
@@ -1332,7 +1436,7 @@ def main():
     # 명령 실행
     if args.command == 'export':
         if args.all_sheets:
-            # 모든 시트를 하나의 JSON 배열로 내보내기
+                # 전체 시트 단일 JSON 배열 내보내기
             output = Path(args.output) if args.output else None
             if hard_mode:
                 sync.export_hard_all_sections_to_json(
@@ -1395,4 +1499,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    raise SystemExit(main())

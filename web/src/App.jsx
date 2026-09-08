@@ -20,11 +20,13 @@ import {
 } from '@/components/charts'
 import { ScoreTable, CostTable } from '@/components/tables'
 import { ModelSelectDropdown } from '@/components/common'
-import { calculateAllModelScores, getCostData, getMaxScore, calculateBestWorstScores, calculateImageBasedScores } from '@/utils/dataTransform'
+import { calculateAllModelScores, getCostData, getMaxScore, calculateBestWorstScores, calculateImageBasedScores, getSubjectFilterGroups, SCORE_BASIS } from '@/utils/dataTransform'
 import { transformToHeatmapData, transformToRadarData } from '@/utils/heatmapTransform'
 import { transformToChoiceData } from '@/utils/choiceTransform'
 import { getModelColor, VENDORS, groupModelsByVendor, getSortedVendors, getDefaultSelectedModels } from '@/utils/colorUtils'
-import { getDashboardQueryState } from '@/utils/urlState'
+import { getDashboardQueryState, replaceDashboardQueryState } from '@/utils/urlState'
+import { DEFAULT_ANALYSIS_X, DEFAULT_ANALYSIS_Y } from '@/utils/analysisMetrics'
+import { loadBenchmarkCatalog } from '@/utils/dataLoader'
 import { formatModelDisplayName } from '@/utils/modelMeta'
 
 /**
@@ -33,10 +35,35 @@ import { formatModelDisplayName } from '@/utils/modelMeta'
 const TAB_KEYS = ['overview', 'subjects', 'compare', 'cost']
 
 /**
+ * @brief 점수 기준 선택 컨트롤
+ * @param {Object} props - 점수 기준과 변경 콜백
+ */
+function ScoreBasisControl({ scoreBasis, onScoreBasisChange, t }) {
+  return (
+    <div className="flex shrink-0 rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden" role="group" aria-label={t('header.scoreBasis')}>
+      <button
+        type="button"
+        onClick={() => onScoreBasisChange('normalized')}
+        aria-pressed={scoreBasis === SCORE_BASIS.NORMALIZED}
+        className={`px-2.5 py-2 text-xs md:text-sm ${scoreBasis === SCORE_BASIS.NORMALIZED ? 'bg-blue-500 text-white' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+      >
+        {t('header.normalized')}
+      </button>
+      <button
+        type="button"
+        onClick={() => onScoreBasisChange('raw')}
+        aria-pressed={scoreBasis === SCORE_BASIS.RAW}
+        className={`px-2.5 py-2 text-xs md:text-sm border-l border-gray-300 dark:border-gray-600 ${scoreBasis === SCORE_BASIS.RAW ? 'bg-blue-500 text-white' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`}
+      >
+        {t('header.raw')}
+      </button>
+    </div>
+  )
+}
+
+/**
  * @brief 탐구 과목 목록 (데이터에서는 subject로 저장됨)
  */
-const EXPLORATION_SUBJECTS = ['물리1', '화학1', '생명1', '사회문화']
-
 /**
  * @brief 과목/섹션명 → 번역 키 맵핑
  */
@@ -53,12 +80,33 @@ const SUBJECT_I18N_KEYS = {
   '미적': 'subjects.mijeok',
   '기하': 'subjects.giha',
   '물리1': 'subjects.physics1',
+  '물리2': 'subjects.physics2',
   '화학1': 'subjects.chemistry1',
+  '화학2': 'subjects.chemistry2',
   '생명1': 'subjects.biology1',
+  '생명2': 'subjects.biology2',
+  '지구1': 'subjects.earthScience1',
+  '지구2': 'subjects.earthScience2',
+  '생활과윤리': 'subjects.lifeEthics',
+  '윤리와사상': 'subjects.ethicsAndThought',
+  '한국지리': 'subjects.koreanGeography',
+  '세계지리': 'subjects.worldGeography',
+  '동아시아사': 'subjects.eastAsianHistory',
+  '세계사': 'subjects.worldHistory',
+  '경제': 'subjects.economics',
+  '정치와법': 'subjects.politicsAndLaw',
   '사회문화': 'subjects.society'
 }
 
-const INITIAL_QUERY_STATE = getDashboardQueryState()
+const INITIAL_UI_STATE = {
+  tab: 'overview',
+  scoreView: 'average',
+  analysisX: DEFAULT_ANALYSIS_X,
+  analysisY: DEFAULT_ANALYSIS_Y,
+  subjects: [],
+  selectedSubject: '',
+  selectedSection: ''
+}
 
 /**
  * @brief 과목/섹션명 번역 헬퍼
@@ -73,39 +121,58 @@ function _translateSubject(name, t) {
 /**
  * @brief 대시보드 메인 컴포넌트
  */
-function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
+function Dashboard({
+  exam: requestedExam,
+  exams = [],
+  benchmarkMode = 'default',
+  onExamChange,
+  onBenchmarkModeChange,
+  scoreBasis = SCORE_BASIS.NORMALIZED,
+  onScoreBasisChange
+}) {
   const { t } = useTranslation()
-  const { data, tokenUsage, modelMetadata, questionsMetadata, loading, error, models, subjects, sections, dataMode } = useData()
+  const { data, tokenUsage, modelMetadata, modelPerformance, questionsMetadata, loading, error, models, dataMode, exam, committedExam } = useData()
   const sidebar = useSidebar()
+  const subjectFilterGroups = useMemo(() => getSubjectFilterGroups(exam, data), [exam, data])
+  const isPreparation = committedExam?.status === 'preparation' && data.length === 0
 
   const [filters, setFilters] = useState({
-    subjects: INITIAL_QUERY_STATE.subjects,
+    subjects: INITIAL_UI_STATE.subjects,
     models: [],
     sortBy: 'score_desc',
     showDetail: false
   })
-  const [activeTab, setActiveTab] = useState(INITIAL_QUERY_STATE.tab)
-  const [selectedSubject, setSelectedSubject] = useState(INITIAL_QUERY_STATE.selectedSubject)
-  const [selectedSection, setSelectedSection] = useState(INITIAL_QUERY_STATE.selectedSection)
+  const [activeTab, setActiveTab] = useState(INITIAL_UI_STATE.tab)
+  const [analysisX, setAnalysisX] = useState(INITIAL_UI_STATE.analysisX)
+  const [analysisY, setAnalysisY] = useState(INITIAL_UI_STATE.analysisY)
+  const [selectedSubject, setSelectedSubject] = useState(INITIAL_UI_STATE.selectedSubject)
+  const [selectedSection, setSelectedSection] = useState(INITIAL_UI_STATE.selectedSection)
   const [compareModels, setCompareModels] = useState([])
   const [hoveredModel, setHoveredModel] = useState(null)
-  const [scoreViewMode, setScoreViewMode] = useState(INITIAL_QUERY_STATE.scoreView)
+  const [scoreViewMode, setScoreViewMode] = useState(INITIAL_UI_STATE.scoreView)
   const [isModelSelectionTouched, setIsModelSelectionTouched] = useState(false)
   const subjectSelectRef = useRef(null)
   const sectionSelectRef = useRef(null)
   const mainRef = useRef(null)
   const scrollPositions = useRef({})
-  const [isDefaultModelSelectionReady, setIsDefaultModelSelectionReady] = useState(false)
+  const [defaultSelectionReady, setDefaultSelectionReady] = useState({ key: '', data: null })
   const [headerVisible, setHeaderVisible] = useState(false)
   const [scrolledPastHeader, setScrolledPastHeader] = useState(false)
   const headerTimeoutRef = useRef(null)
   const originalHeaderRef = useRef(null)
+  const selectionKey = `${requestedExam.id}:${benchmarkMode}`
+  const selectionBoundaryRef = useRef({ key: selectionKey, data, pending: false })
 
   useEffect(() => {
-    setIsDefaultModelSelectionReady(false)
-    setSelectedSubject('')
-    setSelectedSection('')
-  }, [benchmarkMode])
+    const selectionBoundary = selectionBoundaryRef.current
+    if (selectionBoundary.key !== selectionKey) {
+      selectionBoundaryRef.current = { key: selectionKey, data, pending: true }
+      return
+    }
+    if (selectionBoundary.pending && selectionBoundary.data !== data) {
+      selectionBoundaryRef.current = { key: selectionKey, data, pending: false }
+    }
+  }, [selectionKey, data])
 
   const _areArraysEqual = useCallback((a = [], b = []) => {
     if (a.length !== b.length) return false
@@ -119,16 +186,37 @@ function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
     setFilters(nextFilters)
   }, [_areArraysEqual, filters.models])
 
+  /**
+   * @brief 점수 기준 전환 시 허용되지 않는 보기 모드 초기화
+   */
+  const handleScoreBasisChange = useCallback((nextBasis) => {
+    if (nextBasis === SCORE_BASIS.RAW) {
+      setScoreViewMode(prev => prev === 'bestWorst' ? 'average' : prev)
+    }
+    onScoreBasisChange?.(nextBasis)
+  }, [onScoreBasisChange])
+
+  /**
+   * @brief 현재 점수 기준에 맞는 차트 보기 모드 적용
+   */
+  const handleScoreViewModeChange = useCallback((nextViewMode) => {
+    setScoreViewMode(scoreBasis === SCORE_BASIS.RAW && nextViewMode === 'bestWorst' ? 'average' : nextViewMode)
+  }, [scoreBasis])
+
   // 전체 모델 점수 계산 (과목 필터 적용)
   const overallScores = useMemo(() => {
     if (!data?.length || !models?.length) return []
-    return calculateAllModelScores(data, models, filters.subjects)
-  }, [data, models, filters.subjects])
+    return calculateAllModelScores(data, models, filters.subjects, { exam, scoreBasis })
+  }, [data, models, filters.subjects, exam, scoreBasis])
 
   // 동적 만점 계산
   const maxScore = useMemo(() => {
-    return getMaxScore(filters.subjects)
-  }, [filters.subjects])
+    return getMaxScore(filters.subjects, { exam, scoreBasis })
+  }, [filters.subjects, exam, scoreBasis])
+
+  const normalizedMaxScore = useMemo(() => {
+    return getMaxScore(filters.subjects, { exam, scoreBasis: SCORE_BASIS.NORMALIZED })
+  }, [filters.subjects, exam])
 
   /**
    * @brief 데이터 로드 완료 후 기본 모델 필터 설정
@@ -138,20 +226,27 @@ function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
    * - 비교 탭 선택 모델도 새 모드에 있는 모델만 유지
    */
   useEffect(() => {
-    if (loading || isDefaultModelSelectionReady) return
+    if (loading || (defaultSelectionReady.key === selectionKey && defaultSelectionReady.data === data)) return
     if (dataMode !== benchmarkMode) return
+    const selectionBoundary = selectionBoundaryRef.current
+    if (selectionBoundary.pending && selectionBoundary.data === data) return
 
     if (!data?.length || !models?.length) {
+      // 새 데이터셋의 선택 모델 상태를 외부 데이터 로드 결과와 동기화한다.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFilters(prev => ({ ...prev, models: [] }))
       setCompareModels([])
-      setIsDefaultModelSelectionReady(true)
+      // 시험·모드 조합마다 모델 기본 선택을 한 번만 계산한다.
+      setDefaultSelectionReady({ key: selectionKey, data })
+      selectionBoundaryRef.current = { key: selectionKey, data, pending: false }
       return
     }
 
-    const allScores = calculateAllModelScores(data, models, [])
+    const allScores = calculateAllModelScores(data, models, [], { exam, scoreBasis })
     const defaultModels = getDefaultSelectedModels(models, allScores)
     const availableModels = new Set(models)
 
+    // 새 시험에서 사용할 기본 모델 목록을 필터 상태에 반영한다.
     setFilters(prev => {
       const retainedModels = prev.models.filter(model => availableModels.has(model))
       if (!isModelSelectionTouched) {
@@ -166,8 +261,9 @@ function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
       }
     })
     setCompareModels(prev => prev.filter(model => availableModels.has(model)))
-    setIsDefaultModelSelectionReady(true)
-  }, [loading, data, models, dataMode, benchmarkMode, isDefaultModelSelectionReady, isModelSelectionTouched])
+    setDefaultSelectionReady({ key: selectionKey, data })
+    selectionBoundaryRef.current = { key: selectionKey, data, pending: false }
+  }, [loading, data, models, dataMode, benchmarkMode, exam, scoreBasis, defaultSelectionReady, isModelSelectionTouched, selectionKey])
 
   // 필터 및 정렬 적용
   const filteredScores = useMemo(() => {
@@ -216,7 +312,7 @@ function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
 
     if (scoreViewMode === 'bestWorst') {
       // 최고/최저 조합 점수
-      const scores = calculateBestWorstScores(data, displayModels)
+      const scores = calculateBestWorstScores(data, displayModels, { exam })
       return scores.map(s => ({
         ...s,
         color: getModelColor(s.model)
@@ -240,13 +336,17 @@ function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
       totalPoints: maxScore,
       color: getModelColor(s.model)
     }))
-  }, [data, filteredScores, questionsMetadata, scoreViewMode, maxScore])
+  }, [data, filteredScores, questionsMetadata, scoreViewMode, maxScore, exam])
 
   // 비용 데이터 (모델 필터링 + 과목 필터링 적용)
   const costData = useMemo(() => {
     if (!data?.length || !filteredScores?.length) return []
-    return getCostData(data, filteredScores, tokenUsage || {}, filters.subjects)
-  }, [data, filteredScores, tokenUsage, filters.subjects])
+    return getCostData(data, filteredScores, tokenUsage || {}, filters.subjects, { exam, scoreBasis, modelPerformance })
+  }, [data, filteredScores, tokenUsage, filters.subjects, exam, scoreBasis, modelPerformance])
+
+  const sectionKeysByModel = useMemo(() => Object.fromEntries(
+    costData.map(entry => [entry.model, entry.tokenSectionKeys || []])
+  ), [costData])
 
   // 히트맵 데이터
   const heatmapData = useMemo(() => {
@@ -263,46 +363,68 @@ function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
   // 레이더 차트 데이터
   const radarData = useMemo(() => {
     if (!overallScores?.length || !compareModels?.length) return []
-    return transformToRadarData(overallScores, compareModels, t)
-  }, [overallScores, compareModels, t])
+    return transformToRadarData(overallScores, compareModels, t, { exam, scoreBasis })
+  }, [overallScores, compareModels, t, exam, scoreBasis])
 
   // 표시할 모델 목록 (필터 및 정렬 적용 - filteredScores 순서 따름)
   const displayModels = useMemo(() => {
     return filteredScores.map(s => s.model)
   }, [filteredScores])
 
+  // 문항 상세에서는 전체 결과 중 사용자가 선택한 모델의 부분 결과도 표시
+  const detailModels = useMemo(() => {
+    return isModelSelectionTouched && filters.models.length > 0
+      ? filters.models.filter(model => models.includes(model))
+      : models
+  }, [filters.models, models, isModelSelectionTouched])
+
   // 선지 선택률 데이터
   const choiceData = useMemo(() => {
-    if (!heatmapData || !Object.keys(heatmapData).length || !displayModels?.length) return []
-    return transformToChoiceData(heatmapData, displayModels, selectedSubject, selectedSection)
-  }, [heatmapData, displayModels, selectedSubject, selectedSection])
+    if (!heatmapData || !Object.keys(heatmapData).length || !detailModels?.length) return []
+    return transformToChoiceData(heatmapData, detailModels, selectedSubject, selectedSection)
+  }, [heatmapData, detailModels, selectedSubject, selectedSection])
 
-  // 가상 과목 목록 생성 (탐구를 하나로 묶음)
+  // 시험 정의의 그룹 목록을 화면용 과목 목록으로 변환
   const virtualSubjects = useMemo(() => {
-    const baseSubjects = subjects.filter(s => !EXPLORATION_SUBJECTS.includes(s))
-    if (subjects.some(s => EXPLORATION_SUBJECTS.includes(s))) {
-      return [...baseSubjects, '탐구']
-    }
-    return baseSubjects
-  }, [subjects])
+    return subjectFilterGroups.map(group => group.group)
+  }, [subjectFilterGroups])
 
   // 과목 선택 시 섹션 목록
   const availableSections = useMemo(() => {
     if (!selectedSubject) return []
 
-    // 탐구 선택 시 -> 개별 탐구 과목들을 섹션으로 표시
-    if (selectedSubject === '탐구') {
-      return subjects.filter(s => EXPLORATION_SUBJECTS.includes(s))
+    const group = subjectFilterGroups.find(item => item.group === selectedSubject)
+    if (!group) return []
+    const sectionNames = group.sections.map(section => section.group === '탐구' ? section.subject : section.section)
+    if (sectionNames.length === 1 && sectionNames[0] === selectedSubject) return []
+    return sectionNames
+  }, [selectedSubject, subjectFilterGroups])
+
+  /**
+   * @brief 시험 전환 시 현재 필터와 상세 선택을 유효한 값으로 정리
+   */
+  useEffect(() => {
+    const validFilters = new Set(subjectFilterGroups.flatMap(group => [
+      group.key,
+      ...(group.children || []).flatMap(child => [child.key, child.legacyKey])
+    ]))
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setFilters(prev => ({
+      ...prev,
+      subjects: prev.subjects.filter(subject => validFilters.has(subject))
+    }))
+
+    const validSubjects = new Set(subjectFilterGroups.map(group => group.group))
+    if (selectedSubject && !validSubjects.has(selectedSubject)) {
+      setSelectedSubject('')
+      setSelectedSection('')
+      return
     }
 
-    // 영어/한국사처럼 섹션이 자기 자신인 경우 빈 배열 반환
-    const secs = sections[selectedSubject] || []
-    if (secs.length === 1 && secs[0] === selectedSubject) {
-      return []
+    if (selectedSection && !availableSections.includes(selectedSection)) {
+      setSelectedSection('')
     }
-
-    return secs
-  }, [selectedSubject, subjects, sections])
+  }, [subjectFilterGroups, selectedSubject, selectedSection, availableSections])
 
   /**
    * @brief PC 헤더 스크롤 감지 (원본 헤더가 화면 밖으로 나갔는지)
@@ -368,31 +490,30 @@ function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
       return
     }
 
-    // 영어/한국사: 섹션이 자기 자신인 경우 자동 설정
-    if (sections[newSubject]?.length === 1 && sections[newSubject][0] === newSubject) {
+    const group = subjectFilterGroups.find(item => item.group === newSubject)
+    const detailSections = group?.sections
+      .filter(section => section.kind !== 'common')
+      .map(section => section.group === '탐구' ? section.subject : section.section) || []
+    const allSections = group?.sections || []
+    if (detailSections.length === 1 && detailSections[0] === newSubject) {
       setSelectedSection(newSubject)
+    } else if (newSubject === '탐구') {
+      setSelectedSection(detailSections[0] || '')
+    } else {
+      setSelectedSection(allSections[0]?.section || '')
     }
-    // 탐구: 첫 번째 탐구 과목 자동 선택
-    else if (newSubject === '탐구') {
-      const firstExp = subjects.find(s => EXPLORATION_SUBJECTS.includes(s))
-      setSelectedSection(firstExp || '')
-    }
-    // 일반 과목: 첫 번째 섹션 (공통) 자동 선택
-    else {
-      const secs = sections[newSubject] || []
-      setSelectedSection(secs[0] || '')
-    }
-  }, [sections, subjects])
+  }, [subjectFilterGroups])
 
   // 데이터 로드 완료 후 기본 과목 선택
   useEffect(() => {
-    if (!loading && subjects.length > 0 && !selectedSubject) {
-      const firstSubject = subjects.find(s => !EXPLORATION_SUBJECTS.includes(s))
+    if (!loading && virtualSubjects.length > 0 && !selectedSubject) {
+      const firstSubject = virtualSubjects[0]
       if (firstSubject) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         handleSubjectChange(firstSubject)
       }
     }
-  }, [loading, subjects, selectedSubject, handleSubjectChange])
+  }, [loading, virtualSubjects, selectedSubject, handleSubjectChange])
 
   // 과목 드롭다운 휠 스크롤 이벤트 등록 (passive: false로 스크롤 방지)
   useEffect(() => {
@@ -446,11 +567,24 @@ function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
     return () => el.removeEventListener('wheel', handler)
   }, [availableSections, selectedSection, activeTab])
 
-  if (loading) {
+  /**
+   * @brief 현재 시험·실행 모드·점수 기준을 공유 가능한 URL에 반영
+   */
+  useEffect(() => {
+    if (loading || dataMode !== benchmarkMode || committedExam?.id !== requestedExam.id) return
+    replaceDashboardQueryState({
+      exam: requestedExam.id,
+      mode: benchmarkMode,
+      scoreBasis
+    })
+  }, [loading, dataMode, benchmarkMode, requestedExam, committedExam, scoreBasis])
+
+  if (loading && !committedExam) {
     return (
       <div
         className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900"
         data-benchmark-mode={benchmarkMode}
+        data-exam-id={requestedExam.id}
       >
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mx-auto mb-4" />
@@ -473,9 +607,10 @@ function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
 
   return (
       <div
-      className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col"
-      data-benchmark-mode={benchmarkMode}
-      data-dashboard-ready={!loading && !error && isDefaultModelSelectionReady ? 'true' : 'false'}
+        className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col"
+        data-benchmark-mode={benchmarkMode}
+        data-exam-id={requestedExam.id}
+        data-dashboard-ready={!loading && !error && defaultSelectionReady.key === selectionKey && defaultSelectionReady.data === data ? 'true' : 'false'}
     >
       {/* PC 헤더 호버 트리거 영역 (스크롤 시에만 활성화) */}
       {scrolledPastHeader && (
@@ -494,7 +629,11 @@ function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
       >
         <Header
           onMenuToggle={sidebar.toggle}
+          exam={requestedExam}
+          exams={exams}
           mode={benchmarkMode}
+          modes={requestedExam.modes}
+          onExamChange={onExamChange}
           onModeChange={onBenchmarkModeChange}
         />
       </div>
@@ -502,7 +641,11 @@ function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
       <div ref={originalHeaderRef}>
         <Header
           onMenuToggle={sidebar.toggle}
+          exam={requestedExam}
+          exams={exams}
           mode={benchmarkMode}
+          modes={requestedExam.modes}
+          onExamChange={onExamChange}
           onModeChange={onBenchmarkModeChange}
         />
       </div>
@@ -510,6 +653,7 @@ function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
         <Sidebar
           filters={filters}
           onFilterChange={handleFilterChange}
+          subjectFilterGroups={subjectFilterGroups}
           hoveredModel={hoveredModel}
           onModelHover={setHoveredModel}
           isOpen={sidebar.isOpen}
@@ -525,296 +669,282 @@ function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
             }
           }}
         >
-          {/* 탭 네비게이션 (데스크톱) */}
-          <div className="desktop-tabs hidden md:flex gap-2 mb-6">
-            {TAB_KEYS.map(tabKey => (
-              <button
-                key={tabKey}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  activeTab === tabKey
-                    ? 'bg-blue-500 text-white shadow-md'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
-                }`}
-                onClick={() => handleTabChange(tabKey)}
-              >
-                {t(`tabs.${tabKey}`)}
-              </button>
-            ))}
+          {/* 탭 네비게이션과 점수 기준 선택 */}
+          <div className="flex flex-wrap items-center justify-end md:justify-between gap-3 mb-6">
+            <div className="desktop-tabs hidden md:flex gap-2">
+              {TAB_KEYS.map(tabKey => (
+                <button
+                  key={tabKey}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    activeTab === tabKey
+                      ? 'bg-blue-500 text-white shadow-md'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
+                  }`}
+                  onClick={() => handleTabChange(tabKey)}
+                >
+                  {t(`tabs.${tabKey}`)}
+                </button>
+              ))}
+            </div>
+            <ScoreBasisControl
+              scoreBasis={scoreBasis}
+              onScoreBasisChange={handleScoreBasisChange}
+              t={t}
+            />
           </div>
 
           {/* 콘텐츠 영역 */}
           <div className="space-y-6">
-            {/* 종합 대시보드 탭 */}
-            {activeTab === 'overview' && (
+            {isPreparation ? (
+              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                <p className="text-gray-500 dark:text-gray-400 text-center py-8">
+                  {t('common.preparingResults')}
+                </p>
+              </div>
+            ) : (
               <>
-                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                  <ScoreBarChart
-                    data={scoreChartData}
-                    maxScore={scoreViewMode === 'bestWorst' ? maxScore : maxScore}
-                    viewMode={scoreViewMode}
-                    onViewModeChange={setScoreViewMode}
-                    showViewModeButtons={true}
-                    title={
-                      scoreViewMode === 'withImage' ? t('charts.withImageAccuracy') :
-                      scoreViewMode === 'withoutImage' ? t('charts.withoutImageAccuracy') :
-                      scoreViewMode === 'bestWorst' ? `${t('charts.bestWorstScore')} (${t('charts.maxPoints', { max: maxScore })})` :
-                      `${t('charts.totalScore')} (${t('charts.maxPoints', { max: maxScore })})`
-                    }
-                    subtitle={(() => {
-                      if (filters.subjects.length === 0) return null
-
-                      // 과목 계층 정의
-                      const HIERARCHY = {
-                        '국어': ['화작', '언매'],
-                        '수학': ['확통', '미적', '기하'],
-                        '탐구': ['물리1', '화학1', '생명1', '사문']
-                      }
-
-                      // 선택된 항목을 부모별로 그룹화
-                      const grouped = { '국어': [], '수학': [], '탐구': [], standalone: [] }
-                      for (const item of filters.subjects) {
-                        if (item === '영어' || item === '한국사') {
-                          grouped.standalone.push(item)
-                        } else if (item.includes('-')) {
-                          const [parent, child] = item.split('-')
-                          if (grouped[parent]) grouped[parent].push(child)
+                {/* 종합 대시보드 탭 */}
+                {activeTab === 'overview' && (
+                  <>
+                    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                      <ScoreBarChart
+                        data={scoreChartData}
+                        maxScore={scoreViewMode === 'bestWorst' ? normalizedMaxScore : maxScore}
+                        viewMode={scoreViewMode}
+                        onViewModeChange={handleScoreViewModeChange}
+                        showViewModeButtons={true}
+                        allowBestWorst={scoreBasis === SCORE_BASIS.NORMALIZED}
+                        title={
+                          scoreViewMode === 'withImage' ? t('charts.withImageAccuracy') :
+                          scoreViewMode === 'withoutImage' ? t('charts.withoutImageAccuracy') :
+                          scoreViewMode === 'bestWorst' ? `${t('charts.bestWorstScore')} (${t('charts.maxPoints', { max: normalizedMaxScore })})` :
+                          `${t('charts.totalScore')} (${t('charts.maxPoints', { max: maxScore })})`
                         }
-                      }
-
-                      const result = []
-
-                      // 국어: 모두 선택 → "국어", 일부 → 하위만
-                      if (grouped['국어'].length === HIERARCHY['국어'].length) {
-                        result.push('국어')
-                      } else {
-                        result.push(...grouped['국어'])
-                      }
-
-                      // 수학: 동일 로직
-                      if (grouped['수학'].length === HIERARCHY['수학'].length) {
-                        result.push('수학')
-                      } else {
-                        result.push(...grouped['수학'])
-                      }
-
-                      // 영어, 한국사
-                      result.push(...grouped.standalone)
-
-                      // 탐구: 개별 표시
-                      result.push(...grouped['탐구'])
-
-                      // 전체 선택 시 null
-                      const allSelected =
-                        grouped['국어'].length === HIERARCHY['국어'].length &&
-                        grouped['수학'].length === HIERARCHY['수학'].length &&
-                        grouped.standalone.includes('영어') &&
-                        grouped.standalone.includes('한국사') &&
-                        grouped['탐구'].length === HIERARCHY['탐구'].length
-
-                      return allSelected ? null : result.join(', ')
-                    })()}
-                    hoveredModel={hoveredModel}
-                    onModelHover={setHoveredModel}
-                    modelMetadata={modelMetadata}
-                  />
-                </div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                  <ScoreTable
-                    data={filteredScores}
-                    title={t('charts.scoreTable')}
-                    showDetail={filters.showDetail}
-                    onToggleDetail={() => setFilters(f => ({ ...f, showDetail: !f.showDetail }))}
-                    subjectFilter={filters.subjects}
-                    maxScore={maxScore}
-                    hoveredModel={hoveredModel}
-                    onModelHover={setHoveredModel}
-                  />
-                </div>
-              </>
-            )}
-
-            {/* 과목별 상세 탭 */}
-            {activeTab === 'subjects' && (
-              <>
-                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                  <div className="flex gap-4 mb-6">
-                    <select
-                      ref={subjectSelectRef}
-                      className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
-                      value={selectedSubject}
-                      onChange={(e) => handleSubjectChange(e.target.value)}
-                    >
-                      <option value="">{t('charts.selectSubject')}</option>
-                      {virtualSubjects.map(s => (
-                        <option key={s} value={s}>{_translateSubject(s, t)}</option>
-                      ))}
-                    </select>
-                    {selectedSubject && availableSections.length > 0 && (
-                      <select
-                        ref={sectionSelectRef}
-                        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
-                        value={selectedSection}
-                        onChange={(e) => setSelectedSection(e.target.value)}
-                      >
-                        {availableSections.map(s => (
-                          <option key={s} value={s}>{_translateSubject(s, t)}</option>
-                        ))}
-                      </select>
-                    )}
-                  </div>
-
-                  {selectedSubject && selectedSection && Object.keys(heatmapData).length > 0 && (
-                    <QuestionHeatmap
-                      data={heatmapData}
-                      models={displayModels}
-                      title={`${_translateSubject(selectedSubject, t)} - ${_translateSubject(selectedSection, t)} ${t('charts.questionStatus')}`}
-                      subjectName={`${_translateSubject(selectedSubject, t)}_${_translateSubject(selectedSection, t)}`}
-                      modelMetadata={modelMetadata}
-                    />
-                  )}
-
-                  {selectedSubject && selectedSection && choiceData.length > 0 && (
-                    <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                      <ChoiceSelectionChart
-                        data={choiceData}
-                        title={`${_translateSubject(selectedSubject, t)} - ${_translateSubject(selectedSection, t)} ${t('charts.choiceRate')}`}
+                        subtitle={(() => {
+                          if (filters.subjects.length === 0) return null
+                          const selectedLabels = subjectFilterGroups.flatMap(group => {
+                            if (filters.subjects.includes(group.key)) return []
+                            return (group.children || [])
+                              .filter(child => filters.subjects.includes(child.key) || filters.subjects.includes(child.legacyKey))
+                              .map(child => child.name)
+                          })
+                          const selectedGroups = subjectFilterGroups
+                            .filter(group => filters.subjects.includes(group.key))
+                            .map(group => group.name || group.group)
+                          return [...selectedGroups, ...selectedLabels].join(', ')
+                        })()}
+                        hoveredModel={hoveredModel}
+                        onModelHover={setHoveredModel}
+                        modelMetadata={modelMetadata}
                       />
                     </div>
-                  )}
-
-                  {!selectedSubject && (
-                    <p className="text-gray-500 dark:text-gray-400 text-center py-8">
-                      {t('charts.selectSubject')}
-                    </p>
-                  )}
-                </div>
-              </>
-            )}
-
-            {/* 모델 비교 탭 */}
-            {activeTab === 'compare' && (() => {
-              // 정렬된 모델 순서로 개발사별 그룹화
-              const sortedModels = filteredScores.map(s => s.model)
-              const groupedCompareModels = groupModelsByVendor(sortedModels)
-              const sortedVendors = getSortedVendors(groupedCompareModels)
-
-              return (
-                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6">
-                  <div className="mb-6">
-                    <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-3">
-                      {t('charts.compareModels')}
-                    </h4>
-
-                    {/* 모바일: 드롭다운 */}
-                    <div className="md:hidden">
-                      <ModelSelectDropdown
-                        models={sortedModels}
-                        selected={compareModels}
-                        onChange={setCompareModels}
-                        maxSelect={5}
+                    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                      <ScoreTable
+                        data={filteredScores}
+                        title={t('charts.scoreTable')}
+                        showDetail={filters.showDetail}
+                        onToggleDetail={() => setFilters(f => ({ ...f, showDetail: !f.showDetail }))}
+                        subjectFilter={filters.subjects}
+                        maxScore={maxScore}
+                        hoveredModel={hoveredModel}
+                        onModelHover={setHoveredModel}
                       />
                     </div>
+                  </>
+                )}
 
-                    {/* 데스크톱: 체크박스 그룹 */}
-                    <div className="hidden md:block space-y-3">
-                      {sortedVendors.map(vendor => {
-                        const vendorModels = groupedCompareModels[vendor.id]
-                        if (!vendorModels?.length) return null
+                {/* 과목별 상세 탭 */}
+                {activeTab === 'subjects' && (
+                  <>
+                    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                      <div className="flex gap-4 mb-6">
+                        <select
+                          ref={subjectSelectRef}
+                          className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
+                          value={selectedSubject}
+                          onChange={(e) => handleSubjectChange(e.target.value)}
+                        >
+                          <option value="">{t('charts.selectSubject')}</option>
+                          {virtualSubjects.map(s => (
+                            <option key={s} value={s}>{_translateSubject(s, t)}</option>
+                          ))}
+                        </select>
+                        {selectedSubject && availableSections.length > 0 && (
+                          <select
+                            ref={sectionSelectRef}
+                            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer"
+                            value={selectedSection}
+                            onChange={(e) => setSelectedSection(e.target.value)}
+                          >
+                            {availableSections.map(s => (
+                              <option key={s} value={s}>{_translateSubject(s, t)}</option>
+                            ))}
+                          </select>
+                        )}
+                      </div>
 
-                        return (
-                          <div key={vendor.id}>
-                            {/* 개발사 헤더 */}
-                            <div className="flex items-center gap-2 mb-1.5">
-                              <span
-                                className="w-3 h-3 rounded-full"
-                                style={{ backgroundColor: vendor.color }}
-                              />
-                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {vendor.name}
-                              </span>
-                              <span className="text-xs text-gray-400 dark:text-gray-500">
-                                ({vendorModels.length})
-                              </span>
-                            </div>
-                            {/* 모델 목록 */}
-                            <div className="flex flex-wrap gap-2 ml-5">
-                              {vendorModels.map(model => {
-                                const isSelected = compareModels.includes(model)
-                                const isFiltered = filters.models.length === 0 ||
-                                                   filters.models.includes(model)
-                                return (
-                                  <label
-                                    key={model}
-                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full cursor-pointer transition-colors border ${
-                                      isSelected
-                                        ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700'
-                                        : isFiltered
-                                          ? 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600'
-                                          : 'bg-gray-50 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border-gray-200 dark:border-gray-700 opacity-60'
-                                    }`}
-                                    onMouseEnter={() => setHoveredModel(model)}
-                                    onMouseLeave={() => setHoveredModel(null)}
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      className="hidden"
-                                      checked={isSelected}
-                                      onChange={(e) => {
-                                        if (e.target.checked && compareModels.length < 5) {
-                                          setCompareModels([...compareModels, model])
-                                        } else if (!e.target.checked) {
-                                          setCompareModels(compareModels.filter(m => m !== model))
-                                        }
-                                      }}
-                                    />
-                                    <span className="text-sm">{formatModelDisplayName(model)}</span>
-                                  </label>
-                                )
-                              })}
-                            </div>
-                          </div>
-                        )
-                      })}
+                      {selectedSubject && selectedSection && Object.keys(heatmapData).length > 0 && (
+                        <QuestionHeatmap
+                          data={heatmapData}
+                          models={detailModels}
+                          title={`${_translateSubject(selectedSubject, t)} - ${_translateSubject(selectedSection, t)} ${t('charts.questionStatus')}`}
+                          subjectName={`${_translateSubject(selectedSubject, t)}_${_translateSubject(selectedSection, t)}`}
+                          modelMetadata={modelMetadata}
+                        />
+                      )}
+
+                      {selectedSubject && selectedSection && choiceData.length > 0 && (
+                        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                          <ChoiceSelectionChart
+                            data={choiceData}
+                            title={`${_translateSubject(selectedSubject, t)} - ${_translateSubject(selectedSection, t)} ${t('charts.choiceRate')}`}
+                          />
+                        </div>
+                      )}
+
+                      {!selectedSubject && (
+                        <p className="text-gray-500 dark:text-gray-400 text-center py-8">
+                          {t('charts.selectSubject')}
+                        </p>
+                      )}
                     </div>
-                  </div>
-                  <ModelCompareChart
-                    data={radarData}
-                    selectedModels={compareModels}
-                    allScores={overallScores}
-                    title={t('charts.modelCompare')}
-                    height={450}
-                    hoveredModel={hoveredModel}
-                    onModelHover={setHoveredModel}
-                  />
-                </div>
-              )
-            })()}
+                  </>
+                )}
 
-            {/* 비용 분석 탭 */}
-            {activeTab === 'cost' && (
-              <>
-                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                  <CostScatterChart
-                    data={costData}
-                    title={t('charts.costVsPerformance')}
-                    maxScore={maxScore}
-                  />
-                </div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                  <TokenUsageChart
-                    data={tokenUsage}
-                    models={displayModels}
-                    subjectFilter={filters.subjects}
-                    title={t('charts.tokenUsage')}
-                    modelMetadata={modelMetadata}
-                  />
-                </div>
-                <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                  <CostTable
-                    data={costData}
-                    title={t('charts.costInfo')}
-                  />
-                </div>
+                {/* 모델 비교 탭 */}
+                {activeTab === 'compare' && (() => {
+                  // 정렬된 모델 순서로 개발사별 그룹화
+                  const sortedModels = filteredScores.map(s => s.model)
+                  const groupedCompareModels = groupModelsByVendor(sortedModels)
+                  const sortedVendors = getSortedVendors(groupedCompareModels)
+
+                  return (
+                    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6">
+                      <div className="mb-6">
+                        <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-3">
+                          {t('charts.compareModels')}
+                        </h4>
+
+                        {/* 모바일: 드롭다운 */}
+                        <div className="md:hidden">
+                          <ModelSelectDropdown
+                            models={sortedModels}
+                            selected={compareModels}
+                            onChange={setCompareModels}
+                            maxSelect={5}
+                          />
+                        </div>
+
+                        {/* 데스크톱: 체크박스 그룹 */}
+                        <div className="hidden md:block space-y-3">
+                          {sortedVendors.map(vendor => {
+                            const vendorModels = groupedCompareModels[vendor.id]
+                            if (!vendorModels?.length) return null
+
+                            return (
+                              <div key={vendor.id}>
+                                {/* 개발사 헤더 */}
+                                <div className="flex items-center gap-2 mb-1.5">
+                                  <span
+                                    className="w-3 h-3 rounded-full"
+                                    style={{ backgroundColor: vendor.color }}
+                                  />
+                                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    {vendor.name}
+                                  </span>
+                                  <span className="text-xs text-gray-400 dark:text-gray-500">
+                                    ({vendorModels.length})
+                                  </span>
+                                </div>
+                                {/* 모델 목록 */}
+                                <div className="flex flex-wrap gap-2 ml-5">
+                                  {vendorModels.map(model => {
+                                    const isSelected = compareModels.includes(model)
+                                    const isFiltered = filters.models.length === 0 ||
+                                                       filters.models.includes(model)
+                                    return (
+                                      <label
+                                        key={model}
+                                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full cursor-pointer transition-colors border ${
+                                          isSelected
+                                            ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700'
+                                            : isFiltered
+                                              ? 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600'
+                                              : 'bg-gray-50 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border-gray-200 dark:border-gray-700 opacity-60'
+                                        }`}
+                                        onMouseEnter={() => setHoveredModel(model)}
+                                        onMouseLeave={() => setHoveredModel(null)}
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          className="hidden"
+                                          checked={isSelected}
+                                          onChange={(e) => {
+                                            if (e.target.checked && compareModels.length < 5) {
+                                              setCompareModels([...compareModels, model])
+                                            } else if (!e.target.checked) {
+                                              setCompareModels(compareModels.filter(m => m !== model))
+                                            }
+                                          }}
+                                        />
+                                        <span className="text-sm">{formatModelDisplayName(model)}</span>
+                                      </label>
+                                    )
+                                  })}
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                      <ModelCompareChart
+                        data={radarData}
+                        selectedModels={compareModels}
+                        allScores={overallScores}
+                        title={t('charts.modelCompare')}
+                        height={450}
+                        scoreBasis={scoreBasis}
+                        hoveredModel={hoveredModel}
+                        onModelHover={setHoveredModel}
+                      />
+                    </div>
+                  )
+                })()}
+
+                {/* 상세 분석 탭 */}
+                {activeTab === 'cost' && (
+                  <>
+                    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                      <CostScatterChart
+                        data={costData}
+                        maxScore={maxScore}
+                        modelPerformance={modelPerformance}
+                        xMetric={analysisX}
+                        yMetric={analysisY}
+                        onXMetricChange={setAnalysisX}
+                        onYMetricChange={setAnalysisY}
+                      />
+                    </div>
+                    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                      <TokenUsageChart
+                        data={tokenUsage}
+                        models={displayModels}
+                        subjectFilter={filters.subjects}
+                        title={t('charts.tokenUsage')}
+                        modelMetadata={modelMetadata}
+                        sectionKeysByModel={sectionKeysByModel}
+                      />
+                    </div>
+                    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+                      <CostTable
+                        data={costData}
+                        title={t('charts.costInfo')}
+                        showDetail={filters.showDetail}
+                        onToggleDetail={() => setFilters(f => ({ ...f, showDetail: !f.showDetail }))}
+                      />
+                    </div>
+                  </>
+                )}
               </>
             )}
           </div>
@@ -830,27 +960,77 @@ function Dashboard({ benchmarkMode = 'default', onBenchmarkModeChange }) {
  * @brief App 루트 컴포넌트
  */
 export default function App() {
-  const [benchmarkMode, setBenchmarkMode] = useState(INITIAL_QUERY_STATE.mode)
+  const { t } = useTranslation()
+  const [catalog, setCatalog] = useState(null)
+  const [catalogError, setCatalogError] = useState(null)
+  const [catalogLoading, setCatalogLoading] = useState(true)
+  const [queryState] = useState(() => getDashboardQueryState())
+  const [selectedExamId, setSelectedExamId] = useState(queryState.exam)
+  const [benchmarkMode, setBenchmarkMode] = useState(queryState.mode)
+  const [scoreBasis, setScoreBasis] = useState(queryState.scoreBasis)
 
-  const handleBenchmarkModeChange = useCallback((nextMode) => {
-    setBenchmarkMode(nextMode)
-    if (typeof window === 'undefined') return
-
-    const url = new URL(window.location.href)
-    if (nextMode === 'hard') {
-      url.searchParams.set('mode', 'hard')
-    } else {
-      url.searchParams.delete('mode')
-    }
-    window.history.replaceState({}, '', url)
+  useEffect(() => {
+    let cancelled = false
+    loadBenchmarkCatalog()
+      .then(nextCatalog => {
+        if (!cancelled) {
+          setCatalog(nextCatalog)
+          setCatalogLoading(false)
+        }
+      })
+      .catch(error => {
+        if (!cancelled) {
+          setCatalogError(error.message)
+          setCatalogLoading(false)
+        }
+      })
+    return () => { cancelled = true }
   }, [])
+
+  useEffect(() => {
+    if (!catalog) return
+    const currentExam = catalog.exams.find(item => item.id === selectedExamId) || catalog.exams.find(item => item.id === catalog.default_exam) || catalog.exams[0]
+    document.title = currentExam.id === 'csat-2026'
+      ? t('header.title')
+      : currentExam.title.replace(/ LLM 벤치마크$/, ' LLM 풀이 대시보드')
+  }, [catalog, selectedExamId, t])
+
+  if (catalogLoading) {
+    return <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900 text-gray-600 dark:text-gray-400">{t('common.loading')}</div>
+  }
+
+  if (catalogError) {
+    return <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900"><div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 max-w-md"><h2 className="text-xl font-bold text-red-600 dark:text-red-400 mb-2">{t('common.error')}</h2><p className="text-gray-600 dark:text-gray-400">{catalogError}</p></div></div>
+  }
+
+  const defaultExam = catalog.exams.find(exam => exam.id === catalog.default_exam) || catalog.exams[0]
+  const exam = catalog.exams.find(item => item.id === selectedExamId) || defaultExam
+  const availableModes = exam.modes
+  const activeMode = availableModes.find(item => item.id === benchmarkMode)?.id || availableModes[0]?.id || 'default'
+
+  const handleExamChange = (nextExamId) => {
+    const nextExam = catalog.exams.find(item => item.id === nextExamId)
+    if (!nextExam) return
+    const nextModes = nextExam.modes
+    setSelectedExamId(nextExam.id)
+    setBenchmarkMode(prev => nextModes.some(item => item.id === prev) ? prev : nextModes[0]?.id || 'default')
+  }
+
+  const handleModeChange = (nextMode) => {
+    if (availableModes.some(item => item.id === nextMode)) setBenchmarkMode(nextMode)
+  }
 
   return (
     <ThemeProvider>
-      <DataProvider mode={benchmarkMode}>
+      <DataProvider exam={exam} mode={activeMode}>
         <Dashboard
-          benchmarkMode={benchmarkMode}
-          onBenchmarkModeChange={handleBenchmarkModeChange}
+          exam={exam}
+          exams={catalog.exams}
+          benchmarkMode={activeMode}
+          onExamChange={handleExamChange}
+          onBenchmarkModeChange={handleModeChange}
+          scoreBasis={scoreBasis}
+          onScoreBasisChange={setScoreBasis}
         />
       </DataProvider>
     </ThemeProvider>

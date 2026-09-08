@@ -1,13 +1,33 @@
 /**
  * @file useExportImage.js
- * @brief DOM 요소를 이미지로 내보내기 위한 커스텀 훅
+ * @brief DOM 요소 이미지 내보내기 훅 및 내보내기 프로필
  */
 
 import { useRef, useState, useCallback } from 'react'
-import { toPng } from 'html-to-image'
+import { getFontEmbedCSS, toPng } from 'html-to-image'
+import './export-image.css'
 
 export const README_EXPORT_WIDTH = 1680
-const EXPORT_FONT_SIZE_INCREMENT = 3
+
+/**
+ * @brief 차트·표별 이미지 내보내기 스타일 프로필
+ */
+export const EXPORT_PROFILES = Object.freeze({
+  default: { className: 'export-profile-default' },
+  overviewScore: { className: 'export-profile-overview-score' },
+  tokenUsage: { className: 'export-profile-token-usage' },
+  modelCompare: { className: 'export-profile-model-compare' },
+  questionHeatmap: { className: 'export-profile-question-heatmap' },
+  choiceSelection: { className: 'export-profile-choice-selection' },
+  scoreTable: { className: 'export-profile-score-table' },
+  scoreCard: { className: 'export-profile-score-card' },
+  costScatter: { className: 'export-profile-cost-scatter' },
+  costTable: { className: 'export-profile-cost-table' }
+})
+
+const FONT_EMBED_OPTIONS = { preferredFontFormat: 'woff2' }
+let fontReadyPromise
+let fontEmbedCssPromise
 
 function _getExportWidth(element, exportWidth) {
   if (typeof exportWidth === 'number') return exportWidth
@@ -19,17 +39,54 @@ function _getExportWidth(element, exportWidth) {
 }
 
 function _nextFrame() {
-  return new Promise(resolve => requestAnimationFrame(() => resolve()))
+  return new Promise(resolve => requestAnimationFrame(resolve))
 }
 
-async function _waitForFrames(count = 2) {
-  for (let i = 0; i < count; i += 1) {
+async function _waitForFrames(count = 1) {
+  for (let index = 0; index < count; index += 1) {
     await _nextFrame()
   }
 }
 
 /**
- * @brief 현재 다크모드 여부 확인
+ * @brief 현재 문서 폰트 준비 완료 대기
+ * @return {Promise<FontFaceSet>} 폰트 준비 완료 약속
+ */
+function _waitForFonts() {
+  if (!fontReadyPromise) fontReadyPromise = document.fonts.ready
+  return fontReadyPromise
+}
+
+/**
+ * @brief 폰트 임베드 CSS를 최초 한 번만 생성
+ * @param {HTMLElement} element - 폰트 사용 내보내기 요소
+ * @return {Promise<string>} 임베드용 CSS
+ */
+export function getExportFontEmbedCSS(element) {
+  if (!fontEmbedCssPromise) {
+    fontEmbedCssPromise = getFontEmbedCSS(element, FONT_EMBED_OPTIONS)
+  }
+  return fontEmbedCssPromise
+}
+
+/**
+ * @brief 요소에 내보내기 프로필 적용
+ * @param {HTMLElement} element - 내보내기 요소
+ * @param {string} profile - 프로필 이름
+ * @return {function} 프로필 복원 함수
+ */
+export function applyExportProfile(element, profile = 'default') {
+  const { className } = EXPORT_PROFILES[profile]
+  const hadClass = element.classList.contains(className)
+  element.classList.add(className)
+
+  return () => {
+    if (!hadClass) element.classList.remove(className)
+  }
+}
+
+/**
+ * @brief 다크모드 여부 확인
  * @return {boolean} 다크모드 여부
  */
 function _isDarkMode() {
@@ -37,83 +94,61 @@ function _isDarkMode() {
 }
 
 /**
- * @brief 내보내기 대상에서 실제 텍스트를 가진 요소의 글자 크기를 임시 확대
- * @param {HTMLElement} element - 내보내기 루트 요소
- * @return {Array<{element: Element, fontSize: string}>} 복원용 스타일 목록
- */
-function _increaseExportFontSizes(element) {
-  const textElements = new Set()
-  const walker = document.createTreeWalker(element, window.NodeFilter.SHOW_TEXT)
-
-  while (walker.nextNode()) {
-    const textNode = walker.currentNode
-    const parentElement = textNode.parentElement
-    if (!textNode.textContent.trim() || !parentElement) continue
-    if (parentElement.closest('[data-export-hide="true"]')) continue
-    textElements.add(parentElement)
-  }
-
-  const records = Array.from(textElements).map(textElement => ({
-    element: textElement,
-    fontSize: textElement.style.fontSize,
-    computedFontSize: Number.parseFloat(getComputedStyle(textElement).fontSize)
-  }))
-
-  records.forEach(({ element: textElement, computedFontSize }) => {
-    if (Number.isFinite(computedFontSize)) {
-      textElement.style.fontSize = `${computedFontSize + EXPORT_FONT_SIZE_INCREMENT}px`
-    }
-  })
-
-  return records
-}
-
-/**
  * @brief 이미지 내보내기 훅
  * @param {Object} options - 내보내기 옵션
- * @param {number} options.exportWidth - 내보내기 시 임시로 적용할 고정 폭
+ * @param {number} options.exportWidth - 내보내기 시 임시 적용 고정 폭
  * @param {number} options.exportPadding - 캡처 이미지 여백
- * @param {number} options.pixelRatio - 캡처 pixel ratio
+ * @param {number} options.pixelRatio - 캡처 화소 비율
  * @param {function} options.prepareExport - 캡처 직전 배치 조정 함수
+ * @param {string} options.exportProfile - 차트·표별 내보내기 프로필
  * @return {Object} { ref, exportImage, isExporting }
  */
 export function useExportImage({
   exportWidth,
   exportPadding = 16,
   pixelRatio = 2,
-  prepareExport
+  prepareExport,
+  exportProfile = 'default'
 } = {}) {
   const ref = useRef(null)
   const [isExporting, setIsExporting] = useState(false)
 
   /**
    * @brief 현재 ref 요소를 PNG 이미지로 내보내기
-   * @param {string} filename - 저장할 파일명 (기본: 'export.png')
+   * @param {string} filename - 저장할 파일명
    */
   const exportImage = useCallback(async (filename = 'export.png') => {
     if (!ref.current) return
 
     setIsExporting(true)
-    await _waitForFrames(2)
+    await _nextFrame()
 
-    if (!ref.current) {
+    const element = ref.current
+    if (!element) {
       setIsExporting(false)
       return
     }
 
-    const element = ref.current
     const resolvedExportWidth = _getExportWidth(element, exportWidth)
     const originalWidth = element.style.width
     const originalMaxWidth = element.style.maxWidth
     const originalMinWidth = element.style.minWidth
-
-    // 캡처 전: overflow가 있는 모든 요소를 visible로 변경 (스크롤바 숨김)
+    const profileCleanup = applyExportProfile(element, exportProfile)
     const overflowElements = element.querySelectorAll('[class*="overflow"]')
     const originalOverflows = Array.from(overflowElements).map(el => el.style.overflow)
-
-    let exportShowElements = []
-    let exportHideElements = []
-    let exportTextRecords = []
+    const exportHideElements = Array.from(element.querySelectorAll('[data-export-hide="true"]')).map(el => ({
+      element: el,
+      display: el.style.display
+    }))
+    const exportShowElements = new Map()
+    const registerExportShowElements = () => {
+      element.querySelectorAll('[data-export-show="true"]').forEach(showElement => {
+        if (!exportShowElements.has(showElement)) {
+          exportShowElements.set(showElement, showElement.classList.contains('hidden'))
+        }
+        showElement.classList.remove('hidden')
+      })
+    }
     let exportCleanup = null
 
     try {
@@ -121,12 +156,6 @@ export function useExportImage({
       overflowElements.forEach(el => {
         el.style.overflow = 'visible'
       })
-
-      // 필터링할 요소를 크기 측정 전부터 숨겨 빈 캔버스 영역이 남지 않게 한다.
-      exportHideElements = Array.from(element.querySelectorAll('[data-export-hide="true"]')).map(el => ({
-        element: el,
-        display: el.style.display
-      }))
       exportHideElements.forEach(({ element: hideElement }) => {
         hideElement.style.display = 'none'
       })
@@ -139,28 +168,20 @@ export function useExportImage({
         await _waitForFrames(2)
       }
 
-      // 캡처 전: data-export-show 요소 표시 (워터마크, 내보내기 전용 라벨 등)
-      // 폭 조절 뒤에 다시 조회해야 Recharts가 재배치하며 새로 만든 라벨도 잡힌다.
-      exportShowElements = Array.from(element.querySelectorAll('[data-export-show="true"]'))
-      exportShowElements.forEach(el => {
-        el.classList.remove('hidden')
-      })
-      await _waitForFrames(2)
+      registerExportShowElements()
 
-      exportTextRecords = _increaseExportFontSizes(element)
-      await _waitForFrames(2)
+      await _waitForFonts()
+      const fontEmbedCSS = await getExportFontEmbedCSS(element)
 
       if (prepareExport) {
         const cleanup = await prepareExport(element)
         exportCleanup = typeof cleanup === 'function' ? cleanup : null
-        await _waitForFrames(2)
+        await _nextFrame()
+        registerExportShowElements()
       }
 
-      // scrollWidth/scrollHeight로 실제 콘텐츠 크기 측정
       const width = element.scrollWidth + exportPadding * 2
       const height = element.scrollHeight + exportPadding * 2
-
-      // 다크모드에 따른 배경색 설정
       const backgroundColor = isDark ? '#111827' : '#ffffff'
 
       const dataUrl = await toPng(element, {
@@ -168,12 +189,9 @@ export function useExportImage({
         pixelRatio,
         width,
         height,
-        // data-export-hide 속성을 가진 요소 제외 (버튼 등)
-        filter: (node) => {
-          if (node.dataset?.exportHide === 'true') return false
-          return true
-        },
-        // 여백 추가
+        fontEmbedCSS,
+        preferredFontFormat: FONT_EMBED_OPTIONS.preferredFontFormat,
+        filter: node => node.dataset?.exportHide !== 'true',
         style: {
           padding: `${exportPadding}px`
         }
@@ -194,20 +212,17 @@ export function useExportImage({
         }
       }
 
-      overflowElements.forEach((el, i) => {
-        el.style.overflow = originalOverflows[i]
-      })
-
-      exportTextRecords.forEach(({ element: textElement, fontSize }) => {
-        textElement.style.fontSize = fontSize
+      profileCleanup()
+      overflowElements.forEach((el, index) => {
+        el.style.overflow = originalOverflows[index]
       })
       exportHideElements.forEach(({ element: hideElement, display }) => {
         hideElement.style.display = display
       })
-
-      const currentExportShowElements = element.querySelectorAll('[data-export-show="true"]')
-      new Set([...exportShowElements, ...currentExportShowElements]).forEach(el => {
-        el.classList.add('hidden')
+      element.querySelectorAll('[data-export-show="true"]').forEach(showElement => {
+        if (exportShowElements.has(showElement)) {
+          showElement.classList.toggle('hidden', exportShowElements.get(showElement))
+        }
       })
 
       element.style.width = originalWidth
@@ -215,14 +230,12 @@ export function useExportImage({
       element.style.minWidth = originalMinWidth
 
       setIsExporting(false)
-      await _waitForFrames(2)
-
       if (resolvedExportWidth) {
         window.dispatchEvent(new Event('resize'))
-        await _waitForFrames(1)
       }
+      await _nextFrame()
     }
-  }, [exportPadding, exportWidth, pixelRatio, prepareExport])
+  }, [exportPadding, exportProfile, exportWidth, pixelRatio, prepareExport])
 
   return { ref, exportImage, isExporting }
 }
