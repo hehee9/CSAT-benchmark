@@ -34,6 +34,7 @@ desktop.ini
 tmp/
 
 # Project specific
+/config.json
 *.xlsx~
 ~$*.xlsx
 .~lock.*

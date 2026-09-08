@@ -20,7 +20,7 @@ def _project_root() -> Path:
 def _resolve_config_path(value: str | Path | None, project_root: Path) -> Path:
     """@description 현재 작업 폴더·저장소 루트 기준 설정 파일 탐색"""
     if value is None:
-        return project_root / "examples" / "config.example.json"
+        return project_root / "config.json"
     path = Path(value).expanduser()
     if path.is_absolute():
         return path
@@ -39,8 +39,8 @@ def _build_parser(project_root: Path) -> argparse.ArgumentParser:
     parser.add_argument("--exam", help="시험 ID 또는 매니페스트 JSON 경로")
     parser.add_argument(
         "--config",
-        default=str(project_root / "examples" / "config.example.json"),
-        help="모델 설정 경로 (기본: examples/config.example.json)",
+        default=str(project_root / "config.json"),
+        help="모델 설정 경로 (기본: config.json)",
     )
     parser.add_argument("--models", nargs="+", help="실행할 모델 이름")
     parser.add_argument("--subject", help="한 섹션을 고를 과목")

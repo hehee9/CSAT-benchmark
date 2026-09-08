@@ -16,6 +16,7 @@ from csat_benchmark.batch import (
     download_exam,
     status_exam,
     submit_exam,
+    wait_exam,
 )
 from csat_benchmark.exams import load_exam
 from csat_benchmark.models import ModelConfig, Question
@@ -90,6 +91,22 @@ class _FakeBatchTransport(BatchTransport):
         """저장한 fake 응답을 Batch parser 계약으로 반환."""
         del model_config, use_responses_api, input_requests
         return json.loads(result_path.read_text(encoding="utf-8"))
+
+
+class _ProgressBatchTransport(_FakeBatchTransport):
+    """@description 상태 진행 순서와 다운로드를 흉내 내는 대역"""
+
+    def __init__(self, statuses: list[dict]) -> None:
+        super().__init__()
+        self.statuses = statuses
+        self.status_index = 0
+
+    def status(self, batch_id: str, model_config: ModelConfig) -> dict:
+        """@description 지정 상태 순서에 따른 batch 상태 반환"""
+        del batch_id, model_config
+        status = self.statuses[min(self.status_index, len(self.statuses) - 1)]
+        self.status_index += 1
+        return status
 
 
 def _write_exam(tmp_path: Path, *, targets: int = 1, questions: int = 2):
@@ -436,3 +453,245 @@ def test_batch_cli_requires_exam_and_removes_old_run_mode_hard_flags():
     for flag in ("--run", "--mode", "--hard"):
         with pytest.raises(SystemExit):
             batch_main(["--exam", "example-text", flag, "old"])
+
+
+def _stub_batch_cli_exam(monkeypatch):
+    """@description CLI 단위 테스트에서 시험 로딩을 실제 파일·실행과 분리"""
+    exam = object()
+    monkeypatch.setattr(batch_module, "load_exam", lambda *args, **kwargs: exam)
+    return exam
+
+
+def test_batch_cli_default_submit_waits_and_downloads(monkeypatch, capsys):
+    """@description 기본 제출 후 완료 대기와 결과 다운로드 수행 검증"""
+    exam = _stub_batch_cli_exam(monkeypatch)
+    calls = []
+
+    def fake_submit(received_exam, **kwargs):
+        calls.append(("submit", received_exam, kwargs))
+        return {"mode": "default", "path": "submitted", "submitted": 2}
+
+    def fake_wait(received_exam, **kwargs):
+        calls.append(("wait", received_exam, kwargs))
+        return {"mode": "default", "path": "waited", "saved_results": 2}
+
+    monkeypatch.setattr(batch_module, "submit_exam", fake_submit)
+    monkeypatch.setattr(batch_module, "wait_exam", fake_wait)
+
+    assert batch_main(["--exam", "example-text"]) == 0
+
+    assert [call[0] for call in calls] == ["submit", "wait"]
+    assert all(call[1] is exam for call in calls)
+    assert calls[1][2]["download"] is True
+    assert "제출 슬롯: 2" in capsys.readouterr().out
+
+
+def test_batch_cli_no_wait_submits_without_waiting(monkeypatch):
+    """@description --no-wait를 지정한 제출의 대기 생략 검증"""
+    exam = _stub_batch_cli_exam(monkeypatch)
+    calls = []
+
+    def fake_submit(received_exam, **kwargs):
+        calls.append(("submit", received_exam, kwargs))
+        return {"mode": "default", "path": "submitted", "submitted": 2}
+
+    def fake_wait(received_exam, **kwargs):
+        calls.append(("wait", received_exam, kwargs))
+        return {"mode": "default", "path": "waited"}
+
+    monkeypatch.setattr(batch_module, "submit_exam", fake_submit)
+    monkeypatch.setattr(batch_module, "wait_exam", fake_wait)
+
+    assert batch_main(["--exam", "example-text", "--no-wait"]) == 0
+
+    assert [call[0] for call in calls] == ["submit"]
+    assert calls[0][1] is exam
+
+
+def test_batch_cli_retry_waits_and_preserves_submission_summary(monkeypatch, capsys):
+    """@description 기본 재시도의 대기 및 제출 슬롯 요약 유지 검증"""
+    exam = _stub_batch_cli_exam(monkeypatch)
+    calls = []
+
+    def fake_retry(received_exam, **kwargs):
+        calls.append(("retry", received_exam, kwargs))
+        return {
+            "mode": "default",
+            "path": "retried",
+            "submitted": 1,
+            "downloaded_before_retry": {"saved_results": 2},
+        }
+
+    def fake_wait(received_exam, **kwargs):
+        calls.append(("wait", received_exam, kwargs))
+        return {"mode": "default", "path": "waited", "saved_results": 1}
+
+    monkeypatch.setattr(batch_module, "retry_exam", fake_retry)
+    monkeypatch.setattr(batch_module, "wait_exam", fake_wait)
+
+    assert batch_main(["retry", "--exam", "example-text"]) == 0
+
+    assert [call[0] for call in calls] == ["retry", "wait"]
+    assert calls[1][2]["download"] is True
+    assert "제출 슬롯: 1" in capsys.readouterr().out
+
+
+def test_batch_cli_explicit_wait_always_downloads(monkeypatch):
+    """@description 명시적인 wait의 완료 결과 다운로드 검증"""
+    exam = _stub_batch_cli_exam(monkeypatch)
+    calls = []
+
+    def fake_wait(received_exam, **kwargs):
+        calls.append((received_exam, kwargs))
+        return {"mode": "default", "path": "waited"}
+
+    monkeypatch.setattr(batch_module, "wait_exam", fake_wait)
+
+    assert batch_main(["wait", "--exam", "example-text", "--no-wait"]) == 0
+
+    assert len(calls) == 1
+    assert calls[0][0] is exam
+    assert calls[0][1]["download"] is True
+
+
+def test_wait_exam_restores_progress_output_and_downloads(tmp_path: Path, monkeypatch, capsys):
+    """@description batch 진행 표시·완료 줄바꿈·결과 다운로드 검증"""
+    monkeypatch.setenv("BATCH_TEST_KEY", "test-key")
+    exam = _write_exam(tmp_path, questions=2)
+    config_path = _write_config(tmp_path, ["모의 모델"])
+    statuses = [
+        {
+            "status": "in_progress",
+            "request_counts": {
+                "completed": 0,
+                "failed": 0,
+                "pending": 2,
+                "total": 2,
+                "succeeded": 0,
+            },
+        },
+        {
+            "status": "in_progress",
+            "request_counts": {
+                "completed": 0,
+                "failed": 0,
+                "pending": 2,
+                "total": 2,
+                "succeeded": 0,
+            },
+        },
+        {
+            "status": "in_progress",
+            "request_counts": {
+                "completed": 1,
+                "failed": 0,
+                "pending": 1,
+                "total": 2,
+                "succeeded": 1,
+            },
+        },
+        {
+            "status": "ended",
+            "request_counts": {
+                "completed": 2,
+                "failed": 0,
+                "pending": 0,
+                "total": 2,
+                "succeeded": 2,
+            },
+        },
+    ]
+    transport = _ProgressBatchTransport(statuses)
+    submit_exam(
+        exam,
+        config_path=config_path,
+        easy=True,
+        model_names=["모의 모델"],
+        transport=transport,
+    )
+
+    waited = wait_exam(
+        exam,
+        config_path=config_path,
+        easy=True,
+        model_names=["모의 모델"],
+        check_interval=0,
+        transport=transport,
+    )
+
+    assert waited["saved_results"] == 2
+    assert transport.download_calls == ["fake-1"]
+    assert capsys.readouterr().out == (
+        "⏳ 배치 작업 완료 대기 중... (ID: fake-1)\n"
+        "   0초마다 상태를 확인합니다.\n"
+        "\r   상태: in_progress | 완료: 0/2 | 실패: 0"
+        "\r   상태: in_progress | 완료: 0/2 | 실패: 0"
+        "\n📈 진행 업데이트: fake-1 | +1개 | 누적 1/2\n"
+        "\r   상태: in_progress | 완료: 1/2 | 실패: 0"
+        "\n📈 진행 업데이트: fake-1 | +1개 | 누적 2/2\n"
+        "\r   상태: ended | 완료: 2/2 | 실패: 0\n"
+    )
+
+
+@pytest.mark.parametrize(
+    ("provider", "check_interval", "expected"),
+    [
+        (
+            "openai",
+            60,
+            "⏳ 배치 작업 완료 대기 중... (ID: batch-1)\n"
+            "   60초마다 상태를 확인합니다.\n"
+            "\r   상태: ended | 완료: 2/2 | 실패: 1\n",
+        ),
+        (
+            "anthropic",
+            60,
+            "⏳ Anthropic 배치 완료 대기 중... (ID: batch-1)\n"
+            "   60초마다 상태를 확인합니다.\n"
+            "\r   상태: ended | 성공: 2 | 실패: 1 | 대기: 0 | 총합: 2/2\n",
+        ),
+        (
+            "google",
+            60,
+            "⏳ Gemini 배치 완료 대기 중... (ID: batch-1)\n"
+            "   60초마다 상태를 확인합니다.\n"
+            "\r   상태: ended | 완료: 2/2 | 실패: 1 | 대기: 0\n",
+        ),
+        (
+            "grok",
+            300,
+            "⏳ xAI 배치 완료 대기 중... (ID: batch-1)\n"
+            "   300초(5분)마다 상태를 확인합니다.\n"
+            "   상태: ended | 성공: 2 | 실패: 1 | 대기: 0 | 총합: 2/2\n",
+        ),
+        (
+            "grok",
+            60,
+            "⏳ xAI 배치 완료 대기 중... (ID: batch-1)\n"
+            "   60초마다 상태를 확인합니다.\n"
+            "   상태: ended | 성공: 2 | 실패: 1 | 대기: 0 | 총합: 2/2\n",
+        ),
+    ],
+)
+def test_wait_output_matches_legacy_provider_formats(
+    provider: str,
+    check_interval: int,
+    expected: str,
+    capsys,
+):
+    """@description 공급자별 완료 대기 출력 형식 검증"""
+    status_info = {
+        "status": "ended",
+        "request_counts": {
+            "completed": 2,
+            "failed": 1,
+            "pending": 0,
+            "total": 2,
+            "succeeded": 2,
+        },
+    }
+
+    batch_module._print_wait_banner(provider, "batch-1", check_interval)
+    batch_module._print_wait_status(provider, status_info, terminal=True)
+
+    assert capsys.readouterr().out == expected

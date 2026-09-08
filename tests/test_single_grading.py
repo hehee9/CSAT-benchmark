@@ -214,7 +214,7 @@ def test_save_load_verified_merges_unselected_rows(tmp_path: Path):
     assert json.loads(model_verified_path(index, "모델").read_text(encoding="utf-8"))["schema_version"] == 1
 
 
-def test_cli_passes_canonical_path_and_preserves_imported_verified_only_row(tmp_path: Path):
+def test_cli_passes_canonical_path_and_preserves_imported_verified_only_row(tmp_path: Path, capsys):
     """CLI canonical 경로 전달과 raw 없는 imported verified 결과 보존 검증."""
     data_dir = tmp_path / "data"
     data_dir.mkdir()
@@ -299,6 +299,9 @@ def test_cli_passes_canonical_path_and_preserves_imported_verified_only_row(tmp_
     )
 
     class _NoCallVerifier:
+        model_id = "fake-verifier"
+        reasoning_effort = "low"
+
         def verify_answer(self, *args):
             raise AssertionError("imported verified-only 결과에는 추출기를 호출하면 안 됩니다.")
 
@@ -313,6 +316,10 @@ def test_cli_passes_canonical_path_and_preserves_imported_verified_only_row(tmp_
     ):
         assert verify_answers.main(["--exam", str(manifest_path), "--easy"]) == 0
 
+    output = capsys.readouterr().out
+    assert "검증기: fake-verifier (low)" in output
+    assert "검증 완료:" in output
+    assert "모델: 2점 (완료)" in output
     assert seen_run_arguments == [index]
     saved = json.loads(verified_path.read_text(encoding="utf-8"))
     assert saved["results"][0]["provenance"] == "imported_public"

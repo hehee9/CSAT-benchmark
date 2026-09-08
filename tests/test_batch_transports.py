@@ -9,6 +9,7 @@ from types import SimpleNamespace
 from csat_benchmark.batch import ProviderBatchTransport
 from csat_benchmark.models import ModelConfig
 from csat_benchmark.providers.batch import anthropic, google, openai, xai
+from csat_benchmark.runs import is_technical_failure, result_is_completed
 
 
 def _model_config(api_type: str) -> ModelConfig:
@@ -191,17 +192,21 @@ def test_anthropic_transport_preserves_status_download_and_token_recount(tmp_pat
                 return SimpleNamespace(to_dict=lambda: {"id": "anthropic-1", "processing_status": "in_progress"})
 
             def retrieve(self, batch_id):
-                return SimpleNamespace(to_dict=lambda: {
-                    "id": batch_id,
-                    "processing_status": "ended",
-                    "request_counts": {
-                        "processing": 0,
-                        "succeeded": 1,
-                        "errored": 0,
-                        "canceled": 0,
-                        "expired": 0,
-                    },
-                })
+                def to_dict(*, mode="python"):
+                    assert mode == "json"
+                    return {
+                        "id": batch_id,
+                        "processing_status": "ended",
+                        "request_counts": {
+                            "processing": 0,
+                            "succeeded": 1,
+                            "errored": 0,
+                            "canceled": 0,
+                            "expired": 0,
+                        },
+                    }
+
+                return SimpleNamespace(to_dict=to_dict)
 
             def results(self, batch_id):
                 return [Entry()]
@@ -237,6 +242,60 @@ def test_anthropic_transport_preserves_status_download_and_token_recount(tmp_pat
     assert parsed[0]["raw_response"] == "Anthropic 답변"
     assert parsed[0]["input_tokens"] == 8
     assert parsed[0]["total_tokens"] == 11
+
+
+def test_anthropic_error_result_is_retryable_but_successful_no_answer_is_complete(
+    tmp_path: Path,
+):
+    """@description Anthropic 기술 실패 재시도·성공 no_answer 완료 판정 확인"""
+    result_path = tmp_path / "result.jsonl"
+    result_path.write_text(
+        "\n".join(
+            json.dumps(result, ensure_ascii=False)
+            for result in [
+                {
+                    "custom_id": "run__model__target__a1__q2",
+                    "result": {
+                        "type": "errored",
+                        "error": {
+                            "type": "invalid_request_error",
+                            "message": "At least one image is too large",
+                        },
+                    },
+                },
+                {
+                    "custom_id": "run__model__target__a1__q3",
+                    "result": {
+                        "type": "succeeded",
+                        "message": {
+                            "content": [],
+                            "stop_reason": "end_turn",
+                            "usage": {
+                                "input_tokens": 11,
+                                "output_tokens": 3,
+                                "total_tokens": 14,
+                            },
+                        },
+                    },
+                },
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    parsed = anthropic.parse_results(result_path, "anthropic-모의 모델")
+    errored, successful_no_answer = parsed
+
+    assert errored["success"] is False
+    assert errored["answer_status"] == "technical_failure"
+    assert is_technical_failure(errored)
+    assert not result_is_completed(errored)
+
+    assert successful_no_answer["success"] is True
+    assert successful_no_answer["answer_status"] == "no_answer"
+    assert result_is_completed(successful_no_answer)
+    assert not is_technical_failure(successful_no_answer)
 
 
 def test_anthropic_token_recount_uses_initialized_provider_client(monkeypatch):

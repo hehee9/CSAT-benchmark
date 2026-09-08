@@ -1219,6 +1219,86 @@ def status_exam(
     }
 
 
+def _print_wait_banner(provider: str, batch_id: str, check_interval: int) -> None:
+    """@description 공급자별 batch 완료 대기 시작 문구 출력"""
+    if provider == "anthropic":
+        print(f"⏳ Anthropic 배치 완료 대기 중... (ID: {batch_id})")
+        print(f"   {check_interval}초마다 상태를 확인합니다.")
+        return
+    if provider == "grok":
+        print(f"⏳ xAI 배치 완료 대기 중... (ID: {batch_id})")
+        if check_interval == 300:
+            print(f"   {check_interval}초(5분)마다 상태를 확인합니다.")
+        else:
+            print(f"   {check_interval}초마다 상태를 확인합니다.")
+        return
+    if provider == "google":
+        print(f"⏳ Gemini 배치 완료 대기 중... (ID: {batch_id})")
+        print(f"   {check_interval}초마다 상태를 확인합니다.")
+        return
+    print(f"⏳ 배치 작업 완료 대기 중... (ID: {batch_id})")
+    print(f"   {check_interval}초마다 상태를 확인합니다.")
+
+
+def _report_batch_progress(
+    job: Mapping[str, Any],
+    status_info: Mapping[str, Any],
+) -> None:
+    """@description 이전 상태 대비 완료 문항 증가분 출력"""
+    counts = status_info.get("request_counts") or {}
+    previous_status_info = job.get("status_info") or {}
+    previous_counts = previous_status_info.get("request_counts") or {}
+    current_completed = counts.get("completed", 0) or 0
+    previous_completed = previous_counts.get("completed", 0) or 0
+    total = counts.get("total", 0) or len(job["request_map"])
+
+    if current_completed > previous_completed:
+        progressed = current_completed - previous_completed
+        print(
+            f"\n📈 진행 업데이트: {job['provider_batch_id']} | +{progressed}개 | "
+            f"누적 {current_completed}/{total}"
+        )
+
+
+def _print_wait_status(
+    provider: str,
+    status_info: Mapping[str, Any],
+    *,
+    terminal: bool,
+) -> None:
+    """@description 공급자별 batch 상태·처리량 문구 출력"""
+    status = status_info["status"]
+    counts = status_info["request_counts"]
+    if provider == "grok":
+        print(
+            f"   상태: {status} | 성공: {counts.get('succeeded', 0)} "
+            f"| 실패: {counts['failed']} | 대기: {counts.get('pending', 0)} "
+            f"| 총합: {counts['completed']}/{counts['total']}"
+        )
+        return
+    if provider == "anthropic":
+        print(
+            f"\r   상태: {status} | 성공: {counts.get('succeeded', 0)} "
+            f"| 실패: {counts['failed']} | 대기: {counts.get('pending', 0)} "
+            f"| 총합: {counts['completed']}/{counts['total']}",
+            end="",
+        )
+    elif provider == "google":
+        print(
+            f"\r   상태: {status} | 완료: {counts['completed']}/{counts['total']} "
+            f"| 실패: {counts['failed']} | 대기: {counts.get('pending', 0)}",
+            end="",
+        )
+    else:
+        print(
+            f"\r   상태: {status} | 완료: {counts['completed']}/{counts['total']} "
+            f"| 실패: {counts['failed']}",
+            end="",
+        )
+    if terminal:
+        print()
+
+
 def wait_exam(
     exam: ExamManifest | str | Path,
     *,
@@ -1257,6 +1337,7 @@ def wait_exam(
     )
     selected_transport = _resolve_transport(transport, transport_factory)
     statuses: List[Dict[str, Any]] = []
+    announced_batch_ids: set[str] = set()
     while True:
         pending = False
         statuses = []
@@ -1264,7 +1345,14 @@ def wait_exam(
             if job.get("downloaded"):
                 continue
             model_config = context["model_configs"][job["model_name"]]
+            batch_id = job["provider_batch_id"]
+            if batch_id not in announced_batch_ids:
+                _print_wait_banner(model_config.api_type, batch_id, check_interval)
+                announced_batch_ids.add(batch_id)
             status_info = selected_transport.status(job["provider_batch_id"], model_config)
+            _report_batch_progress(job, status_info)
+            terminal = _is_terminal(status_info)
+            _print_wait_status(model_config.api_type, status_info, terminal=terminal)
             job["status"] = status_info.get("status")
             job["status_info"] = status_info
             statuses.append(
@@ -1274,7 +1362,7 @@ def wait_exam(
                     model_name=job["model_name"],
                 )
             )
-            pending = pending or not _is_terminal(status_info)
+            pending = pending or not terminal
         _save_json(_state_path(context["path"]), context["state"])
         if not pending:
             break
@@ -1493,7 +1581,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("action", nargs="?", choices=("submit", "status", "wait", "download", "retry"))
     parser.add_argument("--action", dest="action_option", choices=("submit", "status", "wait", "download", "retry"))
     parser.add_argument("--exam", required=True, help="시험 ID 또는 매니페스트 JSON 경로")
-    parser.add_argument("--config", default="examples/config.example.json", help="모델 설정 경로")
+    parser.add_argument("--config", default="config.json", help="모델 설정 경로")
     parser.add_argument("--models", nargs="+", help="실행 모델 이름")
     parser.add_argument("--targets", nargs="+", help="시험 target 목록")
     parser.add_argument("--subjects", nargs="+", help="과목 또는 탐구 영역 목록")
@@ -1506,7 +1594,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-dir")
     parser.add_argument("--responses-api", action="store_true", default=None)
     parser.add_argument("--check-interval", type=int, default=60)
-    parser.add_argument("--no-wait", action="store_true", help="wait 뒤 결과 다운로드 생략")
+    parser.add_argument("--no-wait", action="store_true", help="제출 후 완료 대기 생략")
     parser.add_argument("--submit", action="store_true")
     parser.add_argument("--status", action="store_true")
     parser.add_argument("--wait", action="store_true")
@@ -1572,11 +1660,20 @@ def batch_main(argv: Sequence[str] | None = None) -> int:
         elif action == "status":
             result = status_exam(exam, **common)
         elif action == "wait":
-            result = wait_exam(exam, **common, check_interval=args.check_interval, download=not args.no_wait)
+            result = wait_exam(exam, **common, check_interval=args.check_interval, download=True)
         elif action == "download":
             result = download_exam(exam, **common)
         else:
             result = retry_exam(exam, **common, use_responses_api=args.responses_api)
+        if action in {"submit", "retry"} and not args.no_wait:
+            summary = result
+            waited = wait_exam(
+                exam,
+                **common,
+                check_interval=args.check_interval,
+                download=True,
+            )
+            result = {**summary, **waited}
     except (OSError, ValueError, RunnerError, BatchError) as error:
         print(f"오류: {error}")
         return 2

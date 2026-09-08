@@ -206,16 +206,18 @@ function getTokenLabel(entry, mode) {
 }
 
 /**
- * @brief 내보내기 숫자 레이블이 모델 칸을 넘지 않도록 표시 폭 계산
+ * @brief 내보내기 숫자 레이블의 글자 크기 계산
  * @param {string} label - 표시할 숫자 레이블
  * @param {number} modelCount - 표시할 모델 수
- * @return {number} SVG 숫자 레이블 표시 폭
+ * @return {number} 내보내기 숫자 레이블 글자 크기
  */
-function _getExportValueTextLength(label, modelCount) {
+function _getExportValueFontSize(label, modelCount) {
   const slotWidth = (README_EXPORT_WIDTH - EXPORT_LEFT_MARGIN - EXPORT_RIGHT_MARGIN) / modelCount
   const availableWidth = Math.max(1, slotWidth - EXPORT_VALUE_LABEL_GAP)
   const estimatedWidth = label.length * EXPORT_VALUE_FONT_SIZE * EXPORT_VALUE_CHAR_WIDTH_FACTOR
-  return Math.min(estimatedWidth, availableWidth)
+  return estimatedWidth > availableWidth
+    ? EXPORT_VALUE_FONT_SIZE * availableWidth / estimatedWidth
+    : EXPORT_VALUE_FONT_SIZE
 }
 
 /**
@@ -230,32 +232,20 @@ function CustomLabel({ x, y, width, index, mode, chartData, darkMode, exportMode
   const entry = chartData[index]
   const label = getTokenLabel(entry, mode)
   if (!label) return null
-  const fontSize = exportMode ? EXPORT_VALUE_FONT_SIZE : 11
-  const lines = exportMode && mode === 'split' ? label.split(' + ') : [label]
-  const lineHeight = fontSize + 2
-  const textY = y - 8 - (lines.length - 1) * lineHeight
+  const fontSize = exportMode ? _getExportValueFontSize(label, chartData.length) : 11
 
   return (
     <text
       className="export-role-value"
       x={x + width / 2}
-      y={textY}
+      y={y - 8}
       textAnchor="middle"
       fill={darkMode ? '#d1d5db' : '#374151'}
       fontSize={fontSize}
       fontWeight="500"
-      style={{ ...(exportMode ? { fontSize: `${fontSize}px` } : {}) }}
+      style={{ ...(exportMode ? { '--export-value-size': `${fontSize}px` } : {}) }}
     >
-      {lines.map((line, index) => (
-        <tspan
-          key={`${line}-${index}`}
-          x={x + width / 2}
-          dy={index === 0 ? 0 : lineHeight}
-          {...(exportMode ? { textLength: _getExportValueTextLength(line, chartData.length), lengthAdjust: 'spacingAndGlyphs' } : {})}
-        >
-          {line}
-        </tspan>
-      ))}
+      {label}
     </text>
   )
 }

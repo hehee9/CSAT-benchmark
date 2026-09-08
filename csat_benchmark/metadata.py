@@ -27,12 +27,23 @@ def validate_knowledge_cutoff(value: Any) -> str | None:
     return validate_year_month(value, "knowledge_cutoff")
 
 
+def validate_plan_message(value: Any, field_name: str) -> str | None:
+    """@brief 모델 요금제 안내 문구 문자열 또는 null 검증"""
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise ValueError(f"{field_name}은 문자열 또는 null이어야 합니다.")
+    return value
+
+
 def model_snapshot_for_resume(snapshot: Mapping[str, Any]) -> Dict[str, Any]:
-    """@brief 재개 비교용 모델 스냅샷 지식 컷오프 제외"""
+    """@brief 재개 비교용 모델 스냅샷 표시 메타데이터 제외"""
     if not isinstance(snapshot, Mapping):
         raise TypeError("모델 스냅샷은 매핑이어야 합니다.")
     comparable = copy.deepcopy(dict(snapshot))
     comparable.pop("knowledge_cutoff", None)
+    comparable.pop("plan_message_ko", None)
+    comparable.pop("plan_message_en", None)
     return comparable
 
 
@@ -76,6 +87,25 @@ def merge_model_metadata(
         item["knowledgeCutoff"] = validate_knowledge_cutoff(
             record.get("knowledge_cutoff")
         )
+        for language in ("ko", "en"):
+            field_name = f"plan_message_{language}"
+            if field_name not in record:
+                continue
+            value = validate_plan_message(record[field_name], field_name)
+            if value is None:
+                continue
+            description = item.get("description", {})
+            if not isinstance(description, Mapping):
+                raise ValueError(f"모델 메타데이터 description이 JSON 객체가 아닙니다: {name}")
+            description = copy.deepcopy(dict(description))
+            if value:
+                description[language] = value
+            else:
+                description.pop(language, None)
+            if description:
+                item["description"] = description
+            else:
+                item.pop("description", None)
         if "supports_vision" in record:
             supports_vision = record["supports_vision"]
             if not isinstance(supports_vision, bool):
@@ -120,5 +150,6 @@ __all__ = [
     "model_snapshot_for_resume",
     "sync_model_metadata",
     "validate_knowledge_cutoff",
+    "validate_plan_message",
     "validate_year_month",
 ]

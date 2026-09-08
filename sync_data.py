@@ -30,6 +30,7 @@ NO_ANSWER = -1
 REFUSAL_MARKERS = {"-2", "(검열)", "검열", "Refusal", "refusal"}
 DEFAULT_EXCEL_PATH = Path('2026 수능 LLM 풀이.xlsx')
 DEFAULT_HARD_EXCEL_PATH = Path('2026 수능 LLM 풀이 hard.xlsx')
+DEFAULT_CONFIG_PATH = Path(__file__).resolve().parent / 'config.json'
 DEFAULT_MODEL_METADATA_PATH = Path(__file__).resolve().parent / 'web' / 'model_metadata.json'
 
 
@@ -819,11 +820,11 @@ class SyncManager:
         self.converter = DataConverter(self.path_mapper, self.model_mapper)
         self._token_usage = self._load_token_usage()
         self._model_config = self._load_model_config()
-        self.model_metadata_path = _metadata_path_for_config(self.problems_dir / 'config.json')
+        self.model_metadata_path = _metadata_path_for_config(DEFAULT_CONFIG_PATH)
 
     def _load_model_config(self) -> Dict[str, Dict]:
         """@description 모델 설정 파일 로드 (이름 -> 설정 매핑)"""
-        config_file = self.problems_dir / 'config.json'
+        config_file = DEFAULT_CONFIG_PATH
         if config_file.exists():
             config = load_config(config_file, resolve_secrets=False)
             return {model['name']: model for model in config.get('models', [])}

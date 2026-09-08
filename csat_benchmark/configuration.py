@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Sequence
 
 from dotenv import load_dotenv
 
-from .metadata import validate_knowledge_cutoff
+from .metadata import validate_knowledge_cutoff, validate_plan_message
 
 
 class ConfigurationError(ValueError):
@@ -136,6 +136,9 @@ def load_config(
         prepared["knowledge_cutoff"] = validate_knowledge_cutoff(
             prepared.get("knowledge_cutoff")
         )
+        for field_name in ("plan_message_ko", "plan_message_en"):
+            if field_name in prepared:
+                prepared[field_name] = validate_plan_message(prepared[field_name], field_name)
         prepared_models.append(prepared)
     output["models"] = prepared_models
     if isinstance(output.get("verifier"), dict):

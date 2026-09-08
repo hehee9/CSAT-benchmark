@@ -12,6 +12,8 @@ from openpyxl.styles import PatternFill
 from csat_benchmark.evaluation import grade_run, save_verified
 from csat_benchmark.exams import load_exam
 from csat_benchmark.exports import (
+    _merge_token_scope,
+    _new_token_record,
     export_run_to_excel,
     import_excel_corrections,
     publish_run,
@@ -144,6 +146,8 @@ def test_single_run_flat_public_and_excel_round_trip(tmp_path: Path):
     assert all("attempts" not in item for item in public[0]["results"])
     token = json.loads(paths["token_usage"].read_text(encoding="utf-8"))
     assert token["models"]["모의 모델"]["sections"]["국어-예시"]["total_tokens"] == 12
+    assert token["models"]["모의 모델"]["sections"]["국어-예시"]["last_updated"] == "2026-09-08T00:00:00+00:00"
+    assert token["models"]["모의 모델"]["last_updated"] == "2026-09-08T00:00:00+00:00"
 
 
 def test_existing_workbook_preserves_unselected_cells_and_styles(tmp_path: Path):
@@ -431,7 +435,58 @@ def test_publish_preserves_legacy_tokens_and_marks_fresh_unknown_usage(tmp_path:
         "output_tokens": None,
         "total_tokens": None,
         "question_count": 1,
+        "last_updated": "2026-09-08T00:00:00+00:00",
     }
     assert tokens["models"][fresh_model]["total_input_tokens"] is None
     assert tokens["models"][fresh_model]["total_output_tokens"] is None
     assert tokens["models"][fresh_model]["total_tokens"] is None
+
+
+def test_token_usage_dates_propagate_latest_section_and_preserve_legacy_date():
+    """@description 여러 섹션의 최신 날짜를 모델에 반영하고 날짜 없는 원본의 기존 날짜 보존"""
+    latest = "2026-09-08 20:52:10"
+    older = "2026-09-07 20:52:10"
+    source_record = _new_token_record(
+        [
+            {"input_tokens": 1, "output_tokens": 2, "total_tokens": 3, "timestamp": latest},
+            {"input_tokens": 4, "output_tokens": 5, "total_tokens": 6, "timestamp": older},
+        ]
+    )
+    legacy_record = {
+        "input_tokens": 10,
+        "output_tokens": 20,
+        "total_tokens": 30,
+        "question_count": 1,
+        "last_updated": older,
+    }
+    merged = _merge_token_scope(
+        {
+            "models": {
+                "모델": {
+                    "last_updated": latest,
+                    "sections": {
+                        "최신 섹션": {
+                            "input_tokens": 7,
+                            "output_tokens": 8,
+                            "total_tokens": 15,
+                            "question_count": 1,
+                            "last_updated": latest,
+                        },
+                        "기존 섹션": legacy_record,
+                    },
+                }
+            }
+        },
+        {
+            ("모델", "기존 섹션"): _new_token_record(
+                [{"input_tokens": 11, "output_tokens": 22, "total_tokens": 33}]
+            ),
+            ("모델", "새 섹션"): source_record,
+        },
+    )
+
+    model = merged["models"]["모델"]
+    assert source_record["last_updated"] == latest
+    assert model["sections"]["기존 섹션"]["last_updated"] == older
+    assert model["sections"]["새 섹션"]["last_updated"] == latest
+    assert model["last_updated"] == latest

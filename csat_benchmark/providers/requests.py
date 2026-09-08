@@ -323,6 +323,27 @@ def _merge_images(image_paths: List[Path]) -> Optional[Dict[str, Any]]:
             image.close()
 
 
+def _resize_anthropic_image_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """@description Anthropic 복수 이미지 요청용 최대 크기 제한 적용"""
+    from PIL import Image
+
+    image_bytes = base64.b64decode(payload["image_data"])
+    with Image.open(BytesIO(image_bytes)) as image:
+        if max(image.size) <= 2000:
+            return payload
+
+        image_format = image.format
+        image.thumbnail((2000, 2000), Image.Resampling.LANCZOS)
+        resized_bytes = BytesIO()
+        image.save(resized_bytes, format=image_format)
+
+    resized_payload = payload.copy()
+    resized_payload["image_data"] = base64.b64encode(
+        resized_bytes.getvalue()
+    ).decode("ascii")
+    return resized_payload
+
+
 def _image_payloads(
     question: Any,
     *,
@@ -537,12 +558,18 @@ def build_anthropic_content(
             }
         )
 
-    for payload in _image_payloads(
+    image_payloads = _image_payloads(
         question,
         supports_vision=supports_vision,
         merge_multiple_images=False,
         skip_missing=skip_missing,
-    ):
+    )
+    if len(image_payloads) > 20:
+        image_payloads = [
+            _resize_anthropic_image_payload(payload) for payload in image_payloads
+        ]
+
+    for payload in image_payloads:
         image_caption = _section_image_caption(question, payload)
         if image_caption is not None:
             content.append({"type": "text", "text": image_caption})

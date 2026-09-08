@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import base64
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 
 import pytest
+from PIL import Image
 
 from csat_benchmark.models import ModelConfig, Question
 from csat_benchmark.providers.requests import (
@@ -41,6 +43,11 @@ def _question(pdf_path: Path, image_path: Path) -> Question:
         image_paths=[str(image_path)],
         pdf_paths=[str(pdf_path)],
     )
+
+
+def _write_png(path: Path, size: tuple[int, int], color: tuple[int, int, int]) -> None:
+    """@description 테스트용 PNG 이미지 생성"""
+    Image.new("RGB", size, color).save(path, format="PNG")
 
 
 def test_pdf_payloads_preserve_provider_shapes_and_content_order(tmp_path: Path):
@@ -98,6 +105,72 @@ def test_pdf_payloads_preserve_provider_shapes_and_content_order(tmp_path: Path)
         },
         {"type": "text", "text": "본문"},
     ]
+
+
+def test_anthropic_many_images_resize_oversized_payloads_in_order(tmp_path: Path):
+    """@description Anthropic 21개 이미지의 초과 크기 조정·순서·원본 보존 확인"""
+    image_paths = [tmp_path / f"문항_{index:02d}.png" for index in range(21)]
+    _write_png(image_paths[0], (320, 240), (1, 2, 3))
+    _write_png(image_paths[1], (3000, 1500), (4, 5, 6))
+    for index, path in enumerate(image_paths[2:], start=2):
+        _write_png(path, (320, 240), (index, index, index))
+
+    original_small = image_paths[0].read_bytes()
+    original_oversized = image_paths[1].read_bytes()
+    question = Question(
+        number=0,
+        correct_answer=0,
+        points=2,
+        question_text="본문",
+        image_paths=[str(path) for path in image_paths],
+    )
+
+    content = build_anthropic_content(question)
+    image_indexes = [
+        index for index, part in enumerate(content) if part["type"] == "image"
+    ]
+
+    assert len(image_indexes) == 21
+    assert [
+        content[index - 1]["text"] for index in image_indexes
+    ] == [f"[이미지:{path.stem}]" for path in image_paths]
+    assert content[-1] == {"type": "text", "text": "본문"}
+
+    small_source = content[image_indexes[0]]["source"]
+    assert base64.b64decode(small_source["data"]) == original_small
+    assert small_source["media_type"] == "image/png"
+
+    oversized_source = content[image_indexes[1]]["source"]
+    assert oversized_source["media_type"] == "image/png"
+    with Image.open(BytesIO(base64.b64decode(oversized_source["data"]))) as image:
+        assert image.format == "PNG"
+        assert image.size == (2000, 1000)
+    assert image_paths[0].read_bytes() == original_small
+    assert image_paths[1].read_bytes() == original_oversized
+
+
+def test_anthropic_twenty_images_leave_oversized_payload_unchanged(tmp_path: Path):
+    """@description Anthropic 20개 이미지 경계에서 초과 크기 원본 유지 확인"""
+    image_paths = [tmp_path / f"문항_{index:02d}.png" for index in range(20)]
+    _write_png(image_paths[0], (3000, 1500), (1, 2, 3))
+    for index, path in enumerate(image_paths[1:], start=1):
+        _write_png(path, (320, 240), (index, index, index))
+
+    original_oversized = image_paths[0].read_bytes()
+    question = Question(
+        number=0,
+        correct_answer=0,
+        points=2,
+        question_text="본문",
+        image_paths=[str(path) for path in image_paths],
+    )
+
+    content = build_anthropic_content(question)
+    oversized_source = content[1]["source"]
+
+    assert base64.b64decode(oversized_source["data"]) == original_oversized
+    with Image.open(BytesIO(base64.b64decode(oversized_source["data"]))) as image:
+        assert image.size == (3000, 1500)
 
 
 @pytest.mark.parametrize(

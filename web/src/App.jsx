@@ -746,6 +746,7 @@ function Dashboard({
                         onToggleDetail={() => setFilters(f => ({ ...f, showDetail: !f.showDetail }))}
                         subjectFilter={filters.subjects}
                         maxScore={maxScore}
+                        scoreBasis={scoreBasis}
                         hoveredModel={hoveredModel}
                         onModelHover={setHoveredModel}
                       />

@@ -49,6 +49,7 @@ def _generic_main(arguments: Sequence[str]) -> int:
             model_names=args.models,
         )
         verifier = build_verifier(args.config)
+        print(f"검증기: {verifier.model_id} ({verifier.reasoning_effort})", flush=True)
         verified = grade_run(
             run_path,
             exam,

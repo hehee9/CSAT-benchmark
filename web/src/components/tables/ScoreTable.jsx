@@ -17,6 +17,7 @@ import {
 import { useData } from '@/hooks/useData'
 import { BenchmarkNote, ExportButton } from '@/components/common'
 import { formatModelDisplayName } from '@/utils/modelMeta'
+import './ScoreTable.css'
 
 const MOBILE_BREAKPOINT = 768
 const SUBJECT_I18N_KEYS = {
@@ -45,6 +46,17 @@ const SUBJECT_I18N_KEYS = {
   '사회문화': 'subjects.society'
 }
 
+const KOREAN_DETAIL_SECTION_LABELS = {
+  '생활과윤리': '생윤',
+  '윤리와사상': '윤사',
+  '한국지리': '한지',
+  '세계지리': '세지',
+  '동아시아사': '동사',
+  '세계사': '세사',
+  '정치와법': '정법',
+  '사회문화': '사문'
+}
+
 /**
  * @brief 점수 셀
  * @param {Object} props - 점수와 만점
@@ -58,9 +70,12 @@ function ScoreCell({ score, maxScore, decimals = 1 }) {
 
 /**
  * @brief 정렬 아이콘
+ * @param {string} columnKey - 정렬 대상 열 키
+ * @param {Object} sortConfig - 현재 정렬 상태
+ * @param {boolean} compact - 비활성 정렬 아이콘 생략 여부
  */
-function SortIcon({ columnKey, sortConfig }) {
-  if (sortConfig.key !== columnKey) return <span className="text-gray-300 dark:text-gray-600 ml-1">↕</span>
+function SortIcon({ columnKey, sortConfig, compact = false }) {
+  if (sortConfig.key !== columnKey) return compact ? null : <span className="text-gray-300 dark:text-gray-600 ml-1">↕</span>
   return <span className="ml-1">{sortConfig.direction === 'desc' ? '↓' : '↑'}</span>
 }
 
@@ -168,11 +183,13 @@ function _hasDetailColumns(group) {
  * @brief 매니페스트 섹션의 표 레이블 생성
  * @param {Object} section - 시험 섹션
  * @param {function} t - 번역 함수
+ * @param {boolean} useKoreanShortLabel - 한국어 상세 표 약칭 사용 여부
  * @return {string}
  */
-function _getSectionLabel(section, t) {
+function _getSectionLabel(section, t, useKoreanShortLabel = false) {
   const name = section.group === '탐구' ? section.subject : section.section
-  return SUBJECT_I18N_KEYS[name] ? t(SUBJECT_I18N_KEYS[name]) : name
+  const fullLabel = SUBJECT_I18N_KEYS[name] ? t(SUBJECT_I18N_KEYS[name]) : name
+  return useKoreanShortLabel ? KOREAN_DETAIL_SECTION_LABELS[name] || fullLabel : fullLabel
 }
 
 /**
@@ -291,7 +308,7 @@ function CardView({ data, groups, maxScore, scoreBasis, hoveredModel, onModelHov
  * @param {Object} props - 테이블 상태와 콜백
  */
 export default function ScoreTable({ data, onRowClick, title, showDetail = false, onToggleDetail, maxScore = 450, hoveredModel, onModelHover, scoreBasis = 'normalized' }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { exam } = useData()
   const [sortConfig, setSortConfig] = useState({ key: 'total', direction: 'desc' })
   const [isMobile, setIsMobile] = useState(false)
@@ -326,6 +343,7 @@ export default function ScoreTable({ data, onRowClick, title, showDetail = false
     if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1
     return 0
   }), [data, sortConfig, scoreBasis])
+  const hasDetailColumns = showDetail && groups.some(group => _hasDetailColumns(group.group))
 
   function handleSort(key) {
     setSortConfig(prev => ({ key, direction: prev.key === key && prev.direction === 'desc' ? 'asc' : 'desc' }))
@@ -391,41 +409,65 @@ export default function ScoreTable({ data, onRowClick, title, showDetail = false
         <CardView data={sortedData} groups={groups} maxScore={maxScore} scoreBasis={scoreBasis} hoveredModel={hoveredModel} onModelHover={onModelHover} t={t} cardRefs={cardRefs} />
       ) : (
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-x-auto">
-          <table className="w-full text-sm export-role-table">
+          <table className={`w-full export-role-table ${hasDetailColumns ? 'score-table--detail table-fixed text-xs' : 'text-sm'}`}>
             <thead className="bg-gray-50 dark:bg-gray-700">
-              <tr>
-                <th className="export-role-table-head px-3 py-2 text-left font-semibold text-gray-700 dark:text-gray-300 cursor-pointer" onClick={() => handleSort('model')}>{t('table.model')} <SortIcon columnKey="model" sortConfig={sortConfig} /></th>
-                {groups.flatMap(group => [
-                  <th key={`group-${group.group}`} className="export-role-table-head px-3 py-2 text-right font-semibold text-gray-700 dark:text-gray-300 cursor-pointer whitespace-nowrap" onClick={() => handleSort(`group:${group.group}`)}>
-                    {_getGroupLabel(group, t)} <SortIcon columnKey={`group:${group.group}`} sortConfig={sortConfig} />
-                  </th>,
-                  ...(showDetail && _hasDetailColumns(group.group)
-                    ? group.sections.map(section => (
-                      <th key={`section-${section.target}`} className="export-role-table-head px-2 py-2 text-right text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-600 cursor-pointer whitespace-nowrap" onClick={() => handleSort(`section:${section.target}`)}>
-                        {_getSectionLabel(section, t)} <SortIcon columnKey={`section:${section.target}`} sortConfig={sortConfig} />
+              {hasDetailColumns ? (
+                <>
+                  <tr>
+                    <th rowSpan={2} scope="col" className="export-role-table-head w-[8.75rem] min-w-[8.75rem] px-[3px] py-2 text-center font-semibold text-gray-700 dark:text-gray-300 cursor-pointer whitespace-normal break-words" onClick={() => handleSort('model')}>{t('table.model')} <SortIcon columnKey="model" sortConfig={sortConfig} compact /></th>
+                    {groups.map(group => _hasDetailColumns(group.group) ? (
+                      <th key={`group-${group.group}`} colSpan={group.sections.length} scope="colgroup" className="export-role-table-head px-[3px] py-2 text-center font-semibold text-gray-700 dark:text-gray-300 cursor-pointer whitespace-normal break-words" onClick={() => handleSort(`group:${group.group}`)}>
+                        {_getGroupLabel(group, t)} <SortIcon columnKey={`group:${group.group}`} sortConfig={sortConfig} compact />
                       </th>
-                    ))
-                    : [])
-                ])}
-                <th className="export-role-table-head px-3 py-2 text-right font-bold text-gray-700 dark:text-gray-300 cursor-pointer" onClick={() => handleSort('total')}>{t('table.total')} <SortIcon columnKey="total" sortConfig={sortConfig} /></th>
-              </tr>
+                    ) : (
+                      <th key={`group-${group.group}`} rowSpan={2} scope="col" className="export-role-table-head px-[3px] py-2 text-center font-semibold text-gray-700 dark:text-gray-300 cursor-pointer whitespace-normal break-words" onClick={() => handleSort(`group:${group.group}`)}>
+                        {_getGroupLabel(group, t)} <SortIcon columnKey={`group:${group.group}`} sortConfig={sortConfig} compact />
+                      </th>
+                    ))}
+                    <th rowSpan={2} scope="col" className="export-role-table-head w-12 px-[3px] py-2 text-center font-bold text-gray-700 dark:text-gray-300 cursor-pointer whitespace-normal break-words" onClick={() => handleSort('total')}>{t('table.total')} <SortIcon columnKey="total" sortConfig={sortConfig} compact /></th>
+                  </tr>
+                  <tr>
+                    {groups.flatMap(group => _hasDetailColumns(group.group)
+                      ? group.sections.map(section => {
+                        const fullLabel = _getSectionLabel(section, t)
+                        const label = _getSectionLabel(section, t, i18n.language === 'ko')
+                        return (
+                          <th key={`section-${section.target}`} scope="col" title={label === fullLabel ? undefined : fullLabel} className="export-role-table-head px-[3px] py-2 text-center text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-600 cursor-pointer whitespace-normal break-words" onClick={() => handleSort(`section:${section.target}`)}>
+                            {label} <SortIcon columnKey={`section:${section.target}`} sortConfig={sortConfig} compact />
+                          </th>
+                        )
+                      })
+                      : [])}
+                  </tr>
+                </>
+              ) : (
+                <tr>
+                  <th scope="col" className="export-role-table-head px-3 py-2 text-center font-semibold text-gray-700 dark:text-gray-300 cursor-pointer" onClick={() => handleSort('model')}>{t('table.model')} <SortIcon columnKey="model" sortConfig={sortConfig} /></th>
+                  {groups.map(group => (
+                    <th key={`group-${group.group}`} scope="col" className="export-role-table-head px-3 py-2 text-right font-semibold text-gray-700 dark:text-gray-300 cursor-pointer whitespace-nowrap" onClick={() => handleSort(`group:${group.group}`)}>
+                      {_getGroupLabel(group, t)} <SortIcon columnKey={`group:${group.group}`} sortConfig={sortConfig} />
+                    </th>
+                  ))}
+                  <th scope="col" className="export-role-table-head px-3 py-2 text-right font-bold text-gray-700 dark:text-gray-300 cursor-pointer" onClick={() => handleSort('total')}>{t('table.total')} <SortIcon columnKey="total" sortConfig={sortConfig} /></th>
+                </tr>
+              )}
             </thead>
             <tbody>
               {sortedData.map(row => (
                 <tr key={row.model} className={`border-t border-gray-100 dark:border-gray-700 transition-colors ${hoveredModel === row.model ? 'bg-blue-50 dark:bg-blue-900/30' : 'hover:bg-gray-50 dark:hover:bg-gray-700'} ${onRowClick ? 'cursor-pointer' : ''}`} onClick={() => onRowClick?.(row.model)} onMouseEnter={() => onModelHover?.(row.model)} onMouseLeave={() => onModelHover?.(null)}>
-                  <td className="export-role-table-model px-3 py-2 text-gray-800 dark:text-gray-200"><span className="inline-block w-3 h-3 rounded-full mr-2" style={{ backgroundColor: getModelColor(row.model) }} />{formatModelDisplayName(row.model)}</td>
+                  <td className={`export-role-table-model px-3 py-2 text-gray-800 dark:text-gray-200 ${hasDetailColumns ? 'min-w-[8.75rem] px-[3px] whitespace-normal break-words' : ''}`}><span className="inline-block w-3 h-3 rounded-full mr-2" style={{ backgroundColor: getModelColor(row.model) }} />{formatModelDisplayName(row.model)}</td>
                   {groups.flatMap(group => {
                     const detail = row.groupDetails?.find(item => item.group === group.group)
+                    if (hasDetailColumns && _hasDetailColumns(group.group)) {
+                      return group.sections.map(section => (
+                        <td key={`section-${section.target}`} className="export-role-table-value px-[3px] py-2 text-center text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 whitespace-normal break-words"><ScoreCell score={row.sectionScores?.find(item => item.target === section.target)?.score} maxScore={section.max_points ?? section.maxScore} decimals={0} /></td>
+                      ))
+                    }
                     return [
-                      <td key={`group-${group.group}`} className="export-role-table-value px-3 py-2 text-right text-gray-800 dark:text-gray-200"><ScoreCell score={detail ? _getGroupScore(detail, scoreBasis) : null} maxScore={_getGroupMaxScore(group, scoreBasis)} /></td>,
-                      ...(showDetail && _hasDetailColumns(group.group)
-                        ? group.sections.map(section => (
-                          <td key={`section-${section.target}`} className="export-role-table-value px-2 py-2 text-right text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50"><ScoreCell score={row.sectionScores?.find(item => item.target === section.target)?.score} maxScore={section.max_points ?? section.maxScore} decimals={0} /></td>
-                        ))
-                        : [])
+                      <td key={`group-${group.group}`} className={`export-role-table-value py-2 text-gray-800 dark:text-gray-200 ${hasDetailColumns ? 'px-[3px] text-center whitespace-normal break-words' : 'px-3 text-right'}`}><ScoreCell score={detail ? _getGroupScore(detail, scoreBasis) : null} maxScore={_getGroupMaxScore(group, scoreBasis)} /></td>
                     ]
                   })}
-                  <td className="export-role-table-value px-3 py-2 text-right font-bold text-gray-800 dark:text-gray-200"><ScoreCell score={row.total} maxScore={maxScore} /></td>
+                  <td className={`export-role-table-value py-2 font-bold text-gray-800 dark:text-gray-200 ${hasDetailColumns ? 'px-[3px] text-center whitespace-nowrap' : 'px-3 text-right'}`}><ScoreCell score={row.total} maxScore={maxScore} /></td>
                 </tr>
               ))}
             </tbody>

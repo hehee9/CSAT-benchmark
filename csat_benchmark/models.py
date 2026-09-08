@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
-from .metadata import validate_knowledge_cutoff
+from .metadata import validate_knowledge_cutoff, validate_plan_message
 
 
 EMPTY_RESPONSE_ERROR = "API returned neither response content nor token usage."
@@ -122,6 +122,8 @@ class ModelConfig:
     batch_supported: bool = True
     comment: Optional[str] = None
     knowledge_cutoff: Optional[str] = None
+    plan_message_ko: Optional[str] = None
+    plan_message_en: Optional[str] = None
 
     def __post_init__(self) -> None:
         """@description API 타입·요청 제한값 검증"""
@@ -132,6 +134,8 @@ class ModelConfig:
             if isinstance(value, bool) or not isinstance(value, int) or value < 1:
                 raise ValueError(f"{field_name}은 양의 정수여야 합니다.")
         self.knowledge_cutoff = validate_knowledge_cutoff(self.knowledge_cutoff)
+        self.plan_message_ko = validate_plan_message(self.plan_message_ko, "plan_message_ko")
+        self.plan_message_en = validate_plan_message(self.plan_message_en, "plan_message_en")
 
 
 @dataclass

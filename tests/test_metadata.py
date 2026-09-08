@@ -12,7 +12,7 @@ import sync_data
 from csat_benchmark.configuration import load_config
 from csat_benchmark.exams import load_exam
 from csat_benchmark.exports import publish_run
-from csat_benchmark.metadata import sync_model_metadata
+from csat_benchmark.metadata import model_snapshot_for_resume, sync_model_metadata
 from csat_benchmark.models import APIResponse, ModelConfig
 from csat_benchmark.runner import run_exam
 from csat_benchmark.runs import create_run
@@ -171,6 +171,72 @@ def test_metadata_sync_preserves_existing_descriptions_flags_and_models(tmp_path
     }
     assert metadata["보존 모델"] == {"description": {"ko": "그대로"}}
     assert metadata["새 모델"]["knowledgeCutoff"] is None
+
+
+def test_metadata_sync_maps_plan_messages_and_removes_empty_language(tmp_path: Path) -> None:
+    """@description 설정 요금제 안내 문구의 언어별 공개·삭제 동기화 검증"""
+    metadata_path = tmp_path / "web" / "model_metadata.json"
+    metadata_path.parent.mkdir()
+    _write_json(
+        metadata_path,
+        {
+            "모델": {"description": {"ko": "기존 한국어", "en": "기존 영어"}},
+            "삭제 모델": {"description": {"ko": "삭제할 한국어", "en": "유지할 영어"}},
+        },
+    )
+
+    assert sync_model_metadata(
+        [
+            {"name": "모델", "plan_message_ko": "새 한국어", "plan_message_en": "새 영어"},
+            {"name": "삭제 모델", "plan_message_ko": ""},
+            {"name": "누락 모델"},
+        ],
+        metadata_path,
+    )
+
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    assert metadata["모델"]["description"] == {"ko": "새 한국어", "en": "새 영어"}
+    assert metadata["삭제 모델"]["description"] == {"en": "유지할 영어"}
+    assert "description" not in metadata["누락 모델"]
+
+
+@pytest.mark.parametrize("field_name", ["plan_message_ko", "plan_message_en"])
+def test_plan_message_rejects_non_string_values(tmp_path: Path, field_name: str) -> None:
+    """@description 요금제 안내 문구의 null 외 비문자열 설정 거부 검증"""
+    config_path = tmp_path / "config.json"
+    _write_json(
+        config_path,
+        {
+            "models": [
+                {
+                    "name": "모델",
+                    "api_type": "openai",
+                    "model_id": "mock",
+                    field_name: 123,
+                }
+            ]
+        },
+    )
+    with pytest.raises(ValueError, match=field_name):
+        load_config(config_path, resolve_secrets=False)
+
+
+def test_display_messages_are_ignored_for_resume_comparison() -> None:
+    """@description 표시 메시지와 지식 컷오프 변경의 재개 비교 제외 검증"""
+    original = {
+        "name": "모델",
+        "model_id": "mock",
+        "knowledge_cutoff": "2025-11",
+        "plan_message_ko": "기존 한국어",
+        "plan_message_en": "기존 영어",
+    }
+    updated = {
+        **original,
+        "knowledge_cutoff": "2026-01",
+        "plan_message_ko": "새 한국어",
+        "plan_message_en": "새 영어",
+    }
+    assert model_snapshot_for_resume(original) == model_snapshot_for_resume(updated)
 
 
 def test_metadata_cli_is_credential_free_and_does_not_construct_sync_manager(

@@ -6,11 +6,13 @@ import copy
 import json
 import os
 import tempfile
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping, Sequence
 
 from .configuration import ConfigurationError, load_config
-from .exams import ExamManifest, ModeManifest, load_exam, load_section_questions
+from .exams import ExamManifest, ModeManifest, SectionManifest, load_exam, load_section_questions
 from .grading.extractor import AnswerVerifier
 from .grading.single import VerificationResult, verify_hard_single_result, verify_single_result
 from .runs import canonical_results_path, load_run, model_verified_path, result_identity, result_is_completed
@@ -22,6 +24,16 @@ VERIFIED_SCHEMA_VERSION = 1
 
 class EvaluationError(ValueError):
     """@description 채점 입력·검증기 설정·채점 계약 불일치 오류"""
+
+
+@dataclass
+class _SectionGrading:
+    """@description 독립 섹션 채점 결과와 진행 정보"""
+
+    target: str
+    rows: dict[tuple[str, str, int], dict[str, Any]]
+    expected_by_model: dict[str, set[tuple[str, str, int]]]
+    manual_review: list[tuple[Any, ...]]
 
 
 def _mode_for_exam(
@@ -342,6 +354,205 @@ def _attach_summary(
     verified["complete_by_model"] = complete_by_model
 
 
+def _section_question_infos(
+    exam: ExamManifest,
+    run: Mapping[str, Any],
+    section_manifest: SectionManifest,
+    selected_mode: ModeManifest,
+    selected_models: Sequence[str],
+    raw_by_key: Mapping[tuple[str, str, int], Mapping[str, Any]],
+    question_numbers: Sequence[int] | None,
+) -> dict[int, dict[str, Any]]:
+    """@description 독립 섹션의 채점 문항 정보 구성"""
+    stored_numbers = _question_numbers_for_target(run, section_manifest.target)
+    if stored_numbers is None and selected_mode.input_mode == "question":
+        stored_numbers = sorted(
+            {
+                key[2]
+                for key in raw_by_key
+                if key[0] == section_manifest.target and key[1] in selected_models and key[2] > 0
+            }
+        )
+    infos = _question_infos(exam, section_manifest.target, stored_numbers)
+    if question_numbers is not None:
+        requested = set(question_numbers)
+        available = {info["number"] for info in infos}
+        missing = requested - available
+        if missing:
+            raise EvaluationError(
+                f"{section_manifest.target}에 지정한 문항 번호가 없습니다: "
+                f"{', '.join(map(str, sorted(missing)))}"
+            )
+        infos = [info for info in infos if info["number"] in requested]
+    return {int(info["number"]): info for info in infos}
+
+
+def _grade_question_section(
+    section_manifest: SectionManifest,
+    exam: ExamManifest,
+    run: Mapping[str, Any],
+    selected_mode: ModeManifest,
+    selected_models: Sequence[str],
+    raw_by_key: Mapping[tuple[str, str, int], Mapping[str, Any]],
+    prior_rows: Mapping[tuple[str, str, int], Mapping[str, Any]],
+    verifier: Any,
+    question_numbers: Sequence[int] | None,
+) -> _SectionGrading:
+    """@description 쉬움 모드 섹션의 모델·문항 병렬 채점"""
+    info_by_number = _section_question_infos(
+        exam,
+        run,
+        section_manifest,
+        selected_mode,
+        selected_models,
+        raw_by_key,
+        question_numbers,
+    )
+    target = section_manifest.target
+    rows: dict[tuple[str, str, int], dict[str, Any]] = {}
+    expected_by_model = {name: set() for name in selected_models}
+    manual_review: list[tuple[Any, ...]] = []
+    tasks: list[tuple[tuple[str, str, int], str, Mapping[str, Any], Mapping[str, Any]]] = []
+
+    for model_name in selected_models:
+        for number, info in info_by_number.items():
+            key = (target, model_name, number)
+            expected_by_model[model_name].add(key)
+            source = raw_by_key.get(key)
+            if source is None:
+                if key in prior_rows:
+                    rows[key] = copy.deepcopy(dict(prior_rows[key]))
+                continue
+            if not result_is_completed(source):
+                rows[key] = _incomplete_row(source, info)
+                continue
+            tasks.append((key, model_name, source, info))
+
+    worker_count = max(1, len(tasks))
+    print(f"\n{target} 쉬움 채점 시작 (문항 작업 {len(tasks)}개, 동시 호출 수: {worker_count})", flush=True)
+    completed = 0
+    with ThreadPoolExecutor(max_workers=worker_count) as executor:
+        task_futures = {
+            executor.submit(
+                verify_single_result,
+                verifier,
+                dict(source),
+                dict(info),
+                1,
+                Path(exam.project_root),
+            ): (key, model_name, int(info["number"]))
+            for key, model_name, source, info in tasks
+        }
+        for future in as_completed(task_futures):
+            key, model_name, question_number = task_futures[future]
+            verification, manual_review_data = future.result()
+            rows[key] = _verified_row(verification, raw_by_key[key], complete=True)
+            if manual_review_data:
+                manual_review.append(manual_review_data)
+            completed += 1
+            status = "✓" if verification.is_correct else "✗"
+            review_mark = " [수동검토필요]" if verification.needs_manual_review else ""
+            print(
+                f"[{completed}/{len(tasks)}] {status} {model_name} - 문제 {question_number}번 "
+                f"(추출: {verification.extracted_answer}, 정답: {verification.correct_answer}){review_mark}",
+                flush=True,
+            )
+
+    return _SectionGrading(target, rows, expected_by_model, manual_review)
+
+
+def _grade_section_input(
+    section_manifest: SectionManifest,
+    exam: ExamManifest,
+    run: Mapping[str, Any],
+    selected_mode: ModeManifest,
+    selected_models: Sequence[str],
+    raw_by_key: Mapping[tuple[str, str, int], Mapping[str, Any]],
+    prior_rows: Mapping[tuple[str, str, int], Mapping[str, Any]],
+    verifier: Any,
+    question_numbers: Sequence[int] | None,
+) -> _SectionGrading:
+    """@description 기본 모드 섹션의 모델별 병렬 채점"""
+    info_by_number = _section_question_infos(
+        exam,
+        run,
+        section_manifest,
+        selected_mode,
+        selected_models,
+        raw_by_key,
+        question_numbers,
+    )
+    target = section_manifest.target
+    rows: dict[tuple[str, str, int], dict[str, Any]] = {}
+    expected_by_model = {name: set() for name in selected_models}
+    manual_review: list[tuple[Any, ...]] = []
+    tasks: list[tuple[str, Mapping[str, Any]]] = []
+
+    for model_name in selected_models:
+        for number in info_by_number:
+            expected_by_model[model_name].add((target, model_name, number))
+        source = raw_by_key.get((target, model_name, 0))
+        if source is None:
+            for number in info_by_number:
+                key = (target, model_name, number)
+                if key in prior_rows:
+                    rows[key] = copy.deepcopy(dict(prior_rows[key]))
+            continue
+        if not result_is_completed(source):
+            for number, info in info_by_number.items():
+                rows[(target, model_name, number)] = _incomplete_row(source, info)
+            continue
+        tasks.append((model_name, source))
+
+    worker_count = max(1, len(tasks))
+    print(f"\n{target} 기본 채점 시작 (모델 작업 {len(tasks)}개, 동시 호출 수: {worker_count})", flush=True)
+    completed = 0
+    with ThreadPoolExecutor(max_workers=worker_count) as executor:
+        task_futures = {
+            executor.submit(
+                verify_hard_single_result,
+                verifier,
+                dict(source),
+                list(info_by_number.values()),
+                1,
+            ): (model_name, source)
+            for model_name, source in tasks
+        }
+        for future in as_completed(task_futures):
+            model_name, source = task_futures[future]
+            hard_results, manual_review_data = future.result()
+            by_number = {int(item.question_number): item for item in hard_results}
+            for number in info_by_number:
+                key = (target, model_name, number)
+                rows[key] = _verified_row(by_number[number], source, complete=True)
+            if manual_review_data:
+                manual_review.extend(manual_review_data)
+            completed += 1
+            correct_count = sum(item.is_correct for item in hard_results)
+            review_count = sum(item.needs_manual_review for item in hard_results)
+            review_mark = f" [수동검토 {review_count}개]" if review_count else ""
+            print(
+                f"[{completed}/{len(tasks)}] {model_name} - "
+                f"{correct_count}/{len(hard_results)}개 정답{review_mark}",
+                flush=True,
+            )
+
+    return _SectionGrading(target, rows, expected_by_model, manual_review)
+
+
+def _merge_section_grading(
+    section_result: _SectionGrading,
+    graded_by_key: dict[tuple[str, str, int], dict[str, Any]],
+    expected_by_model: dict[str, set[tuple[str, str, int]]],
+    manual_review: list[tuple[Any, ...]],
+) -> None:
+    """@description 독립 섹션 결과를 조정 스레드에서 병합"""
+    graded_by_key.update(section_result.rows)
+    for model_name, keys in section_result.expected_by_model.items():
+        expected_by_model[model_name].update(keys)
+    manual_review.extend(section_result.manual_review)
+
+
 def grade_run(
     run: Mapping[str, Any] | str | Path,
     exam: ExamManifest | str | Path,
@@ -418,66 +629,66 @@ def grade_run(
         normalized = _normal_verified_row(row, model_name)
         prior_rows[result_identity(normalized)] = normalized
 
+    print("\n=== 답안 채점 시작 ===", flush=True)
+    print(
+        f"대상 영역 ({len(sections)}개): {', '.join(item.target for item in sections) or '없음'}",
+        flush=True,
+    )
+    print(f"채점 모델 ({len(selected_models)}개): {', '.join(selected_models) or '없음'}", flush=True)
+
     graded_by_key: dict[tuple[str, str, int], dict[str, Any]] = {}
     expected_by_model: dict[str, set[tuple[str, str, int]]] = {name: set() for name in selected_models}
-    hard_cache: dict[tuple[str, str, int], dict[int, VerificationResult]] = {}
-    for section_manifest in sections:
-        stored_numbers = _question_numbers_for_target(run_data, section_manifest.target)
-        if stored_numbers is None and selected_mode.input_mode == "question":
-            stored_numbers = sorted(
-                {
-                    key[2]
-                    for key in raw_by_key
-                    if key[0] == section_manifest.target and key[1] in selected_models and key[2] > 0
-                }
+    manual_review: list[tuple[Any, ...]] = []
+
+    def _collect(section_result: _SectionGrading, completed: int, total: int) -> None:
+        """@description 조정 스레드 섹션 결과 수집 및 완료 출력"""
+        _merge_section_grading(section_result, graded_by_key, expected_by_model, manual_review)
+        print(f"[{completed}/{total}] {section_result.target} 섹션 채점 완료", flush=True)
+
+    section_arguments = {
+        "exam": manifest,
+        "run": run_data,
+        "selected_mode": selected_mode,
+        "selected_models": selected_models,
+        "raw_by_key": raw_by_key,
+        "prior_rows": prior_rows,
+        "verifier": verifier,
+        "question_numbers": question_numbers,
+    }
+
+    if selected_mode.input_mode == "question":
+        subject_names = sorted({section_manifest.subject for section_manifest in sections})
+        print(f"쉬움 모드 과목 순차 처리 ({len(subject_names)}개 과목)", flush=True)
+        for subject_index, subject_name in enumerate(subject_names, 1):
+            subject_sections = [
+                section_manifest for section_manifest in sections if section_manifest.subject == subject_name
+            ]
+            print(
+                f"\n[{subject_index}/{len(subject_names)}] {subject_name} 채점 시작 "
+                f"({len(subject_sections)}개 섹션 동시 처리)",
+                flush=True,
             )
-        infos = _question_infos(manifest, section_manifest.target, stored_numbers)
-        if question_numbers is not None:
-            requested = set(question_numbers)
-            available = {info["number"] for info in infos}
-            missing = requested - available
-            if missing:
-                raise EvaluationError(
-                    f"{section_manifest.target}에 지정한 문항 번호가 없습니다: "
-                    f"{', '.join(map(str, sorted(missing)))}"
-                )
-            infos = [info for info in infos if info["number"] in requested]
-        info_by_number = {int(info["number"]): info for info in infos}
-        for model_name in selected_models:
-            for number, info in info_by_number.items():
-                key = (section_manifest.target, model_name, number)
-                expected_by_model[model_name].add(key)
-                raw_number = number if selected_mode.input_mode == "question" else 0
-                source = raw_by_key.get((section_manifest.target, model_name, raw_number))
-                if source is None:
-                    if key in prior_rows:
-                        graded_by_key[key] = copy.deepcopy(prior_rows[key])
-                    continue
-                if not result_is_completed(source):
-                    graded_by_key[key] = _incomplete_row(source, info)
-                    continue
-                if selected_mode.input_mode == "question":
-                    verification, _manual = verify_single_result(
-                        verifier,
-                        dict(source),
-                        info,
-                        1,
-                        Path(manifest.project_root),
-                    )
-                    graded_by_key[key] = _verified_row(verification, source, complete=True)
-                else:
-                    source_key = (section_manifest.target, model_name, 0)
-                    by_number = hard_cache.get(source_key)
-                    if by_number is None:
-                        hard_results, _manual = verify_hard_single_result(
-                            verifier,
-                            dict(source),
-                            list(info_by_number.values()),
-                            1,
-                        )
-                        by_number = {int(item.question_number): item for item in hard_results}
-                        hard_cache[source_key] = by_number
-                    graded_by_key[key] = _verified_row(by_number[number], source, complete=True)
+            with ThreadPoolExecutor(max_workers=max(1, len(subject_sections))) as executor:
+                section_futures = {
+                    executor.submit(_grade_question_section, section_manifest, **section_arguments): section_manifest
+                    for section_manifest in subject_sections
+                }
+                for completed_sections, future in enumerate(as_completed(section_futures), 1):
+                    _collect(future.result(), completed_sections, len(section_futures))
+    else:
+        print(f"기본 모드 섹션 동시 처리 (동시 섹션 수: {max(1, len(sections))})", flush=True)
+        with ThreadPoolExecutor(max_workers=max(1, len(sections))) as executor:
+            section_futures = {
+                executor.submit(_grade_section_input, section_manifest, **section_arguments): section_manifest
+                for section_manifest in sections
+            }
+            for completed_sections, future in enumerate(as_completed(section_futures), 1):
+                _collect(future.result(), completed_sections, len(section_futures))
+
+    if manual_review:
+        print(f"\n⚠ 수동 검토 필요 항목 ({len(manual_review)}개):", flush=True)
+        for review in sorted(manual_review, key=lambda item: (str(item[0]), int(item[1]))):
+            print(f"  - {review[0]} 문제 {review[1]}번: 추출 결과 = {review[2]}", flush=True)
 
     rows = [graded_by_key[key] for key in sorted(graded_by_key)]
     result = {

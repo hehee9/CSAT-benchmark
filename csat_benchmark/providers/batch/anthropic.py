@@ -51,7 +51,7 @@ def create_batch(client: Any, batch_requests: List[dict]) -> dict:
 def check_batch_status(client: Any, batch_id: str) -> dict:
     """@description Anthropic Message Batch 상태 공용 구조 변환"""
     batch = client.messages.batches.retrieve(batch_id)
-    batch_data = batch.to_dict()
+    batch_data = batch.to_dict(mode="json")
     counts = batch_data.get("request_counts", {})
 
     processing = counts.get("processing", 0)
@@ -207,7 +207,7 @@ def parse_results(
                 "raw_response": json.dumps(result_data, ensure_ascii=False),
                 "success": False,
                 "error_message": error_message,
-                "answer_status": "no_answer",
+                "answer_status": "technical_failure",
                 "provider_stop_reason": None,
                 "input_tokens": None,
                 "output_tokens": None,

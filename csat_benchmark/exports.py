@@ -581,10 +581,10 @@ def _numeric(value: Any) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
 
 
-def _new_token_record(rows: Iterable[Mapping[str, Any]]) -> dict[str, int | None]:
+def _new_token_record(rows: Iterable[Mapping[str, Any]]) -> dict[str, int | str | None]:
     """@description 단일 실행 원본 결과에서 토큰 합계 생성"""
     rows = list(rows)
-    output: dict[str, int | None] = {
+    output: dict[str, int | str | None] = {
         "input_tokens": None,
         "output_tokens": None,
         "total_tokens": None,
@@ -594,6 +594,13 @@ def _new_token_record(rows: Iterable[Mapping[str, Any]]) -> dict[str, int | None
         if values and all(_numeric(value) for value in values):
             output[source] = int(sum(values))
     output["question_count"] = len(rows)
+    timestamps = [
+        row["timestamp"]
+        for row in rows
+        if isinstance(row.get("timestamp"), str) and row["timestamp"]
+    ]
+    if timestamps:
+        output["last_updated"] = max(timestamps)
     return output
 
 
@@ -614,7 +621,14 @@ def _merge_token_scope(
         if not isinstance(sections, dict):
             sections = {}
             model["sections"] = sections
-        sections[section_key] = dict(record)
+        section_record = dict(record)
+        if "last_updated" not in section_record:
+            existing_section = sections.get(section_key)
+            if isinstance(existing_section, Mapping) and isinstance(
+                existing_section.get("last_updated"), str
+            ):
+                section_record["last_updated"] = existing_section["last_updated"]
+        sections[section_key] = section_record
         section_records = list(sections.values())
         for source, destination in (
             ("input_tokens", "total_input_tokens"),
@@ -632,6 +646,15 @@ def _merge_token_scope(
         counts = [item.get("question_count") for item in sections.values() if isinstance(item, Mapping)]
         if counts and all(_numeric(value) for value in counts):
             model["question_count"] = int(sum(counts))
+        timestamps = [
+            item["last_updated"]
+            for item in section_records
+            if isinstance(item, Mapping)
+            and isinstance(item.get("last_updated"), str)
+            and item["last_updated"]
+        ]
+        if timestamps:
+            model["last_updated"] = max(timestamps)
         models[model_name] = model
     return merged
 

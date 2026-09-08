@@ -1,0 +1,15 @@
+/**
+ * @file ScoreTable.css
+ * @brief 상세 점수 표의 이미지 내보내기 보정
+ */
+
+.export-profile-score-table .score-table--detail {
+  width: max-content;
+  min-width: 100%;
+  table-layout: auto;
+}
+
+.export-profile-score-table .score-table--detail .export-role-table-value {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
