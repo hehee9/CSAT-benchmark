@@ -1,6 +1,6 @@
 /**
  * @file Header.css
- * @description 헤더 전용 반응형 레이아웃 및 2026 일반 모드 색상
+ * @description 헤더 전용 반응형 레이아웃 및 쉬운 모드 색상
  */
 
 .dashboard-header .header__github-link {
@@ -23,8 +23,8 @@
   color: #60a5fa;
 }
 
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__exam-name {
-  color: #f87171;
+.dashboard-header[data-header-mode="easy"] .header__exam-name {
+  color: #6ee7b7;
 }
 
 .dashboard-header .header__title-picker {
@@ -90,61 +90,61 @@
   outline-offset: 2px;
 }
 
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__subtitle,
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__github-link,
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__menu-button,
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__actions > button {
-  color: #d8c4bd !important;
+.dashboard-header[data-header-mode="easy"] .header__subtitle,
+.dashboard-header[data-header-mode="easy"] .header__github-link,
+.dashboard-header[data-header-mode="easy"] .header__menu-button,
+.dashboard-header[data-header-mode="easy"] .header__actions > button {
+  color: #a7f3d0 !important;
 }
 
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__github-link:hover,
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__menu-button:hover,
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__actions > button:hover {
-  color: #f1e4df !important;
-  background-color: rgb(239 222 215 / 0.12) !important;
+.dashboard-header[data-header-mode="easy"] .header__github-link:hover,
+.dashboard-header[data-header-mode="easy"] .header__menu-button:hover,
+.dashboard-header[data-header-mode="easy"] .header__actions > button:hover {
+  color: #d1fae5 !important;
+  background-color: rgb(167 243 208 / 0.12) !important;
 }
 
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__mode-toggle {
-  color: #e0cbc4 !important;
-  border-color: rgb(239 222 215 / 0.34) !important;
+.dashboard-header[data-header-mode="easy"] .header__mode-toggle {
+  color: #a7f3d0 !important;
+  border-color: rgb(167 243 208 / 0.34) !important;
 }
 
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__mode-toggle:hover {
-  color: #f1e4df !important;
-  border-color: rgb(239 222 215 / 0.6) !important;
-  background-color: rgb(239 222 215 / 0.12) !important;
+.dashboard-header[data-header-mode="easy"] .header__mode-toggle:hover {
+  color: #d1fae5 !important;
+  border-color: rgb(167 243 208 / 0.6) !important;
+  background-color: rgb(167 243 208 / 0.12) !important;
 }
 
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__exam-chevron {
-  color: #d8c4bd;
+.dashboard-header[data-header-mode="easy"] .header__exam-chevron {
+  color: #a7f3d0;
 }
 
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__exam-select option {
-  background-color: #451a1a;
-  color: #f1e4df;
+.dashboard-header[data-header-mode="easy"] .header__exam-select option {
+  background-color: #064e3b;
+  color: #d1fae5;
 }
 
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__tooltip {
-  background-color: #4a2924 !important;
-  border-color: #94766d !important;
-  color: #f1e4df !important;
+.dashboard-header[data-header-mode="easy"] .header__tooltip {
+  background-color: #064e3b !important;
+  border-color: #10b981 !important;
+  color: #d1fae5 !important;
 }
 
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__tooltip-arrow {
-  background-color: #4a2924 !important;
-  border-color: #94766d !important;
+.dashboard-header[data-header-mode="easy"] .header__tooltip-arrow {
+  background-color: #064e3b !important;
+  border-color: #10b981 !important;
 }
 
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__actions svg {
-  color: #d8c4bd !important;
+.dashboard-header[data-header-mode="easy"] .header__actions svg {
+  color: #a7f3d0 !important;
 }
 
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__actions > button:focus-visible,
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__menu-button:focus-visible,
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__mode-toggle:focus-visible,
-.dashboard-header[data-exam-id="csat-2026"][data-header-mode="default"] .header__github-link:focus-visible {
-  outline-color: #e0cbc4;
-  box-shadow: 0 0 0 3px rgb(239 222 215 / 0.2);
+.dashboard-header[data-header-mode="easy"] .header__actions > button:focus-visible,
+.dashboard-header[data-header-mode="easy"] .header__menu-button:focus-visible,
+.dashboard-header[data-header-mode="easy"] .header__mode-toggle:focus-visible,
+.dashboard-header[data-header-mode="easy"] .header__github-link:focus-visible {
+  outline-color: #a7f3d0;
+  box-shadow: 0 0 0 3px rgb(167 243 208 / 0.2);
 }
 
 @media (max-width: 767px) {

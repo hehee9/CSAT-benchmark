@@ -51,7 +51,7 @@ export default function Header({
 }) {
   const { t, i18n } = useTranslation()
   const is2026Exam = exam?.id === 'csat-2026'
-  const isGeneralMode = mode === 'default'
+  const isEasyMode = mode === 'easy'
   const currentModeIndex = modes.findIndex(item => item.id === mode)
   const nextMode = modes[(currentModeIndex + 1) % modes.length]
   const modeLabelKey = mode === 'default' ? 'header.modeDefault' : mode === 'easy' ? 'header.modeEasy' : null
@@ -97,7 +97,7 @@ export default function Header({
 
   return (
     <header
-      className={`dashboard-header ${is2026Exam && isGeneralMode ? 'bg-red-950' : 'bg-gray-900'} text-white p-3 md:p-4 transition-colors duration-300`}
+      className={`dashboard-header ${isEasyMode ? 'bg-emerald-950' : 'bg-gray-900'} text-white p-3 md:p-4 transition-colors duration-300`}
       data-exam-id={exam?.id}
       data-header-mode={mode}
     >
@@ -172,7 +172,7 @@ export default function Header({
                 onBlur={_handleTooltipHide}
                 aria-label={`${t('header.modeSelect')}: ${modeLabel}`}
                 className={`header__mode-toggle flex items-center gap-1.5 text-base md:text-lg font-semibold px-4 py-2 rounded-lg transition-all duration-200 cursor-pointer border border-white/20 hover:border-white/40 hover:bg-white/5 ${
-                  is2026Exam && isGeneralMode ? 'text-rose-300' : 'text-sky-300'
+                  isEasyMode ? 'text-emerald-300' : 'text-sky-300'
                 }`}
               >
                 {modeLabel}
