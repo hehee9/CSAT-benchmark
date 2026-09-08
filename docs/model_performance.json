@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updatedAt": "2026-09-08T14:09:01.200Z",
+  "updatedAt": "2026-09-08T15:08:10.056Z",
   "models": {
     "Claude Fable 5 (high)": {
       "modelId": "anthropic/claude-fable-5",
@@ -20,11 +20,12 @@
     },
     "Claude Fable 5.1 (high)": {
       "modelId": "anthropic/claude-fable-5.1",
-      "tokensPerSecond": 40,
+      "tokensPerSecond": 38,
       "providers": [
         "Amazon Bedrock",
         "Anthropic",
-        "Azure"
+        "Azure",
+        "Google"
       ],
       "selection": {
         "strategy": "official",
@@ -34,7 +35,7 @@
     },
     "Claude Haiku 4.5": {
       "modelId": "anthropic/claude-haiku-4.5",
-      "tokensPerSecond": 43,
+      "tokensPerSecond": 46,
       "providers": [
         "Amazon Bedrock",
         "Anthropic",
@@ -49,7 +50,7 @@
     },
     "Claude Haiku 4.5 (32K Thinking)": {
       "modelId": "anthropic/claude-haiku-4.5",
-      "tokensPerSecond": 43,
+      "tokensPerSecond": 46,
       "providers": [
         "Amazon Bedrock",
         "Anthropic",
@@ -64,7 +65,7 @@
     },
     "Claude Opus 4.5": {
       "modelId": "anthropic/claude-opus-4.5",
-      "tokensPerSecond": 36,
+      "tokensPerSecond": 32,
       "providers": [
         "Amazon Bedrock",
         "Anthropic",
@@ -80,7 +81,7 @@
     },
     "Claude Opus 4.5 (32K Thinking)": {
       "modelId": "anthropic/claude-opus-4.5",
-      "tokensPerSecond": 36,
+      "tokensPerSecond": 32,
       "providers": [
         "Amazon Bedrock",
         "Anthropic",
@@ -96,7 +97,7 @@
     },
     "Claude Opus 4.7": {
       "modelId": "anthropic/claude-opus-4.7",
-      "tokensPerSecond": 46,
+      "tokensPerSecond": 45,
       "providers": [
         "Amazon Bedrock",
         "Anthropic",
@@ -111,7 +112,7 @@
     },
     "Claude Opus 4.7 (high)": {
       "modelId": "anthropic/claude-opus-4.7",
-      "tokensPerSecond": 46,
+      "tokensPerSecond": 45,
       "providers": [
         "Amazon Bedrock",
         "Anthropic",
@@ -126,7 +127,7 @@
     },
     "Claude Opus 4.7 (max*)": {
       "modelId": "anthropic/claude-opus-4.7",
-      "tokensPerSecond": 46,
+      "tokensPerSecond": 45,
       "providers": [
         "Amazon Bedrock",
         "Anthropic",
@@ -141,7 +142,7 @@
     },
     "Claude Opus 4.8": {
       "modelId": "anthropic/claude-opus-4.8",
-      "tokensPerSecond": 56,
+      "tokensPerSecond": 54,
       "providers": [
         "Amazon Bedrock",
         "Anthropic",
@@ -157,7 +158,7 @@
     },
     "Claude Opus 4.8 (high)": {
       "modelId": "anthropic/claude-opus-4.8",
-      "tokensPerSecond": 56,
+      "tokensPerSecond": 54,
       "providers": [
         "Amazon Bedrock",
         "Anthropic",
@@ -205,7 +206,7 @@
     },
     "Claude Sonnet 4.5": {
       "modelId": "anthropic/claude-sonnet-4.5",
-      "tokensPerSecond": 40,
+      "tokensPerSecond": 38,
       "providers": [
         "Amazon Bedrock",
         "Anthropic",
@@ -221,7 +222,7 @@
     },
     "Claude Sonnet 4.5 (32K Thinking)": {
       "modelId": "anthropic/claude-sonnet-4.5",
-      "tokensPerSecond": 40,
+      "tokensPerSecond": 38,
       "providers": [
         "Amazon Bedrock",
         "Anthropic",
@@ -269,7 +270,7 @@
     },
     "Claude Sonnet 5": {
       "modelId": "anthropic/claude-sonnet-5",
-      "tokensPerSecond": 58,
+      "tokensPerSecond": 57,
       "providers": [
         "Amazon Bedrock",
         "Anthropic",
@@ -285,7 +286,7 @@
     },
     "Claude Sonnet 5 (high)": {
       "modelId": "anthropic/claude-sonnet-5",
-      "tokensPerSecond": 58,
+      "tokensPerSecond": 57,
       "providers": [
         "Amazon Bedrock",
         "Anthropic",
@@ -301,7 +302,7 @@
     },
     "DeepSeek V3.2 Exp (Non-Thinking)": {
       "modelId": "deepseek/deepseek-v3.2-exp",
-      "tokensPerSecond": 15,
+      "tokensPerSecond": 5,
       "providers": [
         "AtlasCloud",
         "Novita",
@@ -315,7 +316,7 @@
     },
     "DeepSeek V3.2 Exp (Thinking)": {
       "modelId": "deepseek/deepseek-v3.2-exp",
-      "tokensPerSecond": 15,
+      "tokensPerSecond": 5,
       "providers": [
         "AtlasCloud",
         "Novita",
@@ -329,7 +330,7 @@
     },
     "DeepSeek V4 Flash (Max)": {
       "modelId": "deepseek/deepseek-v4-flash",
-      "tokensPerSecond": 45,
+      "tokensPerSecond": 44,
       "providers": [
         "Alibaba",
         "AtlasCloud",
@@ -355,7 +356,7 @@
     },
     "DeepSeek V4 Flash (None)": {
       "modelId": "deepseek/deepseek-v4-flash",
-      "tokensPerSecond": 45,
+      "tokensPerSecond": 44,
       "providers": [
         "Alibaba",
         "AtlasCloud",
@@ -381,7 +382,7 @@
     },
     "DeepSeek V4 Flash 0731 (Max)": {
       "modelId": "deepseek/deepseek-v4-flash-0731",
-      "tokensPerSecond": 80,
+      "tokensPerSecond": 83,
       "providers": [
         "Alibaba",
         "AtlasCloud",
@@ -419,7 +420,7 @@
     },
     "DeepSeek V4 Flash 0731 (None)": {
       "modelId": "deepseek/deepseek-v4-flash-0731",
-      "tokensPerSecond": 80,
+      "tokensPerSecond": 83,
       "providers": [
         "Alibaba",
         "AtlasCloud",
@@ -457,7 +458,7 @@
     },
     "DeepSeek V4 Flash Vision Exp (Max)": {
       "modelId": "deepseek/deepseek-v4-flash-vision-exp",
-      "tokensPerSecond": 87,
+      "tokensPerSecond": 86,
       "providers": [
         "AtlasCloud",
         "DeepInfra",
@@ -474,7 +475,7 @@
     },
     "DeepSeek V4 Flash Vision Exp (None)": {
       "modelId": "deepseek/deepseek-v4-flash-vision-exp",
-      "tokensPerSecond": 87,
+      "tokensPerSecond": 86,
       "providers": [
         "AtlasCloud",
         "DeepInfra",
@@ -491,7 +492,7 @@
     },
     "DeepSeek V4 Pro (Max)": {
       "modelId": "deepseek/deepseek-v4-pro",
-      "tokensPerSecond": 29.5,
+      "tokensPerSecond": 28.5,
       "providers": [
         "Alibaba",
         "AtlasCloud",
@@ -516,7 +517,7 @@
     },
     "DeepSeek V4 Pro (None)": {
       "modelId": "deepseek/deepseek-v4-pro",
-      "tokensPerSecond": 29.5,
+      "tokensPerSecond": 28.5,
       "providers": [
         "Alibaba",
         "AtlasCloud",
@@ -541,7 +542,7 @@
     },
     "DeepSeek V4 Pro 0813 (Max)": {
       "modelId": "deepseek/deepseek-v4-pro-0813",
-      "tokensPerSecond": 23,
+      "tokensPerSecond": 22,
       "providers": [
         "Alibaba",
         "Baidu",
@@ -571,7 +572,7 @@
     },
     "DeepSeek V4 Pro 0813 (None)": {
       "modelId": "deepseek/deepseek-v4-pro-0813",
-      "tokensPerSecond": 23,
+      "tokensPerSecond": 22,
       "providers": [
         "Alibaba",
         "Baidu",
@@ -679,7 +680,7 @@
     },
     "Gemini 3.1 Flash-Lite (high)": {
       "modelId": "google/gemini-3.1-flash-lite",
-      "tokensPerSecond": 59,
+      "tokensPerSecond": 58,
       "providers": [
         "Google",
         "Google AI Studio"
@@ -692,7 +693,7 @@
     },
     "Gemini 3.1 Flash-Lite (minimal)": {
       "modelId": "google/gemini-3.1-flash-lite",
-      "tokensPerSecond": 59,
+      "tokensPerSecond": 58,
       "providers": [
         "Google",
         "Google AI Studio"
@@ -705,7 +706,7 @@
     },
     "Gemini 3.1 Pro (high)": {
       "modelId": "google/gemini-3.1-pro-preview",
-      "tokensPerSecond": 100,
+      "tokensPerSecond": 105,
       "providers": [
         "Google",
         "Google AI Studio"
@@ -718,7 +719,7 @@
     },
     "Gemini 3.1 Pro (low)": {
       "modelId": "google/gemini-3.1-pro-preview",
-      "tokensPerSecond": 100,
+      "tokensPerSecond": 105,
       "providers": [
         "Google",
         "Google AI Studio"
@@ -731,7 +732,7 @@
     },
     "Gemini 3.5 Flash (high)": {
       "modelId": "google/gemini-3.5-flash",
-      "tokensPerSecond": 139,
+      "tokensPerSecond": 123,
       "providers": [
         "Google",
         "Google AI Studio"
@@ -744,7 +745,7 @@
     },
     "Gemini 3.5 Flash (minimal)": {
       "modelId": "google/gemini-3.5-flash",
-      "tokensPerSecond": 139,
+      "tokensPerSecond": 123,
       "providers": [
         "Google",
         "Google AI Studio"
@@ -757,7 +758,7 @@
     },
     "Gemini 3.5 Flash-Lite (high)": {
       "modelId": "google/gemini-3.5-flash-lite",
-      "tokensPerSecond": 73,
+      "tokensPerSecond": 72,
       "providers": [
         "Google",
         "Google AI Studio"
@@ -770,7 +771,7 @@
     },
     "Gemini 3.5 Flash-Lite (minimal)": {
       "modelId": "google/gemini-3.5-flash-lite",
-      "tokensPerSecond": 73,
+      "tokensPerSecond": 72,
       "providers": [
         "Google",
         "Google AI Studio"
@@ -783,7 +784,7 @@
     },
     "Gemini 3.6 Flash (high)": {
       "modelId": "google/gemini-3.6-flash",
-      "tokensPerSecond": 119,
+      "tokensPerSecond": 109,
       "providers": [
         "Google",
         "Google AI Studio"
@@ -796,7 +797,7 @@
     },
     "Gemini 3.6 Flash (minimal)": {
       "modelId": "google/gemini-3.6-flash",
-      "tokensPerSecond": 119,
+      "tokensPerSecond": 109,
       "providers": [
         "Google",
         "Google AI Studio"
@@ -809,7 +810,7 @@
     },
     "Gemini 3.7 Flash (high)": {
       "modelId": "google/gemini-3.7-flash",
-      "tokensPerSecond": 72,
+      "tokensPerSecond": 76,
       "providers": [
         "Google",
         "Google AI Studio"
@@ -822,7 +823,7 @@
     },
     "Gemini 3.7 Flash (low)": {
       "modelId": "google/gemini-3.7-flash",
-      "tokensPerSecond": 72,
+      "tokensPerSecond": 76,
       "providers": [
         "Google",
         "Google AI Studio"
@@ -835,7 +836,7 @@
     },
     "Gemini 3.8 Flash (high)": {
       "modelId": "google/gemini-3.8-flash",
-      "tokensPerSecond": 59,
+      "tokensPerSecond": 57,
       "providers": [
         "Google",
         "Google AI Studio"
@@ -848,7 +849,7 @@
     },
     "Gemini 3.8 Flash (low)": {
       "modelId": "google/gemini-3.8-flash",
-      "tokensPerSecond": 59,
+      "tokensPerSecond": 57,
       "providers": [
         "Google",
         "Google AI Studio"
@@ -861,7 +862,7 @@
     },
     "Gemma 4 26B A4B": {
       "modelId": "google/gemma-4-26b-a4b-it",
-      "tokensPerSecond": 24,
+      "tokensPerSecond": 33,
       "providers": [
         "Cloudflare",
         "Darkbloom",
@@ -881,7 +882,7 @@
     },
     "Gemma 4 26B A4B (high)": {
       "modelId": "google/gemma-4-26b-a4b-it",
-      "tokensPerSecond": 24,
+      "tokensPerSecond": 33,
       "providers": [
         "Cloudflare",
         "Darkbloom",
@@ -901,9 +902,8 @@
     },
     "Gemma 4 31B": {
       "modelId": "google/gemma-4-31b-it",
-      "tokensPerSecond": 23,
+      "tokensPerSecond": 14,
       "providers": [
-        "Cerebras",
         "Chutes",
         "CoreWeave",
         "Crusoe",
@@ -925,9 +925,8 @@
     },
     "Gemma 4 31B (high)": {
       "modelId": "google/gemma-4-31b-it",
-      "tokensPerSecond": 23,
+      "tokensPerSecond": 14,
       "providers": [
-        "Cerebras",
         "Chutes",
         "CoreWeave",
         "Crusoe",
@@ -949,7 +948,7 @@
     },
     "GLM-5 (Non-Thinking)": {
       "modelId": "z-ai/glm-5",
-      "tokensPerSecond": 42,
+      "tokensPerSecond": 45,
       "providers": [
         "Amazon Bedrock",
         "Baidu",
@@ -970,7 +969,7 @@
     },
     "GLM-5 (Thinking)": {
       "modelId": "z-ai/glm-5",
-      "tokensPerSecond": 42,
+      "tokensPerSecond": 45,
       "providers": [
         "Amazon Bedrock",
         "Baidu",
@@ -1045,7 +1044,7 @@
     },
     "GLM-5.2 (Non-Thinking)": {
       "modelId": "z-ai/glm-5.2",
-      "tokensPerSecond": 42,
+      "tokensPerSecond": 41,
       "providers": [
         "Alibaba",
         "Ambient",
@@ -1079,7 +1078,7 @@
     },
     "GLM-5.2 (Thinking)": {
       "modelId": "z-ai/glm-5.2",
-      "tokensPerSecond": 42,
+      "tokensPerSecond": 41,
       "providers": [
         "Alibaba",
         "Ambient",
@@ -1113,7 +1112,7 @@
     },
     "GLM-5.3 Flash (high)": {
       "modelId": "z-ai/glm-5.3-flash",
-      "tokensPerSecond": 36,
+      "tokensPerSecond": 55,
       "providers": [
         "BaseTen",
         "Cloudflare",
@@ -1149,7 +1148,7 @@
     },
     "GPT-4.1": {
       "modelId": "openai/gpt-4.1",
-      "tokensPerSecond": 43,
+      "tokensPerSecond": 47,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1162,7 +1161,7 @@
     },
     "GPT-4.1 mini": {
       "modelId": "openai/gpt-4.1-mini",
-      "tokensPerSecond": 29,
+      "tokensPerSecond": 30,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1175,7 +1174,7 @@
     },
     "GPT-4.1 nano": {
       "modelId": "openai/gpt-4.1-nano",
-      "tokensPerSecond": 47,
+      "tokensPerSecond": 51,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1188,7 +1187,7 @@
     },
     "GPT-4o": {
       "modelId": "openai/gpt-4o-2024-11-20",
-      "tokensPerSecond": 43,
+      "tokensPerSecond": 31,
       "providers": [
         "OpenAI"
       ],
@@ -1200,7 +1199,7 @@
     },
     "GPT-4o mini": {
       "modelId": "openai/gpt-4o-mini",
-      "tokensPerSecond": 30,
+      "tokensPerSecond": 27,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1213,7 +1212,7 @@
     },
     "GPT-5 mini (high)": {
       "modelId": "openai/gpt-5-mini",
-      "tokensPerSecond": 67,
+      "tokensPerSecond": 70,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1226,7 +1225,7 @@
     },
     "GPT-5 nano (high)": {
       "modelId": "openai/gpt-5-nano",
-      "tokensPerSecond": 88,
+      "tokensPerSecond": 92,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1239,7 +1238,7 @@
     },
     "GPT-5.1 (high)": {
       "modelId": "openai/gpt-5.1",
-      "tokensPerSecond": 42,
+      "tokensPerSecond": 44,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1252,7 +1251,7 @@
     },
     "GPT-5.1 Codex": {
       "modelId": "openai/gpt-5.1-codex",
-      "tokensPerSecond": 40,
+      "tokensPerSecond": 37,
       "providers": [
         "Azure"
       ],
@@ -1264,7 +1263,7 @@
     },
     "GPT-5.2 (Instant)": {
       "modelId": "openai/gpt-5.2",
-      "tokensPerSecond": 40,
+      "tokensPerSecond": 41,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1277,7 +1276,7 @@
     },
     "GPT-5.2 (xhigh)": {
       "modelId": "openai/gpt-5.2",
-      "tokensPerSecond": 40,
+      "tokensPerSecond": 41,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1290,9 +1289,8 @@
     },
     "GPT-5.4 (high)": {
       "modelId": "openai/gpt-5.4",
-      "tokensPerSecond": 38,
+      "tokensPerSecond": 17,
       "providers": [
-        "Amazon Bedrock",
         "Azure",
         "OpenAI"
       ],
@@ -1304,9 +1302,8 @@
     },
     "GPT-5.4 (none)": {
       "modelId": "openai/gpt-5.4",
-      "tokensPerSecond": 38,
+      "tokensPerSecond": 17,
       "providers": [
-        "Amazon Bedrock",
         "Azure",
         "OpenAI"
       ],
@@ -1318,9 +1315,8 @@
     },
     "GPT-5.4 (xhigh*)": {
       "modelId": "openai/gpt-5.4",
-      "tokensPerSecond": 38,
+      "tokensPerSecond": 17,
       "providers": [
-        "Amazon Bedrock",
         "Azure",
         "OpenAI"
       ],
@@ -1332,7 +1328,7 @@
     },
     "GPT-5.4 mini (none)": {
       "modelId": "openai/gpt-5.4-mini",
-      "tokensPerSecond": 61,
+      "tokensPerSecond": 58,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1345,7 +1341,7 @@
     },
     "GPT-5.4 mini (xhigh)": {
       "modelId": "openai/gpt-5.4-mini",
-      "tokensPerSecond": 61,
+      "tokensPerSecond": 58,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1358,7 +1354,7 @@
     },
     "GPT-5.4 nano (none)": {
       "modelId": "openai/gpt-5.4-nano",
-      "tokensPerSecond": 63,
+      "tokensPerSecond": 53,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1371,7 +1367,7 @@
     },
     "GPT-5.4 nano (xhigh)": {
       "modelId": "openai/gpt-5.4-nano",
-      "tokensPerSecond": 63,
+      "tokensPerSecond": 53,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1384,7 +1380,7 @@
     },
     "GPT-5.5 (high)": {
       "modelId": "openai/gpt-5.5",
-      "tokensPerSecond": 48,
+      "tokensPerSecond": 40,
       "providers": [
         "Amazon Bedrock",
         "Azure",
@@ -1398,7 +1394,7 @@
     },
     "GPT-5.5 (none)": {
       "modelId": "openai/gpt-5.5",
-      "tokensPerSecond": 48,
+      "tokensPerSecond": 40,
       "providers": [
         "Amazon Bedrock",
         "Azure",
@@ -1412,7 +1408,7 @@
     },
     "GPT-5.5 (xhigh*)": {
       "modelId": "openai/gpt-5.5",
-      "tokensPerSecond": 48,
+      "tokensPerSecond": 40,
       "providers": [
         "Amazon Bedrock",
         "Azure",
@@ -1438,7 +1434,7 @@
     },
     "GPT-5.6 Luna (high)": {
       "modelId": "openai/gpt-5.6-luna",
-      "tokensPerSecond": 74,
+      "tokensPerSecond": 68,
       "providers": [
         "Amazon Bedrock",
         "Azure",
@@ -1452,7 +1448,7 @@
     },
     "GPT-5.6 Luna (low)": {
       "modelId": "openai/gpt-5.6-luna",
-      "tokensPerSecond": 74,
+      "tokensPerSecond": 68,
       "providers": [
         "Amazon Bedrock",
         "Azure",
@@ -1466,7 +1462,7 @@
     },
     "GPT-5.6 Luna (max*)": {
       "modelId": "openai/gpt-5.6-luna",
-      "tokensPerSecond": 74,
+      "tokensPerSecond": 68,
       "providers": [
         "Amazon Bedrock",
         "Azure",
@@ -1480,7 +1476,7 @@
     },
     "GPT-5.6 Luna (none)": {
       "modelId": "openai/gpt-5.6-luna",
-      "tokensPerSecond": 74,
+      "tokensPerSecond": 68,
       "providers": [
         "Amazon Bedrock",
         "Azure",
@@ -1494,7 +1490,7 @@
     },
     "GPT-5.6 Luna Pro (high)": {
       "modelId": "openai/gpt-5.6-luna-pro",
-      "tokensPerSecond": 124,
+      "tokensPerSecond": 106,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1507,7 +1503,7 @@
     },
     "GPT-5.6 Sol (high)": {
       "modelId": "openai/gpt-5.6-sol",
-      "tokensPerSecond": 36.5,
+      "tokensPerSecond": 25,
       "providers": [
         "Amazon Bedrock",
         "Azure",
@@ -1521,7 +1517,7 @@
     },
     "GPT-5.6 Sol (max*)": {
       "modelId": "openai/gpt-5.6-sol",
-      "tokensPerSecond": 36.5,
+      "tokensPerSecond": 25,
       "providers": [
         "Amazon Bedrock",
         "Azure",
@@ -1535,7 +1531,7 @@
     },
     "GPT-5.6 Sol (none)": {
       "modelId": "openai/gpt-5.6-sol",
-      "tokensPerSecond": 36.5,
+      "tokensPerSecond": 25,
       "providers": [
         "Amazon Bedrock",
         "Azure",
@@ -1549,7 +1545,7 @@
     },
     "GPT-5.6 Sol Pro (high)": {
       "modelId": "openai/gpt-5.6-sol-pro",
-      "tokensPerSecond": 68,
+      "tokensPerSecond": 67,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1562,7 +1558,7 @@
     },
     "GPT-5.6 Terra (high)": {
       "modelId": "openai/gpt-5.6-terra",
-      "tokensPerSecond": 42,
+      "tokensPerSecond": 36,
       "providers": [
         "Amazon Bedrock",
         "Azure",
@@ -1576,7 +1572,7 @@
     },
     "GPT-5.6 Terra (max*)": {
       "modelId": "openai/gpt-5.6-terra",
-      "tokensPerSecond": 42,
+      "tokensPerSecond": 36,
       "providers": [
         "Amazon Bedrock",
         "Azure",
@@ -1590,7 +1586,7 @@
     },
     "GPT-5.6 Terra (none)": {
       "modelId": "openai/gpt-5.6-terra",
-      "tokensPerSecond": 42,
+      "tokensPerSecond": 36,
       "providers": [
         "Amazon Bedrock",
         "Azure",
@@ -1604,7 +1600,7 @@
     },
     "GPT-5.6 Terra Pro (high)": {
       "modelId": "openai/gpt-5.6-terra-pro",
-      "tokensPerSecond": 70.5,
+      "tokensPerSecond": 69,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1617,7 +1613,7 @@
     },
     "GPT-6 Astra (high)": {
       "modelId": "openai/gpt-6-astra",
-      "tokensPerSecond": 28,
+      "tokensPerSecond": 30,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1630,7 +1626,7 @@
     },
     "GPT-6 Astra (low)": {
       "modelId": "openai/gpt-6-astra",
-      "tokensPerSecond": 28,
+      "tokensPerSecond": 30,
       "providers": [
         "Azure",
         "OpenAI"
@@ -1643,7 +1639,7 @@
     },
     "GPT-OSS 120B (high)": {
       "modelId": "openai/gpt-oss-120b",
-      "tokensPerSecond": 77,
+      "tokensPerSecond": 64.5,
       "providers": [
         "AkashML",
         "Amazon Bedrock",
@@ -1696,7 +1692,7 @@
     },
     "Grok 4.5 (high)": {
       "modelId": "x-ai/grok-4.5",
-      "tokensPerSecond": 49,
+      "tokensPerSecond": 51,
       "providers": [
         "xAI"
       ],
@@ -1708,7 +1704,7 @@
     },
     "Kimi K2.5 (Non-Thinking)": {
       "modelId": "moonshotai/kimi-k2.5",
-      "tokensPerSecond": 28,
+      "tokensPerSecond": 33,
       "providers": [
         "Amazon Bedrock",
         "AtlasCloud",
@@ -1726,7 +1722,7 @@
     },
     "Kimi K2.5 (Thinking)": {
       "modelId": "moonshotai/kimi-k2.5",
-      "tokensPerSecond": 28,
+      "tokensPerSecond": 33,
       "providers": [
         "Amazon Bedrock",
         "AtlasCloud",
@@ -1806,8 +1802,9 @@
     },
     "MiniMax M3 (Non-Thinking)": {
       "modelId": "minimax/minimax-m3",
-      "tokensPerSecond": 61,
+      "tokensPerSecond": 62,
       "providers": [
+        "AtlasCloud",
         "CoreWeave",
         "DeepInfra",
         "GMICloud",
@@ -1828,8 +1825,9 @@
     },
     "MiniMax M3 (Thinking)": {
       "modelId": "minimax/minimax-m3",
-      "tokensPerSecond": 61,
+      "tokensPerSecond": 62,
       "providers": [
+        "AtlasCloud",
         "CoreWeave",
         "DeepInfra",
         "GMICloud",
@@ -1850,7 +1848,7 @@
     },
     "Mistral Small 4 (Non-Thinking)": {
       "modelId": "mistralai/mistral-small-2603",
-      "tokensPerSecond": 84,
+      "tokensPerSecond": 63,
       "providers": [
         "Mistral",
         "Venice"
@@ -1863,7 +1861,7 @@
     },
     "Mistral Small 4 (Thinking)": {
       "modelId": "mistralai/mistral-small-2603",
-      "tokensPerSecond": 84,
+      "tokensPerSecond": 63,
       "providers": [
         "Mistral",
         "Venice"
@@ -1876,7 +1874,7 @@
     },
     "Muse Spark 1.2 (high)": {
       "modelId": "meta/muse-spark-1.2",
-      "tokensPerSecond": 82,
+      "tokensPerSecond": 78,
       "providers": [
         "Meta"
       ],
@@ -1888,7 +1886,7 @@
     },
     "Muse Spark 1.2 (minimal)": {
       "modelId": "meta/muse-spark-1.2",
-      "tokensPerSecond": 82,
+      "tokensPerSecond": 78,
       "providers": [
         "Meta"
       ],
@@ -1900,7 +1898,7 @@
     },
     "Muse Spark 1.3 (high)": {
       "modelId": "meta/muse-spark-1.3-contributor",
-      "tokensPerSecond": 86,
+      "tokensPerSecond": 90,
       "providers": [
         "Meta"
       ],
@@ -1912,7 +1910,7 @@
     },
     "Muse Spark 1.3 (minimal)": {
       "modelId": "meta/muse-spark-1.3-contributor",
-      "tokensPerSecond": 86,
+      "tokensPerSecond": 90,
       "providers": [
         "Meta"
       ],
@@ -1924,7 +1922,7 @@
     },
     "o1 (high)": {
       "modelId": "openai/o1",
-      "tokensPerSecond": 89.5,
+      "tokensPerSecond": 37,
       "providers": [
         "OpenAI"
       ],
@@ -1936,7 +1934,7 @@
     },
     "o3 (high)": {
       "modelId": "openai/o3",
-      "tokensPerSecond": 56,
+      "tokensPerSecond": 64.5,
       "providers": [
         "OpenAI"
       ],
@@ -1948,7 +1946,7 @@
     },
     "o3-mini (high)": {
       "modelId": "openai/o3-mini",
-      "tokensPerSecond": 97,
+      "tokensPerSecond": 128,
       "providers": [
         "OpenAI"
       ],
@@ -1960,7 +1958,7 @@
     },
     "o4-mini (high)": {
       "modelId": "openai/o4-mini",
-      "tokensPerSecond": 95,
+      "tokensPerSecond": 109,
       "providers": [
         "OpenAI"
       ],
@@ -1972,7 +1970,7 @@
     },
     "Qwen3.5 27B (Non-Thinking)": {
       "modelId": "qwen/qwen3.5-27b",
-      "tokensPerSecond": 31,
+      "tokensPerSecond": 22.5,
       "providers": [
         "Alibaba",
         "AtlasCloud",
@@ -1989,7 +1987,7 @@
     },
     "Qwen3.5 27B (Thinking)": {
       "modelId": "qwen/qwen3.5-27b",
-      "tokensPerSecond": 31,
+      "tokensPerSecond": 22.5,
       "providers": [
         "Alibaba",
         "AtlasCloud",
@@ -2006,7 +2004,7 @@
     },
     "Qwen3.5 35B A3B (Non-Thinking)": {
       "modelId": "qwen/qwen3.5-35b-a3b",
-      "tokensPerSecond": 107,
+      "tokensPerSecond": 148,
       "providers": [
         "Alibaba",
         "AtlasCloud",
@@ -2024,7 +2022,7 @@
     },
     "Qwen3.5 35B A3B (Thinking)": {
       "modelId": "qwen/qwen3.5-35b-a3b",
-      "tokensPerSecond": 107,
+      "tokensPerSecond": 148,
       "providers": [
         "Alibaba",
         "AtlasCloud",
@@ -2042,7 +2040,7 @@
     },
     "Qwen3.5 397B (Non-Thinking)": {
       "modelId": "qwen/qwen3.5-397b-a17b",
-      "tokensPerSecond": 60,
+      "tokensPerSecond": 64.5,
       "providers": [
         "Alibaba",
         "AtlasCloud",
@@ -2063,7 +2061,7 @@
     },
     "Qwen3.5 397B (Thinking)": {
       "modelId": "qwen/qwen3.5-397b-a17b",
-      "tokensPerSecond": 60,
+      "tokensPerSecond": 64.5,
       "providers": [
         "Alibaba",
         "AtlasCloud",
@@ -2084,7 +2082,7 @@
     },
     "Qwen3.5 9B (Non-Thinking)": {
       "modelId": "qwen/qwen3.5-9b",
-      "tokensPerSecond": 41.5,
+      "tokensPerSecond": 26,
       "providers": [
         "Darkbloom",
         "DeepInfra",
@@ -2101,7 +2099,7 @@
     },
     "Qwen3.5 9B (Thinking)": {
       "modelId": "qwen/qwen3.5-9b",
-      "tokensPerSecond": 41.5,
+      "tokensPerSecond": 26,
       "providers": [
         "Darkbloom",
         "DeepInfra",
@@ -2118,7 +2116,7 @@
     },
     "Qwen3.6 27B (Non-Thinking)": {
       "modelId": "qwen/qwen3.6-27b",
-      "tokensPerSecond": 60,
+      "tokensPerSecond": 55.5,
       "providers": [
         "Alibaba",
         "Chutes",
@@ -2135,7 +2133,7 @@
     },
     "Qwen3.6 27B (Thinking)": {
       "modelId": "qwen/qwen3.6-27b",
-      "tokensPerSecond": 60,
+      "tokensPerSecond": 55.5,
       "providers": [
         "Alibaba",
         "Chutes",
@@ -2152,7 +2150,7 @@
     },
     "Qwen3.6 Plus (Non-Thinking)": {
       "modelId": "qwen/qwen3.6-plus",
-      "tokensPerSecond": 33,
+      "tokensPerSecond": 34,
       "providers": [
         "Alibaba"
       ],
@@ -2164,7 +2162,7 @@
     },
     "Qwen3.6 Plus (Thinking)": {
       "modelId": "qwen/qwen3.6-plus",
-      "tokensPerSecond": 33,
+      "tokensPerSecond": 34,
       "providers": [
         "Alibaba"
       ],
@@ -2176,7 +2174,7 @@
     },
     "Qwen3.7 Max (Non-Thinking)": {
       "modelId": "qwen/qwen3.7-max",
-      "tokensPerSecond": 53,
+      "tokensPerSecond": 48,
       "providers": [
         "Alibaba"
       ],
@@ -2188,7 +2186,7 @@
     },
     "Qwen3.7 Max (Thinking)": {
       "modelId": "qwen/qwen3.7-max",
-      "tokensPerSecond": 53,
+      "tokensPerSecond": 48,
       "providers": [
         "Alibaba"
       ],
@@ -2200,7 +2198,7 @@
     },
     "Solar Pro 3 (high)": {
       "modelId": "upstage/solar-pro-3",
-      "tokensPerSecond": 5,
+      "tokensPerSecond": 4,
       "providers": [
         "Upstage"
       ],
@@ -2212,7 +2210,7 @@
     },
     "Solar Pro 3 (low)": {
       "modelId": "upstage/solar-pro-3",
-      "tokensPerSecond": 5,
+      "tokensPerSecond": 4,
       "providers": [
         "Upstage"
       ],
@@ -2224,7 +2222,7 @@
     },
     "Solar Pro 4": {
       "modelId": "upstage/solar-pro4",
-      "tokensPerSecond": 39,
+      "tokensPerSecond": 60.5,
       "providers": [
         "Upstage"
       ],
@@ -2236,7 +2234,7 @@
     },
     "Solar Pro 4 (max)": {
       "modelId": "upstage/solar-pro4",
-      "tokensPerSecond": 39,
+      "tokensPerSecond": 60.5,
       "providers": [
         "Upstage"
       ],
