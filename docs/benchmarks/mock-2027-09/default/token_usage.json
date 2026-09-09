@@ -1527,6 +1527,197 @@
       "total_tokens": 837330,
       "question_count": 26,
       "last_updated": "2026-09-08T22:30:09+0900"
+    },
+    "Motif 3 (Thinking)": {
+      "sections": {
+        "윤리와사상": {
+          "input_tokens": 4052,
+          "output_tokens": 4946,
+          "total_tokens": 8998,
+          "question_count": 1,
+          "last_updated": "2026-09-09 17:18:58"
+        },
+        "사회문화": {
+          "input_tokens": 5461,
+          "output_tokens": 16219,
+          "total_tokens": 21680,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:05:18"
+        },
+        "영어-공통": {
+          "input_tokens": 9489,
+          "output_tokens": 10500,
+          "total_tokens": 19989,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:03:46"
+        },
+        "생활과윤리": {
+          "input_tokens": 3949,
+          "output_tokens": 7199,
+          "total_tokens": 11148,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:02:45"
+        },
+        "국어-화작": {
+          "input_tokens": 4440,
+          "output_tokens": 6558,
+          "total_tokens": 10998,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:02:34"
+        },
+        "수학-확통": {
+          "input_tokens": 1022,
+          "output_tokens": 79514,
+          "total_tokens": 80536,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:18:26"
+        },
+        "국어-언매": {
+          "input_tokens": 5296,
+          "output_tokens": 5152,
+          "total_tokens": 10448,
+          "question_count": 1,
+          "last_updated": "2026-09-09 18:19:49"
+        },
+        "한국사-공통": {
+          "input_tokens": 3526,
+          "output_tokens": 6659,
+          "total_tokens": 10185,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:02:36"
+        },
+        "화학2": {
+          "input_tokens": 5547,
+          "output_tokens": 23491,
+          "total_tokens": 29038,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:06:18"
+        },
+        "지과2": {
+          "input_tokens": 4183,
+          "output_tokens": 41266,
+          "total_tokens": 45449,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:10:05"
+        },
+        "지과1": {
+          "input_tokens": 4671,
+          "output_tokens": 6606,
+          "total_tokens": 11277,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:02:36"
+        },
+        "정치와법": {
+          "input_tokens": 5953,
+          "output_tokens": 8782,
+          "total_tokens": 14735,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:03:10"
+        },
+        "한국지리": {
+          "input_tokens": 4641,
+          "output_tokens": 4831,
+          "total_tokens": 9472,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:02:10"
+        },
+        "생명1": {
+          "input_tokens": 6320,
+          "output_tokens": 6854,
+          "total_tokens": 13174,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:02:37"
+        },
+        "물리2": {
+          "input_tokens": 4355,
+          "output_tokens": 105075,
+          "total_tokens": 109430,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:22:38"
+        },
+        "수학-공통": {
+          "input_tokens": 2696,
+          "output_tokens": 42206,
+          "total_tokens": 44902,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:09:53"
+        },
+        "동아시아사": {
+          "input_tokens": 4662,
+          "output_tokens": 5356,
+          "total_tokens": 10018,
+          "question_count": 1,
+          "last_updated": "2026-09-09 17:47:02"
+        },
+        "생명2": {
+          "input_tokens": 5879,
+          "output_tokens": 2571,
+          "total_tokens": 8450,
+          "question_count": 1,
+          "last_updated": "2026-09-09 17:46:20"
+        },
+        "화학1": {
+          "input_tokens": 5015,
+          "output_tokens": 102534,
+          "total_tokens": 107549,
+          "question_count": 1,
+          "last_updated": "2026-09-09 17:38:44"
+        },
+        "수학-미적": {
+          "input_tokens": 1153,
+          "output_tokens": 41590,
+          "total_tokens": 42743,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:09:48"
+        },
+        "세계사": {
+          "input_tokens": 4284,
+          "output_tokens": 104307,
+          "total_tokens": 108591,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:23:14"
+        },
+        "물리1": {
+          "input_tokens": 4278,
+          "output_tokens": 15600,
+          "total_tokens": 19878,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:04:35"
+        },
+        "국어-공통": {
+          "input_tokens": 12567,
+          "output_tokens": 18771,
+          "total_tokens": 31338,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:05:44"
+        },
+        "수학-기하": {
+          "input_tokens": 1110,
+          "output_tokens": 42257,
+          "total_tokens": 43367,
+          "question_count": 1,
+          "last_updated": "2026-09-09 16:09:59"
+        },
+        "세계지리": {
+          "input_tokens": 4643,
+          "output_tokens": 6956,
+          "total_tokens": 11599,
+          "question_count": 1,
+          "last_updated": "2026-09-09 17:56:31"
+        },
+        "경제": {
+          "input_tokens": 4725,
+          "output_tokens": 106207,
+          "total_tokens": 110932,
+          "question_count": 1,
+          "last_updated": "2026-09-09 18:16:50"
+        }
+      },
+      "total_input_tokens": 123917,
+      "total_output_tokens": 822007,
+      "total_tokens": 945924,
+      "question_count": 26,
+      "last_updated": "2026-09-09 18:19:49"
     }
   }
 }
