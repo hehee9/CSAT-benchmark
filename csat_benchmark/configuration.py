@@ -90,11 +90,13 @@ def load_config(
     *,
     model_names: Sequence[str] | None = None,
     resolve_secrets: bool = True,
+    resolve_verifier_secrets: bool = False,
 ) -> Dict[str, Any]:
     """@description JSON 설정 로드 및 선택 모델·로컬 인증 정보 적용
 
     ``resolve_secrets=True``: 실행 대상 모델 설정 ``api_key``·``vertex_key`` 추가
     ``False``: 공개 설정 ``api_key_env``·``vertex_key_env`` 유지(목록·메타데이터용)
+    ``resolve_verifier_secrets=True``: verifier 설정 인증 정보 추가
     ``model_names``: 설정 순서 기준 선택 모델명 목록
     미등록 모델명: API 호출 전 ``ConfigurationError`` 발생
     """
@@ -142,5 +144,5 @@ def load_config(
         prepared_models.append(prepared)
     output["models"] = prepared_models
     if isinstance(output.get("verifier"), dict):
-        output["verifier"] = _prepare_record(output["verifier"], resolve_secrets)
+        output["verifier"] = _prepare_record(output["verifier"], resolve_verifier_secrets)
     return output

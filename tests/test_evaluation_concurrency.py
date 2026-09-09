@@ -278,6 +278,40 @@ def test_model_filter_grades_only_selected_model(tmp_path: Path):
     assert verifier.calls == 4
 
 
+def test_explicit_model_with_mixed_target_history_grades_only_ungraded_target(tmp_path: Path):
+    """@description 선택 모델의 완료 target과 미완료 target을 분리 채점"""
+    sections = [("국어/1", "국어", "1"), ("수학/1", "수학", "1")]
+    exam = _make_exam(tmp_path, sections, mode="default", input_mode="section")
+    run = _make_run(exam, sections, ["모델"], mode="default", input_mode="section")
+    for result in run["results"]:
+        result["raw_response"] = f"1|0|{result['target']}"
+    prior = {
+        "selected_models": ["모델"],
+        "results": [
+            {
+                "target": "국어/1",
+                "subject": "국어",
+                "section": "1",
+                "model_name": "모델",
+                "question_number": 1,
+                "extracted_answer": 1,
+                "correct_answer": 1,
+                "is_correct": True,
+                "points": 2,
+                "answer_status": "answered",
+                "complete": True,
+                "provenance": "graded",
+            }
+        ],
+    }
+    verifier = _ReverseHardVerifier()
+
+    graded = grade_run(run, exam, verifier, model_names=["모델"], verified=prior)
+
+    assert verifier.models == ["수학/1", "수학/1"]
+    assert {row["target"] for row in graded["results"]} == {"국어/1", "수학/1"}
+
+
 def test_progress_is_printed_before_grade_run_returns_and_marks_manual_review(
     tmp_path: Path, capsys
 ):

@@ -7,6 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from PIL import Image
 
 import csat_benchmark.batch as batch_module
 from csat_benchmark.batch import (
@@ -93,6 +94,144 @@ class _FakeBatchTransport(BatchTransport):
         return json.loads(result_path.read_text(encoding="utf-8"))
 
 
+class _XaiBatchTransport(BatchTransport):
+    """@description xAI 원격 생성·청크 추가·결과 회수 대역"""
+
+    def __init__(self, *, failed_chunk: int | None = None, ambiguous_chunk: int | None = None) -> None:
+        self.failed_chunk = failed_chunk
+        self.ambiguous_chunk = ambiguous_chunk
+        self.batches: dict[str, list[str]] = {}
+        self.submissions: list[tuple[str, list[str]]] = []
+        self.status_calls: list[str] = []
+
+    @staticmethod
+    def _request_id(request: dict) -> str:
+        return str(request["chat_get_completion"]["batch_request_id"])
+
+    def create(
+        self,
+        model_config: ModelConfig,
+        requests: list[dict],
+        *,
+        input_path: Path,
+        batch_name: str,
+    ) -> str:
+        del model_config, batch_name
+        batch_id = f"grok-{len(self.submissions) + 1}"
+        input_path.parent.mkdir(parents=True, exist_ok=True)
+        input_path.write_text(json.dumps({"batch_requests": requests}), encoding="utf-8")
+        self.batches[batch_id] = []
+        self.submissions.append((batch_id, []))
+        return batch_id
+
+    def add(
+        self,
+        model_config: ModelConfig,
+        batch_id: str,
+        requests: list[dict],
+        *,
+        before_chunk=None,
+        after_chunk=None,
+    ) -> None:
+        del model_config
+        for index in range(0, len(requests), 1):
+            chunk = requests[index:index + 1]
+            chunk_number = index + 1
+            if before_chunk is not None:
+                before_chunk(chunk, chunk_number, len(requests))
+            request_ids = [self._request_id(request) for request in chunk]
+            if self.failed_chunk == chunk_number:
+                raise RuntimeError("xAI 청크 추가 실패")
+            self.batches[batch_id].extend(request_ids)
+            self.submissions[-1][1].extend(request_ids)
+            if self.ambiguous_chunk == chunk_number:
+                raise TimeoutError("xAI 청크 응답 시간 초과")
+            if after_chunk is not None:
+                after_chunk(chunk, chunk_number, len(requests))
+
+    def submit(
+        self,
+        model_config: ModelConfig,
+        requests: list[dict],
+        *,
+        input_path: Path,
+        batch_name: str,
+        use_responses_api: bool,
+    ) -> str:
+        del use_responses_api
+        batch_id = self.create(
+            model_config,
+            requests,
+            input_path=input_path,
+            batch_name=batch_name,
+        )
+        self.add(model_config, batch_id, requests)
+        return batch_id
+
+    def status(self, batch_id: str, model_config: ModelConfig) -> dict:
+        del model_config
+        self.status_calls.append(batch_id)
+        count = len(self.batches[batch_id])
+        return {
+            "id": batch_id,
+            "status": "completed",
+            "request_counts": {
+                "total": count,
+                "completed": count,
+                "failed": 0,
+                "pending": 0,
+                "succeeded": count,
+            },
+        }
+
+    def download(self, batch_id: str, model_config: ModelConfig, output_path: Path) -> Path:
+        del model_config
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(
+            json.dumps(
+                {
+                    "pages": [
+                        {
+                            "succeeded": [
+                                {
+                                    "batch_request_id": request_id,
+                                    "response": {
+                                        "choices": [{"message": {"content": f"응답 {request_id}"}}]
+                                    },
+                                }
+                                for request_id in self.batches[batch_id]
+                            ],
+                            "failed": [],
+                        }
+                    ]
+                },
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+        return output_path
+
+    def parse(
+        self,
+        result_path: Path,
+        model_config: ModelConfig,
+        *,
+        use_responses_api: bool,
+        input_requests: list[dict],
+    ) -> list[dict]:
+        del model_config, use_responses_api, input_requests
+        payload = json.loads(result_path.read_text(encoding="utf-8"))
+        return [
+            {
+                "request_id": item["batch_request_id"],
+                "success": True,
+                "raw_response": item["response"]["choices"][0]["message"]["content"],
+                "answer_status": "answered",
+            }
+            for item in payload["pages"][0]["succeeded"]
+        ]
+
+
 class _ProgressBatchTransport(_FakeBatchTransport):
     """@description 상태 진행 순서와 다운로드를 흉내 내는 대역"""
 
@@ -172,7 +311,13 @@ def _write_exam(tmp_path: Path, *, targets: int = 1, questions: int = 2):
     return load_exam(manifest_path, project_root=tmp_path)
 
 
-def _write_config(tmp_path: Path, names: list[str]) -> Path:
+def _write_config(
+    tmp_path: Path,
+    names: list[str],
+    *,
+    supports_vision: bool = True,
+    api_type: str = "openai",
+) -> Path:
     """테스트용 모델 설정 작성."""
     config_path = tmp_path / "config.json"
     config_path.write_text(
@@ -182,10 +327,11 @@ def _write_config(tmp_path: Path, names: list[str]) -> Path:
                 "models": [
                     {
                         "name": name,
-                        "api_type": "openai",
+                        "api_type": api_type,
                         "api_key_env": "BATCH_TEST_KEY",
                         "model_id": f"mock-{index}",
                         "batch_supported": True,
+                        "supports_vision": supports_vision,
                     }
                     for index, name in enumerate(names)
                 ],
@@ -444,6 +590,225 @@ def test_batch_rejects_unsupported_media_before_run_or_submit(tmp_path: Path, mo
                 output=tmp_path / "run" / "results.json",
                 transport=_FakeBatchTransport(),
             )
+
+
+def test_batch_text_only_model_with_images_reaches_transport(tmp_path: Path, monkeypatch):
+    """@description 이미지 미지원 모델의 이미지 문항 배치 제출·본문 유지 확인"""
+    monkeypatch.setenv("BATCH_TEST_KEY", "test-key")
+    config_path = _write_config(tmp_path, ["모의 모델"], supports_vision=False)
+    exam = load_exam("example-text")
+    target = exam.sections[0].target
+    question = Question(
+        number=1,
+        correct_answer=1,
+        points=2,
+        question_text="본문",
+        image_paths=[str(tmp_path / "문항.png")],
+    )
+    contexts = [
+        {
+            "target": target,
+            "subject": "국어",
+            "section": "예시",
+            "input_mode": "section",
+            "question_numbers": [1],
+            "questions": [],
+        }
+    ]
+    monkeypatch.setattr(
+        batch_module,
+        "_prepare_sections",
+        lambda manifest, sections, mode, question_numbers: (contexts, {target: [(question, 1)]}),
+    )
+    transport = _FakeBatchTransport()
+
+    result = submit_exam(
+        exam,
+        config_path=config_path,
+        model_names=["모의 모델"],
+        output=tmp_path / "run" / "results.json",
+        transport=transport,
+    )
+
+    assert result["submitted"] == 1
+    request = transport.submissions[0][1][0]
+    assert request["body"]["messages"][1]["content"] == [
+        {"type": "text", "text": "본문"},
+    ]
+
+
+def test_responses_batch_request_preserves_instructions_and_data_url(tmp_path: Path):
+    """@description Responses Batch 지시문·이미지 data URL 형식 확인"""
+    image_path = tmp_path / "문항.png"
+    Image.new("RGB", (1, 1), (255, 0, 0)).save(image_path, format="PNG")
+    config = ModelConfig(
+        name="Responses 모델",
+        api_type="openai",
+        api_key="test-key",
+        model_id="responses-model",
+        supports_vision=True,
+    )
+    question = Question(
+        number=1,
+        correct_answer=1,
+        points=2,
+        question_text="본문",
+        image_paths=[str(image_path)],
+    )
+
+    request = batch_module._base_request(
+        config,
+        question,
+        provider="openai",
+        use_responses_api=True,
+        system_prompt="공통 지시",
+    )
+
+    body = request["body"]
+    assert body["instructions"] == "공통 지시"
+    image_item = next(item for item in body["input"][0]["content"] if item["type"] == "input_image")
+    assert image_item["image_url"].startswith("data:image/png;base64,")
+    assert "source" not in image_item
+
+
+def test_xai_batch_checkpoints_each_successful_chunk(tmp_path: Path, monkeypatch):
+    """@description xAI 다중 청크 성공 상태·진행률 저장 확인"""
+    monkeypatch.setenv("BATCH_TEST_KEY", "test-key")
+    exam = _write_exam(tmp_path, questions=3)
+    config_path = _write_config(tmp_path, ["xAI 모델"], api_type="grok")
+    transport = _XaiBatchTransport()
+
+    result = submit_exam(
+        exam,
+        config_path=config_path,
+        easy=True,
+        model_names=["xAI 모델"],
+        output=tmp_path / "run" / "results.json",
+        transport=transport,
+    )
+
+    job = result["batch_state"]["jobs"][0]
+    assert job["submission_status"] == "complete"
+    assert job["submitted_request_ids"] == job["request_ids"]
+    assert job["in_flight_request_ids"] == []
+    assert job["submission_progress"] == {
+        "submitted": 3,
+        "total": 3,
+        "chunks_submitted": 3,
+        "chunks_total": 3,
+    }
+
+
+def test_xai_batch_failure_recovers_accepted_results_and_retries_only_missing(
+    tmp_path: Path,
+    monkeypatch,
+):
+    """@description xAI 청크 실패 후 상태 복구·누락 문항만 재제출 확인"""
+    monkeypatch.setenv("BATCH_TEST_KEY", "test-key")
+    exam = _write_exam(tmp_path, questions=2)
+    config_path = _write_config(tmp_path, ["xAI 모델"], api_type="grok")
+    output = tmp_path / "run" / "results.json"
+    transport = _XaiBatchTransport(failed_chunk=2)
+
+    with pytest.raises(RuntimeError, match="청크 추가 실패"):
+        submit_exam(
+            exam,
+            config_path=config_path,
+            easy=True,
+            model_names=["xAI 모델"],
+            output=output,
+            transport=transport,
+        )
+
+    state_path = output.parent / batch_module.BATCH_STATE_FILE
+    saved = json.loads(state_path.read_text(encoding="utf-8"))
+    failed_job = saved["jobs"][0]
+    assert failed_job["submitted_request_ids"] == [failed_job["request_ids"][0]]
+    assert failed_job["in_flight_request_ids"] == [failed_job["request_ids"][1]]
+    assert failed_job["submission_status"] == "failed"
+
+    status_exam(
+        exam,
+        config_path=config_path,
+        easy=True,
+        model_names=["xAI 모델"],
+        output=output,
+        transport=transport,
+    )
+    downloaded = download_exam(
+        exam,
+        config_path=config_path,
+        easy=True,
+        model_names=["xAI 모델"],
+        output=output,
+        transport=transport,
+    )
+    assert downloaded["saved_results"] == 1
+    assert downloaded["batch_state"]["jobs"][0]["merged_request_ids"] == [
+        failed_job["request_ids"][0]
+    ]
+
+    transport.failed_chunk = None
+    retried = batch_module.retry_exam(
+        exam,
+        config_path=config_path,
+        easy=True,
+        model_names=["xAI 모델"],
+        output=output,
+        transport=transport,
+    )
+    assert retried["submitted"] == 1
+    assert transport.submissions[-1][1] == [failed_job["request_ids"][1]]
+
+    completed = download_exam(
+        exam,
+        config_path=config_path,
+        easy=True,
+        model_names=["xAI 모델"],
+        output=output,
+        transport=transport,
+    )
+    assert completed["saved_results"] == 1
+    assert {row["question_number"] for row in completed["run"]["results"]} == {1, 2}
+
+
+def test_xai_ambiguous_chunk_waits_for_existing_batch_before_retry(tmp_path: Path, monkeypatch):
+    """@description xAI 모호한 청크 응답의 즉시 재전송 방지·기존 결과 회수 확인"""
+    monkeypatch.setenv("BATCH_TEST_KEY", "test-key")
+    exam = _write_exam(tmp_path, questions=2)
+    config_path = _write_config(tmp_path, ["xAI 모델"], api_type="grok")
+    output = tmp_path / "run" / "results.json"
+    transport = _XaiBatchTransport(ambiguous_chunk=2)
+
+    with pytest.raises(TimeoutError, match="시간 초과"):
+        submit_exam(
+            exam,
+            config_path=config_path,
+            easy=True,
+            model_names=["xAI 모델"],
+            output=output,
+            transport=transport,
+        )
+
+    state_path = output.parent / batch_module.BATCH_STATE_FILE
+    saved = json.loads(state_path.read_text(encoding="utf-8"))
+    job = saved["jobs"][0]
+    assert job["submitted_request_ids"] == [job["request_ids"][0]]
+    assert job["in_flight_request_ids"] == [job["request_ids"][1]]
+
+    transport.ambiguous_chunk = None
+    retried = batch_module.retry_exam(
+        exam,
+        config_path=config_path,
+        easy=True,
+        model_names=["xAI 모델"],
+        output=output,
+        transport=transport,
+    )
+
+    assert retried["submitted"] == 0
+    assert len(transport.submissions) == 1
+    assert retried["downloaded_before_retry"]["saved_results"] == 2
 
 
 def test_batch_cli_requires_exam_and_removes_old_run_mode_hard_flags():

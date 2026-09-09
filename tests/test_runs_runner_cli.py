@@ -7,15 +7,20 @@ import os
 import tempfile
 import threading
 import unittest
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
 from csat_benchmark.cli import api_main
 from csat_benchmark.exams import load_exam
-from csat_benchmark.models import APIResponse
-from csat_benchmark.runner import _merge_contexts, run_exam, select_sections
+from csat_benchmark.models import APIResponse, ModelConfig, Question
+from csat_benchmark.runner import (
+    _merge_contexts,
+    _validate_prepared_media,
+    run_exam,
+    select_sections,
+)
 from csat_benchmark.runs import (
     RunStore,
     create_run,
@@ -25,6 +30,26 @@ from csat_benchmark.runs import (
     result_is_completed,
     save_run,
 )
+
+
+def test_runner_preflight_allows_image_for_text_only_model() -> None:
+    """@description 이미지 미지원 모델의 이미지 문항 사전 검증 통과 확인"""
+    question = Question(
+        number=1,
+        correct_answer=1,
+        points=2,
+        question_text="본문",
+        image_paths=["문항.png"],
+    )
+    config = ModelConfig(
+        name="텍스트 모델",
+        api_type="openai",
+        api_key="test-key",
+        model_id="test-model",
+        supports_vision=False,
+    )
+
+    _validate_prepared_media({"국어/예시": [(question, 1)]}, {config.name: config})
 
 
 class _FakeClient:
@@ -138,6 +163,192 @@ class RunLayerTest(unittest.TestCase):
             encoding="utf-8",
         )
         return manifest_path
+
+    def test_question_selection_skips_unselected_missing_file(self) -> None:
+        """@description 선택 문항만 본문·미디어 파일 검증 대상에 포함"""
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            manifest_path = self._manifest(root, question_count=2)
+            question_path = root / "data" / "questions.json"
+            question_path.write_text(
+                json.dumps(
+                    {
+                        "subject": "국어",
+                        "section": "예시",
+                        "questions": [
+                            {"number": 1, "correct_answer": 1, "points": 1, "question_text": "문항 1"},
+                            {
+                                "number": 2,
+                                "correct_answer": 1,
+                                "points": 1,
+                                "question_path": "없는 문항.txt",
+                            },
+                        ],
+                    },
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            exam = load_exam(manifest_path, project_root=root)
+            config_path = self._config(root, "모델")
+            calls: list[int] = []
+
+            def factory(config, *, system_prompt):
+                return _FakeClient(config, [("응답", True)], calls)
+
+            with patch.dict(os.environ, {"RUN_LAYER_TEST_KEY": "test-key"}):
+                result = run_exam(
+                    exam,
+                    config_path=config_path,
+                    easy=True,
+                    question_numbers=[1],
+                    client_factory=factory,
+                )
+            self.assertEqual([1], calls)
+            self.assertEqual([1], [row["question_number"] for row in result["results"]])
+
+    def test_cli_unknown_target_returns_two_without_traceback(self) -> None:
+        """@description 등록되지 않은 target의 CLI 오류 코드 2 반환"""
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            manifest_path = self._manifest(root, question_count=1)
+            config_path = self._config(root, "모델")
+            output = StringIO()
+            errors = StringIO()
+            with patch.dict(os.environ, {"RUN_LAYER_TEST_KEY": "test-key"}):
+                with redirect_stdout(output), redirect_stderr(errors):
+                    result = api_main(
+                        [
+                            "--exam",
+                            str(manifest_path),
+                            "--config",
+                            str(config_path),
+                            "--targets",
+                            "없는/섹션",
+                            "--check",
+                        ]
+                    )
+            self.assertEqual(2, result)
+            self.assertIn("오류:", errors.getvalue())
+            self.assertNotIn("Traceback", errors.getvalue())
+
+    def test_progress_reports_failure_and_empty_retry(self) -> None:
+        """@description 실패 응답·작업 없는 재시도의 진행 상황 즉시 출력"""
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            exam = load_exam(self._manifest(root, question_count=1), project_root=root)
+            config_path = self._config(root, "모델")
+            failure_output = StringIO()
+            calls: list[int] = []
+
+            def failure_factory(config, *, system_prompt):
+                return _FakeClient(config, [("", False)], calls)
+
+            with patch.dict(os.environ, {"RUN_LAYER_TEST_KEY": "test-key"}):
+                with redirect_stdout(failure_output):
+                    run_exam(exam, config_path=config_path, client_factory=failure_factory)
+            self.assertIn("준비된 작업", failure_output.getvalue())
+            self.assertIn("[1/1] 실패", failure_output.getvalue())
+            self.assertIn("영역=국어/예시", failure_output.getvalue())
+            self.assertNotIn("문항=0", failure_output.getvalue())
+            self.assertIn("소요=", failure_output.getvalue())
+            self.assertIn("오류=모의 전송 실패", failure_output.getvalue())
+
+            success_output = StringIO()
+            success_calls: list[int] = []
+
+            def success_factory(config, *, system_prompt):
+                return _FakeClient(config, [("응답", True)], success_calls)
+
+            with patch.dict(os.environ, {"RUN_LAYER_TEST_KEY": "test-key"}):
+                run_exam(exam, config_path=config_path, client_factory=success_factory)
+                with redirect_stdout(success_output):
+                    run_exam(
+                        exam,
+                        config_path=config_path,
+                        retry_failed=True,
+                        client_factory=success_factory,
+                    )
+            self.assertIn("작업 수=0", success_output.getvalue())
+            self.assertIn("준비된 작업이 없습니다.", success_output.getvalue())
+
+    def test_progress_is_printed_before_a_later_request_finishes(self) -> None:
+        """@description 후속 요청 대기 중 선행 완료 진행 출력 관찰"""
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            exam = load_exam(self._manifest(root, question_count=2), project_root=root)
+            config_path = self._config(root, "모델")
+            config = json.loads(config_path.read_text(encoding="utf-8"))
+            config["models"][0]["concurrent_request_limit"] = 2
+            config_path.write_text(json.dumps(config, ensure_ascii=False), encoding="utf-8")
+            second_started = threading.Event()
+            release_second = threading.Event()
+            first_progress = threading.Event()
+
+            class _ProgressBuffer(StringIO):
+                """@description 첫 완료 출력 관찰용 문자열 버퍼"""
+
+                def write(self, value: str) -> int:
+                    written = super().write(value)
+                    if "[1/2] 성공" in self.getvalue():
+                        first_progress.set()
+                    return written
+
+            output = _ProgressBuffer()
+
+            class _BlockingClient:
+                """@description 두 번째 요청을 대기시키는 공급자 대역"""
+
+                def send_request(self, question):
+                    if question.number == 2:
+                        second_started.set()
+                        release_second.wait(timeout=5)
+                    return APIResponse(
+                        question_number=question.number,
+                        model_name="모델",
+                        raw_response="응답",
+                        timestamp="2026-09-07T00:00:00+00:00",
+                        success=True,
+                    )
+
+            result_holder: list[dict] = []
+            errors: list[BaseException] = []
+
+            def factory(config, *, system_prompt):
+                return _BlockingClient()
+
+            def run():
+                """@description 대기 요청 실행 스레드"""
+                try:
+                    result_holder.append(
+                        run_exam(
+                            exam,
+                            config_path=config_path,
+                            easy=True,
+                            client_factory=factory,
+                        )
+                    )
+                except BaseException as error:
+                    errors.append(error)
+
+            with patch.dict(os.environ, {"RUN_LAYER_TEST_KEY": "test-key"}):
+                with redirect_stdout(output):
+                    worker = threading.Thread(target=run)
+                    worker.start()
+                    second_seen = second_started.wait(timeout=5)
+                    first_seen = first_progress.wait(timeout=5)
+                    output_before_release = output.getvalue()
+                    worker_running = worker.is_alive()
+                    release_second.set()
+                    worker.join(timeout=5)
+
+            self.assertTrue(second_seen)
+            self.assertTrue(first_seen)
+            self.assertTrue(worker_running)
+            self.assertIn("[1/2] 성공", output_before_release)
+            self.assertFalse(errors)
+            self.assertFalse(worker.is_alive())
+            self.assertEqual(2, len(result_holder[0]["results"]))
 
     def test_default_runs_one_section_generation_and_easy_runs_questions(self) -> None:
         """일반 mode는 섹션 한 번, --easy는 문항별 한 번씩 호출한다."""

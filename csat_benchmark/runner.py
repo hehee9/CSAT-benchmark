@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import os
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, fields
 from pathlib import Path
@@ -127,7 +128,10 @@ def select_sections(
             target = target.strip()
             if target in seen:
                 continue
-            selected.append(exam.section(target))
+            try:
+                selected.append(exam.section(target))
+            except KeyError as error:
+                raise RunnerError(f"시험 {exam.id}에 섹션이 없습니다: {target}") from error
             seen.add(target)
         return selected
 
@@ -232,7 +236,6 @@ def _prepare_sections(
     prepared: Dict[str, List[tuple[Question, int]]] = {}
     for section in sections:
         questions = load_section_questions(exam, section)
-        _validate_question_files(questions)
         if requested_numbers:
             available = {question.number for question in questions}
             missing = requested_numbers - available
@@ -241,6 +244,7 @@ def _prepare_sections(
                     f"{section.target}에 지정한 문항 번호가 없습니다: {', '.join(map(str, sorted(missing)))}"
                 )
             questions = [question for question in questions if question.number in requested_numbers]
+        _validate_question_files(questions)
 
         context: Dict[str, Any] = {
             "target": section.target,
@@ -549,6 +553,14 @@ def run_exam(
             initialize_model_results(run, run_path, new_raw_model_names)
             save_run_metadata(run, run_path)
 
+    print(
+        f"준비된 작업: 시험={manifest.id} 모드={selected_mode.id} "
+        f"모델={', '.join(selected_model_names)} 작업 수={len(jobs)}",
+        flush=True,
+    )
+    if not jobs:
+        print("준비된 작업이 없습니다.", flush=True)
+
     for job in jobs:
         invalidate_verified_results(
             run_path,
@@ -570,17 +582,35 @@ def run_exam(
     max_workers = min(max(1, sum(limits.values())), max(1, len(jobs)))
     semaphores = {name: threading.Semaphore(limits[name]) for name in selected_model_names}
 
-    def invoke(job: ImmediateJob) -> APIResponse:
+    def invoke(job: ImmediateJob) -> tuple[APIResponse, float]:
         """@description 작업별 모델 동시성 슬롯 실행"""
         with semaphores[job.model_name]:
-            return clients[job.model_name].send_request(job.question)
+            started = time.perf_counter()
+            response = clients[job.model_name].send_request(job.question)
+            return response, time.perf_counter() - started
 
     if jobs:
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = {executor.submit(invoke, job): job for job in jobs}
+            completed_count = 0
             for future in as_completed(futures):
                 job = futures[future]
-                store.upsert(_response_record(future.result(), job))
+                response, elapsed_seconds = future.result()
+                store.upsert(_response_record(response, job))
+                completed_count += 1
+                status = "성공" if response.success else "실패"
+                scope = (
+                    f"영역={job.target}"
+                    if selected_mode.input_mode == "section"
+                    else f"영역={job.target} 문항={job.question_number}"
+                )
+                progress = (
+                    f"[{completed_count}/{len(jobs)}] {status}: "
+                    f"모델={job.model_name} {scope} 소요={elapsed_seconds:.2f}초"
+                )
+                if not response.success:
+                    progress += f" 오류={response.error_message or '알 수 없는 오류'}"
+                print(progress, flush=True)
     elif existing_path:
         save_run_metadata(store.run, run_path)
     return store.run

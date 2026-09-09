@@ -404,9 +404,6 @@ def validate_question_media(
     batch: bool = False,
 ) -> None:
     """@description 공급자·배치 매체 지원 범위 검증"""
-    if question.image_paths and not config.supports_vision:
-        raise ValueError(f"{config.name} 모델은 이미지 매체를 지원하지 않습니다.")
-
     if question.pdf_paths:
         if batch:
             raise ValueError("배치 요청은 PDF 매체를 지원하지 않습니다.")

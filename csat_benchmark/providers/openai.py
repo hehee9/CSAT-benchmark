@@ -77,6 +77,8 @@ class _StreamProgress:
     usage_info: Any = None
     usage_received: bool = False
     final_response: Any = None
+    provider_stop_reason: Optional[str] = None
+    refusal_detected: bool = False
 
 def _create_recording_byte_stream(stream: Any,
                                   capture_limit: int = STREAM_ERROR_CAPTURE_LIMIT) -> Any:
@@ -263,7 +265,7 @@ class OpenAIClient(APIClient):
     def _build_responses_content(self, question: Question) -> List[Dict[str, Any]]:
         return build_responses_content(
             question,
-            supports_vision=True,
+            supports_vision=self.config.supports_vision,
             image_format="data_url",
             skip_missing=True,
         )
@@ -305,34 +307,35 @@ class OpenAIClient(APIClient):
         return value
 
     def _extract_responses_text_delta(self, chunk: Any) -> str:
-        delta = getattr(chunk, "delta", None)
-        if isinstance(delta, str):
-            return delta
-
         chunk_data = self._to_plain_data(chunk)
         if not isinstance(chunk_data, dict):
             return ""
 
+        if chunk_data.get("type") != "response.output_text.delta":
+            return ""
+
         delta = chunk_data.get("delta")
-        if isinstance(delta, str):
-            return delta
-        if isinstance(delta, dict) and isinstance(delta.get("text"), str):
-            return delta["text"]
+        return delta if isinstance(delta, str) else ""
 
-        part = chunk_data.get("part")
-        if isinstance(part, dict) and isinstance(part.get("text"), str):
-            return part["text"]
-
-        content = chunk_data.get("content")
-        if isinstance(content, dict) and isinstance(content.get("text"), str):
-            return content["text"]
-
-        return ""
+    def _extract_responses_refusal_delta(self, chunk: Any) -> str:
+        """@description Responses API 거부 텍스트 조각 추출"""
+        chunk_data = self._to_plain_data(chunk)
+        if not isinstance(chunk_data, dict):
+            return ""
+        if chunk_data.get("type") != "response.refusal.delta":
+            return ""
+        delta = chunk_data.get("delta")
+        return delta if isinstance(delta, str) else ""
 
     def _extract_response_output_text(self, response: Any) -> str:
         response_data = self._to_plain_data(response)
         if not response_data:
             return ""
+
+        if isinstance(response_data, dict):
+            output_text = response_data.get("output_text")
+            if isinstance(output_text, str) and output_text:
+                return output_text
 
         output_texts: List[str] = []
 
@@ -341,8 +344,8 @@ class OpenAIClient(APIClient):
                 node_type = node.get("type")
                 if node_type == "output_text" and isinstance(node.get("text"), str):
                     output_texts.append(node["text"])
-                elif isinstance(node.get("output_text"), str):
-                    output_texts.append(node["output_text"])
+                elif node_type == "refusal" and isinstance(node.get("refusal"), str):
+                    output_texts.append(node["refusal"])
 
                 if "output" in node:
                     collect(node["output"])
@@ -354,6 +357,51 @@ class OpenAIClient(APIClient):
 
         collect(response_data)
         return "".join(output_texts)
+
+    def _response_contains_refusal(self, response: Any) -> bool:
+        """@description Responses API 최종 응답의 거부 콘텐츠 포함 여부 확인"""
+        response_data = self._to_plain_data(response)
+        if isinstance(response_data, dict):
+            if response_data.get("type") == "refusal":
+                return True
+            if isinstance(response_data.get("refusal"), str):
+                return True
+            return any(
+                self._response_contains_refusal(response_data[key])
+                for key in ("output", "content", "message", "response")
+                if key in response_data
+            )
+        if isinstance(response_data, list):
+            return any(self._response_contains_refusal(item) for item in response_data)
+        return False
+
+    def _extract_responses_stop_reason(self, value: Any) -> Optional[str]:
+        """@description Responses API 종료 사유 추출"""
+        data = self._to_plain_data(value)
+        if not isinstance(data, dict):
+            return None
+
+        for field_name in ("stop_reason", "finish_reason"):
+            reason = data.get(field_name)
+            if isinstance(reason, str) and reason:
+                return reason
+
+        incomplete_details = data.get("incomplete_details")
+        if isinstance(incomplete_details, dict):
+            reason = incomplete_details.get("reason")
+            if isinstance(reason, str) and reason:
+                return reason
+
+        response_data = data.get("response")
+        if isinstance(response_data, dict):
+            reason = self._extract_responses_stop_reason(response_data)
+            if reason is not None:
+                return reason
+
+        status = data.get("status")
+        if isinstance(status, str) and status not in {"queued", "in_progress"}:
+            return status
+        return None
 
     def _get_usage_field(self, usage_info: Any, field_name: str) -> Any:
         if isinstance(usage_info, dict):
@@ -762,11 +810,28 @@ class OpenAIClient(APIClient):
             if hasattr(chunk, 'usage') and chunk.usage:
                 progress.usage_info = chunk.usage
                 progress.usage_received = True
-            if chunk.choices and chunk.choices[0].delta.content:
+            if not chunk.choices:
+                continue
+            choice = chunk.choices[0]
+            finish_reason = getattr(choice, "finish_reason", None)
+            if isinstance(finish_reason, str) and finish_reason:
+                progress.provider_stop_reason = finish_reason
+                if finish_reason in {"refusal", "content_filter"}:
+                    progress.refusal_detected = True
+            delta = getattr(choice, "delta", None)
+            content = getattr(delta, "content", None)
+            if isinstance(content, str) and content:
                 progress.response_text = _append_stream_delta(
                     progress.response_text,
-                    chunk.choices[0].delta.content
+                    content,
                 )
+            refusal = getattr(delta, "refusal", None)
+            if isinstance(refusal, str) and refusal:
+                progress.response_text = _append_stream_delta(
+                    progress.response_text,
+                    refusal,
+                )
+                progress.refusal_detected = True
 
         if progress.chunks_received == 0 and recording_stream is not None:
             provider_error = _parse_unframed_stream_error(bytes(recording_stream.captured))
@@ -784,7 +849,6 @@ class OpenAIClient(APIClient):
             self.config,
             system_prompt=self.system_prompt,
             stream=True,
-            supports_vision=True,
             image_format="data_url",
             reasoning_format="responses",
             include_extra_body=False,
@@ -805,15 +869,46 @@ class OpenAIClient(APIClient):
                     progress.response_text,
                     text_delta,
                 )
+            refusal_delta = self._extract_responses_refusal_delta(chunk)
+            if refusal_delta:
+                progress.response_text = _append_stream_delta(
+                    progress.response_text,
+                    refusal_delta,
+                )
+                progress.refusal_detected = True
+                progress.provider_stop_reason = "refusal"
             if hasattr(chunk, 'usage') and chunk.usage:
                 progress.usage_info = chunk.usage
                 progress.usage_received = True
-            if hasattr(chunk, 'response') and chunk.response:
-                progress.final_response = chunk.response
+            chunk_data = self._to_plain_data(chunk)
+            if isinstance(chunk_data, dict):
+                if chunk_data.get("usage"):
+                    progress.usage_info = chunk_data["usage"]
+                    progress.usage_received = True
+                if chunk_data.get("response"):
+                    progress.final_response = chunk_data["response"]
+            response = getattr(chunk, 'response', None)
+            if response:
+                progress.final_response = response
+            stop_reason = self._extract_responses_stop_reason(chunk)
+            if stop_reason is not None and not (
+                progress.refusal_detected and stop_reason == "completed"
+            ):
+                progress.provider_stop_reason = stop_reason
 
         raw_response = progress.response_text
         if not raw_response and progress.final_response is not None:
             raw_response = self._extract_response_output_text(progress.final_response)
+        if progress.final_response is not None:
+            progress.refusal_detected = (
+                progress.refusal_detected
+                or self._response_contains_refusal(progress.final_response)
+            )
+            if progress.refusal_detected and progress.provider_stop_reason in {
+                None,
+                "completed",
+            }:
+                progress.provider_stop_reason = "refusal"
         if progress.usage_info is None and progress.final_response is not None:
             progress.usage_info = getattr(progress.final_response, 'usage', None)
             if progress.usage_info is None:
@@ -822,6 +917,10 @@ class OpenAIClient(APIClient):
                     progress.usage_info = final_response_data.get("usage")
             if progress.usage_info is not None:
                 progress.usage_received = True
+        if progress.provider_stop_reason is None and progress.final_response is not None:
+            progress.provider_stop_reason = self._extract_responses_stop_reason(
+                progress.final_response
+            )
 
         return raw_response
 
@@ -853,6 +952,12 @@ class OpenAIClient(APIClient):
                 progress.generation_id
             )
 
+            answer_status = (
+                "refusal"
+                if progress.refusal_detected
+                else "answered" if raw_response else "no_answer"
+            )
+
             return APIResponse(
                 question_number=question.number,
                 model_name=self.config.name,
@@ -861,7 +966,9 @@ class OpenAIClient(APIClient):
                 success=True,
                 input_tokens=input_tokens,
                 output_tokens=output_tokens,
-                total_tokens=total_tokens
+                total_tokens=total_tokens,
+                answer_status=answer_status,
+                provider_stop_reason=progress.provider_stop_reason,
             )
 
         except Exception as e:

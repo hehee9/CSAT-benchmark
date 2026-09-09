@@ -149,6 +149,12 @@ python verify_answers.py \
 일반 모드는 섹션 묶음 응답을, 쉬움 모드는 문항별 응답을 채점합니다. 모델 생성은 각 입력마다 한 번이며, 답 추출기는 응답마다 두 번 확인하고 결과가 다를 때만 세 번째 확인을 추가합니다. 이 확인 횟수는 모델 생성 횟수가 아닙니다.
 채점 범위는 `--targets`, `--subject`와 `--section`, `--subjects`, `--models`로 좁힐 수 있습니다. `--benchmark-all`은 매니페스트 전체 채점을 명시하며, `--question-numbers`는 쉬움 모드에서만 사용할 수 있습니다.
 
+기본 실행은 미채점만 처리합니다. `--models`로 명시한 범위가 전부 기채점이면 자동 재채점하며, 그 외에 재채점하려면 `--update`를 붙입니다.
+
+```bash
+python verify_answers.py --exam EXAM --models "모델명" --update
+```
+
 정답이면 배점만큼 부여하고, 완료된 오답·`no_answer`·응답 거부는 그대로 오답으로 기록합니다. 전송·공급자 기술 오류로 응답이 완료되지 않은 결과만 재시도 대상으로 남습니다.
 
 검증기 설정은 모델 설정의 `verifier.model_id`와 `verifier.api_key_env`를 사용합니다. 검증기 호출도 API 요청이므로 실행과 별도의 비용이 발생할 수 있습니다.

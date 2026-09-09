@@ -23,10 +23,11 @@ class AnthropicClient(APIClient):
     def _parse_streaming_response(self, response) -> tuple:
         """@description Server-Sent Events(SSE) 스트리밍 응답 파싱
 
-        @return (text, usage_dict) 응답 텍스트·토큰 사용량
+        @return (text, usage_dict, stop_reason) 응답 텍스트·토큰 사용량·종료 사유
         """
         text_parts = []
         usage_info = {'input_tokens': None, 'output_tokens': None, 'total_tokens': None}
+        stop_reason = None
 
         for line in response.iter_lines():
             if not line:
@@ -56,6 +57,10 @@ class AnthropicClient(APIClient):
 
                     # message_delta 이벤트 output_tokens 추출
                     if data.get('type') == 'message_delta':
+                        delta = data.get('delta', {})
+                        candidate_stop_reason = delta.get('stop_reason')
+                        if candidate_stop_reason:
+                            stop_reason = candidate_stop_reason
                         usage = data.get('usage', {})
                         usage_info['output_tokens'] = usage.get('output_tokens')
 
@@ -63,7 +68,7 @@ class AnthropicClient(APIClient):
                     # ping 등 JSON 파싱 실패 이벤트 무시
                     pass
 
-        return ''.join(text_parts), usage_info
+        return ''.join(text_parts), usage_info, stop_reason
 
     def send_request(self, question: Question) -> APIResponse:
         """@description Anthropic REST API 요청 전송"""
@@ -83,7 +88,6 @@ class AnthropicClient(APIClient):
                 question,
                 self.config,
                 system_prompt=self.system_prompt,
-                supports_vision=True,
             )
             payload["stream"] = True
 
@@ -95,7 +99,7 @@ class AnthropicClient(APIClient):
                 raise Exception(f"API Error {response.status_code}: {response.text}")
 
             # Server-Sent Events 스트리밍 응답 파싱
-            raw_response, usage_info = self._parse_streaming_response(response)
+            raw_response, usage_info, stop_reason = self._parse_streaming_response(response)
 
             # 토큰 사용량 계산
             input_tokens = usage_info.get('input_tokens')
@@ -112,7 +116,13 @@ class AnthropicClient(APIClient):
                 success=True,
                 input_tokens=input_tokens,
                 output_tokens=output_tokens,
-                total_tokens=total_tokens
+                total_tokens=total_tokens,
+                answer_status=(
+                    "refusal"
+                    if stop_reason == "refusal"
+                    else "answered" if raw_response else "no_answer"
+                ),
+                provider_stop_reason=stop_reason,
             )
 
         except Exception as e:

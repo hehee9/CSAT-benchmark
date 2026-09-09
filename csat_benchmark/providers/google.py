@@ -10,7 +10,7 @@ from typing import Any, Dict
 
 import requests
 
-from ..models import APIResponse, ModelConfig, Question
+from ..models import APIResponse, ModelConfig, Question, _has_response_or_token_usage
 from .base import APIClient
 from .requests import build_google_parts, format_image_caption
 
@@ -21,6 +21,49 @@ GOOGLE_GENAI_AVAILABLE = False
 GOOGLE_GENERATIVEAI_AVAILABLE = False
 PILImage = None
 PIL_AVAILABLE = False
+_GOOGLE_REFUSAL_REASONS = {
+    "SAFETY",
+    "BLOCKLIST",
+    "PROHIBITED_CONTENT",
+}
+
+
+def _stringify_google_stop_reason(reason: Any) -> str | None:
+    """@description Google SDK 종료 사유 문자열 변환"""
+    if isinstance(reason, str) and reason:
+        return reason
+    name = getattr(reason, "name", None)
+    if isinstance(name, str) and name:
+        return name
+    value = getattr(reason, "value", None)
+    if isinstance(value, str) and value:
+        return value
+    return None
+
+
+def _extract_google_stop_reason(chunk: Any) -> str | None:
+    """@description Google SDK 청크 종료 사유 추출"""
+    if isinstance(chunk, dict):
+        candidates = chunk.get("candidates", [])
+    else:
+        candidates = getattr(chunk, "candidates", [])
+    if not candidates:
+        return None
+    candidate = candidates[0]
+    if isinstance(candidate, dict):
+        reason = candidate.get("finishReason")
+        if reason is None:
+            reason = candidate.get("finish_reason")
+    else:
+        reason = getattr(candidate, "finish_reason", None)
+        if reason is None:
+            reason = getattr(candidate, "finishReason", None)
+    return _stringify_google_stop_reason(reason)
+
+
+def _is_google_refusal(stop_reason: str | None) -> bool:
+    """@description Google 종료 사유의 거부 여부 확인"""
+    return stop_reason in _GOOGLE_REFUSAL_REASONS
 
 def _ensure_google_available() -> bool:
     """@description Gemini 요청 시 Google SDK 지연 로드"""
@@ -239,15 +282,15 @@ class GoogleClient(APIClient):
 
         raise Exception(f"File processing timeout after {timeout} seconds")
 
-    def _request_and_collect(self, question: Question) -> tuple[str, Any]:
-        """@description Google SDK 요청 실행 및 스트림 텍스트·사용량 수집"""
+    def _request_and_collect(self, question: Question) -> tuple[str, Any, str | None]:
+        """@description Google SDK 요청 실행 및 스트림 텍스트·사용량·종료 사유 수집"""
         question_text = question.load_question_text()
         if self.use_new_sdk:
             # google-genai SDK 사용
             content = [question_text]
 
             # 이미지 첨부(복수 이미지, PIL Image 직접 전달)
-            if _ensure_pil_available():
+            if self.config.supports_vision and _ensure_pil_available():
                 for image_path_str in question.image_paths:
                     image_path = Path(image_path_str)
                     if image_path.exists():
@@ -300,6 +343,7 @@ class GoogleClient(APIClient):
             # 스트리밍 응답 수집
             response_texts = []
             usage_metadata = None
+            stop_reason = None
             stream = self.client.models.generate_content_stream(
                 model=self.model_id,
                 contents=content,
@@ -308,6 +352,9 @@ class GoogleClient(APIClient):
             for chunk in stream:
                 if hasattr(chunk, 'text') and chunk.text:
                     response_texts.append(chunk.text)
+                chunk_stop_reason = _extract_google_stop_reason(chunk)
+                if chunk_stop_reason is not None:
+                    stop_reason = chunk_stop_reason
             # 마지막 청크 usage_metadata 추출
                 if hasattr(chunk, 'usage_metadata') and chunk.usage_metadata:
                     usage_metadata = chunk.usage_metadata
@@ -319,7 +366,7 @@ class GoogleClient(APIClient):
             content = [question_text]
 
             # 이미지 첨부(복수 이미지 지원)
-            if _ensure_pil_available():
+            if self.config.supports_vision and _ensure_pil_available():
                 for image_path_str in question.image_paths:
                     image_path = Path(image_path_str)
                     if image_path.exists():
@@ -369,6 +416,7 @@ class GoogleClient(APIClient):
             # 스트리밍 응답 수집
             response_texts = []
             usage_metadata = None
+            stop_reason = None
             stream = legacy_client.generate_content(
                 content,
                 generation_config=gen_config if gen_config else None,
@@ -377,13 +425,16 @@ class GoogleClient(APIClient):
             for chunk in stream:
                 if hasattr(chunk, 'text') and chunk.text:
                     response_texts.append(chunk.text)
+                chunk_stop_reason = _extract_google_stop_reason(chunk)
+                if chunk_stop_reason is not None:
+                    stop_reason = chunk_stop_reason
             # 마지막 청크 usage_metadata 추출
                 if hasattr(chunk, 'usage_metadata') and chunk.usage_metadata:
                     usage_metadata = chunk.usage_metadata
 
             raw_response = "".join(response_texts)
 
-        return raw_response, usage_metadata
+        return raw_response, usage_metadata, stop_reason
 
     def send_request(self, question: Question) -> APIResponse:
         """@description Google Gemini API 스트리밍 요청 전송"""
@@ -401,7 +452,7 @@ class GoogleClient(APIClient):
             if self.config.thinking_level:
                 return self._send_rest_api_request(question)
 
-            raw_response, usage_metadata = self._request_and_collect(question)
+            raw_response, usage_metadata, stop_reason = self._request_and_collect(question)
 
             # answer = self._extract_answer(raw_response, question.choices)
 
@@ -418,6 +469,8 @@ class GoogleClient(APIClient):
                 if thoughts_tokens and output_tokens:
                     output_tokens = output_tokens + thoughts_tokens
 
+            is_refusal = _is_google_refusal(stop_reason)
+
             return APIResponse(
                 question_number=question.number,
                 model_name=self.config.name,
@@ -426,7 +479,13 @@ class GoogleClient(APIClient):
                 success=True,
                 input_tokens=input_tokens,
                 output_tokens=output_tokens,
-                total_tokens=total_tokens
+                total_tokens=total_tokens,
+                answer_status=(
+                    "refusal"
+                    if is_refusal
+                    else "answered" if raw_response else "no_answer"
+                ),
+                provider_stop_reason=stop_reason,
             )
 
         except Exception as e:
@@ -459,7 +518,7 @@ class GoogleClient(APIClient):
         # 텍스트·이미지 parts 구성(배치 요청 공통)
         parts = build_google_parts(
             question,
-            supports_vision=True,
+            supports_vision=self.config.supports_vision,
             wire_format="snake",
             skip_missing=True,
         )
@@ -555,6 +614,8 @@ class GoogleClient(APIClient):
         try:
             response_texts = []
             usage_metadata = {}
+            stop_reason = None
+            prompt_feedback = {}
             for line in response.iter_lines():
                 if not line:
                     continue
@@ -568,13 +629,21 @@ class GoogleClient(APIClient):
                     for chunk_data in chunks:
                         candidates = chunk_data.get('candidates', [])
                         if candidates:
+                            candidate = candidates[0]
+                            candidate_stop_reason = candidate.get('finishReason')
+                            if candidate_stop_reason:
+                                stop_reason = candidate_stop_reason
                             content_parts = candidates[0].get('content', {}).get('parts', [])
                             for part in content_parts:
+                                if part.get('thought'):
+                                    continue
                                 if 'text' in part:
                                     response_texts.append(part['text'])
                         # usageMetadata 추출
                         if 'usageMetadata' in chunk_data:
                             usage_metadata = chunk_data['usageMetadata']
+                        if 'promptFeedback' in chunk_data:
+                            prompt_feedback = chunk_data['promptFeedback'] or {}
                 elif line.startswith('data: '):
                     # SSE 형식: "data: {...}"
                     try:
@@ -582,13 +651,21 @@ class GoogleClient(APIClient):
                         chunk_data = json.loads(data_str)
                         candidates = chunk_data.get('candidates', [])
                         if candidates:
+                            candidate = candidates[0]
+                            candidate_stop_reason = candidate.get('finishReason')
+                            if candidate_stop_reason:
+                                stop_reason = candidate_stop_reason
                             content_parts = candidates[0].get('content', {}).get('parts', [])
                             for part in content_parts:
+                                if part.get('thought'):
+                                    continue
                                 if 'text' in part:
                                     response_texts.append(part['text'])
                         # usageMetadata 추출
                         if 'usageMetadata' in chunk_data:
                             usage_metadata = chunk_data['usageMetadata']
+                        if 'promptFeedback' in chunk_data:
+                            prompt_feedback = chunk_data['promptFeedback'] or {}
                     except json.JSONDecodeError:
                         # JSON 파싱 실패 라인 무시
                         pass
@@ -604,7 +681,20 @@ class GoogleClient(APIClient):
             if thoughts_tokens and output_tokens:
                 output_tokens = output_tokens + thoughts_tokens
 
-            if not raw_response:
+            prompt_feedback_reason = prompt_feedback.get('blockReason')
+            if not stop_reason and isinstance(prompt_feedback_reason, str):
+                stop_reason = prompt_feedback_reason
+            is_refusal = bool(prompt_feedback_reason) or _is_google_refusal(
+                stop_reason
+            )
+
+            has_generation = _has_response_or_token_usage(
+                raw_response,
+                input_tokens,
+                output_tokens,
+                total_tokens,
+            )
+            if not has_generation and not is_refusal:
             # 스트리밍 응답 없음
                 return APIResponse(
                     question_number=question.number,
@@ -612,7 +702,8 @@ class GoogleClient(APIClient):
                     raw_response="",
                     timestamp=time.strftime("%Y-%m-%d %H:%M:%S"),
                     success=False,
-                    error_message="No content in streaming response (Safety block?)"
+                    error_message="No content in streaming response (Safety block?)",
+                    provider_stop_reason=stop_reason,
                 )
 
             return APIResponse(
@@ -623,7 +714,13 @@ class GoogleClient(APIClient):
                 success=True,
                 input_tokens=input_tokens,
                 output_tokens=output_tokens,
-                total_tokens=total_tokens
+                total_tokens=total_tokens,
+                answer_status=(
+                    "refusal"
+                    if is_refusal
+                    else "answered" if raw_response else "no_answer"
+                ),
+                provider_stop_reason=stop_reason,
             )
 
         except Exception as parse_error:

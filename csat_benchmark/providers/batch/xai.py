@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import time
 from pathlib import Path
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Dict, List, Mapping, Optional, Sequence
 
 import requests
 
@@ -26,6 +26,8 @@ XAI_BATCH_REQUEST_CHUNK_SIZE = 25
 XAI_DEFAULT_BASE_URL = "https://api.x.ai/v1"
 XAI_RESULTS_PAGE_LIMIT = 100
 XAI_TERMINAL_STATUSES = {"completed", "failed", "cancelled", "expired"}
+
+ChunkCallback = Callable[[Sequence[Mapping[str, object]], int, int], None]
 
 
 def initialize_client(model_config: ModelConfig) -> None:
@@ -62,14 +64,17 @@ def request(
 ) -> dict:
     """@description xAI Batch REST 요청 실행"""
     url = f"{get_base_url(model_config)}{path}"
-    response = requests.request(
-        method=method,
-        url=url,
-        headers=headers(model_config, resolve_api_key),
-        json=json_body,
-        params=params,
-        timeout=120,
-    )
+    try:
+        response = requests.request(
+            method=method,
+            url=url,
+            headers=headers(model_config, resolve_api_key),
+            json=json_body,
+            params=params,
+            timeout=120,
+        )
+    except requests.RequestException as exc:
+        raise RuntimeError(f"xAI Batch API 요청 실패 {method} {path}: {exc}") from exc
 
     if not response.ok:
         raise RuntimeError(
@@ -113,8 +118,10 @@ def add_batch_requests(
     request_fn: Callable[..., dict],
     interval_seconds: int = XAI_BATCH_ADD_INTERVAL_SECONDS,
     chunk_size: int = XAI_BATCH_REQUEST_CHUNK_SIZE,
+    before_chunk: Optional[ChunkCallback] = None,
+    after_chunk: Optional[ChunkCallback] = None,
 ) -> None:
-    """@description xAI 배치 요청 묶음 추가(고정 크기)"""
+    """@description xAI 배치 요청 묶음 추가 및 청크별 상태 지점 호출"""
     print(
         f"📦 xAI 배치 요청 추가 시작: 총 {len(batch_requests)}개 "
         f"(chunk={chunk_size}, interval={interval_seconds}초)"
@@ -125,6 +132,8 @@ def add_batch_requests(
         chunk_number = index // chunk_size + 1
         total_chunks = (len(batch_requests) + chunk_size - 1) // chunk_size
 
+        if before_chunk is not None:
+            before_chunk(chunk, chunk_number, total_chunks)
         request_fn(
             "POST",
             f"/batches/{batch_id}/requests",
@@ -136,6 +145,8 @@ def add_batch_requests(
                 ]
             },
         )
+        if after_chunk is not None:
+            after_chunk(chunk, chunk_number, total_chunks)
 
         end_index = index + len(chunk)
         print(
@@ -397,6 +408,7 @@ __all__ = [
     "XAI_DEFAULT_BASE_URL",
     "XAI_RESULTS_PAGE_LIMIT",
     "XAI_TERMINAL_STATUSES",
+    "ChunkCallback",
     "add_batch_requests",
     "check_batch_status",
     "create_batch",

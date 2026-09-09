@@ -76,6 +76,51 @@ def test_provider_transport_openai_delegates_direct_provider_functions(tmp_path:
     assert json.loads(input_path.read_text(encoding="utf-8"))["custom_id"] == "q1"
 
 
+def test_provider_transport_xai_checkpoints_creation_and_chunk_add(tmp_path: Path, monkeypatch):
+    """@description xAI 원격 생성·입력 저장·청크 상태 지점 위임 확인"""
+    config = _model_config("grok")
+    calls: list[tuple] = []
+
+    def fake_create(model, batch_name, request_fn):
+        del model, request_fn
+        assert (tmp_path / "input.json").is_file()
+        calls.append(("create", batch_name))
+        return {"batch_id": "grok-1"}
+
+    def fake_add(batch_id, requests, model, request_fn, **kwargs):
+        del model, request_fn
+        calls.append(("add", batch_id, requests))
+        kwargs["before_chunk"](requests, 1, 1)
+        kwargs["after_chunk"](requests, 1, 1)
+
+    monkeypatch.setattr(xai, "create_batch", fake_create)
+    monkeypatch.setattr(xai, "add_batch_requests", fake_add)
+    transport = ProviderBatchTransport()
+    requests = [{"chat_get_completion": {"batch_request_id": "q1"}}]
+    checkpoints: list[str] = []
+
+    assert transport.create(
+        config,
+        requests,
+        input_path=tmp_path / "input.json",
+        batch_name="fixture",
+    ) == "grok-1"
+    transport.add(
+        config,
+        "grok-1",
+        requests,
+        before_chunk=lambda chunk, number, total: checkpoints.append(
+            f"before:{number}/{total}:{chunk[0]['chat_get_completion']['batch_request_id']}"
+        ),
+        after_chunk=lambda chunk, number, total: checkpoints.append(
+            f"after:{number}/{total}:{chunk[0]['chat_get_completion']['batch_request_id']}"
+        ),
+    )
+
+    assert calls == [("create", "fixture"), ("add", "grok-1", requests)]
+    assert checkpoints == ["before:1/1:q1", "after:1/1:q1"]
+
+
 def test_openai_transport_preserves_submission_download_and_parsing(tmp_path: Path):
     """@description OpenAI 호환 SDK 호출 인자·다운로드 바이트·응답 파싱 확인"""
     config = _model_config("openai")

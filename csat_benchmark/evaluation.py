@@ -34,6 +34,8 @@ class _SectionGrading:
     rows: dict[tuple[str, str, int], dict[str, Any]]
     expected_by_model: dict[str, set[tuple[str, str, int]]]
     manual_review: list[tuple[Any, ...]]
+    task_count: int = 0
+    skipped_count: int = 0
 
 
 def _mode_for_exam(
@@ -390,29 +392,21 @@ def _section_question_infos(
 def _grade_question_section(
     section_manifest: SectionManifest,
     exam: ExamManifest,
-    run: Mapping[str, Any],
-    selected_mode: ModeManifest,
     selected_models: Sequence[str],
     raw_by_key: Mapping[tuple[str, str, int], Mapping[str, Any]],
     prior_rows: Mapping[tuple[str, str, int], Mapping[str, Any]],
+    prior_complete_keys: set[tuple[str, str, int]],
     verifier: Any,
-    question_numbers: Sequence[int] | None,
+    info_by_number: Mapping[int, Mapping[str, Any]],
+    regrade: bool,
 ) -> _SectionGrading:
     """@description 쉬움 모드 섹션의 모델·문항 병렬 채점"""
-    info_by_number = _section_question_infos(
-        exam,
-        run,
-        section_manifest,
-        selected_mode,
-        selected_models,
-        raw_by_key,
-        question_numbers,
-    )
     target = section_manifest.target
     rows: dict[tuple[str, str, int], dict[str, Any]] = {}
     expected_by_model = {name: set() for name in selected_models}
     manual_review: list[tuple[Any, ...]] = []
     tasks: list[tuple[tuple[str, str, int], str, Mapping[str, Any], Mapping[str, Any]]] = []
+    skipped_count = 0
 
     for model_name in selected_models:
         for number, info in info_by_number.items():
@@ -422,71 +416,73 @@ def _grade_question_section(
             if source is None:
                 if key in prior_rows:
                     rows[key] = copy.deepcopy(dict(prior_rows[key]))
+                skipped_count += 1
                 continue
             if not result_is_completed(source):
                 rows[key] = _incomplete_row(source, info)
+                skipped_count += 1
+                continue
+            if not regrade and key in prior_complete_keys:
+                rows[key] = copy.deepcopy(dict(prior_rows[key]))
+                skipped_count += 1
                 continue
             tasks.append((key, model_name, source, info))
 
     worker_count = max(1, len(tasks))
-    print(f"\n{target} 쉬움 채점 시작 (문항 작업 {len(tasks)}개, 동시 호출 수: {worker_count})", flush=True)
+    print(
+        f"\n{target} 쉬움 채점 시작 (문항 작업 {len(tasks)}개, 건너뛴 문항 {skipped_count}개, "
+        f"동시 호출 수: {worker_count}, 재채점: {'예' if regrade else '아니오'})",
+        flush=True,
+    )
     completed = 0
-    with ThreadPoolExecutor(max_workers=worker_count) as executor:
-        task_futures = {
-            executor.submit(
-                verify_single_result,
-                verifier,
-                dict(source),
-                dict(info),
-                1,
-                Path(exam.project_root),
-            ): (key, model_name, int(info["number"]))
-            for key, model_name, source, info in tasks
-        }
-        for future in as_completed(task_futures):
-            key, model_name, question_number = task_futures[future]
-            verification, manual_review_data = future.result()
-            rows[key] = _verified_row(verification, raw_by_key[key], complete=True)
-            if manual_review_data:
-                manual_review.append(manual_review_data)
-            completed += 1
-            status = "✓" if verification.is_correct else "✗"
-            review_mark = " [수동검토필요]" if verification.needs_manual_review else ""
-            print(
-                f"[{completed}/{len(tasks)}] {status} {model_name} - 문제 {question_number}번 "
-                f"(추출: {verification.extracted_answer}, 정답: {verification.correct_answer}){review_mark}",
-                flush=True,
-            )
+    if tasks:
+        with ThreadPoolExecutor(max_workers=worker_count) as executor:
+            task_futures = {
+                executor.submit(
+                    verify_single_result,
+                    verifier,
+                    dict(source),
+                    dict(info),
+                    1,
+                    Path(exam.project_root),
+                ): (key, model_name, int(info["number"]))
+                for key, model_name, source, info in tasks
+            }
+            for future in as_completed(task_futures):
+                key, model_name, question_number = task_futures[future]
+                verification, manual_review_data = future.result()
+                rows[key] = _verified_row(verification, raw_by_key[key], complete=True)
+                if manual_review_data:
+                    manual_review.append(manual_review_data)
+                completed += 1
+                status = "✓" if verification.is_correct else "✗"
+                review_mark = " [수동검토필요]" if verification.needs_manual_review else ""
+                print(
+                    f"[{completed}/{len(tasks)}] {status} {model_name} - 문제 {question_number}번 "
+                    f"(추출: {verification.extracted_answer}, 정답: {verification.correct_answer}){review_mark}",
+                    flush=True,
+                )
 
-    return _SectionGrading(target, rows, expected_by_model, manual_review)
+    return _SectionGrading(target, rows, expected_by_model, manual_review, len(tasks), skipped_count)
 
 
 def _grade_section_input(
     section_manifest: SectionManifest,
-    exam: ExamManifest,
-    run: Mapping[str, Any],
-    selected_mode: ModeManifest,
     selected_models: Sequence[str],
     raw_by_key: Mapping[tuple[str, str, int], Mapping[str, Any]],
     prior_rows: Mapping[tuple[str, str, int], Mapping[str, Any]],
+    prior_complete_keys: set[tuple[str, str, int]],
     verifier: Any,
-    question_numbers: Sequence[int] | None,
+    info_by_number: Mapping[int, Mapping[str, Any]],
+    regrade: bool,
 ) -> _SectionGrading:
     """@description 기본 모드 섹션의 모델별 병렬 채점"""
-    info_by_number = _section_question_infos(
-        exam,
-        run,
-        section_manifest,
-        selected_mode,
-        selected_models,
-        raw_by_key,
-        question_numbers,
-    )
     target = section_manifest.target
     rows: dict[tuple[str, str, int], dict[str, Any]] = {}
     expected_by_model = {name: set() for name in selected_models}
     manual_review: list[tuple[Any, ...]] = []
-    tasks: list[tuple[str, Mapping[str, Any]]] = []
+    tasks: list[tuple[str, Mapping[str, Any], list[Mapping[str, Any]]]] = []
+    skipped_count = 0
 
     for model_name in selected_models:
         for number in info_by_number:
@@ -497,47 +493,66 @@ def _grade_section_input(
                 key = (target, model_name, number)
                 if key in prior_rows:
                     rows[key] = copy.deepcopy(dict(prior_rows[key]))
+                skipped_count += 1
             continue
         if not result_is_completed(source):
             for number, info in info_by_number.items():
                 rows[(target, model_name, number)] = _incomplete_row(source, info)
+                skipped_count += 1
             continue
-        tasks.append((model_name, source))
+        pending_infos = [
+            info
+            for number, info in info_by_number.items()
+            if regrade or (target, model_name, number) not in prior_complete_keys
+        ]
+        for number, info in info_by_number.items():
+            key = (target, model_name, number)
+            if not regrade and key in prior_complete_keys:
+                rows[key] = copy.deepcopy(dict(prior_rows[key]))
+        skipped_count += len(info_by_number) - len(pending_infos)
+        if pending_infos:
+            tasks.append((model_name, source, pending_infos))
 
     worker_count = max(1, len(tasks))
-    print(f"\n{target} 기본 채점 시작 (모델 작업 {len(tasks)}개, 동시 호출 수: {worker_count})", flush=True)
+    print(
+        f"\n{target} 기본 채점 시작 (모델·영역 작업 {len(tasks)}개, 건너뛴 문항 {skipped_count}개, "
+        f"동시 호출 수: {worker_count}, 재채점: {'예' if regrade else '아니오'})",
+        flush=True,
+    )
     completed = 0
-    with ThreadPoolExecutor(max_workers=worker_count) as executor:
-        task_futures = {
-            executor.submit(
-                verify_hard_single_result,
-                verifier,
-                dict(source),
-                list(info_by_number.values()),
-                1,
-            ): (model_name, source)
-            for model_name, source in tasks
-        }
-        for future in as_completed(task_futures):
-            model_name, source = task_futures[future]
-            hard_results, manual_review_data = future.result()
-            by_number = {int(item.question_number): item for item in hard_results}
-            for number in info_by_number:
-                key = (target, model_name, number)
-                rows[key] = _verified_row(by_number[number], source, complete=True)
-            if manual_review_data:
-                manual_review.extend(manual_review_data)
-            completed += 1
-            correct_count = sum(item.is_correct for item in hard_results)
-            review_count = sum(item.needs_manual_review for item in hard_results)
-            review_mark = f" [수동검토 {review_count}개]" if review_count else ""
-            print(
-                f"[{completed}/{len(tasks)}] {model_name} - "
-                f"{correct_count}/{len(hard_results)}개 정답{review_mark}",
-                flush=True,
-            )
+    if tasks:
+        with ThreadPoolExecutor(max_workers=worker_count) as executor:
+            task_futures = {
+                executor.submit(
+                    verify_hard_single_result,
+                    verifier,
+                    dict(source),
+                    list(pending_infos),
+                    1,
+                ): (model_name, source, pending_infos)
+                for model_name, source, pending_infos in tasks
+            }
+            for future in as_completed(task_futures):
+                model_name, source, pending_infos = task_futures[future]
+                hard_results, manual_review_data = future.result()
+                by_number = {int(item.question_number): item for item in hard_results}
+                for info in pending_infos:
+                    number = int(info["number"])
+                    key = (target, model_name, number)
+                    rows[key] = _verified_row(by_number[number], source, complete=True)
+                if manual_review_data:
+                    manual_review.extend(manual_review_data)
+                completed += 1
+                correct_count = sum(item.is_correct for item in hard_results)
+                review_count = sum(item.needs_manual_review for item in hard_results)
+                review_mark = f" [수동검토 {review_count}개]" if review_count else ""
+                print(
+                    f"[{completed}/{len(tasks)}] {model_name} - "
+                    f"{correct_count}/{len(hard_results)}개 정답{review_mark}",
+                    flush=True,
+                )
 
-    return _SectionGrading(target, rows, expected_by_model, manual_review)
+    return _SectionGrading(target, rows, expected_by_model, manual_review, len(tasks), skipped_count)
 
 
 def _merge_section_grading(
@@ -568,6 +583,7 @@ def grade_run(
     benchmark_all: bool = False,
     question_numbers: Sequence[int] | None = None,
     verified: Mapping[str, Any] | str | Path | None = None,
+    update: bool = False,
 ) -> dict[str, Any]:
     """@description 단일 생성 결과를 선택 범위만 채점"""
     manifest = exam if isinstance(exam, ExamManifest) else load_exam(exam)
@@ -629,31 +645,70 @@ def grade_run(
         normalized = _normal_verified_row(row, model_name)
         prior_rows[result_identity(normalized)] = normalized
 
+    info_by_target = {
+        section_manifest.target: _section_question_infos(
+            manifest,
+            run_data,
+            section_manifest,
+            selected_mode,
+            selected_models,
+            raw_by_key,
+            question_numbers,
+        )
+        for section_manifest in sections
+    }
+    expected_scope = {
+        (section_manifest.target, model_name, number)
+        for section_manifest in sections
+        for model_name in selected_models
+        for number in info_by_target[section_manifest.target]
+    }
+    prior_complete_keys = {
+        key for key, row in prior_rows.items() if row.get("complete") is True
+    }
+    automatic_regrade = (
+        model_names is not None
+        and bool(expected_scope)
+        and expected_scope.issubset(prior_complete_keys)
+    )
+    regrade = bool(update or automatic_regrade)
+
     print("\n=== 답안 채점 시작 ===", flush=True)
     print(
         f"대상 영역 ({len(sections)}개): {', '.join(item.target for item in sections) or '없음'}",
         flush=True,
     )
     print(f"채점 모델 ({len(selected_models)}개): {', '.join(selected_models) or '없음'}", flush=True)
+    print(f"채점 방식: {'재채점' if regrade else '미채점만 채점'} (재채점: {'예' if regrade else '아니오'})", flush=True)
 
     graded_by_key: dict[tuple[str, str, int], dict[str, Any]] = {}
-    expected_by_model: dict[str, set[tuple[str, str, int]]] = {name: set() for name in selected_models}
+    expected_by_model: dict[str, set[tuple[str, str, int]]] = {
+        model_name: {
+            key
+            for key in expected_scope
+            if key[1] == model_name
+        }
+        for model_name in selected_models
+    }
     manual_review: list[tuple[Any, ...]] = []
+    task_count = 0
+    skipped_count = 0
 
     def _collect(section_result: _SectionGrading, completed: int, total: int) -> None:
         """@description 조정 스레드 섹션 결과 수집 및 완료 출력"""
         _merge_section_grading(section_result, graded_by_key, expected_by_model, manual_review)
+        nonlocal task_count, skipped_count
+        task_count += section_result.task_count
+        skipped_count += section_result.skipped_count
         print(f"[{completed}/{total}] {section_result.target} 섹션 채점 완료", flush=True)
 
     section_arguments = {
-        "exam": manifest,
-        "run": run_data,
-        "selected_mode": selected_mode,
         "selected_models": selected_models,
         "raw_by_key": raw_by_key,
         "prior_rows": prior_rows,
+        "prior_complete_keys": prior_complete_keys,
         "verifier": verifier,
-        "question_numbers": question_numbers,
+        "regrade": regrade,
     }
 
     if selected_mode.input_mode == "question":
@@ -670,7 +725,13 @@ def grade_run(
             )
             with ThreadPoolExecutor(max_workers=max(1, len(subject_sections))) as executor:
                 section_futures = {
-                    executor.submit(_grade_question_section, section_manifest, **section_arguments): section_manifest
+                    executor.submit(
+                        _grade_question_section,
+                        section_manifest,
+                        manifest,
+                        info_by_number=info_by_target[section_manifest.target],
+                        **section_arguments,
+                    ): section_manifest
                     for section_manifest in subject_sections
                 }
                 for completed_sections, future in enumerate(as_completed(section_futures), 1):
@@ -679,11 +740,20 @@ def grade_run(
         print(f"기본 모드 섹션 동시 처리 (동시 섹션 수: {max(1, len(sections))})", flush=True)
         with ThreadPoolExecutor(max_workers=max(1, len(sections))) as executor:
             section_futures = {
-                executor.submit(_grade_section_input, section_manifest, **section_arguments): section_manifest
+                executor.submit(
+                    _grade_section_input,
+                    section_manifest,
+                    info_by_number=info_by_target[section_manifest.target],
+                    **section_arguments,
+                ): section_manifest
                 for section_manifest in sections
             }
             for completed_sections, future in enumerate(as_completed(section_futures), 1):
                 _collect(future.result(), completed_sections, len(section_futures))
+
+    if task_count == 0:
+        print("실행할 채점 작업이 없습니다.", flush=True)
+    print(f"채점 작업 요약: 작업 {task_count}개, 건너뛴 문항 {skipped_count}개", flush=True)
 
     if manual_review:
         print(f"\n⚠ 수동 검토 필요 항목 ({len(manual_review)}개):", flush=True)
@@ -827,7 +897,12 @@ def load_verified(path: str | Path) -> dict[str, Any]:
 
 def build_verifier(config_path: str | Path) -> AnswerVerifier:
     """@description 지정 verifier 설정 기준 답안 추출기 생성"""
-    config = load_config(config_path, model_names=[], resolve_secrets=True)
+    config = load_config(
+        config_path,
+        model_names=[],
+        resolve_secrets=False,
+        resolve_verifier_secrets=True,
+    )
     verifier_config = config.get("verifier")
     if not isinstance(verifier_config, Mapping):
         verifier_config = {

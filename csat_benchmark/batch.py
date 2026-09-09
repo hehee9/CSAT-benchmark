@@ -110,6 +110,29 @@ class BatchTransport:
         """@description 요청 목록 공급자 제출 및 batch ID 반환"""
         raise NotImplementedError
 
+    def create(
+        self,
+        model_config: ModelConfig,
+        requests: Sequence[Mapping[str, Any]],
+        *,
+        input_path: Path,
+        batch_name: str,
+    ) -> str:
+        """@description xAI 원격 batch 생성 및 입력 파일 저장"""
+        raise NotImplementedError
+
+    def add(
+        self,
+        model_config: ModelConfig,
+        batch_id: str,
+        requests: Sequence[Mapping[str, Any]],
+        *,
+        before_chunk: Callable[[Sequence[Mapping[str, Any]], int, int], None] | None = None,
+        after_chunk: Callable[[Sequence[Mapping[str, Any]], int, int], None] | None = None,
+    ) -> None:
+        """@description xAI 원격 batch 요청 청크 추가"""
+        raise NotImplementedError
+
     def status(self, batch_id: str, model_config: ModelConfig) -> Dict[str, Any]:
         """@description 공급자 배치 상태 → 공용 상태 매핑 변환"""
         raise NotImplementedError
@@ -228,15 +251,14 @@ class ProviderBatchTransport(BatchTransport):
         provider = model_config.api_type
         requests_list = [copy.deepcopy(dict(item)) for item in requests]
         if provider == "grok":
-            self._save_json({"batch_requests": requests_list}, input_path)
-            batch = xai_batch.create_batch(model_config, batch_name, self._xai_request)
-            batch_id = batch.get("batch_id") or batch.get("id")
-            if not batch_id:
-                raise BatchError(f"xAI 배치 생성 응답에 batch_id가 없습니다: {batch}")
-            xai_batch.add_batch_requests(
-                str(batch_id), requests_list, model_config, self._xai_request
+            batch_id = self.create(
+                model_config,
+                requests_list,
+                input_path=input_path,
+                batch_name=batch_name,
             )
-            return str(batch_id)
+            self.add(model_config, batch_id, requests_list)
+            return batch_id
 
         if provider == "anthropic":
             self._save_json({"requests": requests_list}, input_path)
@@ -257,6 +279,46 @@ class ProviderBatchTransport(BatchTransport):
         file_id = openai_batch.upload_file(self._client(model_config), input_path)
         endpoint = "/v1/responses" if use_responses_api else "/v1/chat/completions"
         return str(openai_batch.create_batch(self._client(model_config), file_id, endpoint))
+
+    def create(
+        self,
+        model_config: ModelConfig,
+        requests: Sequence[Mapping[str, Any]],
+        *,
+        input_path: Path,
+        batch_name: str,
+    ) -> str:
+        """@description xAI 원격 batch 생성 전 입력 저장 및 ID 반환"""
+        if model_config.api_type != "grok":
+            raise BatchError("create는 xAI Batch API에서만 사용할 수 있습니다.")
+        requests_list = [copy.deepcopy(dict(item)) for item in requests]
+        self._save_json({"batch_requests": requests_list}, input_path)
+        batch = xai_batch.create_batch(model_config, batch_name, self._xai_request)
+        batch_id = batch.get("batch_id") or batch.get("id")
+        if not batch_id:
+            raise BatchError(f"xAI 배치 생성 응답에 batch_id가 없습니다: {batch}")
+        return str(batch_id)
+
+    def add(
+        self,
+        model_config: ModelConfig,
+        batch_id: str,
+        requests: Sequence[Mapping[str, Any]],
+        *,
+        before_chunk: Callable[[Sequence[Mapping[str, Any]], int, int], None] | None = None,
+        after_chunk: Callable[[Sequence[Mapping[str, Any]], int, int], None] | None = None,
+    ) -> None:
+        """@description xAI 원격 batch 요청 청크 추가 및 상태 지점 위임"""
+        if model_config.api_type != "grok":
+            raise BatchError("add는 xAI Batch API에서만 사용할 수 있습니다.")
+        xai_batch.add_batch_requests(
+            str(batch_id),
+            [copy.deepcopy(dict(item)) for item in requests],
+            model_config,
+            self._xai_request,
+            before_chunk=before_chunk,
+            after_chunk=after_chunk,
+        )
 
     def status(self, batch_id: str, model_config: ModelConfig) -> Dict[str, Any]:
         """@description 공급자별 Batch 상태 조회 위임"""
@@ -425,6 +487,14 @@ def _set_request_id(provider: str, request: Dict[str, Any], request_id: str) -> 
         request["custom_id"] = request_id
 
 
+def _xai_request_ids(requests: Sequence[Mapping[str, Any]]) -> List[str]:
+    """@description xAI 요청 청크의 내부 요청 ID 추출"""
+    return [
+        str(request["chat_get_completion"]["batch_request_id"])
+        for request in requests
+    ]
+
+
 def _base_request(
     model_config: ModelConfig,
     question: Question,
@@ -441,7 +511,6 @@ def _base_request(
                 question,
                 model_config,
                 system_prompt=system_prompt,
-                supports_vision=True,
                 skip_missing=False,
             ),
         }
@@ -452,7 +521,6 @@ def _base_request(
                 question,
                 model_config,
                 system_prompt=system_prompt,
-                supports_vision=True,
             ),
         }
     if provider == "grok":
@@ -460,7 +528,6 @@ def _base_request(
             question,
             model_config,
             system_prompt=system_prompt,
-            supports_vision=True,
             skip_missing=False,
             image_url_mode="data_url",
             merge_multiple_images=False,
@@ -473,8 +540,8 @@ def _base_request(
         build_responses_body(
             question,
             model_config,
-            image_format="base64_source",
-            supports_vision=True,
+            system_prompt=system_prompt,
+            image_format="data_url",
             skip_missing=False,
             extra_body_mode="top_level",
         )
@@ -483,7 +550,6 @@ def _base_request(
             question,
             model_config,
             system_prompt=system_prompt,
-            supports_vision=True,
             skip_missing=False,
             image_url_mode="data_url",
             merge_multiple_images=False,
@@ -1045,17 +1111,25 @@ def submit_exam(
             f"{_input_suffix(model_config.api_type)}"
         )
         batch_name = f"{context['exam'].id}-{context['mode'].id}-{_safe_id(model_name, 20)}-{key_digest}"
-        provider_batch_id = selected_transport.submit(
-            model_config,
-            requests,
-            input_path=input_path,
-            batch_name=batch_name,
-            use_responses_api=selected_protocol,
-        )
         request_map = {
             slot.request_id: _request_metadata(slot)
             for slot in slots
         }
+        if model_config.api_type == "grok":
+            provider_batch_id = selected_transport.create(
+                model_config,
+                requests,
+                input_path=input_path,
+                batch_name=batch_name,
+            )
+        else:
+            provider_batch_id = selected_transport.submit(
+                model_config,
+                requests,
+                input_path=input_path,
+                batch_name=batch_name,
+                use_responses_api=selected_protocol,
+            )
         job = {
             "model_name": model_name,
             "provider": model_config.api_type,
@@ -1070,12 +1144,78 @@ def submit_exam(
             "input_path": str(input_path),
             "use_responses_api": selected_protocol,
         }
+        if model_config.api_type == "grok":
+            job.update(
+                {
+                    "submission_status": "created",
+                    "submitted_request_ids": [],
+                    "in_flight_request_ids": [],
+                    "submission_progress": {
+                        "submitted": 0,
+                        "total": len(requests),
+                        "chunks_submitted": 0,
+                        "chunks_total": (
+                            len(requests) + xai_batch.XAI_BATCH_REQUEST_CHUNK_SIZE - 1
+                        )
+                        // xai_batch.XAI_BATCH_REQUEST_CHUNK_SIZE,
+                    },
+                }
+            )
         state["jobs"].append(job)
         for request_id, metadata in request_map.items():
             current = dict(metadata)
             current["provider_batch_id"] = str(provider_batch_id)
             state["request_map"][request_id] = current
         _save_json(_state_path(context["path"]), state)
+
+        if model_config.api_type == "grok":
+            def _before_chunk(
+                chunk: Sequence[Mapping[str, Any]],
+                chunk_number: int,
+                total_chunks: int,
+            ) -> None:
+                """@description xAI 청크 전송 전 in-flight 요청 ID 저장"""
+                job["submission_status"] = "in_progress"
+                job["in_flight_request_ids"] = _xai_request_ids(chunk)
+                job["submission_progress"]["chunks_total"] = total_chunks
+                _save_json(_state_path(context["path"]), state)
+
+            def _after_chunk(
+                chunk: Sequence[Mapping[str, Any]],
+                chunk_number: int,
+                total_chunks: int,
+            ) -> None:
+                """@description xAI 청크 승인 후 제출 ID·진행률 저장"""
+                confirmed = set(job["submitted_request_ids"])
+                confirmed.update(_xai_request_ids(chunk))
+                job["submitted_request_ids"] = [
+                    request_id
+                    for request_id in job["request_ids"]
+                    if request_id in confirmed
+                ]
+                job["in_flight_request_ids"] = []
+                job["submission_progress"] = {
+                    "submitted": len(job["submitted_request_ids"]),
+                    "total": len(job["request_ids"]),
+                    "chunks_submitted": chunk_number,
+                    "chunks_total": total_chunks,
+                }
+                _save_json(_state_path(context["path"]), state)
+
+            try:
+                selected_transport.add(
+                    model_config,
+                    str(provider_batch_id),
+                    requests,
+                    before_chunk=_before_chunk,
+                    after_chunk=_after_chunk,
+                )
+            except (RuntimeError, TimeoutError):
+                job["submission_status"] = "failed"
+                _save_json(_state_path(context["path"]), state)
+                raise
+            job["submission_status"] = "complete"
+            _save_json(_state_path(context["path"]), state)
 
     _save_json(_state_path(context["path"]), state)
     result = {

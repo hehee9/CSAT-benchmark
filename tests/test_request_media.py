@@ -13,8 +13,13 @@ from PIL import Image
 from csat_benchmark.models import ModelConfig, Question
 from csat_benchmark.providers.requests import (
     build_anthropic_content,
+    build_anthropic_params,
+    build_chat_body,
     build_chat_content,
+    build_google_parts,
+    build_google_request,
     build_responses_content,
+    build_responses_body,
     validate_question_media,
 )
 
@@ -173,10 +178,71 @@ def test_anthropic_twenty_images_leave_oversized_payload_unchanged(tmp_path: Pat
         assert image.size == (3000, 1500)
 
 
+def test_content_builders_keep_text_when_vision_is_disabled(tmp_path: Path):
+    """@description 이미지 미지원 모델의 공급자 본문 텍스트 유지·이미지 생략 확인"""
+    image_path = tmp_path / "문항.png"
+    image_path.write_bytes(b"image-bytes")
+    question = Question(
+        number=7,
+        correct_answer=3,
+        points=2,
+        question_text="본문",
+        image_paths=[str(image_path)],
+    )
+
+    assert build_chat_content(question, supports_vision=False) == [
+        {"type": "text", "text": "본문"},
+    ]
+    assert build_responses_content(question, supports_vision=False) == [
+        {"type": "input_text", "text": "본문"},
+    ]
+    assert build_anthropic_content(question, supports_vision=False) == [
+        {"type": "text", "text": "본문"},
+    ]
+    assert build_google_parts(question, supports_vision=False) == [
+        {"text": "본문"},
+    ]
+
+
+def test_config_aware_builders_keep_text_when_vision_is_disabled(tmp_path: Path):
+    """@description 설정 기반 공급자 요청의 이미지 생략·본문 유지 확인"""
+    image_path = tmp_path / "문항.png"
+    image_path.write_bytes(b"image-bytes")
+    question = Question(
+        number=7,
+        correct_answer=3,
+        points=2,
+        question_text="본문",
+        image_paths=[str(image_path)],
+    )
+
+    chat_config = _config("grok", supports_vision=False)
+    assert build_chat_body(question, chat_config)["messages"][0]["content"] == [
+        {"type": "text", "text": "본문"},
+    ]
+    assert build_responses_body(
+        question,
+        _config("openai", supports_vision=False),
+    )["input"][0]["content"] == [
+        {"type": "input_text", "text": "본문"},
+    ]
+    assert build_anthropic_params(
+        question,
+        _config("anthropic", supports_vision=False),
+    )["messages"][0]["content"] == [
+        {"type": "text", "text": "본문"},
+    ]
+    assert build_google_request(
+        question,
+        _config("google", supports_vision=False),
+    )["contents"][0]["parts"] == [
+        {"text": "본문"},
+    ]
+
+
 @pytest.mark.parametrize(
     ("media_field", "api_type", "supports_vision", "batch", "message"),
     [
-        ("image_paths", "openai", False, False, "이미지"),
         ("pdf_paths", "deepseek", True, False, "PDF"),
         ("pdf_paths", "openai", False, False, "PDF"),
         ("audio_paths", "openai", True, False, "오디오"),
@@ -229,3 +295,16 @@ def test_validate_question_media_allows_supported_media():
         pdf_paths=["문항.pdf"],
     )
     validate_question_media(openai_question, _config("openai"))
+
+
+def test_validate_question_media_allows_images_for_text_only_model():
+    """@description 이미지 미지원 모델의 이미지 문항 사전 검증 통과 확인"""
+    question = Question(
+        number=1,
+        correct_answer=1,
+        points=2,
+        question_text="본문",
+        image_paths=["문항.png"],
+    )
+
+    validate_question_media(question, _config("openai", supports_vision=False))

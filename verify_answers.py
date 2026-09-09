@@ -27,6 +27,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--subjects", nargs="+", help="실행할 과목 또는 탐구 영역 목록")
     parser.add_argument("--question-numbers", nargs="+", type=int, help="문항별 실행에서 고를 문제 번호")
     parser.add_argument("--benchmark-all", action="store_true", help="시험의 모든 섹션 채점")
+    parser.add_argument("--update", action="store_true", help="선택 범위의 기존 verified 결과도 재채점")
     parser.add_argument("--output", help="검증 결과 색인 경로 재정의")
     return parser
 
@@ -62,6 +63,7 @@ def _generic_main(arguments: Sequence[str]) -> int:
             subjects=args.subjects,
             benchmark_all=args.benchmark_all,
             question_numbers=args.question_numbers,
+            update=args.update,
         )
         output_path = Path(args.output).expanduser().resolve() if args.output else run_path
         save_verified(verified, output_path)

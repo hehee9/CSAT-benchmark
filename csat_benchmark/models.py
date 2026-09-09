@@ -100,7 +100,6 @@ class ModelConfig:
     api_key: Union[str, List[str]]
     model_id: str
     max_tokens: int = 4096
-    rate_limit_rpm: int = 10
     concurrent_request_limit: int = 50
     base_url: Optional[str] = None
     request_api: Optional[str] = None
@@ -129,10 +128,9 @@ class ModelConfig:
         """@description API 타입·요청 제한값 검증"""
         if self.api_type not in SUPPORTED_API_TYPES:
             raise ValueError(f"지원하지 않는 API 타입입니다: {self.api_type}")
-        for field_name in ("rate_limit_rpm", "concurrent_request_limit"):
-            value = getattr(self, field_name)
-            if isinstance(value, bool) or not isinstance(value, int) or value < 1:
-                raise ValueError(f"{field_name}은 양의 정수여야 합니다.")
+        value = self.concurrent_request_limit
+        if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+            raise ValueError("concurrent_request_limit은 양의 정수여야 합니다.")
         self.knowledge_cutoff = validate_knowledge_cutoff(self.knowledge_cutoff)
         self.plan_message_ko = validate_plan_message(self.plan_message_ko, "plan_message_ko")
         self.plan_message_en = validate_plan_message(self.plan_message_en, "plan_message_en")

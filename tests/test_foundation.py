@@ -7,6 +7,7 @@ import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from csat_benchmark import (
     APIResponse,
@@ -16,6 +17,8 @@ from csat_benchmark import (
     load_section_questions,
     list_exams,
 )
+from csat_benchmark.evaluation import build_verifier
+from csat_benchmark.runner import run_exam
 
 
 class FoundationTest(unittest.TestCase):
@@ -78,6 +81,59 @@ class FoundationTest(unittest.TestCase):
             finally:
                 os.environ.pop("FOUNDATION_DOTENV_KEY", None)
                 os.environ.pop("FOUNDATION_SECOND_KEY", None)
+
+    def test_verifier_secret_resolution_is_opt_in_and_separate(self) -> None:
+        """@description 모델·verifier 인증 정보 해석 범위 분리"""
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            config_path = root / "config.json"
+            config_path.write_text(
+                json.dumps(
+                    {
+                        "models": [
+                            {
+                                "name": "모델",
+                                "api_type": "openai",
+                                "api_key_env": "FOUNDATION_MODEL_KEY",
+                                "model_id": "example-model",
+                            }
+                        ],
+                        "verifier": {
+                            "api_key_env": "FOUNDATION_VERIFIER_KEY",
+                            "model_id": "example-verifier",
+                        },
+                    },
+                    ensure_ascii=False,
+                ),
+                encoding="utf-8",
+            )
+            with patch.dict(os.environ, {"FOUNDATION_MODEL_KEY": "model-key"}, clear=False):
+                os.environ.pop("FOUNDATION_VERIFIER_KEY", None)
+                resolved = load_config(config_path, model_names=["모델"])
+                self.assertEqual("model-key", resolved["models"][0]["api_key"])
+                self.assertNotIn("api_key", resolved["verifier"])
+
+                class _GenerationClient:
+                    """@description 생성 호출 검증용 공급자 대역"""
+
+                    def send_request(self, question):
+                        return APIResponse(
+                            question_number=question.number,
+                            model_name="모델",
+                            raw_response="응답",
+                            timestamp="2026-09-07T00:00:00+00:00",
+                            success=True,
+                        )
+
+                generated = run_exam(
+                    load_exam("example-text"),
+                    config_path=config_path,
+                    output=root / "results.json",
+                    client_factory=lambda config, *, system_prompt: _GenerationClient(),
+                )
+                self.assertEqual(1, len(generated["results"]))
+                with self.assertRaisesRegex(ConfigurationError, "FOUNDATION_VERIFIER_KEY"):
+                    build_verifier(config_path)
 
     def test_manifest_supports_variable_section_catalog_and_public_example(self) -> None:
         """13개 실제 섹션과 공개 텍스트 예시의 경로·실행 정책을 검증."""
