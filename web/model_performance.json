@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updatedAt": "2026-09-10T13:07:30.160Z",
+  "updatedAt": "2026-09-10T14:07:07.832Z",
   "models": {
     "Claude Fable 5 (high)": {
       "modelId": "anthropic/claude-fable-5",
