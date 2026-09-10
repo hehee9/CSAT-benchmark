@@ -113,6 +113,9 @@ def _make_run(exam, sections: list[tuple[str, str, str]], models: list[str], *, 
 class _HardConcurrencyVerifier:
     """@description 기본 모드 모델 작업의 동시 진입을 확인하는 검증기 대역"""
 
+    model_id = "test-verifier"
+    reasoning_effort = "low"
+
     def __init__(self, parties: int):
         self.barrier = threading.Barrier(parties)
         self.lock = threading.Lock()
@@ -138,7 +141,7 @@ class _HardConcurrencyVerifier:
         return [{"question_number": 1, "correct_answer": 1, "llm_answer": int(raw_response)}]
 
 
-def test_default_mode_runs_sections_and_models_concurrently(tmp_path: Path):
+def test_default_mode_runs_sections_and_models_concurrently(tmp_path: Path, capsys):
     """@description 기본 모드의 전체 섹션·섹션별 모델 동시 채점 확인"""
     sections = [("국어/1", "국어", "1"), ("수학/1", "수학", "1")]
     exam = _make_exam(tmp_path, sections, mode="default", input_mode="section")
@@ -150,10 +153,31 @@ def test_default_mode_runs_sections_and_models_concurrently(tmp_path: Path):
     assert verifier.max_active >= 4
     assert len(graded["results"]) == 4
     assert graded["score_by_model"] == {"모델A": 4, "모델B": 4}
+    output = capsys.readouterr().out
+    assert "일반 전체 검증 모드: 2개 섹션 발견" in output
+    assert "일반 전체 섹션 병렬 처리 시작 (동시 섹션 수: 2)" in output
+    assert "  - 국어/1" in output
+    assert "  - 수학/1" in output
+    assert "=== 일반 Answer Verification ===" in output
+    assert "Subject: 국어" in output
+    assert "Section: 1" in output
+    assert "Total 일반 results: 2" in output
+    assert "Questions: 1" in output
+    assert "일반 병렬 처리 시작 (동시 호출 수: 2)" in output
+    assert "모델A - 1/1개 정답" in output
+    assert "총 2개 중 2개 정답" in output
+    assert "=== 일반 모델별 점수 (총점: 2점) ===" in output
+    assert "모델A: 2점 / 2점" in output
+    assert "일반 검증 완료" in output
+    assert "일반 전체 검증 결과 요약" in output
+    assert "모델A: 4점" in output
 
 
 class _QuestionConcurrencyVerifier:
     """@description 쉬움 모드 과목·문항 작업 순서를 확인하는 검증기 대역"""
+
+    model_id = "test-verifier"
+    reasoning_effort = "low"
 
     def __init__(self, first_batch: int):
         self.barrier = threading.Barrier(first_batch)
@@ -180,7 +204,7 @@ class _QuestionConcurrencyVerifier:
         return 1
 
 
-def test_easy_mode_keeps_subjects_sequential_and_inner_work_concurrent(tmp_path: Path):
+def test_easy_mode_keeps_subjects_sequential_and_inner_work_concurrent(tmp_path: Path, capsys):
     """@description 쉬움 모드의 과목 순차·내부 작업 병렬 처리 확인"""
     sections = [("국어/1", "국어", "1"), ("국어/2", "국어", "2"), ("수학/1", "수학", "1")]
     exam = _make_exam(tmp_path, sections, mode="easy", input_mode="question")
@@ -194,10 +218,22 @@ def test_easy_mode_keeps_subjects_sequential_and_inner_work_concurrent(tmp_path:
     assert verifier.calls[8] == "수학/1"
     assert len(graded["results"]) == 6
     assert graded["complete_by_model"] == {"모델A": True, "모델B": True}
+    output = capsys.readouterr().out
+    assert "=== Answer Verification ===" in output
+    assert "Subject: 국어" in output
+    assert "Subject: 수학" in output
+    assert "Total results: 2" in output
+    assert "병렬 처리 시작 (동시 호출 수: 2)" in output
+    assert "[1/2] ✓ 모델" in output
+    assert "(추출: 1, 정답: 1)" in output
+    assert "전체 검증 결과 요약" in output
 
 
 class _ManualReviewVerifier:
     """@description 진행 출력과 수동 검토 표시를 확인하는 검증기 대역"""
+
+    model_id = "test-verifier"
+    reasoning_effort = "low"
 
     def __init__(self):
         self.calls = 0
@@ -210,6 +246,9 @@ class _ManualReviewVerifier:
 
 class _ReverseHardVerifier:
     """@description 완료 순서와 무관한 hard 채점 집계를 확인하는 검증기 대역"""
+
+    model_id = "test-verifier"
+    reasoning_effort = "low"
 
     def __init__(self):
         self.calls = 0
@@ -260,7 +299,7 @@ def test_reversed_completion_keeps_sorted_answers_scores_and_tokens(tmp_path: Pa
     } == {"모델A": (11, 1, 12), "모델B": (13, 2, 15)}
 
 
-def test_model_filter_grades_only_selected_model(tmp_path: Path):
+def test_model_filter_grades_only_selected_model(tmp_path: Path, capsys):
     """@description 모델 필터 지정 시 선택 모델만 채점·저장 대상 유지 확인"""
     sections = [("국어/1", "국어", "1"), ("수학/1", "수학", "1")]
     models = ["모델A", "모델B"]
@@ -276,6 +315,7 @@ def test_model_filter_grades_only_selected_model(tmp_path: Path):
     assert {row["model_name"] for row in graded["results"]} == {"모델B"}
     assert graded["score_by_model"] == {"모델B": 4}
     assert verifier.calls == 4
+    assert "Model filter: 모델B" in capsys.readouterr().out
 
 
 def test_explicit_model_with_mixed_target_history_grades_only_ungraded_target(tmp_path: Path):
@@ -358,6 +398,10 @@ def test_progress_is_printed_before_grade_run_returns_and_marks_manual_review(
     assert not thread.is_alive()
     assert result_holder[0]["results"][0]["needs_manual_review"] is True
     output = before_return + after_return
+    assert "Subject: 국어" in output
+    assert "Section: 1" in output
+    assert "Total results: 1" in output
+    assert "Questions: 1" in output
     assert "[1/1] ✓ 모델 - 문제 1번" in output
     assert "[수동검토필요]" in output
     assert "수동 검토 필요 항목 (1개)" in output

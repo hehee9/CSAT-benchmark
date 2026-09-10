@@ -20,23 +20,23 @@
 
 ## Overview
 
-This dataset records and summarizes the results of various LLM models solving the 2026 Korean CSAT.
-The test covers all Korean and Math sections, English, Korean History, and
-four inquiry subjects that were widely considered relatively difficult in this year's CSAT: Life Science I, Physics I, Chemistry I, and Society & Culture.
+This dataset records and summarizes the results of various LLMs solving Korean CSAT and mock exam questions.
+The 2026 CSAT tests covered all Korean and Math sections, English, Korean History, and four inquiry subjects widely considered relatively difficult: Life Science I, Physics I, Chemistry I, and Society & Culture.
+Subsequent exams cover all subjects, including all inquiry subjects.
 
-The README shows **only the scores of major models**, so please check the **full results on the [dashboard](https://hehee9.github.io/CSAT-benchmark/)**.
+Please check the **full results on the [dashboard](https://hehee9.github.io/CSAT-benchmark/)**.
 
 Section-bundled 2026 records are shown in the dashboard's **[Normal](https://hehee9.github.io/CSAT-benchmark/?exam=csat-2026&mode=default&scoreBasis=normalized)** mode, and question-by-question records are shown in **[Easy](https://hehee9.github.io/CSAT-benchmark/?exam=csat-2026&mode=easy&scoreBasis=normalized)** mode.
 
 To run the benchmark directly, see the [usage guide](guides/usage.md).
 
-**As of 2026-04-25, I found that the images for Physics I questions 16 and 17 had been attached in reverse order, so only those two questions were fully retried.**
+**On 2026-04-25, I found that the images for Physics I questions 16 and 17 in the 2026 CSAT had been swapped, so those two questions were rerun for all models.**
 
 ---
 
 ## Overall Scores for Major Subjects
 
-![Overall total score comparison](https://hehee9.github.io/CSAT-benchmark/images/전체.png)
+![2026 CSAT total score comparison for major subjects](https://hehee9.github.io/CSAT-benchmark/images/전체.png)
 
 > 📊 **Evaluated subjects**: Korean, Math, English, Korean History, Inquiry subjects (Physics I, Chemistry I, Life Science I, Society & Culture), for a total of 450 points.
 >
@@ -44,9 +44,9 @@ To run the benchmark directly, see the [usage guide](guides/usage.md).
 > - Korean: common section + average of electives (Speech & Writing, Language & Media)
 > - Math: common section + average of electives (Probability & Statistics, Calculus, Geometry)
 > - English and Korean History: full score
-> - Inquiry: converted as two selected subjects from four subjects (average of four subjects × 2)
+> - Inquiry: converted to a two-subject score (average inquiry subject score × 2)
 
-![Best/worst total score combination comparison](https://hehee9.github.io/CSAT-benchmark/images/최고_최저.png)
+![2026 CSAT best/worst total score combination comparison](https://hehee9.github.io/CSAT-benchmark/images/최고_최저.png)
 
 > 📊 **Evaluated subjects**: Same as above, for a total of 450 points.
 >
@@ -54,13 +54,13 @@ To run the benchmark directly, see the [usage guide](guides/usage.md).
 > - Korean: common section + best/worst score among electives (Speech & Writing, Language & Media)
 > - Math: common section + best/worst score among electives (Probability & Statistics, Calculus, Geometry)
 > - English and Korean History: full score
-> - Inquiry: best/worst two-subject combination among four subjects (Physics I, Chemistry I, Life Science I, Society & Culture)
+> - Inquiry: select the two highest/lowest scores among the evaluated subjects
 
 ### Image-attached Questions vs Text-only Questions
 
-![Score rate for questions with images](https://hehee9.github.io/CSAT-benchmark/images/이미지O.png)
+![2026 CSAT score rate for questions with images](https://hehee9.github.io/CSAT-benchmark/images/이미지O.png)
 
-![Score rate for questions without images](https://hehee9.github.io/CSAT-benchmark/images/이미지X.png)
+![2026 CSAT score rate for questions without images](https://hehee9.github.io/CSAT-benchmark/images/이미지X.png)
 
 > 📊 **Evaluation range**: All subjects (Korean, Math, English, Korean History, Inquiry)
 >
@@ -73,16 +73,16 @@ To run the benchmark directly, see the [usage guide](guides/usage.md).
 
 ## Test Environment and Notes
 
-**Important: Except for GPT-5.5 Pro, this test was conducted through each model's official API.**
+**Tests were conducted through each model's official API.**
 
-> However, GPT-5.5 Pro was run in a tools-disabled web environment through [custom GPTs](https://chatgpt.com/g/g-69ecacbb8fac8191b0eb07e39c62496c-gpt-pro).
+\* GPT-5.5 Pro was run in a tools-disabled web environment through [custom GPTs](https://chatgpt.com/g/g-69ecacbb8fac8191b0eb07e39c62496c-gpt-pro).
 
 ### Test Environment
-- **Execution method**: Each model except GPT-5.5 Pro was tested through its official API.
-- **Reasoning settings**: Maximum output tokens and reasoning budgets were set sufficiently high.
+- **Execution method**: Each model was tested through its official API.
+- **Reasoning settings**: See the notation next to each model name.
 - **System prompt**: No separate system prompt was provided.
 - **External tools**: No external tools such as search or calculators were **provided**.
-- Temperature, Top P, and similar settings were kept at their **default values**. This means results may vary somewhat between runs.
+- Temperature, Top P, and similar settings were kept at their **default values**.
 - **Test method**: Problems were solved purely with the model's base capabilities.
 
 ### Differences from Ordinary User Environments
@@ -106,7 +106,9 @@ Therefore, **performance may differ from official website or app results.**
 - **Original preservation**: The PDF file itself or full-page screenshots were not provided.
 - This was done so that the models would use only text understanding and visual-material interpretation abilities.
 - **Normal Mode**: Every question in a section is solved in one request.
-- **Easy Mode**: Each question is solved once in its own request.
+- **Easy Mode**: Each question is solved once in its own request. This mode applies only to the 2026 CSAT.
+
+The former Hard mode has been renamed Normal, and the former Normal mode has been renamed Easy, as LLM performance has improved across models.
 
 ---
 
@@ -188,6 +190,7 @@ Therefore, **performance may differ from official website or app results.**
   - Mistral Small 4 (Thinking / Non-Thinking)
 
 - **DeepSeek series**
+  - DeepSeek V4.1 Flash (High)
   - DeepSeek V4 Flash Vision Exp (None / Max)
   - DeepSeek V4 Flash 0731 (None / Max)
   - DeepSeek V4 Flash (None / Max)
@@ -238,7 +241,7 @@ Therefore, **performance may differ from official website or app results.**
   - Motif 3 (Thinking)
   - Motif 12.7B (Thinking)
 
-※ * GPT-5.x (xhigh) and Claude Opus 4.7 (max) were retested only on problems they missed at high. This approach was used because the time and cost became too large relative to the performance gain.
+\* Only incorrectly answered questions were retested with higher reasoning effort. This approach was used because the time and cost became too large relative to the performance gain. Thank you for your understanding.
 
 ※ Models that cannot recognize images were run with text only.
 
@@ -291,8 +294,6 @@ Therefore, **performance may differ from official website or app results.**
 ![Physics I easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_물리1.png)
 ![Physics I normal mode](https://hehee9.github.io/CSAT-benchmark/images/물리1.png)
 
-> ※ The average score is low because many wrong answers occurred on questions containing visual materials with many lines or arrows.
-
 ### Chemistry I
 
 ![Chemistry I easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_화학1.png)
@@ -325,6 +326,7 @@ For models without an official provider, the measurement is based on OpenRouter'
 | GPT-OSS 120B | 0.15 | 0.6 |
 | Gemma 4 31B | 0.14 | 0.4 |
 | Gemma 4 26B A4B | 0.1 | 0.4 |
+| Motif 12.7B (Thinking) | 0.1 | 0.2 |
 
 ※ Prices are in USD per 1,000,000 tokens.
 
@@ -338,7 +340,7 @@ For models without an official provider, the measurement is based on OpenRouter'
 
 ## Support
 
-Tests for models other than GPT-5.5 Pro were conducted through actual APIs, and token usage and costs are transparently disclosed.
+Tests were conducted through APIs, and token usage and costs are transparently disclosed.
 
 Since every subject is tested each time a new model is released, significant API costs are incurred. If you'd like to help maintain this project, please consider supporting via Ko-fi!
 
@@ -350,24 +352,33 @@ Since every subject is tested each time a new model is released, significant API
 
 ### 2026 Korean CSAT
 
-- Korean: 34 common questions (76 points); Speech & Writing and Language & Media electives: 11 questions each (24 points each); 100 points total
-- Math: 22 common questions (74 points); Probability & Statistics, Calculus, and Geometry electives: 8 questions each (26 points each); 100 points total
-- English: 45 questions; listening replaced with a transcript (100 points)
-- Korean History: 20 questions (50 points; mandatory section)
-- Inquiry: Physics I, Chemistry I, Life Science I, and Society & Culture: 20 questions each (50 points each)
+- Korean: 34 common questions; Speech & Writing and Language & Media electives: 11 questions each
+- Math: 22 common questions; Probability & Statistics, Calculus, and Geometry electives: 8 questions each
+- English: 45 questions; listening replaced with a transcript
+- Korean History: 20 questions
+- Inquiry: Science (Physics I, Chemistry I, Life Science I) and social studies (Society & Culture): 20 questions each
 
-### 2027 Korean CSAT preparation
-- The exam manifest is being prepared for Korean, Math, English, Korean History, and 17 inquiry subjects.
+### September Mock Exam for the 2027 CSAT
+
+- Korean: 34 common questions; Speech & Writing and Language & Media electives: 11 questions each
+- Math: 22 common questions; Probability & Statistics, Calculus, and Geometry electives: 8 questions each
+- English: 45 questions; listening replaced with a transcript
+- Korean History: 20 questions
 - Social studies: Economics, East Asian History, Society & Culture, Ethics and Life, World History, World Geography, Ethics and Thought, Politics and Law, Korean Geography
 - Science studies: Physics I, Physics II, Chemistry I, Chemistry II, Life Science I, Life Science II, Earth Science I, Earth Science II
-- Question files are not included yet. Once they are ready, the manifest's default Normal mode will be used.
+\* Mock exams are tested with a small selection of models.
+
+### 2027 Korean CSAT (Planned)
+
+- Testing is being prepared for Korean, Math, English, Korean History, and 17 inquiry subjects.
+- Social studies: Economics, East Asian History, Society & Culture, Ethics and Life, World History, World Geography, Ethics and Thought, Politics and Law, Korean Geography
+- Science studies: Physics I, Physics II, Chemistry I, Chemistry II, Life Science I, Life Science II, Earth Science I, Earth Science II
 
 ## Detailed Evaluation Method
 
 The problems were first extracted into text using OCR, and incorrectly extracted parts were manually corrected.
 
-In Easy Mode, each problem was entered individually into the prompt with only the minimum required information.
-In Easy Mode, when one passage had multiple linked questions, each input was structured as passage + individual question.
+When a passage has multiple linked questions, the input uses a passage + individual question format. The passage may therefore be repeated, as in passage + question 1, passage + question 2, and passage + question 3.
 
 Formulas were converted to LaTeX to prevent the model from misunderstanding the formulas themselves. Recognizing text from images is also a performance metric, but I judged that wrong answers caused by misrecognizing the problem text did not fit the direction of this project.
 
@@ -375,7 +386,7 @@ Retries were performed only when no response was received due to an error. Other
 
 ### Example Input Prompts
 
-- Case with a passage (Korean odd-form question 3):
+- Case with a passage (2026 CSAT Korean, odd-numbered version, question 3):
 ````
 [1～3] 다음 글을 읽고 물음에 답하시오.
 
@@ -398,7 +409,7 @@ Retries were performed only when no response was received due to an error. Other
 ⑤ ...
 ````
 
-- Case with formulas (Math odd-form question 15):
+- Case with formulas (2026 CSAT Math, odd-numbered version, question 15):
 ````
 15. 함수 $f(x)$가
 $f(x) = \begin{cases} -x^2 & (x < 0) \\ x^2-x & (x \ge 0) \end{cases}$
@@ -411,7 +422,7 @@ $f(x) = \begin{cases} -x^2 & (x < 0) \\ x^2-x & (x \ge 0) \end{cases}$
 ⑤ ...
 ````
 
-- Case with an image (Korean History odd-form question 2):
+- Case with an image (2026 CSAT Korean History, odd-numbered version, question 2):
 ````
 2. 밑줄 친 '이 나라'에 대한 설명으로 옳은 것은?
 ```
@@ -436,7 +447,7 @@ This project is distributed under the MIT License. See the [LICENSE](LICENSE.md)
 
 ### CSAT Problem Copyright
 - The 2026 Korean CSAT problems are copyrighted works of the **Korea Institute for Curriculum and Evaluation (KICE)**.
-- This repository does not include the original problems. It includes only **model answer results and analysis data**.
+- This repository does not include the original problems.
 - The Excel file includes only question numbers and correct answers. Full problem text is not provided due to copyright.
 - If you want to use the CSAT problems, please use official materials from KICE.
 

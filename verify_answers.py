@@ -67,10 +67,10 @@ def _generic_main(arguments: Sequence[str]) -> int:
         )
         output_path = Path(args.output).expanduser().resolve() if args.output else run_path
         save_verified(verified, output_path)
-        print(f"검증 완료: {output_path}")
+        print(f"\n✓ 검증 완료: {output_path}", flush=True)
         for model_name, score in verified["score_by_model"].items():
             complete = "완료" if verified["complete_by_model"][model_name] else "미완료"
-            print(f"{model_name}: {score}점 ({complete})")
+            print(f"{model_name}: {score}점 ({complete})", flush=True)
         return 0
     except (OSError, ValueError, EvaluationError) as error:
         print(f"오류: {error}", file=sys.stderr)

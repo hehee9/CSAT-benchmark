@@ -24,6 +24,9 @@ from csat_benchmark.runs import canonical_results_path, create_run, save_run
 class _SectionVerifier:
     """섹션 응답에 고정된 문항별 답을 반환하는 검증기 대역."""
 
+    model_id = "test-verifier"
+    reasoning_effort = "low"
+
     def verify_hard_answers(self, raw_response, question_infos):
         answers = [int(value) for value in raw_response.split(",")]
         return [
@@ -38,6 +41,9 @@ class _SectionVerifier:
 
 class _QuestionVerifier:
     """문항별 응답을 정수 답으로 변환하는 검증기 대역."""
+
+    model_id = "test-verifier"
+    reasoning_effort = "low"
 
     def verify_answer(self, raw_response, correct_answer, question_number, question_text):
         return int(raw_response)

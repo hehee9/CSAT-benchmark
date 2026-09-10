@@ -123,6 +123,9 @@ def _verified_row(model: str, number: int, *, is_correct: bool = True) -> dict:
 class _EasyVerifier:
     """@description 문항별 pending 호출 기록 검증기 대역"""
 
+    model_id = "test-verifier"
+    reasoning_effort = "low"
+
     def __init__(self):
         self.calls: list[int] = []
 
@@ -134,6 +137,9 @@ class _EasyVerifier:
 
 class _HardVerifier:
     """@description pending 섹션 문항 정보와 원문 보존 검증기 대역"""
+
+    model_id = "test-verifier"
+    reasoning_effort = "low"
 
     def __init__(self):
         self.calls: list[tuple[str, list[int]]] = []

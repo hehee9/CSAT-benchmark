@@ -170,6 +170,34 @@ def _raw_results_by_key(run: Mapping[str, Any]) -> dict[tuple[str, str, int], Ma
     return {result_identity(result): result for result in run.get("results", [])}
 
 
+def _print_section_header(
+    section_manifest: SectionManifest,
+    *,
+    grading_mode: str,
+    total_results: int,
+    question_count: int,
+    model_filter: Sequence[str] | None,
+    verifier: Any,
+    worker_count: int,
+) -> None:
+    """@description 원본 섹션 채점 시작 출력"""
+    verifier_model = verifier.model_id
+    verifier_reasoning = verifier.reasoning_effort
+    mode_prefix = "" if grading_mode == "쉬움" else "일반 "
+    print(f"\n=== {mode_prefix}Answer Verification ===", flush=True)
+    print(f"Subject: {section_manifest.subject}", flush=True)
+    print(f"Section: {section_manifest.section}", flush=True)
+    print(f"Total {mode_prefix}results: {total_results}", flush=True)
+    print(f"Questions: {question_count}", flush=True)
+    if model_filter:
+        print(f"Model filter: {', '.join(sorted(model_filter))}", flush=True)
+    print(
+        f"Using: {verifier_model} ({verifier_reasoning}) via Responses API (Structured Output)",
+        flush=True,
+    )
+    print(f"\n{mode_prefix}병렬 처리 시작 (동시 호출 수: {worker_count})\n", flush=True)
+
+
 def _verified_row(result: VerificationResult, source: Mapping[str, Any], *, complete: bool) -> dict[str, Any]:
     """@description 추출 결과와 원본 응답을 canonical verified 행으로 변환"""
     row: dict[str, Any] = {
@@ -399,6 +427,9 @@ def _grade_question_section(
     verifier: Any,
     info_by_number: Mapping[int, Mapping[str, Any]],
     regrade: bool,
+    grading_mode: str,
+    total_results: int,
+    model_filter: Sequence[str] | None,
 ) -> _SectionGrading:
     """@description 쉬움 모드 섹션의 모델·문항 병렬 채점"""
     target = section_manifest.target
@@ -429,10 +460,14 @@ def _grade_question_section(
             tasks.append((key, model_name, source, info))
 
     worker_count = max(1, len(tasks))
-    print(
-        f"\n{target} 쉬움 채점 시작 (문항 작업 {len(tasks)}개, 건너뛴 문항 {skipped_count}개, "
-        f"동시 호출 수: {worker_count}, 재채점: {'예' if regrade else '아니오'})",
-        flush=True,
+    _print_section_header(
+        section_manifest,
+        grading_mode=grading_mode,
+        total_results=total_results,
+        question_count=len(info_by_number),
+        model_filter=model_filter,
+        verifier=verifier,
+        worker_count=worker_count,
     )
     completed = 0
     if tasks:
@@ -475,6 +510,9 @@ def _grade_section_input(
     verifier: Any,
     info_by_number: Mapping[int, Mapping[str, Any]],
     regrade: bool,
+    grading_mode: str,
+    total_results: int,
+    model_filter: Sequence[str] | None,
 ) -> _SectionGrading:
     """@description 기본 모드 섹션의 모델별 병렬 채점"""
     target = section_manifest.target
@@ -514,10 +552,14 @@ def _grade_section_input(
             tasks.append((model_name, source, pending_infos))
 
     worker_count = max(1, len(tasks))
-    print(
-        f"\n{target} 기본 채점 시작 (모델·영역 작업 {len(tasks)}개, 건너뛴 문항 {skipped_count}개, "
-        f"동시 호출 수: {worker_count}, 재채점: {'예' if regrade else '아니오'})",
-        flush=True,
+    _print_section_header(
+        section_manifest,
+        grading_mode=grading_mode,
+        total_results=total_results,
+        question_count=len(info_by_number),
+        model_filter=model_filter,
+        verifier=verifier,
+        worker_count=worker_count,
     )
     completed = 0
     if tasks:
@@ -553,6 +595,37 @@ def _grade_section_input(
                 )
 
     return _SectionGrading(target, rows, expected_by_model, manual_review, len(tasks), skipped_count)
+
+
+def _print_section_summary(
+    section_result: _SectionGrading,
+    info_by_number: Mapping[int, Mapping[str, Any]],
+    selected_models: Sequence[str],
+    grading_mode: str,
+) -> None:
+    """@description 원본 섹션 채점 결과·모델별 점수 출력"""
+    verified_rows = [
+        row
+        for row in section_result.rows.values()
+        if row.get("complete") is True and row.get("is_correct") is not None
+    ]
+    total_verified = len(verified_rows)
+    correct_count = sum(row.get("is_correct") is True for row in verified_rows)
+    total_points = sum(int(info["points"]) for info in info_by_number.values())
+    model_scores = {
+        model_name: sum(
+            int(row.get("points", 0))
+            for row in verified_rows
+            if row.get("model_name") == model_name and row.get("is_correct") is True
+        )
+        for model_name in selected_models
+    }
+
+    print(f"총 {total_verified}개 중 {correct_count}개 정답", flush=True)
+    mode_prefix = "" if grading_mode == "쉬움" else "일반 "
+    print(f"\n=== {mode_prefix}모델별 점수 (총점: {total_points}점) ===", flush=True)
+    for model_name, score in sorted(model_scores.items()):
+        print(f"{model_name}: {score}점 / {total_points}점", flush=True)
 
 
 def _merge_section_grading(
@@ -672,6 +745,22 @@ def grade_run(
         and expected_scope.issubset(prior_complete_keys)
     )
     regrade = bool(update or automatic_regrade)
+    grading_mode = "쉬움" if selected_mode.input_mode == "question" else "일반"
+    model_filter = tuple(sorted(dict.fromkeys(model_names))) if model_names is not None else None
+    result_count_by_target = {
+        section_manifest.target: sum(
+            1
+            for target, model_name, question_number in raw_by_key
+            if target == section_manifest.target
+            and model_name in selected_models
+            and (
+                question_number > 0
+                if selected_mode.input_mode == "question"
+                else question_number == 0
+            )
+        )
+        for section_manifest in sections
+    }
 
     print("\n=== 답안 채점 시작 ===", flush=True)
     print(
@@ -680,6 +769,16 @@ def grade_run(
     )
     print(f"채점 모델 ({len(selected_models)}개): {', '.join(selected_models) or '없음'}", flush=True)
     print(f"채점 방식: {'재채점' if regrade else '미채점만 채점'} (재채점: {'예' if regrade else '아니오'})", flush=True)
+    if benchmark_all or len(sections) > 1:
+        mode_prefix = "" if grading_mode == "쉬움" else "일반 "
+        print(f"\n{'=' * 50}", flush=True)
+        print(f"{mode_prefix}전체 검증 모드: {len(sections)}개 섹션 발견", flush=True)
+        print(f"{'=' * 50}", flush=True)
+        for section_manifest in sections:
+            print(f"  - {section_manifest.target}", flush=True)
+        if model_filter:
+            print(f"\n모델 필터: {', '.join(model_filter)}", flush=True)
+        print(flush=True)
 
     graded_by_key: dict[tuple[str, str, int], dict[str, Any]] = {}
     expected_by_model: dict[str, set[tuple[str, str, int]]] = {
@@ -700,7 +799,24 @@ def grade_run(
         nonlocal task_count, skipped_count
         task_count += section_result.task_count
         skipped_count += section_result.skipped_count
-        print(f"[{completed}/{total}] {section_result.target} 섹션 채점 완료", flush=True)
+        if section_result.manual_review:
+            print(
+                f"\n⚠ 수동 검토 필요 항목 ({len(section_result.manual_review)}개):",
+                flush=True,
+            )
+            for review in section_result.manual_review:
+                print(f"  - {review[0]} 문제 {review[1]}번: 추출 결과 = {review[2]}", flush=True)
+        _print_section_summary(
+            section_result,
+            info_by_target[section_result.target],
+            selected_models,
+            grading_mode,
+        )
+        if grading_mode == "일반":
+            completion_name = f"{section_result.target} 일반 검증 완료"
+        else:
+            completion_name = f"{section_result.target} 섹션 채점 완료"
+        print(f"[{completed}/{total}] {completion_name}", flush=True)
 
     section_arguments = {
         "selected_models": selected_models,
@@ -709,6 +825,8 @@ def grade_run(
         "prior_complete_keys": prior_complete_keys,
         "verifier": verifier,
         "regrade": regrade,
+        "grading_mode": grading_mode,
+        "model_filter": model_filter,
     }
 
     if selected_mode.input_mode == "question":
@@ -730,6 +848,7 @@ def grade_run(
                         section_manifest,
                         manifest,
                         info_by_number=info_by_target[section_manifest.target],
+                        total_results=result_count_by_target[section_manifest.target],
                         **section_arguments,
                     ): section_manifest
                     for section_manifest in subject_sections
@@ -737,13 +856,18 @@ def grade_run(
                 for completed_sections, future in enumerate(as_completed(section_futures), 1):
                     _collect(future.result(), completed_sections, len(section_futures))
     else:
-        print(f"기본 모드 섹션 동시 처리 (동시 섹션 수: {max(1, len(sections))})", flush=True)
+        if benchmark_all or len(sections) > 1:
+            print(
+                f"일반 전체 섹션 병렬 처리 시작 (동시 섹션 수: {max(1, len(sections))})",
+                flush=True,
+            )
         with ThreadPoolExecutor(max_workers=max(1, len(sections))) as executor:
             section_futures = {
                 executor.submit(
                     _grade_section_input,
                     section_manifest,
                     info_by_number=info_by_target[section_manifest.target],
+                    total_results=result_count_by_target[section_manifest.target],
                     **section_arguments,
                 ): section_manifest
                 for section_manifest in sections
@@ -755,10 +879,27 @@ def grade_run(
         print("실행할 채점 작업이 없습니다.", flush=True)
     print(f"채점 작업 요약: 작업 {task_count}개, 건너뛴 문항 {skipped_count}개", flush=True)
 
-    if manual_review:
-        print(f"\n⚠ 수동 검토 필요 항목 ({len(manual_review)}개):", flush=True)
-        for review in sorted(manual_review, key=lambda item: (str(item[0]), int(item[1]))):
-            print(f"  - {review[0]} 문제 {review[1]}번: 추출 결과 = {review[2]}", flush=True)
+    if benchmark_all or len(sections) > 1:
+        mode_prefix = "" if grading_mode == "쉬움" else "일반 "
+        print(f"\n{'=' * 50}", flush=True)
+        print(f"{mode_prefix}전체 검증 결과 요약", flush=True)
+        print(f"{'=' * 50}", flush=True)
+        print(f"\n성공: {len(sections)}개 섹션", flush=True)
+        total_model_scores = {
+            model_name: sum(
+                int(row.get("points", 0))
+                for row in graded_by_key.values()
+                if row.get("model_name") == model_name
+                and row.get("complete") is True
+                and row.get("is_correct") is True
+            )
+            for model_name in selected_models
+        }
+        print(f"\n=== {mode_prefix}모델별 전체 점수 ===", flush=True)
+        for model_name, score in sorted(
+            total_model_scores.items(), key=lambda item: item[1], reverse=True
+        ):
+            print(f"{model_name}: {score}점", flush=True)
 
     rows = [graded_by_key[key] for key in sorted(graded_by_key)]
     result = {

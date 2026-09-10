@@ -19,6 +19,8 @@ from csat_benchmark.runs import create_run, model_verified_path, save_run
 class _SingleVerifier:
     answers: list[object]
     calls: int = 0
+    model_id: str = "test-verifier"
+    reasoning_effort: str = "low"
 
     def verify_answer(self, raw_response, correct_answer, question_number, question_text):
         self.calls += 1
@@ -29,6 +31,8 @@ class _SingleVerifier:
 class _HardVerifier:
     outputs: list[object]
     calls: list[list[int]] | None = None
+    model_id: str = "test-verifier"
+    reasoning_effort: str = "low"
 
     def __post_init__(self):
         self.calls = []

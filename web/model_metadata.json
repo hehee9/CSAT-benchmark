@@ -83,7 +83,8 @@
   },
   "GPT-5.5 Pro": {
     "supportsVision": true,
-    "webServiceNoTools": true
+    "webServiceNoTools": true,
+    "knowledgeCutoff": null
   },
   "GPT-5.6 Sol (high)": {
     "description": {
@@ -646,6 +647,9 @@
     "knowledgeCutoff": "2024-11"
   },
   "모의 모델": {
+    "knowledgeCutoff": null
+  },
+  "DeepSeek V4.1 Flash (High)": {
     "knowledgeCutoff": null
   }
 }
