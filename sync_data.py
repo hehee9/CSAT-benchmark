@@ -14,6 +14,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, Alignment, PatternFill
 from openpyxl.styles.colors import Color
 
+from csat_benchmark.answers import CorrectAnswer, _is_correct_answer, _validate_correct_answer
 from csat_benchmark.evaluation import EvaluationError, resolve_run
 from csat_benchmark.configuration import load_config
 from csat_benchmark.exams import load_exam
@@ -173,6 +174,33 @@ def normalize_answer_value(answer):
         return int(answer), 'answered'
     except (ValueError, TypeError):
         return NO_ANSWER, 'parse_failed'
+
+
+def _normalise_correct_answer_cell(value) -> Optional[CorrectAnswer]:
+    """@description Excel 정답 셀을 단일값·복수값으로 변환"""
+    if value is None or str(value).strip() == '' or isinstance(value, bool):
+        return None
+    if isinstance(value, str):
+        parts = [part.strip() for part in value.strip().split(',')]
+        if any(not part for part in parts):
+            return None
+        try:
+            parsed = [int(part) for part in parts] if len(parts) > 1 else int(parts[0])
+        except (ValueError, TypeError):
+            return None
+    else:
+        parsed = value
+    try:
+        return _validate_correct_answer(parsed)
+    except (TypeError, ValueError):
+        return None
+
+
+def _format_correct_answer_cell(value: CorrectAnswer) -> int | str:
+    """@description 정답 단일값·복수값을 Excel 셀 값으로 변환"""
+    if isinstance(value, list):
+        return ', '.join(str(answer) for answer in value)
+    return value
 
 
 def _create_hard_excel_template(source_path: Path, target_path: Path):
@@ -408,11 +436,8 @@ class ExcelHandler:
         for q_num, correct in correct_answers.items():
             answer = answers.get(q_num)
             normalized_answer, _ = normalize_answer_value(answer)
-            try:
-                if normalized_answer == int(correct):
-                    score += points_by_question.get(q_num, 0)
-            except (ValueError, TypeError):
-                continue
+            if _is_correct_answer(normalized_answer, correct):
+                score += points_by_question.get(q_num, 0)
 
         return score
 
@@ -494,11 +519,34 @@ class ExcelHandler:
             if q_num is not None:
                 try:
                     q_num = int(q_num)
-                    correct_answers[q_num] = correct
+                    normalized_correct = _normalise_correct_answer_cell(correct)
+                    if normalized_correct is not None:
+                        correct_answers[q_num] = normalized_correct
                 except (ValueError, TypeError):
                     pass
 
         return correct_answers
+
+    def update_correct_answer_cells(self, sheet_name: str, questions_data: Dict) -> None:
+        """@description 문항 원본 기준 Excel 정답 셀 갱신"""
+        self._load_workbook()
+        ws = self.workbook[sheet_name]
+        header_row = self._find_header_row(sheet_name)
+        score_row = self._find_score_row(sheet_name)
+        answer_col = self._find_answer_column(sheet_name)
+        correct_answers = {
+            int(question['number']): _validate_correct_answer(question['correct_answer'])
+            for question in questions_data.get('questions', [])
+        }
+
+        for row_idx in range(header_row + 1, score_row):
+            q_num = ws.cell(row=row_idx, column=1).value
+            if isinstance(q_num, bool) or not isinstance(q_num, int):
+                continue
+            if q_num in correct_answers:
+                ws.cell(row=row_idx, column=answer_col).value = _format_correct_answer_cell(
+                    correct_answers[q_num]
+                )
 
     def add_model_column(self, sheet_name: str, model_name: str,
                          answers: Dict[int, any], score: int,
@@ -576,12 +624,9 @@ class ExcelHandler:
                             cell.font = red_font
                         else:
                             cell.value = answer
-                            # 오답 확인
-                            try:
-                                if int(answer) != int(correct):
-                                    cell.font = red_font
-                            except (ValueError, TypeError):
-                                pass
+                            normalized_answer, _ = normalize_answer_value(answer)
+                            if not _is_correct_answer(normalized_answer, correct):
+                                cell.font = red_font
                     else:
                         # answers 미포함 문항 포기 처리
                         cell.value = "(포기)"
@@ -649,12 +694,9 @@ class ExcelHandler:
                             cell.font = red_font
                         else:
                             cell.value = answer
-                            # 오답 확인
-                            try:
-                                if int(answer) != int(correct):
-                                    cell.font = red_font
-                            except (ValueError, TypeError):
-                                pass
+                            normalized_answer, _ = normalize_answer_value(answer)
+                            if not _is_correct_answer(normalized_answer, correct):
+                                cell.font = red_font
                     else:
                         cell.value = "(포기)"
                         cell.font = red_font
@@ -714,13 +756,13 @@ class DataConverter:
 
         for q in questions_data['questions']:
             q_num = q['number']
-            correct_answer = q['correct_answer']
+            correct_answer = _validate_correct_answer(q['correct_answer'])
             points = q['points']
 
             extracted = answers.get(q_num)
             extracted_normalized, answer_status = normalize_answer_value(extracted)
 
-            is_correct = (extracted_normalized == correct_answer)
+            is_correct = _is_correct_answer(extracted_normalized, correct_answer)
             if is_correct:
                 total_score += points
                 correct_count += 1
@@ -962,6 +1004,10 @@ class SyncManager:
         if sheet_name not in self.excel_handler.get_sheet_names():
             print(f"시트를 찾을 수 없습니다: {sheet_name}")
             return False
+
+        self.excel_handler.update_correct_answer_cells(
+            sheet_name, self.converter.load_questions(sheet_name)
+        )
 
         # 전체 모델 데이터 변환
         model_data_list = self.converter.json_to_excel(json_data)

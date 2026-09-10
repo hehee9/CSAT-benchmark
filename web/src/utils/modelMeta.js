@@ -37,7 +37,8 @@ const PARTIAL_BENCHMARK_MODELS = {
 }
 
 const MODEL_DISPLAY_NAMES = {
-  'GPT-5.5 Pro': 'GPT-5.5 Pro (xhigh, GPTs)'
+  'GPT-5.5 Pro': 'GPT-5.5 Pro (xhigh, GPTs)',
+  'DeepSeek V4.1 Flash (High)': 'DeepSeek V4.1 Flash (high)'
 }
 
 /**

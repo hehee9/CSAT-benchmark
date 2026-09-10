@@ -322,8 +322,13 @@ def _question_from_record(record: Any, exam: ExamManifest) -> Question:
     if any(key not in record for key in required):
         raise ValueError(f"문항에 필수 필드가 없습니다: {required}")
     values = {key: record[key] for key in required}
-    if any(isinstance(values[key], bool) or not isinstance(values[key], int) for key in required):
-        raise ValueError(f"문항 번호·정답·배점은 정수여야 합니다: {values}")
+    if (
+        isinstance(values["number"], bool)
+        or not isinstance(values["number"], int)
+        or isinstance(values["points"], bool)
+        or not isinstance(values["points"], int)
+    ):
+        raise ValueError(f"문항 번호·배점은 정수여야 합니다: {values}")
     if values["points"] < 1:
         raise ValueError(f"문항 배점은 양수여야 합니다: {values['points']}")
     question_path = record.get("question_path")

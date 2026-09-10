@@ -19,6 +19,7 @@ from csat_benchmark.exports import (
     publish_run,
 )
 from csat_benchmark.runs import canonical_results_path, create_run, save_run
+from sync_data import DataConverter, ExcelHandler, ModelNameMapper, PathMapper
 
 
 class _SectionVerifier:
@@ -496,3 +497,135 @@ def test_token_usage_dates_propagate_latest_section_and_preserve_legacy_date():
     assert model["sections"]["기존 섹션"]["last_updated"] == older
     assert model["sections"]["새 섹션"]["last_updated"] == latest
     assert model["last_updated"] == latest
+
+
+def test_multiple_correct_answers_round_trip_through_canonical_excel_and_public_json(tmp_path: Path):
+    """복수 정답 대안이 Excel 표시·수동 재채점·공개 JSON에서 보존된다."""
+    exam = _make_exam(tmp_path)
+    questions_path = exam.data_root / "questions.json"
+    payload = json.loads(questions_path.read_text(encoding="utf-8"))
+    payload["questions"][0]["correct_answer"] = [2, 3]
+    questions_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    exam = load_exam(exam.manifest_path, project_root=tmp_path)
+
+    run = _make_run(exam, mode="default", input_mode="section", raw="3,1")
+    index = canonical_results_path(exam, "default")
+    save_run(run, index)
+    verified = grade_run(index, exam, _SectionVerifier())
+    save_verified(verified, index)
+
+    excel_path = export_run_to_excel(index, tmp_path / "answers.xlsx", run=index, exam=exam)
+    worksheet = load_workbook(excel_path)["국어-예시"]
+    assert worksheet["B2"].value == "2, 3"
+    assert worksheet["D2"].value == 3
+
+    worksheet["B2"] = 9
+    worksheet.parent.save(excel_path)
+    export_run_to_excel(index, excel_path, run=index, exam=exam)
+    worksheet = load_workbook(excel_path)["국어-예시"]
+    assert worksheet["B2"].value == "2, 3"
+
+    worksheet["D2"] = 2
+    worksheet.parent.save(excel_path)
+    imported = import_excel_corrections(index, excel_path, run=index, exam=exam)
+    imported_row = next(row for row in imported["verified"]["results"] if row["question_number"] == 1)
+    assert imported_row["correct_answer"] == [2, 3]
+    assert imported_row["is_correct"] is True
+
+    paths = publish_run(exam, index, imported["path"], output_dir=tmp_path / "published")
+    public = json.loads(paths["results"].read_text(encoding="utf-8"))
+    public_row = public[0]["results"][0]
+    assert public_row["correct_answer"] == [2, 3]
+    assert public[0]["score"] == 4
+
+
+def test_legacy_excel_json_round_trip_scores_multiple_answers_and_statuses(tmp_path: Path):
+    """legacy Excel·JSON 변환이 복수 정답, 오답, 포기 답안을 구분한다."""
+    questions_dir = tmp_path / "problems" / "국어" / "공통"
+    questions_dir.mkdir(parents=True)
+    (questions_dir / "questions.json").write_text(
+        json.dumps(
+            {
+                "subject": "국어",
+                "section": "공통",
+                "questions": [
+                    {"number": 1, "correct_answer": [2, 3], "points": 2},
+                    {"number": 2, "correct_answer": 1, "points": 2},
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    workbook = Workbook()
+    worksheet = workbook.active
+    worksheet.title = "국어-공통"
+    worksheet.append(["문항 번호", "정답", "모델"])
+    worksheet.append([1, "2, 3", 3])
+    worksheet.append([2, 1, "(포기)"])
+    worksheet.append(["총점", None, 2])
+    excel_path = tmp_path / "legacy.xlsx"
+    workbook.save(excel_path)
+
+    handler = ExcelHandler(excel_path)
+    answers = handler.get_model_answers("국어-공통", "모델")
+    assert handler._get_correct_answers("국어-공통") == {1: [2, 3], 2: 1}
+    handler._load_questions_for_sheet = lambda _sheet: {
+        "questions": [
+            {"number": 1, "correct_answer": [2, 3], "points": 2},
+            {"number": 2, "correct_answer": 1, "points": 2},
+        ]
+    }
+    assert handler.calculate_score_from_answers("국어-공통", answers) == 2
+
+    converter = DataConverter(PathMapper(tmp_path), ModelNameMapper(tmp_path / "mapping.json"))
+    exported = converter.excel_to_json("국어-공통", "모델", answers, handler)
+    assert exported["model_scores"] == {"모델": 2}
+    assert exported["results"][0]["correct_answer"] == [2, 3]
+    assert exported["results"][0]["is_correct"] is True
+    assert exported["results"][1]["answer_status"] == "no_answer"
+    round_trip = converter.json_to_excel(exported)
+    assert round_trip[0][1] == {1: 3, 2: None}
+    assert round_trip[0][2] == 2
+
+
+def test_legacy_update_formats_multiple_answer_statuses_and_syncs_official_answers(tmp_path: Path):
+    """legacy 모델 열 갱신이 복수 정답 글꼴과 상태별 오류 표시를 유지한다."""
+    workbook = Workbook()
+    worksheet = workbook.active
+    worksheet.title = "국어-공통"
+    worksheet.append(["문항 번호", "정답", "모델"])
+    worksheet.append([1, 9, 9])
+    worksheet.append([2, 1, 9])
+    worksheet.append([3, 2, 9])
+    worksheet.append([4, 3, 9])
+    worksheet.append(["총점", None, 0])
+    excel_path = tmp_path / "legacy-update.xlsx"
+    workbook.save(excel_path)
+
+    handler = ExcelHandler(excel_path)
+    source_questions = {
+        "questions": [
+            {"number": 1, "correct_answer": [2, 3], "points": 2},
+            {"number": 2, "correct_answer": 1, "points": 2},
+            {"number": 3, "correct_answer": 2, "points": 2},
+            {"number": 4, "correct_answer": 3, "points": 2},
+        ]
+    }
+    handler.update_correct_answer_cells("국어-공통", source_questions)
+    handler.update_model_column(
+        "국어-공통",
+        "모델",
+        {1: 3, 2: 4, 3: None, 4: "(검열)"},
+        score=2,
+    )
+
+    updated = handler.workbook["국어-공통"]
+    assert updated["B2"].value == "2, 3"
+    assert updated["B3"].value == 1
+    assert updated["C2"].font.color is None
+    assert updated["C3"].font.color.rgb.endswith("FF0000")
+    assert updated["C4"].value == "(포기)"
+    assert updated["C4"].font.color.rgb.endswith("FF0000")
+    assert updated["C5"].value == "(검열)"
+    assert updated["C5"].font.color.rgb.endswith("7C3AED")

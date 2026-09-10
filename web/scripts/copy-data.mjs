@@ -359,6 +359,48 @@ async function _resolveModeSources(manifest, mode, roots) {
   throw new Error(`준비 완료 시험의 공개 자료가 없습니다: ${manifest.id}/${mode.id}`)
 }
 
+/** @description 공개 시험 결과에서 실제 모델명 수집 */
+export async function discoverPublishedModelNames(options = {}) {
+  const configuredRepoRoot = path.resolve(options.repoRoot || repoRoot)
+  const configuredWebRoot = path.resolve(options.webRoot || path.join(configuredRepoRoot, 'web'))
+  const catalogDir = _resolveConfiguredPath(
+    options.catalogDir,
+    path.join(configuredRepoRoot, 'benchmarks'),
+    configuredRepoRoot
+  )
+  const publishedDir = _resolveConfiguredPath(
+    options.publishedDir,
+    path.join(configuredRepoRoot, 'published'),
+    configuredRepoRoot
+  )
+  const roots = {
+    repoRoot: configuredRepoRoot,
+    webRoot: configuredWebRoot,
+    publishedDir
+  }
+  const manifests = await _loadManifests(catalogDir)
+  const modelNames = new Set()
+
+  for (const { manifest } of manifests.filter(item => item.manifest.publish === true)) {
+    for (const mode of manifest.modes) {
+      const sources = await _resolveModeSources(manifest, mode, roots)
+      if (sources.sourceKind === 'empty') continue
+
+      const results = await _readJson(sources.results, '공개 결과')
+      if (!Array.isArray(results)) {
+        throw new Error(`공개 결과가 배열이 아닙니다: ${sources.results}`)
+      }
+      for (const record of results) {
+        if (record && typeof record.model_name === 'string' && record.model_name.trim()) {
+          modelNames.add(record.model_name)
+        }
+      }
+    }
+  }
+
+  return [...modelNames].sort((left, right) => left.localeCompare(right))
+}
+
 /** @description 모드 자료를 중첩 공개 경로와 필요한 역사적 루트 경로에 기록 */
 async function _publishMode(manifest, mode, roots, outputDir) {
   const sources = await _resolveModeSources(manifest, mode, roots)

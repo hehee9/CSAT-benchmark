@@ -10,6 +10,7 @@ from typing import Any, Iterable, Mapping, Sequence
 
 from openpyxl import Workbook, load_workbook
 
+from .answers import CorrectAnswer, _is_correct_answer
 from .configuration import load_config
 from .evaluation import load_verified, save_verified
 from .exams import ExamManifest, SectionManifest, load_exam, load_section_questions
@@ -23,6 +24,13 @@ _ANSWER_HEADERS = {"문항 번호", "정답", "배점"}
 _NON_MODEL_HEADERS = _ANSWER_HEADERS | {"총점", "총합", "점수"}
 _REFUSAL_MARKERS = {"-2", "(검열)", "검열", "refusal", "Refusal"}
 _NO_ANSWER_MARKERS = {"-1", "포기", "(포기)"}
+
+
+def _format_excel_correct_answer(value: CorrectAnswer) -> int | str:
+    """@description 정답 단일값·복수값을 Excel 표시값으로 변환"""
+    if isinstance(value, list):
+        return ", ".join(str(answer) for answer in value)
+    return value
 
 
 def target_to_section_key(
@@ -298,7 +306,10 @@ def _new_sheet(
     worksheet.append(headers)
     questions = load_section_questions(manifest, section)
     for question in questions:
-        worksheet.append([question.number, question.correct_answer, question.points] + [None] * len(models))
+        worksheet.append(
+            [question.number, _format_excel_correct_answer(question.correct_answer), question.points]
+            + [None] * len(models)
+        )
     worksheet.append(["총점", None, sum(question.points for question in questions)])
     return worksheet
 
@@ -384,6 +395,7 @@ def export_run_to_excel(
             for index, value in enumerate(headers, start=1)
             if value is not None and str(value).strip()
         }
+        answer_column = header_to_column.get("정답", 2)
         expected_questions = load_section_questions(manifest, section_manifest)
         question_rows = {
             int(worksheet.cell(row, 1).value): row
@@ -396,11 +408,16 @@ def export_run_to_excel(
                 row_index = score_row
                 worksheet.insert_rows(row_index)
                 worksheet.cell(row_index, 1).value = question.number
-                worksheet.cell(row_index, 2).value = question.correct_answer
+                worksheet.cell(row_index, answer_column).value = _format_excel_correct_answer(
+                    question.correct_answer
+                )
                 if "배점" in header_to_column:
                     worksheet.cell(row_index, header_to_column["배점"]).value = question.points
                 score_row += 1
                 question_rows[question.number] = row_index
+            worksheet.cell(
+                question_rows[question.number], answer_column
+            ).value = _format_excel_correct_answer(question.correct_answer)
         for model in models:
             excel_model = mapping.get(model, model)
             column = header_to_column.get(excel_model) or header_to_column.get(model)
@@ -505,6 +522,13 @@ def import_excel_corrections(
     changed = 0
     selected_targets = {item.target for item in sections}
     requested_numbers = set(question_numbers) if question_numbers is not None else None
+    source_correct_answers = {
+        section_manifest.target: {
+            question.number: question.correct_answer
+            for question in load_section_questions(manifest, section_manifest)
+        }
+        for section_manifest in sections
+    }
     for worksheet in workbook.worksheets:
         if worksheet.title == "_csat_meta":
             continue
@@ -537,15 +561,22 @@ def import_excel_corrections(
                 item = rows_by_key.get((target, model_name, number))
                 if item is None or item.get("complete") is not True:
                     continue
+                correct_answer = source_correct_answers[target].get(number)
+                if correct_answer is None:
+                    continue
                 answer, status = _normalise_excel_answer(worksheet.cell(row_index, column).value)
                 if answer is None or status is None:
                     continue
-                if item.get("extracted_answer") == answer:
+                if (
+                    item.get("extracted_answer") == answer
+                    and item.get("correct_answer") == correct_answer
+                ):
                     continue
                 item.update(
                     {
                         "extracted_answer": answer,
-                        "is_correct": answer == int(item["correct_answer"]),
+                        "correct_answer": copy.deepcopy(correct_answer),
+                        "is_correct": _is_correct_answer(answer, correct_answer),
                         "answer_status": status,
                         "provenance": "excel_manual",
                         "needs_manual_review": False,

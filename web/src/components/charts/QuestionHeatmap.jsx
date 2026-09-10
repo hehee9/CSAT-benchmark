@@ -51,6 +51,15 @@ function _isRefusalCell(cell) {
   return cell?.answerStatus === 'refusal' || cell?.extractedAnswer === -2
 }
 
+/**
+ * @brief 정답 선지 표시 문자열 생성
+ * @param {number|number[]|null} correctAnswer - 공식 정답 또는 복수 정답
+ * @return {number|string|null} 화면에 표시할 정답
+ */
+function _formatCorrectAnswer(correctAnswer) {
+  return Array.isArray(correctAnswer) ? correctAnswer.join(', ') : correctAnswer
+}
+
 /** @description Format an answer value for compact heatmap cells */
 function _formatAnswer(cell, t) {
   if (_isRefusalCell(cell)) return t('heatmap.refusalShort')
@@ -176,10 +185,10 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
                   const cellTitle = cell?.isCorrect === undefined
                     ? `${formatModelDisplayName(model)} - ${t('heatmap.question')} ${q}: ${t('common.noData')}`
                     : isRefusal
-                    ? `${formatModelDisplayName(model)} - ${t('heatmap.question')} ${q}: ${t('heatmap.refusal')} (${cell.points}${t('common.points')}) - ${t('heatmap.answer')}: ${cell.correctAnswer}`
+                    ? `${formatModelDisplayName(model)} - ${t('heatmap.question')} ${q}: ${t('heatmap.refusal')} (${cell.points}${t('common.points')}) - ${t('heatmap.answer')}: ${_formatCorrectAnswer(cell.correctAnswer)}`
                     : cell?.isCorrect
                     ? `${formatModelDisplayName(model)} - ${t('heatmap.question')} ${q}: ${t('heatmap.correct')} (${cell.points}${t('common.points')}) - ${t('heatmap.yourAnswer')}: ${cell.extractedAnswer}`
-                    : `${formatModelDisplayName(model)} - ${t('heatmap.question')} ${q}: ${t('heatmap.incorrect')} (${cell.points}${t('common.points')}) - ${t('heatmap.yourAnswer')}: ${cell.extractedAnswer}, ${t('heatmap.answer')}: ${cell.correctAnswer}`
+                    : `${formatModelDisplayName(model)} - ${t('heatmap.question')} ${q}: ${t('heatmap.incorrect')} (${cell.points}${t('common.points')}) - ${t('heatmap.yourAnswer')}: ${cell.extractedAnswer}, ${t('heatmap.answer')}: ${_formatCorrectAnswer(cell.correctAnswer)}`
                   return (
                     <div
                       key={q}

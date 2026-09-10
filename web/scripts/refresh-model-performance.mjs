@@ -2,6 +2,7 @@ import path from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { discoverPublishedModelNames } from './copy-data.mjs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -15,6 +16,21 @@ const PUBLISHER_TAGS = {
   'Z.AI': 'z-ai',
   xAI: 'xai'
 }
+const PUBLISHER_ALIASES = {
+  anthropic: 'Anthropic',
+  deepseek: 'DeepSeek',
+  google: 'Google',
+  openai: 'OpenAI',
+  'x-ai': 'xAI',
+  'z-ai': 'Z.AI',
+  moonshotai: 'Moonshot AI',
+  minimax: 'Minimax',
+  mistralai: 'Mistral',
+  meta: 'Meta',
+  qwen: 'Alibaba',
+  upstage: 'Upstage'
+}
+const REASONING_ANNOTATION = /^(?:high|low|minimal|medium|max|none|instant|thinking|non[- ]thinking|xhigh\*?|max\*?|\d+\s*k\s+(?:thinking|non[- ]thinking))$/i
 
 /** @description 수치 목록의 중앙값 계산 */
 export function median(values) {
@@ -57,6 +73,121 @@ function _getProviderMedians(endpoints) {
 /** @description 공식 공급자의 일반 태그 확인 */
 function _getPublisherTag(mapping) {
   return PUBLISHER_TAGS[mapping.officialProvider] || mapping.modelId.split('/')[0]
+}
+
+/** @description 모델명 끝의 벤치마크 추론 표기 제거 */
+function _stripReasoningAnnotations(value) {
+  let result = value.trim()
+  let match = result.match(/\s*\(([^()]*)\)\s*$/)
+  while (match) {
+    const segments = match[1].split(',').map(segment => segment.trim())
+    const retained = segments.filter(segment => !REASONING_ANNOTATION.test(segment))
+    if (retained.length === segments.length) break
+    result = retained.length === 0
+      ? result.slice(0, match.index).trim()
+      : `${result.slice(0, match.index).trim()} (${retained.join(', ')})`
+    match = result.match(/\s*\(([^()]*)\)\s*$/)
+  }
+  return result
+}
+
+/** @description 모델명 비교용 소문자·구두점 제거 키 생성 */
+function _normalizeModelName(value) {
+  return _stripReasoningAnnotations(value)
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/[\p{P}\p{S}\s]+/gu, '')
+}
+
+/** @description 공급자 접두어를 제외한 OpenRouter 표시명 반환 */
+function _removePublisherPrefix(value) {
+  const separatorIndex = value.indexOf(':')
+  return separatorIndex === -1 ? value : value.slice(separatorIndex + 1).trim()
+}
+
+/** @description OpenRouter 모델의 비교 키 생성 */
+function _getCatalogKeys(model) {
+  return new Set([
+    _normalizeModelName(model.id.slice(model.id.indexOf('/') + 1)),
+    _normalizeModelName(_removePublisherPrefix(model.name))
+  ].filter(Boolean))
+}
+
+/** @description 끝의 Preview 표기를 제거한 비교 키 생성 */
+function _withoutTrailingPreview(key) {
+  return key.endsWith('preview') ? key.slice(0, -'preview'.length) : key
+}
+
+/** @description 두 키가 Preview 별칭으로 일치하는지 확인 */
+function _matchesPreviewAlias(rawKey, catalogKey) {
+  return (catalogKey !== rawKey && _withoutTrailingPreview(catalogKey) === rawKey) ||
+    (rawKey !== catalogKey && _withoutTrailingPreview(rawKey) === catalogKey)
+}
+
+/** @description 매칭된 모델의 공식 공급자 추론 */
+function _inferOfficialProvider(model) {
+  const publisherId = model.id.split('/')[0]
+  if (PUBLISHER_ALIASES[publisherId]) return PUBLISHER_ALIASES[publisherId]
+  const namePrefix = model.name.includes(':') ? model.name.slice(0, model.name.indexOf(':')).trim() : ''
+  return namePrefix || publisherId
+}
+
+/** @description OpenRouter 후보 중 단일 모델 ID 반환 */
+function _findModelMatch(rawName, modelCatalog) {
+  const rawKey = _normalizeModelName(rawName)
+  const candidates = modelCatalog
+    .filter(model => !model.id.includes(':'))
+    .map(model => ({ model, keys: _getCatalogKeys(model) }))
+  const exact = candidates.filter(candidate => [...candidate.keys].includes(rawKey))
+  const exactIds = [...new Set(exact.map(candidate => candidate.model.id))].sort()
+  if (exactIds.length > 0) {
+    const model = exactIds.length === 1
+      ? exact.find(candidate => candidate.model.id === exactIds[0]).model
+      : null
+    return { model, candidates: exactIds }
+  }
+
+  const preview = candidates.filter(candidate => [...candidate.keys].some(catalogKey => _matchesPreviewAlias(rawKey, catalogKey)))
+  const previewIds = [...new Set(preview.map(candidate => candidate.model.id))].sort()
+  const model = previewIds.length === 1
+    ? preview.find(candidate => candidate.model.id === previewIds[0]).model
+    : null
+  return { model, candidates: previewIds }
+}
+
+/** @description 공개 모델명과 OpenRouter 모델 목록의 매핑 생성 */
+export function matchModelNames(modelNames, mapPayload, modelCatalog) {
+  const discoveredNames = [...new Set(modelNames)]
+    .filter(modelName => typeof modelName === 'string' && modelName.trim())
+    .sort((left, right) => left.localeCompare(right))
+  const models = {}
+  const unmatched = []
+  const ambiguous = []
+
+  for (const modelName of discoveredNames) {
+    const override = mapPayload.models[modelName]
+    if (override) {
+      models[modelName] = override
+      continue
+    }
+
+    const match = _findModelMatch(modelName, modelCatalog)
+    if (match.model) {
+      models[modelName] = {
+        modelId: match.model.id,
+        officialProvider: _inferOfficialProvider(match.model)
+      }
+    } else {
+      models[modelName] = null
+      if (match.candidates.length > 1) {
+        ambiguous.push({ modelName, candidates: match.candidates })
+      } else {
+        unmatched.push(modelName)
+      }
+    }
+  }
+
+  return { models, diagnostics: { unmatched, ambiguous } }
 }
 
 /**
@@ -127,9 +258,15 @@ export function selectThroughput(endpoints, mapping) {
 export function buildModelPerformanceSnapshot(mapPayload, endpointsByModel, updatedAt) {
   const models = Object.fromEntries(
     Object.entries(mapPayload.models).map(([displayName, mapping]) => {
-      const stats = selectThroughput(endpointsByModel.get(mapping.modelId) || [], mapping)
+      const stats = mapping
+        ? selectThroughput(endpointsByModel.get(mapping.modelId) || [], mapping)
+        : {
+            tokensPerSecond: null,
+            providers: [],
+            selection: { strategy: 'unavailable', provider: null, tag: null }
+          }
       return [displayName, {
-        modelId: mapping.modelId,
+        modelId: mapping ? mapping.modelId : null,
         tokensPerSecond: stats.tokensPerSecond,
         providers: stats.providers,
         selection: stats.selection
@@ -185,11 +322,13 @@ async function _fetchJson(fetchImpl, url, apiKey) {
   return response.json()
 }
 
-/** @description OpenRouter 모델 목록에서 모델 ID 집합 추출 */
-async function _fetchModelIds(fetchImpl, apiKey) {
+/** @description OpenRouter 모델 목록의 전체 모델 정보 요청 */
+async function _fetchModelCatalog(fetchImpl, apiKey) {
   const payload = await _fetchJson(fetchImpl, `${OPENROUTER_API_ROOT}/models`, apiKey)
   if (!Array.isArray(payload.data)) throw new Error('OpenRouter 모델 목록이 올바르지 않습니다')
-  return new Set(payload.data.map(model => model.id).filter(id => typeof id === 'string'))
+  return payload.data
+    .filter(model => model && typeof model.id === 'string' && typeof model.name === 'string')
+    .map(model => ({ id: model.id, name: model.name }))
 }
 
 /** @description 모델별 엔드포인트 처리량 요청 */
@@ -215,22 +354,38 @@ export async function refreshModelPerformance({
   outputPath = DEFAULT_OUTPUT_PATH,
   apiKey = process.env.OPENROUTER_API_KEY,
   fetchImpl = fetch,
-  now = new Date()
+  now = new Date(),
+  repoRoot,
+  catalogDir,
+  publishedDir,
+  webRoot
 } = {}) {
   if (!apiKey) throw new Error('OPENROUTER_API_KEY가 없습니다')
 
   const mapPayload = await _readJson(mapPath)
   _validateMapPayload(mapPayload)
   const previous = await _readJson(outputPath, true)
-  let modelIds
+  let modelCatalog
   try {
-    modelIds = await _fetchModelIds(fetchImpl, apiKey)
+    modelCatalog = await _fetchModelCatalog(fetchImpl, apiKey)
   } catch (error) {
-    if (previous) return { snapshot: previous, refreshed: false, errors: [error.message] }
+    if (previous) return { snapshot: previous, refreshed: false, errors: [error.message], matching: null }
     throw error
   }
 
-  const uniqueModelIds = [...new Set(Object.values(mapPayload.models).map(mapping => mapping.modelId))]
+  const discoveredModelNames = await discoverPublishedModelNames({
+    repoRoot,
+    webRoot,
+    catalogDir,
+    publishedDir
+  })
+  const resolved = matchModelNames(discoveredModelNames, mapPayload, modelCatalog)
+  const modelIds = new Set(modelCatalog.map(model => model.id))
+  const uniqueModelIds = [...new Set(
+    Object.values(resolved.models)
+      .filter(mapping => mapping && typeof mapping.modelId === 'string')
+      .map(mapping => mapping.modelId)
+  )].sort()
   const endpointsByModel = new Map()
   const errors = []
   let successfulRequests = 0
@@ -249,12 +404,12 @@ export async function refreshModelPerformance({
   }))
 
   if (successfulRequests === 0 && uniqueModelIds.length > 0 && previous) {
-    return { snapshot: previous, refreshed: false, errors }
+    return { snapshot: previous, refreshed: false, errors, matching: resolved.diagnostics }
   }
 
-  const snapshot = buildModelPerformanceSnapshot(mapPayload, endpointsByModel, now.toISOString())
+  const snapshot = buildModelPerformanceSnapshot({ ...mapPayload, models: resolved.models }, endpointsByModel, now.toISOString())
   await _writeJson(outputPath, snapshot)
-  return { snapshot, refreshed: true, errors }
+  return { snapshot, refreshed: true, errors, matching: resolved.diagnostics }
 }
 
 /** @description CLI 인자 파싱 */
@@ -264,6 +419,10 @@ function _parseArgs(argv) {
     const argument = argv[index]
     if (argument === '--map') options.mapPath = path.resolve(argv[++index])
     else if (argument === '--output') options.outputPath = path.resolve(argv[++index])
+    else if (argument === '--repo-root') options.repoRoot = path.resolve(argv[++index])
+    else if (argument === '--catalog-dir') options.catalogDir = path.resolve(argv[++index])
+    else if (argument === '--published-dir') options.publishedDir = path.resolve(argv[++index])
+    else if (argument === '--web-root') options.webRoot = path.resolve(argv[++index])
     else throw new Error(`알 수 없는 옵션입니다: ${argument}`)
   }
   return options
@@ -274,11 +433,22 @@ if (process.argv[1] === __filename) {
     .then(result => {
       if (!result.refreshed) {
         console.error(`모델 처리량 갱신 실패로 이전 스냅샷을 유지했습니다: ${result.errors.join('; ')}`)
+        if (result.matching?.unmatched.length > 0) {
+          console.error(`자동 매칭 미확인 모델: ${result.matching.unmatched.join(', ')}`)
+        }
+        if (result.matching?.ambiguous.length > 0) {
+          console.error(`자동 매칭 후보 다중 모델: ${result.matching.ambiguous.map(item => item.modelName).join(', ')}`)
+        }
         process.exitCode = 1
         return
       }
-      const failedCount = result.errors.length
-      console.log(`모델 처리량 스냅샷 갱신 완료${failedCount > 0 ? `, 미상 모델 ${failedCount}개` : ''}`)
+      console.log(`모델 처리량 스냅샷 갱신 완료${result.errors.length > 0 ? `, 요청 오류 ${result.errors.length}개` : ''}`)
+      if (result.matching.unmatched.length > 0) {
+        console.error(`자동 매칭 미확인 모델: ${result.matching.unmatched.join(', ')}`)
+      }
+      if (result.matching.ambiguous.length > 0) {
+        console.error(`자동 매칭 후보 다중 모델: ${result.matching.ambiguous.map(item => item.modelName).join(', ')}`)
+      }
     })
     .catch(error => {
       console.error(error.message)

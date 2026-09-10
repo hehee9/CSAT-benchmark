@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
+from .answers import CorrectAnswer, _validate_correct_answer
 from .metadata import validate_knowledge_cutoff, validate_plan_message
 
 
@@ -39,7 +40,7 @@ class Question:
     """@description 수능 문제 자료 클래스"""
 
     number: int
-    correct_answer: int
+    correct_answer: CorrectAnswer
     points: int
     question_path: Optional[str] = None
     image_paths: Optional[List[str]] = None
@@ -51,6 +52,7 @@ class Question:
 
     def __post_init__(self) -> None:
         """@description 선택 미디어 경로 기본값 초기화"""
+        self.correct_answer = _validate_correct_answer(self.correct_answer)
         if self.image_paths is None:
             self.image_paths = []
         if self.pdf_paths is None:

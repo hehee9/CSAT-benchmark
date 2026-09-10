@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import verify_answers
+import pytest
 from csat_benchmark import evaluation
 from csat_benchmark.evaluation import grade_run, load_verified, save_verified
 from csat_benchmark.grading.single import verify_hard_single_result, verify_single_result
@@ -46,7 +47,7 @@ def _info(number: int = 1, correct: int = 1) -> dict:
     return {"number": number, "correct_answer": correct, "points": 2, "question_text": "본문"}
 
 
-def _answer(number: int, answer: int, correct: int = 1) -> dict:
+def _answer(number: int, answer: int, correct: int | list[int] = 1) -> dict:
     return {"question_number": number, "correct_answer": correct, "llm_answer": answer}
 
 
@@ -73,6 +74,72 @@ def test_single_uses_two_matching_checks_and_canonical_fields():
     assert manual is None
     assert result.extracted_answer == 1
     assert result.answer_status == "answered"
+
+
+@pytest.mark.parametrize("answer", [2, 4])
+def test_single_multiple_correct_answers_award_points_for_each_accepted_choice(answer):
+    """복수 정답 중 하나를 선택한 답안에 배점 적용."""
+    verifier = _SingleVerifier([answer, answer])
+    result, manual = verify_single_result(
+        verifier, _result(), _info(correct=[2, 4]), 1, Path.cwd()
+    )
+    assert manual is None
+    assert result.extracted_answer == answer
+    assert result.correct_answer == [2, 4]
+    assert result.is_correct is True
+
+
+@pytest.mark.parametrize(
+    ("answers", "status"),
+    [([1, 1], "answered"), ([-1, -1], "no_answer"), ([None, None, None], "parse_failed")],
+)
+def test_single_multiple_correct_answers_preserve_wrong_no_answer_and_parse_failure(answers, status):
+    """복수 정답의 오답·무응답·추출 실패 상태 보존."""
+    verifier = _SingleVerifier(list(answers))
+    result, manual = verify_single_result(
+        verifier, _result(), _info(correct=[2, 4]), 1, Path.cwd()
+    )
+    assert manual is None
+    assert result.is_correct is False
+    assert result.answer_status == status
+
+
+def test_single_multiple_correct_answers_preserves_refusal_status():
+    """복수 정답 문항의 거부 상태와 sentinel 보존."""
+    verifier = _SingleVerifier([])
+    result, manual = verify_single_result(
+        verifier,
+        _result(answer_status="refusal", provider_stop_reason="refusal"),
+        _info(correct=[2, 4]),
+        1,
+        Path.cwd(),
+    )
+    assert manual is None
+    assert result.extracted_answer == -2
+    assert result.correct_answer == [2, 4]
+    assert result.is_correct is False
+    assert result.answer_status == "refusal"
+
+
+@pytest.mark.parametrize("answer", [2, 4])
+def test_hard_multiple_correct_answers_award_points_for_each_accepted_choice(answer):
+    """hard 모드 복수 정답 중 하나를 선택한 답안에 배점 적용."""
+    verifier = _HardVerifier(
+        [
+            [_answer(1, answer, [2, 4])],
+            [_answer(1, answer, [2, 4])],
+        ]
+    )
+    results, manual = verify_hard_single_result(
+        verifier,
+        _result(question_number=0),
+        [_info(1, [2, 4])],
+        1,
+    )
+    assert manual == []
+    assert results[0].extracted_answer == answer
+    assert results[0].correct_answer == [2, 4]
+    assert results[0].is_correct is True
 
 
 def test_single_uses_conditional_third_check_and_old_manual_review():
@@ -216,6 +283,50 @@ def test_save_load_verified_merges_unselected_rows(tmp_path: Path):
     loaded = load_verified(index)
     assert {row["question_number"] for row in loaded["results"]} == {1, 2}
     assert json.loads(model_verified_path(index, "모델").read_text(encoding="utf-8"))["schema_version"] == 1
+
+
+def test_save_load_verified_preserves_multiple_correct_answer_value(tmp_path: Path):
+    """verified sidecar 저장·로드 시 복수 정답 값과 순서 보존."""
+    index = tmp_path / "results.json"
+    index.write_text(
+        json.dumps(
+            {
+                "exam_id": "example-text",
+                "mode": "default",
+                "selected_models": [{"name": "모델"}],
+                "selected_targets": ["국어/예시"],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    save_verified(
+        {
+            "schema_version": 1,
+            "exam_id": "example-text",
+            "mode": "default",
+            "selected_models": ["모델"],
+            "results": [
+                {
+                    "target": "국어/예시",
+                    "subject": "국어",
+                    "section": "예시",
+                    "model_name": "모델",
+                    "question_number": 1,
+                    "extracted_answer": 4,
+                    "correct_answer": [4, 2],
+                    "is_correct": True,
+                    "points": 2,
+                    "answer_status": "answered",
+                    "complete": True,
+                    "provenance": "graded",
+                }
+            ],
+        },
+        index,
+    )
+    loaded = load_verified(index)
+    assert loaded["results"][0]["correct_answer"] == [4, 2]
 
 
 def test_cli_passes_canonical_path_and_preserves_imported_verified_only_row(tmp_path: Path, capsys):

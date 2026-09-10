@@ -15,7 +15,7 @@
     "examSelect": "시험 선택",
     "modeSelect": "실행 모드 선택",
     "scoreBasis": "점수 기준",
-    "normalized": "정규화",
+    "normalized": "450점 환산",
     "raw": "원점수",
     "openMenu": "메뉴 열기"
   },
@@ -77,7 +77,8 @@
     "tokenUsageAverage": "회차당 평균 토큰 사용량",
     "costInfo": "모델별 비용 정보",
     "costInfoAverage": "모델별 회차당 평균 비용",
-    "modelCompare": "모델 비교 (과목별 정규화 점수)",
+    "modelCompare": "모델 비교 (과목별 450점 환산 점수)",
+    "modelCompareRaw": "모델 비교 (과목별 원점수)",
     "showScores": "점수 표시",
     "viewModes": {
       "average": "종합",

@@ -78,6 +78,10 @@ assert.deepEqual(
 )
 assert.deepEqual(
   getDashboardQueryState('?lang=en&theme=dark&tab=cost&analysisX=tokens'),
+  { exam: 'csat-2026', mode: 'default', scoreBasis: 'raw' }
+)
+assert.deepEqual(
+  getDashboardQueryState('?scoreBasis=normalized'),
   { exam: 'csat-2026', mode: 'default', scoreBasis: 'normalized' }
 )
 
@@ -97,4 +101,4 @@ assert.deepEqual(roundTripped, { exam: 'csat-2026', mode: 'easy', scoreBasis: 'r
 
 globalThis.window = previousWindow
 await server.close()
-console.log('analysis-metrics: 28 assertions passed')
+console.log('analysis-metrics: URL and metric assertions passed')

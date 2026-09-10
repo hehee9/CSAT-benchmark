@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from ..answers import CorrectAnswer, _is_correct_answer, _validate_correct_answer
 from .extractor import AnswerVerifier
 
 
@@ -17,7 +18,7 @@ class VerificationResult:
     model_name: str
     raw_response: str
     extracted_answer: Optional[int]
-    correct_answer: int
+    correct_answer: CorrectAnswer
     is_correct: bool
     points: int
     needs_manual_review: bool = False
@@ -97,7 +98,7 @@ def verify_single_result(
                 final_answer = candidates[0]
                 manual_review_data = (model_name, question_num, [attempt1, attempt2, attempt3])
 
-    is_correct = (final_answer == correct_answer) if final_answer is not None else False
+    is_correct = _is_correct_answer(final_answer, correct_answer)
     if final_answer is None:
         answer_status = "parse_failed"
     elif final_answer == -1:
@@ -120,18 +121,18 @@ def verify_single_result(
 
 
 def _normalize_hard_answer_map(
-    answers: Optional[List[Dict[str, int]]],
-) -> Optional[Dict[int, Dict[str, int]]]:
+    answers: Optional[List[Dict[str, Any]]],
+) -> Optional[Dict[int, Dict[str, Any]]]:
     """@description hard 추출 결과 배열을 문항 번호별 매핑으로 변환"""
     if answers is None:
         return None
 
-    answer_map: Dict[int, Dict[str, int]] = {}
+    answer_map: Dict[int, Dict[str, Any]] = {}
     for answer in answers:
         try:
             question_number = int(answer["question_number"])
             answer_map[question_number] = {
-                "correct_answer": int(answer["correct_answer"]),
+                "correct_answer": _validate_correct_answer(answer["correct_answer"]),
                 "llm_answer": int(answer["llm_answer"]),
             }
         except (KeyError, TypeError, ValueError):
@@ -140,7 +141,7 @@ def _normalize_hard_answer_map(
 
 
 def _hard_answer_value(
-    answer_map: Optional[Dict[int, Dict[str, int]]], question_number: int
+    answer_map: Optional[Dict[int, Dict[str, Any]]], question_number: int
 ) -> Optional[int]:
     """@description hard 추출 매핑에서 특정 문항 답 조회"""
     if answer_map is None:
@@ -152,15 +153,18 @@ def _hard_answer_value(
 
 
 def _has_correct_answer_mismatch(
-    answer_maps: List[Optional[Dict[int, Dict[str, int]]]],
+    answer_maps: List[Optional[Dict[int, Dict[str, Any]]]],
     question_number: int,
-    correct_answer: int,
+    correct_answer: CorrectAnswer,
 ) -> bool:
     """@description hard 추출 결과의 정답 필드 불일치 여부 확인"""
+    expected_set = {correct_answer} if isinstance(correct_answer, int) else set(correct_answer)
     for answer_map in answer_maps:
         if answer_map is None or question_number not in answer_map:
             continue
-        if answer_map[question_number].get("correct_answer") != correct_answer:
+        echoed_answer = answer_map[question_number]["correct_answer"]
+        echoed_set = {echoed_answer} if isinstance(echoed_answer, int) else set(echoed_answer)
+        if echoed_set != expected_set:
             return True
     return False
 
@@ -291,7 +295,7 @@ def verify_hard_single_result(
             is_correct = False
         else:
             answer_status = "answered"
-            is_correct = final_answer == correct_answer
+            is_correct = _is_correct_answer(final_answer, correct_answer)
 
         verification_results.append(
             VerificationResult(

@@ -12,6 +12,15 @@ function _isRefusalCell(cell) {
   return cell?.answerStatus === 'refusal' || cell?.extractedAnswer === -2
 }
 
+/**
+ * @brief 정답 선지 표시 문자열 생성
+ * @param {number|number[]|null} correctAnswer - 공식 정답 또는 복수 정답
+ * @return {number|string|null} 화면에 표시할 정답
+ */
+function _formatCorrectAnswer(correctAnswer) {
+  return Array.isArray(correctAnswer) ? correctAnswer.join(', ') : correctAnswer
+}
+
 /** @description Format model answer values for table display */
 function _formatAnswer(cell) {
   if (_isRefusalCell(cell)) return '검열'
@@ -94,7 +103,7 @@ export default function QuestionDetailTable({ data, models, title }) {
                     {qNum}
                   </td>
                   <td className="px-3 py-2 text-center font-bold text-blue-600">
-                    {correctAnswer ?? '-'}
+                    {_formatCorrectAnswer(correctAnswer) ?? '-'}
                   </td>
                   <td className="px-3 py-2 text-center text-gray-600">
                     {points ?? '-'}점

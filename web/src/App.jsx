@@ -127,7 +127,7 @@ function Dashboard({
   benchmarkMode = 'default',
   onExamChange,
   onBenchmarkModeChange,
-  scoreBasis = SCORE_BASIS.NORMALIZED,
+  scoreBasis = SCORE_BASIS.RAW,
   onScoreBasisChange
 }) {
   const { t } = useTranslation()
@@ -902,7 +902,7 @@ function Dashboard({
                         data={radarData}
                         selectedModels={compareModels}
                         allScores={overallScores}
-                        title={t('charts.modelCompare')}
+                        title={t(scoreBasis === SCORE_BASIS.RAW ? 'charts.modelCompareRaw' : 'charts.modelCompare')}
                         height={450}
                         scoreBasis={scoreBasis}
                         hoveredModel={hoveredModel}

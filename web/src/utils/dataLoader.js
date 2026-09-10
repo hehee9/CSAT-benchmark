@@ -50,7 +50,14 @@ export async function loadBenchmarkCatalog() {
     throw new Error('시험 카탈로그의 exams와 default_exam이 필요합니다')
   }
 
-  const exams = catalog.exams.filter(exam => exam.publish !== false)
+  const exams = catalog.exams
+    .filter(exam => exam.publish !== false)
+    .sort((a, b) => {
+      if (!a.exam_month && !b.exam_month) return 0
+      if (!a.exam_month) return 1
+      if (!b.exam_month) return -1
+      return b.exam_month.localeCompare(a.exam_month)
+    })
   if (!exams.some(exam => exam.id === catalog.default_exam)) {
     throw new Error(`기본 시험이 카탈로그에 없습니다: ${catalog.default_exam}`)
   }

@@ -11,6 +11,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping, Sequence
 
+from .answers import _validate_correct_answer
 from .configuration import ConfigurationError, load_config
 from .exams import ExamManifest, ModeManifest, SectionManifest, load_exam, load_section_questions
 from .grading.extractor import AnswerVerifier
@@ -207,7 +208,7 @@ def _verified_row(result: VerificationResult, source: Mapping[str, Any], *, comp
         "model_name": result.model_name,
         "question_number": int(result.question_number),
         "extracted_answer": result.extracted_answer,
-        "correct_answer": int(result.correct_answer),
+        "correct_answer": copy.deepcopy(result.correct_answer),
         "is_correct": result.is_correct if complete else None,
         "points": int(result.points),
         "answer_status": result.answer_status if complete else "incomplete",
@@ -232,7 +233,7 @@ def _incomplete_row(source: Mapping[str, Any], info: Mapping[str, Any]) -> dict[
         "model_name": source["model_name"],
         "question_number": int(info["number"]),
         "extracted_answer": None,
-        "correct_answer": int(info["correct_answer"]),
+        "correct_answer": copy.deepcopy(info["correct_answer"]),
         "is_correct": None,
         "points": int(info["points"]),
         "answer_status": "incomplete",
@@ -254,6 +255,11 @@ def _normal_verified_row(row: Mapping[str, Any], model_name: str) -> dict[str, A
     normalized.setdefault("model_name", model_name)
     if normalized.get("model_name") != model_name:
         raise EvaluationError(f"검증 결과 model_name이 sidecar와 다릅니다: {model_name}")
+    if "correct_answer" in normalized:
+        try:
+            normalized["correct_answer"] = _validate_correct_answer(normalized["correct_answer"])
+        except ValueError as error:
+            raise EvaluationError("검증 결과 correct_answer 형식이 잘못되었습니다.") from error
     if "complete" not in normalized:
         normalized["complete"] = normalized.get("is_correct") is not None
     normalized.setdefault("provenance", "imported_public")

@@ -5,7 +5,7 @@
 
 const DEFAULT_EXAM = 'csat-2026'
 const DEFAULT_MODE = 'default'
-const DEFAULT_SCORE_BASIS = 'normalized'
+const DEFAULT_SCORE_BASIS = 'raw'
 const VALID_MODES = new Set(['default', 'easy'])
 const VALID_SCORE_BASES = new Set(['normalized', 'raw'])
 

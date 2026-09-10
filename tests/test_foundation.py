@@ -16,7 +16,9 @@ from csat_benchmark import (
     load_exam,
     load_section_questions,
     list_exams,
+    Question,
 )
+from csat_benchmark.answers import _is_correct_answer, _validate_correct_answer
 from csat_benchmark.evaluation import build_verifier
 from csat_benchmark.runner import run_exam
 
@@ -188,6 +190,21 @@ class FoundationTest(unittest.TestCase):
         self.assertFalse(response.success)
         self.assertEqual("no_answer", response.answer_status)
         self.assertIsNotNone(response.error_message)
+
+    def test_multiple_correct_answers_are_validated_and_grade_by_membership(self) -> None:
+        """복수 정답의 원본 보존·입력 검증·정답 포함 판정을 검증."""
+        correct_answer = [2, 4]
+        self.assertIs(correct_answer, _validate_correct_answer(correct_answer))
+        question = Question(number=1, correct_answer=correct_answer, points=2)
+        self.assertIs(correct_answer, question.correct_answer)
+        self.assertTrue(_is_correct_answer(2, correct_answer))
+        self.assertTrue(_is_correct_answer(4, correct_answer))
+        self.assertFalse(_is_correct_answer(1, correct_answer))
+        self.assertFalse(_is_correct_answer(-1, correct_answer))
+        self.assertFalse(_is_correct_answer(None, correct_answer))
+        for invalid in ([], [2, -1], [True], True):
+            with self.assertRaises(ValueError):
+                _validate_correct_answer(invalid)
 
 
 if __name__ == "__main__":

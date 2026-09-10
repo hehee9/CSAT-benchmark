@@ -9,7 +9,11 @@ from pathlib import Path
 import pytest
 
 from csat_benchmark.grading import extractor
-from csat_benchmark.grading.single import verify_hard_single_result, verify_single_result
+from csat_benchmark.grading.single import (
+    _has_correct_answer_mismatch,
+    verify_hard_single_result,
+    verify_single_result,
+)
 
 
 class _FakeResponse:
@@ -169,6 +173,49 @@ def test_answer_verifier_parse_failure_returns_none(monkeypatch):
     verifier.client.responses.outputs.append("not-json")
     assert verifier.verify_answer("응답", 1, 1) is None
     assert len(verifier.client.responses.calls) == 1
+
+
+def test_answer_verifier_preserves_multiple_answers_in_prompt_schema_and_echo():
+    """복수 정답의 일반·hard prompt 및 structured output 필드 보존을 검증."""
+    _FakeOpenAI.instances.clear()
+    verifier = extractor.AnswerVerifier.__new__(extractor.AnswerVerifier)
+    verifier.model_id = "extractor-model"
+    verifier.reasoning_effort = "low"
+    verifier.system_prompt = extractor.AnswerVerifier.SYSTEM_PROMPT
+    verifier.client = _FakeOpenAI()
+    verifier.client.responses.outputs.extend(
+        [
+            json.dumps({"correct_answer": [2, 4], "llm_answer": 4}),
+            json.dumps(
+                {
+                    "answers": [
+                        {"question_number": 1, "correct_answer": [4, 2], "llm_answer": 2}
+                    ]
+                }
+            ),
+        ]
+    )
+
+    assert verifier.verify_answer("응답", [2, 4], 1) == 4
+    hard_infos = [{"number": 1, "correct_answer": [2, 4], "question_text": "본문"}]
+    assert verifier.verify_hard_answers("응답", hard_infos) == [
+        {"question_number": 1, "correct_answer": [4, 2], "llm_answer": 2}
+    ]
+
+    single_schema = verifier.client.responses.calls[0]["text"]["format"]["schema"]
+    hard_schema = verifier.client.responses.calls[1]["text"]["format"]["schema"]
+    assert single_schema["properties"]["correct_answer"]["type"] == "array"
+    assert hard_schema["properties"]["answers"]["items"]["properties"]["correct_answer"]["type"] == "array"
+    assert "The correct answer is [2, 4]" in verifier.client.responses.calls[0]["input"][1]["content"][0]["text"]
+    assert "The correct answer is [2, 4]" in verifier.client.responses.calls[1]["input"][1]["content"][0]["text"]
+
+
+def test_hard_echoed_multiple_answer_order_does_not_trigger_mismatch():
+    """hard echoed 정답은 목록 순서와 무관하게 비교."""
+    matching = [{1: {"correct_answer": [4, 2], "llm_answer": 2}}]
+    mismatching = [{1: {"correct_answer": [2, 3], "llm_answer": 2}}]
+    assert _has_correct_answer_mismatch(matching, 1, [2, 4]) is False
+    assert _has_correct_answer_mismatch(mismatching, 1, [2, 4]) is True
 
 
 @dataclass

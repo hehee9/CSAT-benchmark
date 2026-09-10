@@ -15,7 +15,7 @@
     "examSelect": "Select exam",
     "modeSelect": "Select run mode",
     "scoreBasis": "Score basis",
-    "normalized": "Normalized",
+    "normalized": "450-point scale",
     "raw": "Raw",
     "openMenu": "Open menu"
   },
@@ -77,7 +77,8 @@
     "tokenUsageAverage": "Average Token Usage per Attempt",
     "costInfo": "Cost Information by Model",
     "costInfoAverage": "Average Cost per Attempt by Model",
-    "modelCompare": "Model Comparison (Normalized by Subject)",
+    "modelCompare": "Model Comparison (450-point Scale by Subject)",
+    "modelCompareRaw": "Model Comparison (Raw Scores by Subject)",
     "showScores": "Show Scores",
     "viewModes": {
       "average": "Average",

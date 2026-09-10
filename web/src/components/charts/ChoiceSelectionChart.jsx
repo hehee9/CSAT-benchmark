@@ -14,6 +14,27 @@ import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
 import { BenchmarkNote, ExportButton } from '@/components/common'
 
 /**
+ * @brief 정답 선지 표시 문자열 생성
+ * @param {number|number[]|null} correctAnswer - 공식 정답 또는 복수 정답
+ * @return {number|string|null} 화면에 표시할 정답
+ */
+function _formatCorrectAnswer(correctAnswer) {
+  return Array.isArray(correctAnswer) ? correctAnswer.join(', ') : correctAnswer
+}
+
+/**
+ * @brief 정답 선지 포함 여부 확인
+ * @param {number|number[]} correctAnswer - 공식 정답 또는 복수 정답
+ * @param {number} choiceNumber - 확인할 선지 번호
+ * @return {boolean} 정답 선지 여부
+ */
+function _isCorrectChoice(correctAnswer, choiceNumber) {
+  return Array.isArray(correctAnswer)
+    ? correctAnswer.includes(choiceNumber)
+    : correctAnswer === choiceNumber
+}
+
+/**
  * @brief 선택률에 따른 색상 강도 계산
  * @param {number} percentage - 선택률 (0-100)
  * @param {boolean} isCorrect - 정답 여부
@@ -40,7 +61,7 @@ function createCustomBar(darkMode) {
   return function CustomBar(props) {
     const { x, y, width, height, payload, dataKey } = props
     const choiceNum = parseInt(dataKey.replace('choice', '').replace('Pct', ''))
-    const isCorrect = payload.correctAnswer === choiceNum
+    const isCorrect = _isCorrectChoice(payload.correctAnswer, choiceNum)
     const percentage = payload[dataKey] || 0
     const fill = _getChoiceColor(percentage, isCorrect, darkMode)
 
@@ -60,13 +81,13 @@ function CustomTooltip({ active, payload, label, t }) {
   return (
     <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
       <p className="font-semibold mb-2 text-gray-800 dark:text-gray-200">
-        {t('choice.questionNum', { num: label })} ({t('choice.correctAnswer', { answer: item.correctAnswer })})
+        {t('choice.questionNum', { num: label })} ({t('choice.correctAnswer', { answer: _formatCorrectAnswer(item.correctAnswer) })})
       </p>
       <div className="space-y-1 text-sm">
         {[1, 2, 3, 4, 5].map(i => {
           const pct = item[`choice${i}Pct`]
           const count = item[`choice${i}`]
-          const isCorrect = item.correctAnswer === i
+          const isCorrect = _isCorrectChoice(item.correctAnswer, i)
           return (
             <div key={i} className={isCorrect ? 'text-green-600 dark:text-green-400 font-medium' : 'text-gray-600 dark:text-gray-400'}>
               {i}: {pct.toFixed(1)}% ({t('choice.modelCount', { count })}) {isCorrect && '✓'}

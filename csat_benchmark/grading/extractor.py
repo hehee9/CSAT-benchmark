@@ -6,6 +6,8 @@ import json
 import re
 from typing import Any, Dict, List, Optional
 
+from ..answers import CorrectAnswer, _validate_correct_answer
+
 
 try:
     from openai import OpenAI
@@ -24,6 +26,31 @@ _INSERTION_SLOT_PATTERNS = {
     marker: re.compile(rf"\(\s*{re.escape(marker)}\s*\)")
     for marker in _OPTION_MARKERS
 }
+
+
+def _correct_answer_schema(correct_answer: CorrectAnswer) -> Dict[str, Any]:
+    """@description 정답 값 형식에 맞는 structured output schema 생성"""
+    if isinstance(correct_answer, list):
+        return {
+            "type": "array",
+            "items": {"type": "integer"},
+            "description": "정답 번호 목록",
+        }
+    return {"type": "integer", "description": "정답"}
+
+
+def _hard_correct_answer_schema(question_infos: List[Dict[str, Any]]) -> Dict[str, Any]:
+    """@description hard 문항 정답 형식에 맞는 structured output schema 생성"""
+    answer_kinds = {isinstance(info["correct_answer"], list) for info in question_infos}
+    if len(answer_kinds) == 1:
+        return _correct_answer_schema(question_infos[0]["correct_answer"])
+    return {
+        "anyOf": [
+            _correct_answer_schema(1),
+            _correct_answer_schema([0]),
+        ],
+        "description": "정수 또는 정답 번호 목록",
+    }
 
 
 class AnswerVerifier:
@@ -45,7 +72,7 @@ class AnswerVerifier:
 - LLM: "이 문제를 풀어보겠습니다. 보기를 확인하면... 따라서 정답은 ③ 입니다."
 - 추출 결과: 3
 
-추출 결과는 항상 정수여야 합니다. 최종 정답을 여러 개 내놓거나 답을 구하지 못한 경우에는 **-1**을 반환하십니다.
+추출 결과의 llm_answer는 항상 정수여야 합니다. correct_answer는 단일 정수 또는 복수 정답 번호 목록입니다. 최종 정답을 여러 개 내놓거나 답을 구하지 못한 경우에는 **-1**을 반환하십니다.
 객관식 문제에서는 LLM이 제시한 최종 값이나 내용을 선택지와 대조하여 일치하는 선택지 번호를 반환합니다. 선택지 자체가 숫자여도 값 자체가 아닌 그 값에 해당하는 선택지 번호를 반환합니다.
 주관식 문제에서는 LLM이 제시한 정수 답을 그대로 반환합니다.
 
@@ -53,7 +80,7 @@ class AnswerVerifier:
 당신은 다음 구조에 따라 결과물을 반환해야 합니다.
 ```
 {
-  correct_answer: int,
+  correct_answer: int | list[int],
   llm_answer: int
 }
 ```
@@ -66,7 +93,7 @@ class AnswerVerifier:
 - LLM: "35번은 ②, 36번은 ⑤입니다."
 - 추출 결과: [{"question_number": 35, "correct_answer": 2, "llm_answer": 2}, {"question_number": 36, "correct_answer": 5, "llm_answer": 5}]
 
-추출 결과의 llm_answer는 항상 정수여야 합니다. 특정 문항의 최종 정답을 여러 개 내놓거나 답을 구하지 못한 경우에는 해당 문항의 llm_answer로 **-1**을 반환하십니다.
+추출 결과의 llm_answer는 항상 정수여야 합니다. correct_answer는 단일 정수 또는 복수 정답 번호 목록입니다. 특정 문항의 최종 정답을 여러 개 내놓거나 답을 구하지 못한 경우에는 해당 문항의 llm_answer로 **-1**을 반환하십니다.
 객관식 문제에서는 LLM이 제시한 최종 값이나 내용을 선택지와 대조하여 일치하는 선택지 번호를 반환합니다. 선택지 자체가 숫자여도 값 자체가 아닌 그 값에 해당하는 선택지 번호를 반환합니다.
 주관식 문제에서는 LLM이 제시한 정수 답을 그대로 반환합니다.
 
@@ -77,7 +104,7 @@ class AnswerVerifier:
   answers: [
     {
       question_number: int,
-      correct_answer: int,
+      correct_answer: int | list[int],
       llm_answer: int
     }
   ]
@@ -316,11 +343,12 @@ class AnswerVerifier:
     def verify_answer(
         self,
         raw_response: str,
-        correct_answer: int,
+        correct_answer: CorrectAnswer,
         question_number: int,
         question_text: Optional[str] = None,
     ) -> Optional[int]:
         """@description LLM 응답 최종 답 추출"""
+        correct_answer = _validate_correct_answer(correct_answer)
         truncated_response = self._truncate_response_for_verification(raw_response)
 
         if question_text:
@@ -345,7 +373,7 @@ The correct answer is {correct_answer}
         schema = {
             "type": "object",
             "properties": {
-                "correct_answer": {"type": "integer", "description": "정답"},
+                "correct_answer": _correct_answer_schema(correct_answer),
                 "llm_answer": {
                     "type": "integer",
                     "description": "LLM이 응답에서 추출한 답",
@@ -415,8 +443,10 @@ The correct answer is {correct_answer}
 
     def verify_hard_answers(
         self, raw_response: str, question_infos: List[Dict[str, Any]]
-    ) -> Optional[List[Dict[str, int]]]:
+    ) -> Optional[List[Dict[str, Any]]]:
         """@description hard 섹션 응답 문항별 최종 답 추출"""
+        for question_info in question_infos:
+            _validate_correct_answer(question_info["correct_answer"])
         user_message = self._build_hard_user_message(raw_response, question_infos)
         schema = {
             "type": "object",
@@ -427,7 +457,7 @@ The correct answer is {correct_answer}
                         "type": "object",
                         "properties": {
                             "question_number": {"type": "integer", "description": "문항 번호"},
-                            "correct_answer": {"type": "integer", "description": "정답"},
+                            "correct_answer": _hard_correct_answer_schema(question_infos),
                             "llm_answer": {
                                 "type": "integer",
                                 "description": "LLM이 응답에서 추출한 답",
@@ -475,7 +505,7 @@ The correct answer is {correct_answer}
                 normalized_answers.append(
                     {
                         "question_number": int(answer["question_number"]),
-                        "correct_answer": int(answer["correct_answer"]),
+                        "correct_answer": _validate_correct_answer(answer["correct_answer"]),
                         "llm_answer": int(answer["llm_answer"]),
                     }
                 )
