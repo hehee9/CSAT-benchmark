@@ -6,6 +6,8 @@ on:
     paths-ignore:
       - 'docs/**'
       - 'images/**'
+  schedule:
+    - cron: '0 * * * *'
   workflow_dispatch:
 
 concurrency:
@@ -13,12 +15,16 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: write
+  contents: read
   pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -38,23 +44,20 @@ jobs:
         working-directory: web
         run: npx playwright install --with-deps chromium
 
+      - name: Refresh OpenRouter throughput snapshot
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: node web/scripts/refresh-model-performance.mjs
+
       - name: Sync dashboard assets
         working-directory: web
         run: npm run sync:assets
 
-      - name: Deploy to GitHub Pages
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add docs -f
-          if git diff --staged --quiet; then
-            echo "No generated Pages changes"
-            exit 0
-          fi
-          git commit -m "chore: sync dashboard assets [skip ci]"
-          git push
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs
 
-      - name: Publish updated Pages data
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds"
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
