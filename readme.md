@@ -237,6 +237,7 @@
 
 - **Upstage Solar 시리즈**
   - Solar Pro 4 (none / max)
+  - Solar Mini 4 (none / max)
   - Solar Pro 3 0126 (high / low)
   - Solar Pro 3 (high / low)
 

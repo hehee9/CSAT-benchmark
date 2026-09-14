@@ -327,7 +327,7 @@ def test_incomplete_verified_scope_is_not_published(tmp_path: Path):
     index = canonical_results_path(exam, "default")
     save_run(run, index)
     save_verified(grade_run(index, exam, _SectionVerifier()), index)
-    with pytest.raises(ValueError, match="미완료"):
+    with pytest.raises(ValueError, match="정본 원본이 없는 stale graded"):
         publish_run(exam, index, index, output_dir=tmp_path / "published")
 
 

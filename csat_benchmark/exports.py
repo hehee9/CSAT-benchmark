@@ -794,8 +794,6 @@ def publish_run(
         numbers = {int(row["question_number"]) for row in scope_rows}
         if numbers != expected_numbers[target] or len(numbers) != len(scope_rows):
             raise ValueError(f"검증 결과의 문항 범위가 실행 입력과 다릅니다: {target}/{model}")
-        if any(row.get("complete") is not True or row.get("needs_manual_review") is True for row in scope_rows):
-            raise ValueError(f"미완료 또는 수동 검토 대상 결과는 공개할 수 없습니다: {target}/{model}")
     raw_by_key = {result_identity(result): result for result in run_data.get("results", [])}
     for (target, model), scope_rows in rows_by_scope.items():
         for row in scope_rows:

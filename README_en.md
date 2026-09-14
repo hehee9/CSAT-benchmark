@@ -234,6 +234,7 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
 
 - **Upstage Solar series**
   - Solar Pro 4 (none / max)
+  - Solar Mini 4 (none / max)
   - Solar Pro 3 0126 (high / low)
   - Solar Pro 3 (high / low)
 

@@ -49,7 +49,7 @@
   },
   "GPT-OSS 120B (high)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2024-06"
+    "knowledgeCutoff": null
   },
   "GLM-5 (Thinking)": {
     "supportsVision": false,
@@ -650,6 +650,26 @@
     "knowledgeCutoff": null
   },
   "DeepSeek V4.1 Flash (High)": {
+    "knowledgeCutoff": null
+  },
+  "Solar Mini 4 Preview (max)": {
+    "knowledgeCutoff": "2026-02",
+    "supportsVision": false
+  },
+  "Solar Mini 4 Preview": {
+    "knowledgeCutoff": "2026-02",
+    "supportsVision": false
+  },
+  "DeepSeek V3.2 Exp (Thinking)": {
+    "knowledgeCutoff": null
+  },
+  "DeepSeek V3.2 Exp (Non-Thinking)": {
+    "knowledgeCutoff": null
+  },
+  "DeepSeek-V3.2 (Thinking)": {
+    "knowledgeCutoff": null
+  },
+  "DeepSeek-V3.2 (Non-Thinking)": {
     "knowledgeCutoff": null
   }
 }

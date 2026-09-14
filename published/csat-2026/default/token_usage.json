@@ -8459,6 +8459,206 @@
       "total_tokens": 588893,
       "question_count": 13,
       "last_updated": "2026-09-10 18:21:07"
+    },
+    "Solar Mini 4 Preview (max)": {
+      "sections": {
+        "영어-공통": {
+          "input_tokens": 10935,
+          "output_tokens": 25626,
+          "total_tokens": 36561,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:05:08"
+        },
+        "수학-기하": {
+          "input_tokens": 1010,
+          "output_tokens": 39631,
+          "total_tokens": 40641,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:07:00"
+        },
+        "국어-언매": {
+          "input_tokens": 4429,
+          "output_tokens": 72455,
+          "total_tokens": 76884,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:14:52"
+        },
+        "생명1": {
+          "input_tokens": 5703,
+          "output_tokens": 73434,
+          "total_tokens": 79137,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:11:27"
+        },
+        "한국사-공통": {
+          "input_tokens": 3492,
+          "output_tokens": 12802,
+          "total_tokens": 16294,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:02:37"
+        },
+        "수학-확통": {
+          "input_tokens": 1168,
+          "output_tokens": 27373,
+          "total_tokens": 28541,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:05:02"
+        },
+        "국어-화작": {
+          "input_tokens": 3763,
+          "output_tokens": 38389,
+          "total_tokens": 42152,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:06:48"
+        },
+        "수학-공통": {
+          "input_tokens": 2745,
+          "output_tokens": 55389,
+          "total_tokens": 58134,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:11:28"
+        },
+        "물리1": {
+          "input_tokens": 3953,
+          "output_tokens": 76120,
+          "total_tokens": 80073,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:15:31"
+        },
+        "수학-미적": {
+          "input_tokens": 1232,
+          "output_tokens": 85295,
+          "total_tokens": 86527,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:16:59"
+        },
+        "사회문화": {
+          "input_tokens": 5017,
+          "output_tokens": 82024,
+          "total_tokens": 87041,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:16:30"
+        },
+        "화학1": {
+          "input_tokens": 5018,
+          "output_tokens": 112091,
+          "total_tokens": 117109,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:20:14"
+        },
+        "국어-공통": {
+          "input_tokens": 12657,
+          "output_tokens": 66047,
+          "total_tokens": 78704,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:13:41"
+        }
+      },
+      "total_input_tokens": 61122,
+      "total_output_tokens": 766676,
+      "total_tokens": 827798,
+      "question_count": 13,
+      "last_updated": "2026-09-14 17:20:14"
+    },
+    "Solar Mini 4 Preview": {
+      "sections": {
+        "사회문화": {
+          "input_tokens": 5018,
+          "output_tokens": 1169,
+          "total_tokens": 6187,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:00:28"
+        },
+        "화학1": {
+          "input_tokens": 5019,
+          "output_tokens": 45793,
+          "total_tokens": 50812,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:09:21"
+        },
+        "국어-공통": {
+          "input_tokens": 12658,
+          "output_tokens": 2015,
+          "total_tokens": 14673,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:00:38"
+        },
+        "영어-공통": {
+          "input_tokens": 10936,
+          "output_tokens": 3662,
+          "total_tokens": 14598,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:00:57"
+        },
+        "수학-기하": {
+          "input_tokens": 1011,
+          "output_tokens": 39406,
+          "total_tokens": 40417,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:07:58"
+        },
+        "국어-언매": {
+          "input_tokens": 4430,
+          "output_tokens": 1161,
+          "total_tokens": 5591,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:00:29"
+        },
+        "생명1": {
+          "input_tokens": 5704,
+          "output_tokens": 7111,
+          "total_tokens": 12815,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:01:36"
+        },
+        "한국사-공통": {
+          "input_tokens": 3493,
+          "output_tokens": 2289,
+          "total_tokens": 5782,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:00:40"
+        },
+        "수학-확통": {
+          "input_tokens": 1169,
+          "output_tokens": 18334,
+          "total_tokens": 19503,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:03:42"
+        },
+        "국어-화작": {
+          "input_tokens": 3764,
+          "output_tokens": 3297,
+          "total_tokens": 7061,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:00:51"
+        },
+        "수학-공통": {
+          "input_tokens": 2746,
+          "output_tokens": 27839,
+          "total_tokens": 30585,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:05:06"
+        },
+        "물리1": {
+          "input_tokens": 3954,
+          "output_tokens": 9550,
+          "total_tokens": 13504,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:02:00"
+        },
+        "수학-미적": {
+          "input_tokens": 1233,
+          "output_tokens": 14119,
+          "total_tokens": 15352,
+          "question_count": 1,
+          "last_updated": "2026-09-14 17:02:55"
+        }
+      },
+      "total_input_tokens": 61135,
+      "total_output_tokens": 175745,
+      "total_tokens": 236880,
+      "question_count": 13,
+      "last_updated": "2026-09-14 17:09:21"
     }
   }
 }
