@@ -293,7 +293,7 @@
     "knowledgeCutoff": "2026-04"
   },
   "GPT-6 Sol (none)": {
-    "knowledgeCutoff": null
+    "knowledgeCutoff": "2026-04"
   },
   "GPT-6 Terra (high)": {
     "knowledgeCutoff": null
@@ -302,10 +302,10 @@
     "knowledgeCutoff": null
   },
   "GPT-6 Luna (high)": {
-    "knowledgeCutoff": null
+    "knowledgeCutoff": "2026-04"
   },
   "GPT-6 Luna (none)": {
-    "knowledgeCutoff": null
+    "knowledgeCutoff": "2026-04"
   },
   "GPT-5.6 Sol (max*)": {
     "knowledgeCutoff": "2026-02"

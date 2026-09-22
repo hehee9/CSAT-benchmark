@@ -119,6 +119,8 @@
 
 - **OpenAI GPT 시리즈**
   - GPT-6 Astra (high / low)
+  - GPT-6 Sol (high / none)
+  - GPT-6 Luna (high / none)
   - GPT-5.6 Sol Pro (high)
   - GPT-5.6 Sol (max* / high / none)
   - GPT-5.6 Terra Pro (high)
