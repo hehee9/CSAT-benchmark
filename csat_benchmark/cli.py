@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Callable, Iterable, Sequence
 
 from .configuration import load_config
 from .exams import list_exams, load_exam
@@ -30,7 +30,11 @@ def _resolve_config_path(value: str | Path | None, project_root: Path) -> Path:
     return (project_root / path).resolve()
 
 
-def _build_parser(project_root: Path) -> argparse.ArgumentParser:
+def _build_parser(
+    project_root: Path,
+    *,
+    default_config_filename: str = "config.json",
+) -> argparse.ArgumentParser:
     """@description 시험 실행 인자 구성"""
     parser = argparse.ArgumentParser(
         description="시험 매니페스트 기반 수능 LLM 실행기",
@@ -39,8 +43,8 @@ def _build_parser(project_root: Path) -> argparse.ArgumentParser:
     parser.add_argument("--exam", help="시험 ID 또는 매니페스트 JSON 경로")
     parser.add_argument(
         "--config",
-        default=str(project_root / "config.json"),
-        help="모델 설정 경로 (기본: config.json)",
+        default=str(project_root / default_config_filename),
+        help=f"모델 설정 경로 (기본: {default_config_filename})",
     )
     parser.add_argument("--models", nargs="+", help="실행할 모델 이름")
     parser.add_argument("--subject", help="한 섹션을 고를 과목")
@@ -83,11 +87,17 @@ def _print_models(config_path: Path, model_names: Iterable[str] | None) -> None:
         print(f"  - {model['name']}")
 
 
-def api_main(argv: Sequence[str] | None = None) -> int:
+def api_main(
+    argv: Sequence[str] | None = None,
+    *,
+    default_config_filename: str = "config.json",
+    check_fn: Callable[..., dict] | None = None,
+    run_fn: Callable[..., dict] | None = None,
+) -> int:
     """@description 시험 목록·모델 목록 출력 및 선택 시험 실행"""
     arguments = list(sys.argv[1:] if argv is None else argv)
     project_root = _project_root()
-    parser = _build_parser(project_root)
+    parser = _build_parser(project_root, default_config_filename=default_config_filename)
     args = parser.parse_args(arguments)
     if args.list_exams:
         _print_exams(project_root)
@@ -124,14 +134,16 @@ def api_main(argv: Sequence[str] | None = None) -> int:
             "question_numbers": args.question_numbers,
         }
         if args.check:
-            checked = check_exam(exam, **common)
+            checker = check_exam if check_fn is None else check_fn
+            checked = checker(exam, **common)
             print(
                 f"검증 완료: {checked['exam_id']} / {checked['mode']} - "
                 f"섹션 {len(checked['targets'])}개, 모델 {len(checked['models'])}개"
             )
             return 0
 
-        run = run_exam(
+        runner = run_exam if run_fn is None else run_fn
+        run = runner(
             exam,
             **common,
             output=args.output,

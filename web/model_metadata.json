@@ -671,5 +671,9 @@
   },
   "DeepSeek-V3.2 (Non-Thinking)": {
     "knowledgeCutoff": null
+  },
+  "Jev 1.13": {
+    "knowledgeCutoff": null,
+    "supportsVision": false
   }
 }

@@ -1,0 +1,19 @@
+{
+  "models": [
+    {
+      "name": "Jev 1.13",
+      "api_type": "jev",
+      "model_id": "typesafe/jev-1.13",
+      "api_key_env": "OPENROUTER_API_KEY",
+      "base_url": "https://openrouter.ai/api/alpha/decisions",
+      "supports_vision": false,
+      "batch_supported": false,
+      "knowledge_cutoff": null,
+      "concurrent_request_limit": 10,
+      "price": {
+        "input": 0.042,
+        "output": 0
+      }
+    }
+  ]
+}

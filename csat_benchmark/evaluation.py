@@ -9,7 +9,7 @@ import tempfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterable, Mapping, Sequence
+from typing import Any, Callable, Dict, Iterable, Mapping, Sequence
 
 from .answers import _validate_correct_answer
 from .configuration import ConfigurationError, load_config
@@ -180,10 +180,9 @@ def _print_section_header(
     model_filter: Sequence[str] | None,
     verifier: Any,
     worker_count: int,
+    grading_description: str | None,
 ) -> None:
     """@description 원본 섹션 채점 시작 출력"""
-    verifier_model = verifier.model_id
-    verifier_reasoning = verifier.reasoning_effort
     mode_prefix = "" if grading_mode == "쉬움" else "일반 "
     print(f"\n=== {mode_prefix}Answer Verification ===", flush=True)
     print(f"Subject: {section_manifest.subject}", flush=True)
@@ -192,10 +191,15 @@ def _print_section_header(
     print(f"Questions: {question_count}", flush=True)
     if model_filter:
         print(f"Model filter: {', '.join(sorted(model_filter))}", flush=True)
-    print(
-        f"Using: {verifier_model} ({verifier_reasoning}) via Responses API (Structured Output)",
-        flush=True,
-    )
+    if grading_description is None:
+        verifier_model = verifier.model_id
+        verifier_reasoning = verifier.reasoning_effort
+        print(
+            f"Using: {verifier_model} ({verifier_reasoning}) via Responses API (Structured Output)",
+            flush=True,
+        )
+    else:
+        print(f"Using: {grading_description}", flush=True)
     print(f"\n{mode_prefix}병렬 처리 시작 (동시 호출 수: {worker_count})\n", flush=True)
 
 
@@ -436,6 +440,8 @@ def _grade_question_section(
     grading_mode: str,
     total_results: int,
     model_filter: Sequence[str] | None,
+    single_result_extractor: Callable[..., Any],
+    grading_description: str | None,
 ) -> _SectionGrading:
     """@description 쉬움 모드 섹션의 모델·문항 병렬 채점"""
     target = section_manifest.target
@@ -474,13 +480,14 @@ def _grade_question_section(
         model_filter=model_filter,
         verifier=verifier,
         worker_count=worker_count,
+        grading_description=grading_description,
     )
     completed = 0
     if tasks:
         with ThreadPoolExecutor(max_workers=worker_count) as executor:
             task_futures = {
                 executor.submit(
-                    verify_single_result,
+                    single_result_extractor,
                     verifier,
                     dict(source),
                     dict(info),
@@ -519,6 +526,8 @@ def _grade_section_input(
     grading_mode: str,
     total_results: int,
     model_filter: Sequence[str] | None,
+    section_result_extractor: Callable[..., Any],
+    grading_description: str | None,
 ) -> _SectionGrading:
     """@description 기본 모드 섹션의 모델별 병렬 채점"""
     target = section_manifest.target
@@ -566,13 +575,14 @@ def _grade_section_input(
         model_filter=model_filter,
         verifier=verifier,
         worker_count=worker_count,
+        grading_description=grading_description,
     )
     completed = 0
     if tasks:
         with ThreadPoolExecutor(max_workers=worker_count) as executor:
             task_futures = {
                 executor.submit(
-                    verify_hard_single_result,
+                    section_result_extractor,
                     verifier,
                     dict(source),
                     list(pending_infos),
@@ -663,6 +673,10 @@ def grade_run(
     question_numbers: Sequence[int] | None = None,
     verified: Mapping[str, Any] | str | Path | None = None,
     update: bool = False,
+    default_model_names: Sequence[str] | None = None,
+    single_result_extractor: Callable[..., Any] | None = None,
+    section_result_extractor: Callable[..., Any] | None = None,
+    grading_description: str | None = None,
 ) -> dict[str, Any]:
     """@description 단일 생성 결과를 선택 범위만 채점"""
     manifest = exam if isinstance(exam, ExamManifest) else load_exam(exam)
@@ -689,6 +703,18 @@ def grade_run(
             raise EvaluationError(f"실행에 없는 모델입니다: {', '.join(sorted(unknown))}")
         requested_set = set(requested)
         selected_models = [name for name in stored_models if name in requested_set]
+    elif default_model_names is not None:
+        requested_defaults = list(dict.fromkeys(default_model_names))
+        unknown = set(requested_defaults) - set(stored_models)
+        if unknown:
+            raise EvaluationError(f"실행에 없는 기본 모델입니다: {', '.join(sorted(unknown))}")
+        requested_set = set(requested_defaults)
+        selected_models = [name for name in stored_models if name in requested_set]
+
+    if single_result_extractor is None:
+        single_result_extractor = verify_single_result
+    if section_result_extractor is None:
+        section_result_extractor = verify_hard_single_result
 
     if question_numbers is not None and any(
         isinstance(number, bool) or not isinstance(number, int) or number < 1
@@ -775,6 +801,8 @@ def grade_run(
     )
     print(f"채점 모델 ({len(selected_models)}개): {', '.join(selected_models) or '없음'}", flush=True)
     print(f"채점 방식: {'재채점' if regrade else '미채점만 채점'} (재채점: {'예' if regrade else '아니오'})", flush=True)
+    if grading_description is not None:
+        print(f"채점기: {grading_description}", flush=True)
     if benchmark_all or len(sections) > 1:
         mode_prefix = "" if grading_mode == "쉬움" else "일반 "
         print(f"\n{'=' * 50}", flush=True)
@@ -833,6 +861,7 @@ def grade_run(
         "regrade": regrade,
         "grading_mode": grading_mode,
         "model_filter": model_filter,
+        "grading_description": grading_description,
     }
 
     if selected_mode.input_mode == "question":
@@ -855,6 +884,7 @@ def grade_run(
                         manifest,
                         info_by_number=info_by_target[section_manifest.target],
                         total_results=result_count_by_target[section_manifest.target],
+                        single_result_extractor=single_result_extractor,
                         **section_arguments,
                     ): section_manifest
                     for section_manifest in subject_sections
@@ -874,6 +904,7 @@ def grade_run(
                     section_manifest,
                     info_by_number=info_by_target[section_manifest.target],
                     total_results=result_count_by_target[section_manifest.target],
+                    section_result_extractor=section_result_extractor,
                     **section_arguments,
                 ): section_manifest
                 for section_manifest in sections

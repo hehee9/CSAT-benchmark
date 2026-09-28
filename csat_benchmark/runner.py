@@ -463,6 +463,7 @@ def run_exam(
     retry_failed: bool = False,
     merge: bool = False,
     client_factory: Callable[..., Any] | None = None,
+    request_sender: Callable[[Any, ImmediateJob, Mapping[str, Any]], APIResponse] | None = None,
 ) -> Dict[str, Any]:
     """@description 선택 시험 섹션·모델 단일 생성 및 정본 즉시 저장"""
     manifest = _resolve_manifest(exam)
@@ -586,7 +587,11 @@ def run_exam(
         """@description 작업별 모델 동시성 슬롯 실행"""
         with semaphores[job.model_name]:
             started = time.perf_counter()
-            response = clients[job.model_name].send_request(job.question)
+            client = clients[job.model_name]
+            if request_sender is None:
+                response = client.send_request(job.question)
+            else:
+                response = request_sender(client, job, context_by_target[job.target])
             return response, time.perf_counter() - started
 
     if jobs:

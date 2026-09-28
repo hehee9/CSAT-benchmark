@@ -6,20 +6,26 @@ import argparse
 import sys
 from collections.abc import Sequence
 from pathlib import Path
+from typing import Any, Callable
 
 from csat_benchmark.evaluation import EvaluationError, build_verifier, grade_run, resolve_run, save_verified
 from csat_benchmark.exams import load_exam
 
 
-def _build_parser() -> argparse.ArgumentParser:
+def _build_parser(
+    *,
+    description: str = "시험 단일 실행 답안 검증",
+    config_default: str = "config.json",
+    config_help: str = "verifier 설정 경로",
+) -> argparse.ArgumentParser:
     """@description 단일 실행 답안 채점 인자 구성"""
     parser = argparse.ArgumentParser(
-        description="시험 단일 실행 답안 검증",
+        description=description,
         allow_abbrev=False,
     )
     parser.add_argument("--exam", required=True, help="시험 ID 또는 매니페스트 경로")
     parser.add_argument("--easy", action="store_true", help="문항별 쉬움 실행 선택")
-    parser.add_argument("--config", default="config.json", help="verifier 설정 경로")
+    parser.add_argument("--config", default=config_default, help=config_help)
     parser.add_argument("--models", nargs="+", help="검증할 모델명")
     parser.add_argument("--targets", nargs="+", help="시험 target 목록")
     parser.add_argument("--subject", help="한 섹션을 고를 과목")
@@ -32,11 +38,23 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _generic_main(arguments: Sequence[str]) -> int:
+def _generic_main(
+    arguments: Sequence[str],
+    *,
+    parser_description: str = "시험 단일 실행 답안 검증",
+    config_default: str = "config.json",
+    config_help: str = "verifier 설정 경로",
+    grade_handler: Callable[[Any, Any, Any, Any, Path], Any] | None = None,
+) -> int:
     """@description 시험 ID 기준 단일 실행 채점"""
-    args = _build_parser().parse_args(list(arguments))
+    parser = _build_parser(
+        description=parser_description,
+        config_default=config_default,
+        config_help=config_help,
+    )
+    args = parser.parse_args(list(arguments))
     if (args.subject is None) != (args.section is None):
-        _build_parser().error("--subject와 --section은 함께 지정해야 합니다.")
+        parser.error("--subject와 --section은 함께 지정해야 합니다.")
     try:
         exam_argument = Path(args.exam).expanduser()
         exam_input = (
@@ -49,22 +67,25 @@ def _generic_main(arguments: Sequence[str]) -> int:
             easy=args.easy,
             model_names=args.models,
         )
-        verifier = build_verifier(args.config)
-        print(f"검증기: {verifier.model_id} ({verifier.reasoning_effort})", flush=True)
-        verified = grade_run(
-            run_path,
-            exam,
-            verifier,
-            mode=mode,
-            model_names=args.models,
-            targets=args.targets,
-            subject=args.subject,
-            section=args.section,
-            subjects=args.subjects,
-            benchmark_all=args.benchmark_all,
-            question_numbers=args.question_numbers,
-            update=args.update,
-        )
+        if grade_handler is None:
+            verifier = build_verifier(args.config)
+            print(f"검증기: {verifier.model_id} ({verifier.reasoning_effort})", flush=True)
+            verified = grade_run(
+                run_path,
+                exam,
+                verifier,
+                mode=mode,
+                model_names=args.models,
+                targets=args.targets,
+                subject=args.subject,
+                section=args.section,
+                subjects=args.subjects,
+                benchmark_all=args.benchmark_all,
+                question_numbers=args.question_numbers,
+                update=args.update,
+            )
+        else:
+            verified = grade_handler(args, exam, mode, _run, run_path)
         output_path = Path(args.output).expanduser().resolve() if args.output else run_path
         save_verified(verified, output_path)
         print(f"\n✓ 검증 완료: {output_path}", flush=True)

@@ -244,6 +244,9 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
   - Motif 3 (Thinking)
   - Motif 12.7B (Thinking)
 
+- **Typesafe Jev series**
+  - Jev 1.13
+
 \* Only incorrectly answered questions were retested with higher reasoning effort. This approach was used because the time and cost became too large relative to the performance gain. Thank you for your understanding.
 
 ※ Models that cannot recognize images were run with text only.

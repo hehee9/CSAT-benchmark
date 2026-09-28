@@ -14,7 +14,7 @@ from .metadata import validate_knowledge_cutoff, validate_plan_message
 
 EMPTY_RESPONSE_ERROR = "API returned neither response content nor token usage."
 SUPPORTED_API_TYPES = frozenset(
-    {"openai", "anthropic", "google", "deepseek", "grok", "friendli", "vllm"}
+    {"openai", "anthropic", "google", "deepseek", "grok", "friendli", "vllm", "jev"}
 )
 
 
