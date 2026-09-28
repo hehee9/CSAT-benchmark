@@ -26,6 +26,7 @@ export const MODEL_COLORS = {
   MiniMax: '#E2167E',   // MiniMax - 로고 핑크색
   Motif: '#00A6A6',     // Motif Technologies - 청록색
   Meta: '#0668E1',      // Meta - 파란색
+  TypeSafe: '#F386A1',  // TypeSafe - 분홍색
   default: '#6B7280'    // 기타 - 회색
 }
 
@@ -50,6 +51,7 @@ export const VENDORS = [
   { id: 'minimax', name: 'MiniMax', pattern: /minimax/i, color: MODEL_COLORS.MiniMax },
   { id: 'motif', name: 'Motif Technologies', pattern: /motif/i, color: MODEL_COLORS.Motif },
   { id: 'meta', name: 'Meta', pattern: /^Muse Spark\b/i, color: MODEL_COLORS.Meta },
+  { id: 'typesafe', name: 'TypeSafe', pattern: /jev|typesafe/i, color: MODEL_COLORS.TypeSafe },
   { id: 'other', name: '기타', pattern: null, color: MODEL_COLORS.default }
 ]
 
@@ -161,6 +163,10 @@ export function getModelColor(modelName) {
   }
   if (/^muse spark\b/.test(name)) {
     return MODEL_COLORS.Meta
+  }
+
+  if (name.includes('jev') || name.includes('typesafe')) {
+    return MODEL_COLORS.TypeSafe
   }
 
   return MODEL_COLORS.default
