@@ -115,6 +115,7 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
 ## Tested Models
 
 - **OpenAI GPT series**
+  - GPT-6.1 Sol (high / low)
   - GPT-6 Astra (high / low)
   - GPT-6 Sol (high / none)
   - GPT-6 Luna (high / none)

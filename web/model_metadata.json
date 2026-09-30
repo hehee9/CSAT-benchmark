@@ -675,5 +675,11 @@
   "Jev 1.13": {
     "knowledgeCutoff": null,
     "supportsVision": false
+  },
+  "GPT-6.1 Sol (high)": {
+    "knowledgeCutoff": "2026-04"
+  },
+  "GPT-6.1 Sol (low)": {
+    "knowledgeCutoff": "2026-04"
   }
 }
