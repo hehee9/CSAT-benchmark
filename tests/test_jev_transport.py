@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import base64
 import json
+from io import BytesIO
 from typing import Any
 
 import pytest
 import requests
+from PIL import Image
 
 from csat_benchmark.jev import JevClient, build_jev_questions, decode_jev_answer
 from csat_benchmark.models import ModelConfig, Question
@@ -52,6 +55,17 @@ def _choice_answer(choice: str) -> dict[str, Any]:
         "probabilities": {choice: 0.1},
         "confidence": 0.0,
     }
+
+
+def _successful_response() -> _FakeResponse:
+    """@description 이미지 전송 테스트용 유효 응답 생성"""
+    return _FakeResponse(
+        200,
+        {
+            "answers": {"q1": _choice_answer("2")},
+            "usage": {"input_tokens": 11, "output_tokens": 4},
+        },
+    )
 
 
 def test_build_jev_questions_encodes_objective_and_short_math_answers():
@@ -165,6 +179,121 @@ def test_send_questions_preserves_prepared_state_usage_and_raw_response(monkeypa
     )
     assert "987654" not in json.dumps(payload, ensure_ascii=False)
     assert "correct_answer" not in json.dumps(payload, ensure_ascii=False)
+
+
+def test_send_questions_transports_vision_images_as_chat_content(monkeypatch, tmp_path):
+    """@description 순서와 픽셀을 보존한 무손실 이미지 Decisions 전송 확인"""
+    first_image_path = tmp_path / "시험지_1.png"
+    first_image = Image.new("RGBA", (2, 2))
+    first_image.putdata(
+        [
+            (20, 40, 60, 255),
+            (80, 100, 120, 128),
+            (140, 160, 180, 0),
+            (200, 220, 240, 64),
+        ]
+    )
+    first_image.save(first_image_path, format="PNG")
+    second_image_path = tmp_path / "시험지_2.png"
+    second_image = Image.new("RGB", (3, 2), (30, 50, 70))
+    second_image.save(second_image_path, format="PNG")
+    captured: list[dict[str, Any]] = []
+    monkeypatch.setattr(
+        "csat_benchmark.jev.requests.post",
+        lambda _url, **kwargs: (captured.append(kwargs["json"]) or _successful_response()),
+    )
+    client = JevClient(_config(supports_vision=True))
+    question_text = "공통 지문과 문항 본문"
+
+    result = client.send_questions(
+        Question(
+            number=0,
+            correct_answer=1,
+            points=2,
+            question_text=question_text,
+            image_paths=[str(first_image_path), str(second_image_path)],
+        ),
+        subject="국어",
+        questions=[_question_info(1, "1. 답을 고르세요.")],
+    )
+
+    assert result.success is True
+    state = captured[0]["state"]
+    assert [(part["type"], part.get("text")) for part in state] == [
+        ("text", question_text),
+        ("text", "[이미지:시험지_1]"),
+        ("image_url", None),
+        ("text", "[이미지:시험지_2]"),
+        ("image_url", None),
+    ]
+    for image_part, original_image in zip(
+        (state[2], state[4]),
+        (first_image, second_image),
+    ):
+        url = image_part["image_url"]["url"]
+        mime_type, encoded_data = url.removeprefix("data:").split(";base64,", 1)
+        assert mime_type == "image/webp"
+        assert image_part["image_url"]["detail"] == "high"
+        decoded_image = Image.open(BytesIO(base64.b64decode(encoded_data)))
+        assert decoded_image.size == original_image.size
+        assert decoded_image.convert("RGBA").tobytes() == original_image.convert(
+            "RGBA"
+        ).tobytes()
+
+
+def test_send_questions_missing_vision_image_fails_before_http(monkeypatch, tmp_path):
+    """@description 누락 이미지를 HTTP 호출 전에 실패 처리"""
+    calls: list[Any] = []
+    monkeypatch.setattr(
+        "csat_benchmark.jev.requests.post",
+        lambda *args, **kwargs: calls.append((args, kwargs)),
+    )
+    client = JevClient(_config(supports_vision=True))
+
+    with pytest.raises(FileNotFoundError):
+        client.send_questions(
+            Question(
+                number=1,
+                correct_answer=1,
+                points=2,
+                question_text="본문",
+                image_paths=[str(tmp_path / "없음.png")],
+            ),
+            subject="국어",
+            questions=[_question_info(1, "본문")],
+        )
+
+    assert calls == []
+
+
+def test_send_questions_text_only_model_preserves_string_state_with_image(
+    monkeypatch, tmp_path
+):
+    """@description 이미지가 붙은 문자 전용 모델의 기존 문자열 상태 보존"""
+    image_path = tmp_path / "무시.png"
+    image_path.write_bytes(b"image bytes")
+    captured: list[dict[str, Any]] = []
+    monkeypatch.setattr(
+        "csat_benchmark.jev.requests.post",
+        lambda _url, **kwargs: (captured.append(kwargs["json"]) or _successful_response()),
+    )
+    client = JevClient(_config(supports_vision=False))
+    question_text = "기존 문자 상태"
+
+    result = client.send_questions(
+        Question(
+            number=1,
+            correct_answer=1,
+            points=2,
+            question_text=question_text,
+            image_paths=[str(image_path)],
+        ),
+        subject="국어",
+        questions=[_question_info(1, question_text)],
+    )
+
+    assert result.success is True
+    assert captured[0]["state"] == question_text
 
 
 def test_client_uses_default_decision_endpoint_without_override():

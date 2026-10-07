@@ -27,8 +27,6 @@ def _validate_jev_models(
         name = model.get("name")
         if model.get("api_type") != "jev":
             raise RunnerError(f"{name}의 api_type은 jev여야 합니다.")
-        if model.get("supports_vision", True) is not False:
-            raise RunnerError(f"{name}의 supports_vision은 false여야 합니다.")
 
 
 def check_jev_exam(

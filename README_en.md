@@ -119,6 +119,7 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
   - GPT-6 Astra (high / low)
   - GPT-6 Sol (high / none)
   - GPT-6 Luna (high / none)
+  - GPT-6 Luna Decisions
   - GPT-5.6 Sol Pro (high)
   - GPT-5.6 Sol (max* / high / none)
   - GPT-5.6 Terra Pro (high)
@@ -238,6 +239,7 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
 - **Upstage Solar series**
   - Solar Pro 4 (none / max)
   - Solar Mini 4 (none / max)
+  - Solar Decide
   - Solar Pro 3 0126 (high / low)
   - Solar Pro 3 (high / low)
 

@@ -407,7 +407,7 @@ def validate_question_media(
     if question.pdf_paths:
         if batch:
             raise ValueError("배치 요청은 PDF 매체를 지원하지 않습니다.")
-        if config.api_type == "deepseek" or not config.supports_vision:
+        if config.api_type in {"deepseek", "jev"} or not config.supports_vision:
             raise ValueError(f"{config.name} 모델은 PDF 매체를 지원하지 않습니다.")
 
     if question.audio_paths:

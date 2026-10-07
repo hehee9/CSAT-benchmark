@@ -122,6 +122,7 @@
   - GPT-6 Astra (high / low)
   - GPT-6 Sol (high / none)
   - GPT-6 Luna (high / none)
+  - GPT-6 Luna Decisions
   - GPT-5.6 Sol Pro (high)
   - GPT-5.6 Sol (max* / high / none)
   - GPT-5.6 Terra Pro (high)
@@ -241,6 +242,7 @@
 - **Upstage Solar 시리즈**
   - Solar Pro 4 (none / max)
   - Solar Mini 4 (none / max)
+  - Solar Decide
   - Solar Pro 3 0126 (high / low)
   - Solar Pro 3 (high / low)
 

@@ -35,6 +35,8 @@ tmp/
 
 # Project specific
 /config.json
+/jev_config.json
+/decisions_config.json
 *.xlsx~
 ~$*.xlsx
 .~lock.*

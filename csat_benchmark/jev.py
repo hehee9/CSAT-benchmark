@@ -2,19 +2,40 @@
 
 from __future__ import annotations
 
+import base64
 import json
 import time
 from collections.abc import Mapping, Sequence
+from io import BytesIO
 from typing import Any
 
 import requests
+from PIL import Image
 
 from .grading.extractor import AnswerVerifier
 from .models import APIResponse, ModelConfig, Question
 from .providers.base import APIClient
+from .providers.requests import build_chat_content, validate_question_media
 
 
 DEFAULT_JEV_URL = "https://openrouter.ai/api/alpha/decisions"
+
+
+def _to_lossless_webp_data_url(data_url: str) -> str:
+    """@description 이미지 data URL을 픽셀 보존 WebP로 변환"""
+    image_bytes = base64.b64decode(data_url.partition(",")[2])
+    output = BytesIO()
+    with Image.open(BytesIO(image_bytes)) as image:
+        image.convert("RGBA").save(
+            output,
+            format="WEBP",
+            lossless=True,
+            quality=100,
+            method=6,
+            exact=True,
+        )
+    encoded = base64.b64encode(output.getvalue()).decode("ascii")
+    return f"data:image/webp;base64,{encoded}"
 
 
 def build_jev_questions(
@@ -143,10 +164,27 @@ class JevClient(APIClient):
         questions: Sequence[Mapping[str, Any]],
     ) -> APIResponse:
         """@description 준비된 문항 본문과 Jev 답안 기준 전송"""
+        validate_question_media(question, self.config)
         jev_questions = build_jev_questions(subject, questions)
+        question_text = question.load_question_text()
+        state: str | list[dict[str, Any]] = question_text
+        if self.config.supports_vision and question.image_paths:
+            state = build_chat_content(
+                question,
+                supports_vision=True,
+                skip_missing=False,
+            )
+            if question_text:
+                state.insert(0, state.pop())
+            for part in state:
+                if part["type"] == "image_url":
+                    part["image_url"]["url"] = _to_lossless_webp_data_url(
+                        part["image_url"]["url"]
+                    )
+                    part["image_url"]["detail"] = "high"
         payload = {
             "model": self.config.model_id,
-            "state": question.load_question_text(),
+            "state": state,
             "questions": jev_questions,
         }
         if self.system_prompt:

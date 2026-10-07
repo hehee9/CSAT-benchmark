@@ -244,6 +244,7 @@ def test_config_aware_builders_keep_text_when_vision_is_disabled(tmp_path: Path)
     ("media_field", "api_type", "supports_vision", "batch", "message"),
     [
         ("pdf_paths", "deepseek", True, False, "PDF"),
+        ("pdf_paths", "jev", True, False, "PDF"),
         ("pdf_paths", "openai", False, False, "PDF"),
         ("audio_paths", "openai", True, False, "오디오"),
         ("video_paths", "openai", True, False, "동영상"),

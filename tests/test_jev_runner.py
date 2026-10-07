@@ -17,14 +17,19 @@ from csat_benchmark.jev_runner import check_jev_exam, run_jev_exam
 from jev_solver import main
 
 
-def _write_config(path: Path, *model_names: str, verifier: bool = False) -> Path:
+def _write_config(
+    path: Path,
+    *model_names: str,
+    verifier: bool = False,
+    supports_vision: bool = False,
+) -> Path:
     models = [
         {
             "name": name,
             "api_type": "jev",
             "model_id": "typesafe/jev-1.13",
             "api_key_env": "OPENROUTER_API_KEY",
-            "supports_vision": False,
+            "supports_vision": supports_vision,
             "concurrent_request_limit": 1,
             "batch_supported": False,
         }
@@ -96,6 +101,8 @@ class _FakeJevClient:
             {
                 "model": self.config.name,
                 "question_number": question.number,
+                "image_paths": list(question.image_paths),
+                "question_text": question.load_question_text(),
                 "subject": subject,
                 "questions": questions,
             }
@@ -174,6 +181,38 @@ def test_jev_sender_forwards_all_section_questions_and_only_matching_easy_questi
         assert set(call["questions"][0]) == {"number", "question_text"}
 
 
+def test_jev_sender_keeps_prepared_section_images_for_vision_enabled_model(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    """@description 비전 모델의 섹션 이미지·본문 전달 확인"""
+    exam_path = _write_exam(tmp_path, question_count=1)
+    image_path = tmp_path / "data" / "도형.png"
+    image_path.write_bytes(b"image")
+    questions_path = tmp_path / "data" / "questions.json"
+    questions_data = json.loads(questions_path.read_text(encoding="utf-8"))
+    questions_data["questions"][0]["image_paths"] = [image_path.name]
+    questions_path.write_text(json.dumps(questions_data, ensure_ascii=False), encoding="utf-8")
+    exam = load_exam(exam_path, project_root=tmp_path)
+    config_path = _write_config(
+        tmp_path / "jev_config.json",
+        "Jev 비전",
+        supports_vision=True,
+    )
+    monkeypatch.setenv("OPENROUTER_API_KEY", "test-key")
+    calls = []
+
+    def client_factory(config, *, system_prompt):
+        return _FakeJevClient(config, system_prompt=system_prompt, calls=calls)
+
+    with patch("csat_benchmark.jev_runner.JevClient", side_effect=client_factory):
+        run_jev_exam(exam, config_path=config_path)
+
+    section_call = next(call for call in calls if call["question_number"] == 0)
+    assert section_call["image_paths"] == [str(image_path.resolve())]
+    assert "원문 문항 1" in section_call["question_text"]
+
+
 def test_jev_retry_only_retries_technical_failure_and_keeps_other_models(
     tmp_path: Path,
     monkeypatch,
@@ -244,7 +283,8 @@ def test_jev_retry_only_retries_technical_failure_and_keeps_other_models(
     assert RunStore.load(canonical).run["results"] == retried["results"]
 
 
-def test_jev_configuration_rejects_other_api_types_or_vision(tmp_path: Path) -> None:
+def test_jev_configuration_rejects_other_api_types_and_accepts_vision(tmp_path: Path) -> None:
+    """@description Jev API 유형 제한 및 비전 설정 허용 확인"""
     exam_path = _write_exam(tmp_path, question_count=1)
     config_path = tmp_path / "jev_config.json"
     invalid_configs = [
@@ -256,15 +296,6 @@ def test_jev_configuration_rejects_other_api_types_or_vision(tmp_path: Path) -> 
                 "supports_vision": False,
             },
             "api_type은 jev",
-        ),
-        (
-            {
-                "name": "비전 지원 모델",
-                "api_type": "jev",
-                "model_id": "test",
-                "supports_vision": True,
-            },
-            "supports_vision은 false",
         ),
     ]
     for model, error_message in invalid_configs:
@@ -278,3 +309,12 @@ def test_jev_configuration_rejects_other_api_types_or_vision(tmp_path: Path) -> 
             assert error_message in str(error)
         else:
             raise AssertionError(f"{error_message} 설정을 거부해야 합니다.")
+
+    config_path = _write_config(
+        config_path,
+        "비전 지원 Jev 모델",
+        supports_vision=True,
+    )
+    exam = load_exam(exam_path, project_root=tmp_path)
+    checked = check_jev_exam(exam, config_path=config_path)
+    assert checked["models"] == ["비전 지원 Jev 모델"]
