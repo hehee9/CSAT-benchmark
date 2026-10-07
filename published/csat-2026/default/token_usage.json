@@ -9159,6 +9159,206 @@
       "total_tokens": 145051,
       "question_count": 13,
       "last_updated": "2026-09-29 07:21:16"
+    },
+    "Solar Decide": {
+      "sections": {
+        "국어-화작": {
+          "input_tokens": 47421,
+          "output_tokens": 11,
+          "total_tokens": 47432,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:21"
+        },
+        "수학-미적": {
+          "input_tokens": 21016,
+          "output_tokens": 12,
+          "total_tokens": 21028,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:38:01"
+        },
+        "수학-공통": {
+          "input_tokens": 122129,
+          "output_tokens": 36,
+          "total_tokens": 122165,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:38:43"
+        },
+        "물리1": {
+          "input_tokens": 94291,
+          "output_tokens": 20,
+          "total_tokens": 94311,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:38:32"
+        },
+        "생명1": {
+          "input_tokens": 131331,
+          "output_tokens": 20,
+          "total_tokens": 131351,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:39:17"
+        },
+        "국어-공통": {
+          "input_tokens": 461065,
+          "output_tokens": 34,
+          "total_tokens": 461099,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:40:03"
+        },
+        "수학-기하": {
+          "input_tokens": 17812,
+          "output_tokens": 12,
+          "total_tokens": 17824,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:31"
+        },
+        "영어-공통": {
+          "input_tokens": 537021,
+          "output_tokens": 45,
+          "total_tokens": 537066,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:41:01"
+        },
+        "사회문화": {
+          "input_tokens": 114971,
+          "output_tokens": 20,
+          "total_tokens": 114991,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:38:58"
+        },
+        "한국사-공통": {
+          "input_tokens": 83431,
+          "output_tokens": 20,
+          "total_tokens": 83451,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:32:00"
+        },
+        "화학1": {
+          "input_tokens": 116251,
+          "output_tokens": 20,
+          "total_tokens": 116271,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:38:22"
+        },
+        "수학-확통": {
+          "input_tokens": 19636,
+          "output_tokens": 12,
+          "total_tokens": 19648,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:23"
+        },
+        "국어-언매": {
+          "input_tokens": 55275,
+          "output_tokens": 11,
+          "total_tokens": 55286,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:32"
+        }
+      },
+      "total_input_tokens": 1821650,
+      "total_output_tokens": 273,
+      "total_tokens": 1821923,
+      "question_count": 13,
+      "last_updated": "2026-10-07 10:41:01"
+    },
+    "GPT-6 Luna Decisions": {
+      "sections": {
+        "수학-미적": {
+          "input_tokens": 4830,
+          "output_tokens": 0,
+          "total_tokens": 4830,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:03"
+        },
+        "물리1": {
+          "input_tokens": 31936,
+          "output_tokens": 0,
+          "total_tokens": 31936,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:07"
+        },
+        "생명1": {
+          "input_tokens": 21643,
+          "output_tokens": 0,
+          "total_tokens": 21643,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:05"
+        },
+        "수학-공통": {
+          "input_tokens": 13169,
+          "output_tokens": 0,
+          "total_tokens": 13169,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:55:22"
+        },
+        "수학-기하": {
+          "input_tokens": 7027,
+          "output_tokens": 0,
+          "total_tokens": 7027,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:04"
+        },
+        "영어-공통": {
+          "input_tokens": 22207,
+          "output_tokens": 0,
+          "total_tokens": 22207,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:06"
+        },
+        "사회문화": {
+          "input_tokens": 14939,
+          "output_tokens": 0,
+          "total_tokens": 14939,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:05"
+        },
+        "국어-공통": {
+          "input_tokens": 25545,
+          "output_tokens": 0,
+          "total_tokens": 25545,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:04"
+        },
+        "한국사-공통": {
+          "input_tokens": 20022,
+          "output_tokens": 0,
+          "total_tokens": 20022,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:57:05"
+        },
+        "화학1": {
+          "input_tokens": 20279,
+          "output_tokens": 0,
+          "total_tokens": 20279,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:05"
+        },
+        "수학-확통": {
+          "input_tokens": 5241,
+          "output_tokens": 0,
+          "total_tokens": 5241,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:03"
+        },
+        "국어-언매": {
+          "input_tokens": 15004,
+          "output_tokens": 0,
+          "total_tokens": 15004,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:04"
+        },
+        "국어-화작": {
+          "input_tokens": 10631,
+          "output_tokens": 0,
+          "total_tokens": 10631,
+          "question_count": 1,
+          "last_updated": "2026-10-07 10:37:05"
+        }
+      },
+      "total_input_tokens": 212473,
+      "total_output_tokens": 0,
+      "total_tokens": 212473,
+      "question_count": 13,
+      "last_updated": "2026-10-07 10:57:05"
     }
   }
 }

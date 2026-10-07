@@ -681,5 +681,12 @@
   },
   "GPT-6.1 Sol (low)": {
     "knowledgeCutoff": "2026-04"
+  },
+  "GPT-6 Luna Decisions": {
+    "knowledgeCutoff": null
+  },
+  "Solar Decide": {
+    "knowledgeCutoff": null,
+    "supportsVision": false
   }
 }
