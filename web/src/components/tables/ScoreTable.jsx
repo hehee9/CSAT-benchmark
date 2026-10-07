@@ -394,8 +394,8 @@ export default function ScoreTable({ data, onRowClick, title, showDetail = false
               {showDetail ? t('table.hideDetail') : t('table.showDetail')}
             </button>
           )}
-          <ExportButton onClick={() => setShowExportOptions(prev => !prev)} exportKey="score-table" />
-          {showExportOptions && (
+          <ExportButton onClick={() => isMobile ? setShowExportOptions(prev => !prev) : exportImage(`${t('charts.scoreTable')}.png`)} exportKey="score-table" />
+          {isMobile && showExportOptions && (
             <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50" data-export-hide="true">
               <button className="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700" onClick={() => { setShowExportOptions(false); exportImage(`${t('charts.scoreTable')}.png`) }}>{t('export.singleImage')}</button>
               <button className="w-full text-left px-4 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border-t border-gray-100 dark:border-gray-700" onClick={exportMultipleImages}>{t('export.individualImages')}</button>
