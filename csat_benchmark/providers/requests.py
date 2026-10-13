@@ -663,6 +663,9 @@ def build_anthropic_thinking_config(config: Any) -> Dict[str, Any]:
 def _supports_anthropic_thinking_disabled(model_id: str) -> bool:
     import re
 
+    if re.match(r"^claude-haiku-5-5(?:-|$)", model_id):
+        return True
+
     match = re.match(r"^claude-(opus|sonnet)-(\d+)(?:-|$)", model_id)
     return bool(match and int(match.group(2)) >= 5)
 

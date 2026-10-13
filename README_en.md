@@ -148,6 +148,7 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
   - GPT-OSS 120B (high) (via Fireworks AI)
 
 - **Google Gemini series**
+  - Gemini 4 Argon (high / low)
   - Gemini 3.8 Flash (high / low)
   - Gemini 3.7 Flash (high / low)
   - Gemini 3.6 Flash (high / minimal)

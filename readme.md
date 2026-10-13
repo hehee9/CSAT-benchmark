@@ -151,6 +151,7 @@
   - GPT-OSS 120B (high) (via Fireworks AI)
 
 - **Google Gemini 시리즈**
+  - Gemini 4 Argon (high / low)
   - Gemini 3.8 Flash (high / low)
   - Gemini 3.7 Flash (high / low)
   - Gemini 3.6 Flash (high / minimal)

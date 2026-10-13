@@ -688,5 +688,19 @@
   "Solar Decide": {
     "knowledgeCutoff": null,
     "supportsVision": false
+  },
+  "Gemini 4 Argon (high)": {
+    "knowledgeCutoff": "2026-03",
+    "description": {
+      "ko": "Google AI Pro 사용자용 모델 또는 그와 동급",
+      "en": "For Google AI Pro users or an equivalent model"
+    }
+  },
+  "Gemini 4 Argon (low)": {
+    "knowledgeCutoff": "2026-03",
+    "description": {
+      "ko": "Google AI Pro 사용자용 모델 또는 그와 동급",
+      "en": "For Google AI Pro users or an equivalent model"
+    }
   }
 }
