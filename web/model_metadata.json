@@ -702,5 +702,8 @@
       "ko": "Google AI Pro 사용자용 모델 또는 그와 동급",
       "en": "For Google AI Pro users or an equivalent model"
     }
+  },
+  "Jev 1.14": {
+    "knowledgeCutoff": null
   }
 }

@@ -7,6 +7,7 @@ import json
 import time
 from collections.abc import Mapping, Sequence
 from io import BytesIO
+from math import ceil, sqrt
 from typing import Any
 
 import requests
@@ -19,6 +20,9 @@ from .providers.requests import build_chat_content, validate_question_media
 
 
 DEFAULT_JEV_URL = "https://openrouter.ai/api/alpha/decisions"
+TYPESAFE_JEV_IMAGE_MAX_SIDE = 1568
+TYPESAFE_JEV_IMAGE_MIN_SIDE = 280
+TYPESAFE_JEV_IMAGE_MIN_AREA = 78400
 
 
 def _to_lossless_webp_data_url(data_url: str) -> str:
@@ -36,6 +40,51 @@ def _to_lossless_webp_data_url(data_url: str) -> str:
         )
     encoded = base64.b64encode(output.getvalue()).decode("ascii")
     return f"data:image/webp;base64,{encoded}"
+
+
+def _prepare_typesafe_jev_image_data_url(data_url: str) -> str:
+    """@description TypeSafe Jev 이미지 크기 맞춤 및 PNG 인코딩"""
+    image_bytes = base64.b64decode(data_url.partition(",")[2])
+    with Image.open(BytesIO(image_bytes)) as source_image:
+        image = source_image.convert("RGBA")
+
+    try:
+        if max(image.size) > TYPESAFE_JEV_IMAGE_MAX_SIDE:
+            image.thumbnail(
+                (TYPESAFE_JEV_IMAGE_MAX_SIDE, TYPESAFE_JEV_IMAGE_MAX_SIDE),
+                Image.Resampling.LANCZOS,
+            )
+
+        width, height = image.size
+        canvas_width = max(width, TYPESAFE_JEV_IMAGE_MIN_SIDE)
+        canvas_height = max(height, TYPESAFE_JEV_IMAGE_MIN_SIDE)
+        if canvas_width * canvas_height < TYPESAFE_JEV_IMAGE_MIN_AREA:
+            scale = sqrt(
+                TYPESAFE_JEV_IMAGE_MIN_AREA / (canvas_width * canvas_height)
+            )
+            canvas_width = max(canvas_width, ceil(canvas_width * scale))
+            canvas_height = max(canvas_height, ceil(canvas_height * scale))
+
+        if (canvas_width, canvas_height) != image.size:
+            canvas = Image.new(
+                "RGBA",
+                (canvas_width, canvas_height),
+                (255, 255, 255, 255),
+            )
+            canvas.paste(
+                image,
+                ((canvas_width - width) // 2, (canvas_height - height) // 2),
+            )
+            image.close()
+            image = canvas
+
+        output = BytesIO()
+        image.save(output, format="PNG")
+    finally:
+        image.close()
+
+    encoded = base64.b64encode(output.getvalue()).decode("ascii")
+    return f"data:image/png;base64,{encoded}"
 
 
 def build_jev_questions(
@@ -167,21 +216,30 @@ class JevClient(APIClient):
         validate_question_media(question, self.config)
         jev_questions = build_jev_questions(subject, questions)
         question_text = question.load_question_text()
-        state: str | list[dict[str, Any]] = question_text
+        state: str | list[str | dict[str, Any]] = question_text
         if self.config.supports_vision and question.image_paths:
-            state = build_chat_content(
+            content = build_chat_content(
                 question,
                 supports_vision=True,
                 skip_missing=False,
             )
             if question_text:
-                state.insert(0, state.pop())
-            for part in state:
+                content.insert(0, content.pop())
+            is_typesafe_jev = self.config.model_id.startswith("typesafe/jev-")
+            state = []
+            for part in content:
+                if part["type"] == "text" and is_typesafe_jev:
+                    state.append(part["text"])
+                    continue
                 if part["type"] == "image_url":
-                    part["image_url"]["url"] = _to_lossless_webp_data_url(
-                        part["image_url"]["url"]
+                    prepare_image = (
+                        _prepare_typesafe_jev_image_data_url
+                        if is_typesafe_jev
+                        else _to_lossless_webp_data_url
                     )
+                    part["image_url"]["url"] = prepare_image(part["image_url"]["url"])
                     part["image_url"]["detail"] = "high"
+                state.append(part)
         payload = {
             "model": self.config.model_id,
             "state": state,

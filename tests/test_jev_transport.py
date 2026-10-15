@@ -181,8 +181,10 @@ def test_send_questions_preserves_prepared_state_usage_and_raw_response(monkeypa
     assert "correct_answer" not in json.dumps(payload, ensure_ascii=False)
 
 
-def test_send_questions_transports_vision_images_as_chat_content(monkeypatch, tmp_path):
-    """@description 순서와 픽셀을 보존한 무손실 이미지 Decisions 전송 확인"""
+def test_send_questions_preserves_other_jev_models_webp_chat_content(
+    monkeypatch, tmp_path
+):
+    """@description 다른 Jev 모델의 기존 WebP·문자 사전 전송 보존 확인"""
     first_image_path = tmp_path / "시험지_1.png"
     first_image = Image.new("RGBA", (2, 2))
     first_image.putdata(
@@ -202,7 +204,9 @@ def test_send_questions_transports_vision_images_as_chat_content(monkeypatch, tm
         "csat_benchmark.jev.requests.post",
         lambda _url, **kwargs: (captured.append(kwargs["json"]) or _successful_response()),
     )
-    client = JevClient(_config(supports_vision=True))
+    client = JevClient(
+        _config(model_id="other-provider/jev-vision", supports_vision=True)
+    )
     question_text = "공통 지문과 문항 본문"
 
     result = client.send_questions(
@@ -239,6 +243,148 @@ def test_send_questions_transports_vision_images_as_chat_content(monkeypatch, tm
         assert decoded_image.convert("RGBA").tobytes() == original_image.convert(
             "RGBA"
         ).tobytes()
+
+
+def test_typesafe_jev_uses_png_images_and_string_text_in_order(monkeypatch, tmp_path):
+    """@description TypeSafe Jev의 PNG·문자열 본문·순서·픽셀 보존 확인"""
+    image_paths = [tmp_path / "시험지_1.png", tmp_path / "시험지_2.png"]
+    original_images = [Image.new("RGBA", (400, 300)), Image.new("RGB", (300, 300))]
+    original_images[0].putdata(
+        [
+            (20, 40, 60, 255),
+            (80, 100, 120, 128),
+            (140, 160, 180, 0),
+            (200, 220, 240, 64),
+        ]
+        * (400 * 300 // 4)
+    )
+    original_images[1].putpixel((0, 0), (30, 50, 70))
+    source_files = []
+    for path, original_image in zip(image_paths, original_images):
+        original_image.save(path, format="PNG")
+        source_files.append(path.read_bytes())
+
+    captured: list[dict[str, Any]] = []
+    monkeypatch.setattr(
+        "csat_benchmark.jev.requests.post",
+        lambda _url, **kwargs: (captured.append(kwargs["json"]) or _successful_response()),
+    )
+    client = JevClient(_config(model_id="typesafe/jev-1.14", supports_vision=True))
+    question_text = "공통 지문과 문항 본문"
+
+    result = client.send_questions(
+        Question(
+            number=0,
+            correct_answer=1,
+            points=2,
+            question_text=question_text,
+            image_paths=[str(path) for path in image_paths],
+        ),
+        subject="국어",
+        questions=[_question_info(1, "1. 답을 고르세요.")],
+    )
+
+    assert result.success is True
+    state = captured[0]["state"]
+    assert [item if isinstance(item, str) else item["type"] for item in state] == [
+        question_text,
+        "[이미지:시험지_1]",
+        "image_url",
+        "[이미지:시험지_2]",
+        "image_url",
+    ]
+    for image_part, original_image in zip((state[2], state[4]), original_images):
+        url = image_part["image_url"]["url"]
+        mime_type, encoded_data = url.removeprefix("data:").split(";base64,", 1)
+        assert mime_type == "image/png"
+        assert image_part["image_url"]["detail"] == "high"
+        decoded_image = Image.open(BytesIO(base64.b64decode(encoded_data)))
+        assert decoded_image.size == original_image.size
+        assert decoded_image.convert("RGBA").tobytes() == original_image.convert(
+            "RGBA"
+        ).tobytes()
+    assert [path.read_bytes() for path in image_paths] == source_files
+
+
+def test_typesafe_jev_resizes_oversized_image_and_pads_minimum_side(
+    monkeypatch, tmp_path
+):
+    """@description 초과 크기 LANCZOS 축소 및 최소 변 길이 패딩 확인"""
+    image_path = tmp_path / "초장형_문항.png"
+    original_image = Image.new("RGB", (3493, 534), "white")
+    original_image.paste((20, 80, 140), (300, 60, 1900, 474))
+    original_image.paste((220, 40, 30), (1900, 60, 3200, 474))
+    original_image.save(image_path, format="PNG")
+    source_file = image_path.read_bytes()
+    expected_image = original_image.copy()
+    expected_image.thumbnail((1568, 1568), Image.Resampling.LANCZOS)
+    expected_canvas = Image.new("RGBA", (1568, 280), (255, 255, 255, 255))
+    expected_canvas.paste(expected_image.convert("RGBA"), (0, 20))
+
+    captured: list[dict[str, Any]] = []
+    monkeypatch.setattr(
+        "csat_benchmark.jev.requests.post",
+        lambda _url, **kwargs: (captured.append(kwargs["json"]) or _successful_response()),
+    )
+    client = JevClient(_config(supports_vision=True))
+
+    result = client.send_questions(
+        Question(
+            number=1,
+            correct_answer=1,
+            points=2,
+            question_text="초장형 이미지 문항",
+            image_paths=[str(image_path)],
+        ),
+        subject="국어",
+        questions=[_question_info(1, "1. 답을 고르세요.")],
+    )
+
+    assert result.success is True
+    state = captured[0]["state"]
+    assert state[0] == "초장형 이미지 문항"
+    url = state[1]["image_url"]["url"]
+    assert url.startswith("data:image/png;base64,")
+    decoded_image = Image.open(BytesIO(base64.b64decode(url.partition(",")[2])))
+    assert decoded_image.size == (1568, 280)
+    assert decoded_image.convert("RGBA").tobytes() == expected_canvas.tobytes()
+    assert image_path.read_bytes() == source_file
+
+
+def test_typesafe_jev_pads_to_minimum_area_without_resizing_pixels(
+    monkeypatch, tmp_path
+):
+    """@description 최소 변 적용 후 최소 면적까지 중앙 흰색 패딩 확인"""
+    image_path = tmp_path / "작은_문항.png"
+    original_image = Image.new("RGBA", (200, 200), (40, 80, 120, 180))
+    original_image.putpixel((0, 0), (200, 100, 50, 255))
+    original_image.save(image_path, format="PNG")
+    captured: list[dict[str, Any]] = []
+    monkeypatch.setattr(
+        "csat_benchmark.jev.requests.post",
+        lambda _url, **kwargs: (captured.append(kwargs["json"]) or _successful_response()),
+    )
+    client = JevClient(_config(supports_vision=True))
+
+    result = client.send_questions(
+        Question(
+            number=1,
+            correct_answer=1,
+            points=2,
+            question_text="작은 이미지 문항",
+            image_paths=[str(image_path)],
+        ),
+        subject="국어",
+        questions=[_question_info(1, "1. 답을 고르세요.")],
+    )
+
+    assert result.success is True
+    url = captured[0]["state"][1]["image_url"]["url"]
+    decoded_image = Image.open(BytesIO(base64.b64decode(url.partition(",")[2])))
+    assert decoded_image.size == (280, 280)
+    assert decoded_image.width * decoded_image.height >= 78400
+    assert decoded_image.crop((40, 40, 240, 240)).tobytes() == original_image.tobytes()
+    assert decoded_image.getpixel((0, 0)) == (255, 255, 255, 255)
 
 
 def test_send_questions_missing_vision_image_fails_before_http(monkeypatch, tmp_path):
