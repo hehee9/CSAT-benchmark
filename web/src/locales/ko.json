@@ -23,7 +23,20 @@
     "overview": "종합 대시보드",
     "subjects": "과목별 상세",
     "compare": "모델 비교",
-    "cost": "상세 분석"
+    "cost": "상세 분석",
+    "trend": "성적 변화 추이"
+  },
+  "trend": {
+    "title": "출시일별 성적 변화 추이",
+    "vendorSelection": "개발사 {{total}}개 중 {{selected}}개",
+    "selectAll": "전체 선택",
+    "selectNone": "전체 해제",
+    "legendLabel": "개발사 범례",
+    "otherVendor": "기타",
+    "developer": "개발사",
+    "releaseDate": "출시일",
+    "noReleaseDates": "출시일 정보가 있는 모델이 없습니다",
+    "excludedModels": "출시일 정보가 없는 모델 {{count}}개는 표시하지 않았습니다."
   },
   "analysis": {
     "metrics": { "score": "성적", "cost": "비용", "tokens": "토큰", "time": "시간" },

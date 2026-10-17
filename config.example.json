@@ -11,6 +11,7 @@
       "reasoning_effort": "low",
       "supports_vision": true,
       "knowledge_cutoff": "2026-02",
+      "release_date": "2026-07-09",
       "plan_message_ko": "요금제 안내 문구를 입력합니다.",
       "plan_message_en": "Enter the subscription plan message.",
       "batch_supported": false

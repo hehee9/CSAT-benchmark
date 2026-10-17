@@ -12,7 +12,11 @@ import sync_data
 from csat_benchmark.configuration import load_config
 from csat_benchmark.exams import load_exam
 from csat_benchmark.exports import publish_run
-from csat_benchmark.metadata import model_snapshot_for_resume, sync_model_metadata
+from csat_benchmark.metadata import (
+    merge_model_metadata,
+    model_snapshot_for_resume,
+    sync_model_metadata,
+)
 from csat_benchmark.models import APIResponse, ModelConfig
 from csat_benchmark.runner import run_exam
 from csat_benchmark.runs import create_run
@@ -70,6 +74,62 @@ def test_model_config_accepts_null_and_rejects_invalid_cutoff() -> None:
     assert ModelConfig("모델", "openai", "key", "mock").knowledge_cutoff is None
     with pytest.raises(ValueError, match="knowledge_cutoff"):
         ModelConfig("모델", "openai", "key", "mock", knowledge_cutoff="2026-13")
+
+
+@pytest.mark.parametrize("value", ["", "2026", "2026-1-05", "2026-02-30", 20260105])
+def test_invalid_release_date_is_rejected_by_config(tmp_path: Path, value: object) -> None:
+    """@brief 잘못된 출시일 형식이나 달력 날짜의 설정 로드 거부 검증"""
+    config_path = tmp_path / "config.json"
+    _write_json(
+        config_path,
+        {
+            "models": [
+                {
+                    "name": "모델",
+                    "api_type": "openai",
+                    "model_id": "mock",
+                    "release_date": value,
+                }
+            ]
+        },
+    )
+    with pytest.raises(ValueError, match="release_date"):
+        load_config(config_path, resolve_secrets=False)
+
+
+@pytest.mark.parametrize("value", ["", "2026", "2026-1-05", "2026-02-30", 20260105])
+def test_model_config_validates_release_date(value: object) -> None:
+    """@brief 공용 모델 자료 클래스의 출시일 검증"""
+    assert ModelConfig("모델", "openai", "key", "mock").release_date is None
+    with pytest.raises(ValueError, match="release_date"):
+        ModelConfig("모델", "openai", "key", "mock", release_date=value)
+
+
+def test_model_config_accepts_valid_release_date() -> None:
+    """@brief 공용 모델 자료 클래스의 유효한 출시일 검증"""
+    assert ModelConfig(
+        "모델", "openai", "key", "mock", release_date="2026-01-05"
+    ).release_date == "2026-01-05"
+
+
+def test_merge_model_metadata_sets_release_date_and_preserves_existing_values() -> None:
+    """@brief 설정 출시일 반영과 누락·null 기존값 보존 검증"""
+    merged = merge_model_metadata(
+        {
+            "출시일 갱신": {"releaseDate": "2025-01-01"},
+            "출시일 누락": {"releaseDate": "2024-01-01"},
+            "출시일 null": {"releaseDate": "2023-01-01"},
+        },
+        [
+            {"name": "출시일 갱신", "release_date": "2026-01-05"},
+            {"name": "출시일 누락"},
+            {"name": "출시일 null", "release_date": None},
+        ],
+    )
+
+    assert merged["출시일 갱신"]["releaseDate"] == "2026-01-05"
+    assert merged["출시일 누락"]["releaseDate"] == "2024-01-01"
+    assert merged["출시일 null"]["releaseDate"] == "2023-01-01"
 
 
 @pytest.mark.parametrize("value", ["", "2026", "2026-00", "2026-13", 202609])
@@ -222,17 +282,19 @@ def test_plan_message_rejects_non_string_values(tmp_path: Path, field_name: str)
 
 
 def test_display_messages_are_ignored_for_resume_comparison() -> None:
-    """@description 표시 메시지와 지식 컷오프 변경의 재개 비교 제외 검증"""
+    """@brief 표시 메타데이터 변경의 재개 비교 제외 검증"""
     original = {
         "name": "모델",
         "model_id": "mock",
         "knowledge_cutoff": "2025-11",
+        "release_date": "2025-11-01",
         "plan_message_ko": "기존 한국어",
         "plan_message_en": "기존 영어",
     }
     updated = {
         **original,
         "knowledge_cutoff": "2026-01",
+        "release_date": "2026-01-05",
         "plan_message_ko": "새 한국어",
         "plan_message_en": "새 영어",
     }
@@ -334,6 +396,49 @@ def test_cutoff_only_change_keeps_immediate_run_compatible(tmp_path: Path) -> No
         )
     assert resumed["run_id"] == first["run_id"]
     assert resumed["selected_models"][0]["knowledge_cutoff"] == "2025-11"
+
+
+def test_release_date_change_resumes_run_without_snapshot_field(tmp_path: Path) -> None:
+    """@brief 출시일 필드가 없는 기존 실행의 재개 호환성 검증"""
+    config_path = tmp_path / "config.json"
+    _write_json(
+        config_path,
+        {
+            "models": [
+                {
+                    "name": "모델",
+                    "api_type": "openai",
+                    "api_key_env": "RUN_METADATA_KEY",
+                    "model_id": "mock",
+                    "batch_supported": False,
+                    "concurrent_request_limit": 1,
+                }
+            ]
+        },
+    )
+    exam = load_exam("example-text")
+    output_path = tmp_path / "run" / "results.json"
+    with patch.dict(os.environ, {"RUN_METADATA_KEY": "test-key"}):
+        first = run_exam(
+            exam,
+            config_path=config_path,
+            output=output_path,
+            client_factory=lambda config, *, system_prompt: _FixedClient(config),
+        )
+        stored_run = json.loads(output_path.read_text(encoding="utf-8"))
+        stored_run["selected_models"][0].pop("release_date", None)
+        output_path.write_text(json.dumps(stored_run), encoding="utf-8")
+        config = json.loads(config_path.read_text(encoding="utf-8"))
+        config["models"][0]["release_date"] = "2026-01-05"
+        config_path.write_text(json.dumps(config), encoding="utf-8")
+        resumed = run_exam(
+            exam,
+            config_path=config_path,
+            output=output_path,
+            client_factory=lambda config, *, system_prompt: _FixedClient(config),
+        )
+    assert resumed["created_at"] == first["created_at"]
+    assert resumed["selected_models"][0]["release_date"] == "2026-01-05"
 
 
 def test_modern_publish_uses_override_metadata_and_manifest_destination(tmp_path: Path) -> None:

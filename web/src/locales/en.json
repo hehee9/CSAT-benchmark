@@ -23,7 +23,21 @@
     "overview": "Overview",
     "subjects": "Subject Details",
     "compare": "Model Comparison",
-    "cost": "Detailed Analysis"
+    "cost": "Detailed Analysis",
+    "trend": "Score Trend"
+  },
+  "trend": {
+    "title": "Score Trend by Release Date",
+    "vendorSelection": "{{selected}} of {{total}} developers",
+    "selectAll": "Select all",
+    "selectNone": "Clear all",
+    "legendLabel": "Developer legend",
+    "otherVendor": "Other",
+    "developer": "Developer",
+    "releaseDate": "Release date",
+    "noReleaseDates": "No models have release date information",
+    "excludedModels_one": "{{count}} model without a release date is not shown.",
+    "excludedModels_other": "{{count}} models without a release date are not shown."
   },
   "analysis": {
     "metrics": { "score": "Score", "cost": "Cost", "tokens": "Tokens", "time": "Time" },

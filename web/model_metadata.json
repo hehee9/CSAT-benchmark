@@ -1,23 +1,28 @@
 {
   "o3-mini (high)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2023-10"
+    "knowledgeCutoff": "2023-10",
+    "releaseDate": "2025-01-31"
   },
   "DeepSeek V4 Flash (None)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-04-24"
   },
   "DeepSeek V4 Flash (Max)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-04-24"
   },
   "DeepSeek V4 Pro (None)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-04-24"
   },
   "DeepSeek V4 Pro (Max)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-04-24"
   },
   "DeepSeek V3.2 (Non-Thinking)": {
     "supportsVision": false,
@@ -29,35 +34,43 @@
   },
   "DeepSeek V3.2 Speciale": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-03"
+    "knowledgeCutoff": "2025-03",
+    "releaseDate": "2025-12-01"
   },
   "K-EXAONE (Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2024-12"
+    "knowledgeCutoff": "2024-12",
+    "releaseDate": "2025-12-31"
   },
   "K-EXAONE (Non-Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2024-12"
+    "knowledgeCutoff": "2024-12",
+    "releaseDate": "2025-12-31"
   },
   "Solar Pro 3 (high)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-03"
+    "knowledgeCutoff": "2025-03",
+    "releaseDate": "2026-03-23"
   },
   "Solar Pro 3 (low)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-03"
+    "knowledgeCutoff": "2025-03",
+    "releaseDate": "2026-03-23"
   },
   "GPT-OSS 120B (high)": {
     "supportsVision": false,
-    "knowledgeCutoff": null
+    "knowledgeCutoff": null,
+    "releaseDate": "2025-08-05"
   },
   "GLM-5 (Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-12"
+    "knowledgeCutoff": "2025-12",
+    "releaseDate": "2026-02-11"
   },
   "GLM-5 (Non-Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-12"
+    "knowledgeCutoff": "2025-12",
+    "releaseDate": "2026-02-11"
   },
   "Solar Pro 3 0323 (high)": {
     "supportsVision": false
@@ -67,129 +80,149 @@
   },
   "Qwen3.7 Max (Non-Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-05-20"
   },
   "Qwen3.7 Max (Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-05-20"
   },
   "GLM-5.1 (Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-12"
+    "knowledgeCutoff": "2025-12",
+    "releaseDate": "2026-03-27"
   },
   "GLM-5.1 (Non-Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-12"
+    "knowledgeCutoff": "2025-12",
+    "releaseDate": "2026-03-27"
   },
   "GPT-5.5 Pro": {
     "supportsVision": true,
     "webServiceNoTools": true,
-    "knowledgeCutoff": null
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-04-23"
   },
   "GPT-5.6 Sol (high)": {
     "description": {
       "ko": "ChatGPT Plus 사용자용 모델 또는 그와 동급",
       "en": "For ChatGPT Plus users or an equivalent model"
     },
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-07-09"
   },
   "GPT-6 Astra (high)": {
     "description": {
       "ko": "ChatGPT Plus 사용자용 모델 또는 그와 동급",
       "en": "For ChatGPT Plus users or an equivalent model"
     },
-    "knowledgeCutoff": "2026-04"
+    "knowledgeCutoff": "2026-04",
+    "releaseDate": "2026-09-03"
   },
   "GPT-5.6 Sol Pro (high)": {
     "description": {
       "ko": "ChatGPT Pro 사용자용 모델 또는 그와 동급",
       "en": "For ChatGPT Pro users or an equivalent model"
     },
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-07-09"
   },
   "GPT-5.6 Luna (low)": {
     "description": {
       "ko": "ChatGPT 무료 사용자용 모델 또는 그와 동급",
       "en": "For ChatGPT Free users or an equivalent model"
     },
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-07-09"
   },
   "Claude Sonnet 5": {
     "description": {
       "ko": "Claude 무료 사용자용 모델 또는 그와 동급",
       "en": "For Claude Free users or an equivalent model"
     },
-    "knowledgeCutoff": "2026-01"
+    "knowledgeCutoff": "2026-01",
+    "releaseDate": "2026-06-30"
   },
   "Claude Sonnet 5 (high)": {
     "description": {
       "ko": "Claude 무료 사용자용 모델 또는 그와 동급",
       "en": "For Claude Free users or an equivalent model"
     },
-    "knowledgeCutoff": "2026-01"
+    "knowledgeCutoff": "2026-01",
+    "releaseDate": "2026-06-30"
   },
   "Claude Opus 5": {
     "description": {
       "ko": "Claude Pro 사용자용 모델 또는 그와 동급",
       "en": "For Claude Pro users or an equivalent model"
     },
-    "knowledgeCutoff": "2026-05"
+    "knowledgeCutoff": "2026-05",
+    "releaseDate": "2026-07-24"
   },
   "Claude Opus 5 (high)": {
     "description": {
       "ko": "Claude Pro 사용자용 모델 또는 그와 동급",
       "en": "For Claude Pro users or an equivalent model"
     },
-    "knowledgeCutoff": "2026-05"
+    "knowledgeCutoff": "2026-05",
+    "releaseDate": "2026-07-24"
   },
   "Claude Fable 5.1 (high)": {
     "description": {
       "ko": "Claude Max 사용자용 모델 또는 그와 동급",
       "en": "For Claude Max users or an equivalent model"
     },
-    "knowledgeCutoff": "2026-06"
+    "knowledgeCutoff": "2026-06",
+    "releaseDate": "2026-09-01"
   },
   "Gemini 3.1 Pro (high)": {
     "description": {
       "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
       "en": "Available to both free and paid Gemini users"
     },
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2026-02-19"
   },
   "Gemini 3.1 Pro (low)": {
     "description": {
       "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
       "en": "Available to both free and paid Gemini users"
     },
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2026-02-19"
   },
   "Gemini 3.8 Flash (high)": {
     "description": {
       "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
       "en": "Available to both free and paid Gemini users"
     },
-    "knowledgeCutoff": "2026-03"
+    "knowledgeCutoff": "2026-03",
+    "releaseDate": "2026-09-02"
   },
   "Gemini 3.8 Flash (low)": {
     "description": {
       "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
       "en": "Available to both free and paid Gemini users"
     },
-    "knowledgeCutoff": "2026-03"
+    "knowledgeCutoff": "2026-03",
+    "releaseDate": "2026-09-02"
   },
   "Gemini 3.5 Flash-Lite (high)": {
     "description": {
       "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
       "en": "Available to both free and paid Gemini users"
     },
-    "knowledgeCutoff": "2026-03"
+    "knowledgeCutoff": "2026-03",
+    "releaseDate": "2026-07-21"
   },
   "Gemini 3.5 Flash-Lite (minimal)": {
     "description": {
       "ko": "Gemini 무료·유료 사용자 모두 이용 가능",
       "en": "Available to both free and paid Gemini users"
     },
-    "knowledgeCutoff": "2026-03"
+    "knowledgeCutoff": "2026-03",
+    "releaseDate": "2026-07-21"
   },
   "DeepSeek V4 Flash 0731 (None)": {
     "supportsVision": false,
@@ -197,7 +230,8 @@
       "ko": "별도의 유료 DeepSeek 요금제 없음",
       "en": "No separate paid DeepSeek subscription plan"
     },
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-07-31"
   },
   "DeepSeek V4 Flash 0731 (Max)": {
     "supportsVision": false,
@@ -205,38 +239,46 @@
       "ko": "별도의 유료 DeepSeek 요금제 없음",
       "en": "No separate paid DeepSeek subscription plan"
     },
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-07-31"
   },
   "Solar Pro 3 (0126, high)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-03"
+    "knowledgeCutoff": "2025-03",
+    "releaseDate": "2026-01-26"
   },
   "Solar Pro 3 (0126, low)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-03"
+    "knowledgeCutoff": "2025-03",
+    "releaseDate": "2026-01-26"
   },
   "GLM-5.2 (Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-06-16"
   },
   "GLM-5.2 (Non-Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-06-16"
   },
   "Motif 12.7B (Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": null
+    "knowledgeCutoff": null,
+    "releaseDate": "2025-12-04"
   },
   "Solar Pro 4 (xhigh)": {
     "supportsVision": false
   },
   "Solar Pro 4": {
     "supportsVision": false,
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-08-06"
   },
   "Solar Pro 4 (max)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-08-06"
   },
   "EXAONE 4.0 32B (Thinking)": {
     "supportsVision": false,
@@ -256,11 +298,13 @@
   },
   "K-EXAONE 2.0 (Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-07-31"
   },
   "K-EXAONE 2.0 (Non-Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-07-31"
   },
   "DeepSeek V4 Pro 0813 (None)": {
     "supportsVision": false,
@@ -268,7 +312,8 @@
       "ko": "별도의 유료 DeepSeek 요금제 없음",
       "en": "No separate paid DeepSeek subscription plan"
     },
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-08-13"
   },
   "DeepSeek V4 Pro 0813 (Max)": {
     "supportsVision": false,
@@ -276,24 +321,30 @@
       "ko": "별도의 유료 DeepSeek 요금제 없음",
       "en": "No separate paid DeepSeek subscription plan"
     },
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-08-13"
   },
   "Motif 3 (Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2026-03"
+    "knowledgeCutoff": "2026-03",
+    "releaseDate": "2026-08-12"
   },
   "Motif 3 (Non-Thinking)": {
     "supportsVision": false,
-    "knowledgeCutoff": "2026-03"
+    "knowledgeCutoff": "2026-03",
+    "releaseDate": "2026-08-12"
   },
   "GPT-6 Astra (low)": {
-    "knowledgeCutoff": "2026-04"
+    "knowledgeCutoff": "2026-04",
+    "releaseDate": "2026-09-03"
   },
   "GPT-6 Sol (high)": {
-    "knowledgeCutoff": "2026-04"
+    "knowledgeCutoff": "2026-04",
+    "releaseDate": "2026-09-22"
   },
   "GPT-6 Sol (none)": {
-    "knowledgeCutoff": "2026-04"
+    "knowledgeCutoff": "2026-04",
+    "releaseDate": "2026-09-22"
   },
   "GPT-6 Terra (high)": {
     "knowledgeCutoff": null
@@ -302,163 +353,215 @@
     "knowledgeCutoff": null
   },
   "GPT-6 Luna (high)": {
-    "knowledgeCutoff": "2026-04"
+    "knowledgeCutoff": "2026-04",
+    "releaseDate": "2026-09-22"
   },
   "GPT-6 Luna (none)": {
-    "knowledgeCutoff": "2026-04"
+    "knowledgeCutoff": "2026-04",
+    "releaseDate": "2026-09-22"
   },
   "GPT-5.6 Sol (max*)": {
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-07-09"
   },
   "GPT-5.6 Sol (none)": {
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-07-09"
   },
   "GPT-5.6 Terra (max*)": {
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-07-09"
   },
   "GPT-5.6 Terra (high)": {
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-07-09"
   },
   "GPT-5.6 Terra Pro (high)": {
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-07-09"
   },
   "GPT-5.6 Terra (none)": {
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-07-09"
   },
   "GPT-5.6 Luna (max*)": {
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-07-09"
   },
   "GPT-5.6 Luna (high)": {
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-07-09"
   },
   "GPT-5.6 Luna Pro (high)": {
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-07-09"
   },
   "GPT-5.6 Luna (none)": {
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-07-09"
   },
   "GPT-5.5 (xhigh*)": {
-    "knowledgeCutoff": "2025-12"
+    "knowledgeCutoff": "2025-12",
+    "releaseDate": "2026-04-23"
   },
   "GPT-5.5 (high)": {
-    "knowledgeCutoff": "2025-12"
+    "knowledgeCutoff": "2025-12",
+    "releaseDate": "2026-04-23"
   },
   "GPT-5.5 (none)": {
-    "knowledgeCutoff": "2025-12"
+    "knowledgeCutoff": "2025-12",
+    "releaseDate": "2026-04-23"
   },
   "GPT-5.5 Instant": {
-    "knowledgeCutoff": null
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-05-05"
   },
   "GPT-5.4 (xhigh*)": {
-    "knowledgeCutoff": "2025-08"
+    "knowledgeCutoff": "2025-08",
+    "releaseDate": "2026-03-05"
   },
   "GPT-5.4 (high)": {
-    "knowledgeCutoff": "2025-08"
+    "knowledgeCutoff": "2025-08",
+    "releaseDate": "2026-03-05"
   },
   "GPT-5.4 (none)": {
-    "knowledgeCutoff": "2025-08"
+    "knowledgeCutoff": "2025-08",
+    "releaseDate": "2026-03-05"
   },
   "GPT-5.4 mini (xhigh)": {
-    "knowledgeCutoff": "2025-08"
+    "knowledgeCutoff": "2025-08",
+    "releaseDate": "2026-03-17"
   },
   "GPT-5.4 mini (none)": {
-    "knowledgeCutoff": "2025-08"
+    "knowledgeCutoff": "2025-08",
+    "releaseDate": "2026-03-17"
   },
   "GPT-5.4 nano (xhigh)": {
-    "knowledgeCutoff": "2025-08"
+    "knowledgeCutoff": "2025-08",
+    "releaseDate": "2026-03-17"
   },
   "GPT-5.4 nano (none)": {
-    "knowledgeCutoff": "2025-08"
+    "knowledgeCutoff": "2025-08",
+    "releaseDate": "2026-03-17"
   },
   "GPT-5.2 (xhigh)": {
-    "knowledgeCutoff": "2025-08"
+    "knowledgeCutoff": "2025-08",
+    "releaseDate": "2025-12-11"
   },
   "GPT-5.2 (Instant)": {
-    "knowledgeCutoff": "2025-08"
+    "knowledgeCutoff": "2025-08",
+    "releaseDate": "2025-12-11"
   },
   "GPT-5.1 (high)": {
-    "knowledgeCutoff": "2024-09"
+    "knowledgeCutoff": "2024-09",
+    "releaseDate": "2025-11-12"
   },
   "GPT-5.2 Codex": {
     "knowledgeCutoff": "2025-08"
   },
   "GPT-5.1 Codex": {
-    "knowledgeCutoff": "2024-09"
+    "knowledgeCutoff": "2024-09",
+    "releaseDate": "2025-11-13"
   },
   "GPT-5.1 Chat": {
-    "knowledgeCutoff": "2024-09"
+    "knowledgeCutoff": "2024-09",
+    "releaseDate": "2025-11-12"
   },
   "GPT-5 mini (high)": {
-    "knowledgeCutoff": "2024-05"
+    "knowledgeCutoff": "2024-05",
+    "releaseDate": "2025-08-07"
   },
   "GPT-5 nano (high)": {
-    "knowledgeCutoff": "2024-05"
+    "knowledgeCutoff": "2024-05",
+    "releaseDate": "2025-08-07"
   },
   "o1 (high)": {
-    "knowledgeCutoff": "2023-10"
+    "knowledgeCutoff": "2023-10",
+    "releaseDate": "2024-12-17"
   },
   "o3 (high)": {
-    "knowledgeCutoff": "2024-06"
+    "knowledgeCutoff": "2024-06",
+    "releaseDate": "2025-04-16"
   },
   "o4-mini (high)": {
-    "knowledgeCutoff": "2024-06"
+    "knowledgeCutoff": "2024-06",
+    "releaseDate": "2025-04-16"
   },
   "GPT-4.1": {
-    "knowledgeCutoff": "2024-06"
+    "knowledgeCutoff": "2024-06",
+    "releaseDate": "2025-04-14"
   },
   "GPT-4.1 mini": {
-    "knowledgeCutoff": "2024-06"
+    "knowledgeCutoff": "2024-06",
+    "releaseDate": "2025-04-14"
   },
   "GPT-4.1 nano": {
-    "knowledgeCutoff": "2024-06"
+    "knowledgeCutoff": "2024-06",
+    "releaseDate": "2025-04-14"
   },
   "GPT-4o": {
-    "knowledgeCutoff": "2023-10"
+    "knowledgeCutoff": "2023-10",
+    "releaseDate": "2024-11-20"
   },
   "GPT-4o mini": {
-    "knowledgeCutoff": "2023-10"
+    "knowledgeCutoff": "2023-10",
+    "releaseDate": "2024-07-18"
   },
   "Claude Fable 5 (high)": {
-    "knowledgeCutoff": "2026-01"
+    "knowledgeCutoff": "2026-01",
+    "releaseDate": "2026-06-09"
   },
   "Claude Opus 4.8": {
-    "knowledgeCutoff": "2026-01"
+    "knowledgeCutoff": "2026-01",
+    "releaseDate": "2026-05-28"
   },
   "Claude Opus 4.8 (high)": {
-    "knowledgeCutoff": "2026-01"
+    "knowledgeCutoff": "2026-01",
+    "releaseDate": "2026-05-28"
   },
   "Claude Opus 4.7": {
-    "knowledgeCutoff": "2026-01"
+    "knowledgeCutoff": "2026-01",
+    "releaseDate": "2026-04-16"
   },
   "Claude Opus 4.7 (high)": {
-    "knowledgeCutoff": "2026-01"
+    "knowledgeCutoff": "2026-01",
+    "releaseDate": "2026-04-16"
   },
   "Claude Opus 4.7 (max*)": {
-    "knowledgeCutoff": "2026-01"
+    "knowledgeCutoff": "2026-01",
+    "releaseDate": "2026-04-16"
   },
   "Claude Opus 4.5 (32K Thinking)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2025-11-24"
   },
   "Claude Opus 4.5": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2025-11-24"
   },
   "Claude Sonnet 4.6": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-02-17"
   },
   "Claude Sonnet 4.6 (high)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-02-17"
   },
   "Claude Sonnet 4.5 (32K Thinking)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2025-09-29"
   },
   "Claude Sonnet 4.5": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2025-09-29"
   },
   "Claude Haiku 4.5 (32K Thinking)": {
-    "knowledgeCutoff": "2025-02"
+    "knowledgeCutoff": "2025-02",
+    "releaseDate": "2025-10-15"
   },
   "Claude Haiku 4.5": {
-    "knowledgeCutoff": "2025-02"
+    "knowledgeCutoff": "2025-02",
+    "releaseDate": "2025-10-15"
   },
   "Gemini 3.1 Flash-Lite (Preview, high)": {
     "knowledgeCutoff": "2025-01"
@@ -467,244 +570,326 @@
     "knowledgeCutoff": "2025-01"
   },
   "Gemini 3.1 Flash-Lite (high)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2026-05-07"
   },
   "Gemini 3.1 Flash-Lite (minimal)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2026-05-07"
   },
   "Gemini 3 Pro (high)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2025-11-18"
   },
   "Gemini 3 Pro (low)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2025-11-18"
   },
   "Gemini 2.5 Pro (32K Thinking)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2025-06-17"
   },
   "Gemini 3.5 Flash (high)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2026-05-19"
   },
   "Gemini 3.5 Flash (minimal)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2026-05-19"
   },
   "Gemini 3.6 Flash (high)": {
-    "knowledgeCutoff": "2026-03"
+    "knowledgeCutoff": "2026-03",
+    "releaseDate": "2026-07-21"
   },
   "Gemini 3.6 Flash (minimal)": {
-    "knowledgeCutoff": "2026-03"
+    "knowledgeCutoff": "2026-03",
+    "releaseDate": "2026-07-21"
   },
   "Gemini 3.7 Flash (high)": {
-    "knowledgeCutoff": "2026-03"
+    "knowledgeCutoff": "2026-03",
+    "releaseDate": "2026-08-13"
   },
   "Gemini 3.7 Flash (low)": {
-    "knowledgeCutoff": "2026-03"
+    "knowledgeCutoff": "2026-03",
+    "releaseDate": "2026-08-13"
   },
   "Gemini 3 Flash (high)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2025-12-17"
   },
   "Gemini 3 Flash (minimal)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2025-12-17"
   },
   "Gemini 2.5 Flash (2025-09 Preview, 24K Thinking)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2025-09-25"
   },
   "Gemini 2.5 Flash (2025-09 Preview, Non-Thinking)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2025-09-25"
   },
   "Gemini 2.5 Flash Lite (2025-09 Preview, 24K Thinking)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2025-09-25"
   },
   "Gemini 2.5 Flash Lite (2025-09 Preview, Non-Thinking)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2025-09-25"
   },
   "Gemini 2.0 Flash": {
-    "knowledgeCutoff": "2024-08"
+    "knowledgeCutoff": "2024-08",
+    "releaseDate": "2025-02-05"
   },
   "Gemini 2.0 Flash Lite": {
-    "knowledgeCutoff": "2024-08"
+    "knowledgeCutoff": "2024-08",
+    "releaseDate": "2025-02-25"
   },
   "DeepSeek V4 Flash Vision Exp (None)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-08-21"
   },
   "DeepSeek V4 Flash Vision Exp (Max)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-08-21"
   },
   "Grok 4": {
-    "knowledgeCutoff": "2024-11"
+    "knowledgeCutoff": "2024-11",
+    "releaseDate": "2025-07-09"
   },
   "Grok 4 Fast (Thinking)": {
-    "knowledgeCutoff": null
+    "knowledgeCutoff": null,
+    "releaseDate": "2025-09-19"
   },
   "Grok 4.1 Fast (Thinking)": {
-    "knowledgeCutoff": null
+    "knowledgeCutoff": null,
+    "releaseDate": "2025-11-19"
   },
   "Grok 4.1 Fast (Non-Thinking)": {
-    "knowledgeCutoff": null
+    "knowledgeCutoff": null,
+    "releaseDate": "2025-11-19"
   },
   "Grok 4.20 Multi-Agent Beta (4 Agents)": {
     "knowledgeCutoff": "2025-09"
   },
   "Grok 4.3 (none)": {
-    "knowledgeCutoff": "2025-12"
+    "knowledgeCutoff": "2025-12",
+    "releaseDate": "2026-04-30"
   },
   "Grok 4.3 (high)": {
-    "knowledgeCutoff": "2025-12"
+    "knowledgeCutoff": "2025-12",
+    "releaseDate": "2026-04-30"
   },
   "Grok 4.5 (high)": {
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-07-16"
   },
   "Kimi K2.5 (Thinking)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2026-01-27"
   },
   "Kimi K2.5 (Non-Thinking)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2026-01-27"
   },
   "Kimi K2.6 (Thinking)": {
-    "knowledgeCutoff": "2025-04"
+    "knowledgeCutoff": "2025-04",
+    "releaseDate": "2026-04-20"
   },
   "Kimi K2.6 (Non-Thinking)": {
-    "knowledgeCutoff": "2025-04"
+    "knowledgeCutoff": "2025-04",
+    "releaseDate": "2026-04-20"
   },
   "Qwen3.5 397B (Non-Thinking)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-02-16"
   },
   "Qwen3.5 397B (Thinking)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-02-16"
   },
   "Qwen3.5 27B (Non-Thinking)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-02-24"
   },
   "Qwen3.5 27B (Thinking)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-02-24"
   },
   "Qwen3.5 35B A3B (Non-Thinking)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-02-24"
   },
   "Qwen3.5 35B A3B (Thinking)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-02-24"
   },
   "Qwen3.5 9B (Non-Thinking)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-03-02"
   },
   "Qwen3.5 9B (Thinking)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-03-02"
   },
   "Kanana-o 9.8B": {
-    "knowledgeCutoff": "2024-06"
+    "knowledgeCutoff": "2024-06",
+    "releaseDate": "2026-03-04"
   },
   "MiniMax M3 (Non-Thinking)": {
-    "knowledgeCutoff": "2026-01"
+    "knowledgeCutoff": "2026-01",
+    "releaseDate": "2026-06-01"
   },
   "MiniMax M3 (Thinking)": {
-    "knowledgeCutoff": "2026-01"
+    "knowledgeCutoff": "2026-01",
+    "releaseDate": "2026-06-01"
   },
   "Muse Spark 1.3 (high)": {
-    "knowledgeCutoff": "2026-08"
+    "knowledgeCutoff": "2026-08",
+    "releaseDate": "2026-09-02"
   },
   "Muse Spark 1.3 (minimal)": {
-    "knowledgeCutoff": "2026-08"
+    "knowledgeCutoff": "2026-08",
+    "releaseDate": "2026-09-02"
   },
   "Muse Spark 1.2 (high)": {
-    "knowledgeCutoff": "2026-07"
+    "knowledgeCutoff": "2026-07",
+    "releaseDate": "2026-08-05"
   },
   "Muse Spark 1.2 (minimal)": {
-    "knowledgeCutoff": "2026-07"
+    "knowledgeCutoff": "2026-07",
+    "releaseDate": "2026-08-05"
   },
   "Qwen3.6 Plus (Non-Thinking)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-04-02"
   },
   "Qwen3.6 Plus (Thinking)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-04-02"
   },
   "Qwen3.8 Max (xhigh)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-08-03"
   },
   "Qwen3.6 27B (Non-Thinking)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-04-22"
   },
   "Qwen3.6 27B (Thinking)": {
-    "knowledgeCutoff": "2025-05"
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-04-22"
   },
   "Gemma 4 26B A4B": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2026-04-02"
   },
   "Gemma 4 26B A4B (high)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2026-04-02"
   },
   "Gemma 4 31B": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2026-04-02"
   },
   "Gemma 4 31B (high)": {
-    "knowledgeCutoff": "2025-01"
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2026-04-02"
   },
   "GLM-5.3 Flash (high)": {
-    "knowledgeCutoff": "2026-02"
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-08-26"
   },
   "Mistral Small 4 (Thinking)": {
-    "knowledgeCutoff": "2024-11"
+    "knowledgeCutoff": "2024-11",
+    "releaseDate": "2026-03-16"
   },
   "Mistral Small 4 (Non-Thinking)": {
-    "knowledgeCutoff": "2024-11"
+    "knowledgeCutoff": "2024-11",
+    "releaseDate": "2026-03-16"
   },
   "모의 모델": {
     "knowledgeCutoff": null
   },
   "DeepSeek V4.1 Flash (High)": {
-    "knowledgeCutoff": null
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-09-10"
   },
   "Solar Mini 4 Preview (max)": {
     "knowledgeCutoff": "2026-02",
-    "supportsVision": false
+    "supportsVision": false,
+    "releaseDate": "2026-09-22"
   },
   "Solar Mini 4 Preview": {
     "knowledgeCutoff": "2026-02",
-    "supportsVision": false
+    "supportsVision": false,
+    "releaseDate": "2026-09-22"
   },
   "DeepSeek V3.2 Exp (Thinking)": {
-    "knowledgeCutoff": null
+    "knowledgeCutoff": null,
+    "releaseDate": "2025-09-29"
   },
   "DeepSeek V3.2 Exp (Non-Thinking)": {
-    "knowledgeCutoff": null
+    "knowledgeCutoff": null,
+    "releaseDate": "2025-09-29"
   },
   "DeepSeek-V3.2 (Thinking)": {
-    "knowledgeCutoff": null
+    "knowledgeCutoff": null,
+    "releaseDate": "2025-12-01"
   },
   "DeepSeek-V3.2 (Non-Thinking)": {
-    "knowledgeCutoff": null
+    "knowledgeCutoff": null,
+    "releaseDate": "2025-12-01"
   },
   "Jev 1.13": {
     "knowledgeCutoff": null,
-    "supportsVision": false
+    "supportsVision": false,
+    "releaseDate": "2026-09-16"
   },
   "GPT-6.1 Sol (high)": {
-    "knowledgeCutoff": "2026-04"
+    "knowledgeCutoff": "2026-04",
+    "releaseDate": "2026-09-29"
   },
   "GPT-6.1 Sol (low)": {
-    "knowledgeCutoff": "2026-04"
+    "knowledgeCutoff": "2026-04",
+    "releaseDate": "2026-09-29"
   },
   "GPT-6 Luna Decisions": {
-    "knowledgeCutoff": null
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-10-06"
   },
   "Solar Decide": {
     "knowledgeCutoff": null,
-    "supportsVision": false
+    "supportsVision": false,
+    "releaseDate": "2026-09-22"
   },
   "Gemini 4 Argon (high)": {
     "knowledgeCutoff": "2026-03",
     "description": {
       "ko": "Google AI Ultra부터 이용 가능"
-    }
+    },
+    "releaseDate": "2026-10-13"
   },
   "Gemini 4 Argon (low)": {
     "knowledgeCutoff": "2026-03",
     "description": {
       "ko": "Google AI Ultra부터 이용 가능"
-    }
+    },
+    "releaseDate": "2026-10-13"
   },
   "Jev 1.14": {
-    "knowledgeCutoff": null
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-10-14"
   },
   "DeepSeek V4.1 Flash 1017 (High)": {
-    "knowledgeCutoff": "2026-01"
+    "knowledgeCutoff": "2026-01",
+    "releaseDate": "2026-10-17"
+  },
+  "GPT-6 Luna (low)": {
+    "knowledgeCutoff": "2026-04",
+    "description": {
+      "ko": "ChatGPT 무료 사용자용 모델 또는 그와 동급",
+      "en": "For ChatGPT Free users or an equivalent model"
+    }
   }
 }

@@ -6,11 +6,13 @@ import copy
 import json
 import re
 from dataclasses import asdict, is_dataclass
+from datetime import date
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
 
 _YEAR_MONTH_PATTERN = re.compile(r"^\d{4}-(?:0[1-9]|1[0-2])$")
+_RELEASE_DATE_PATTERN = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
 
 
 def validate_year_month(value: Any, field_name: str = "날짜") -> str | None:
@@ -25,6 +27,19 @@ def validate_year_month(value: Any, field_name: str = "날짜") -> str | None:
 def validate_knowledge_cutoff(value: Any) -> str | None:
     """@brief 모델 지식 컷오프 YYYY-MM 형식 또는 null 검증"""
     return validate_year_month(value, "knowledge_cutoff")
+
+
+def validate_release_date(value: Any) -> str | None:
+    """@brief 모델 출시일 YYYY-MM-DD 형식과 실제 날짜 검증"""
+    if value is None:
+        return None
+    if not isinstance(value, str) or not _RELEASE_DATE_PATTERN.fullmatch(value):
+        raise ValueError("release_date는 YYYY-MM-DD 형식의 날짜 문자열 또는 null이어야 합니다.")
+    try:
+        date.fromisoformat(value)
+    except ValueError as error:
+        raise ValueError("release_date는 실제 달력 날짜여야 합니다.") from error
+    return value
 
 
 def validate_plan_message(value: Any, field_name: str) -> str | None:
@@ -42,6 +57,7 @@ def model_snapshot_for_resume(snapshot: Mapping[str, Any]) -> Dict[str, Any]:
         raise TypeError("모델 스냅샷은 매핑이어야 합니다.")
     comparable = copy.deepcopy(dict(snapshot))
     comparable.pop("knowledge_cutoff", None)
+    comparable.pop("release_date", None)
     comparable.pop("plan_message_ko", None)
     comparable.pop("plan_message_en", None)
     return comparable
@@ -87,6 +103,9 @@ def merge_model_metadata(
         item["knowledgeCutoff"] = validate_knowledge_cutoff(
             record.get("knowledge_cutoff")
         )
+        release_date = validate_release_date(record.get("release_date"))
+        if release_date is not None:
+            item["releaseDate"] = release_date
         for language in ("ko", "en"):
             field_name = f"plan_message_{language}"
             if field_name not in record:
@@ -151,5 +170,6 @@ __all__ = [
     "sync_model_metadata",
     "validate_knowledge_cutoff",
     "validate_plan_message",
+    "validate_release_date",
     "validate_year_month",
 ]

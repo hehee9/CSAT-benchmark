@@ -16,7 +16,8 @@ import {
   TokenUsageChart,
   QuestionHeatmap,
   ModelCompareChart,
-  ChoiceSelectionChart
+  ChoiceSelectionChart,
+  ScoreTrendChart
 } from '@/components/charts'
 import { ScoreTable, CostTable } from '@/components/tables'
 import { ModelSelectDropdown } from '@/components/common'
@@ -32,7 +33,7 @@ import { formatModelDisplayName } from '@/utils/modelMeta'
 /**
  * @brief 탭 정의
  */
-const TAB_KEYS = ['overview', 'subjects', 'compare', 'cost']
+const TAB_KEYS = ['overview', 'subjects', 'compare', 'cost', 'trend']
 
 /**
  * @brief 점수 기준 선택 컨트롤
@@ -217,6 +218,21 @@ function Dashboard({
   const normalizedMaxScore = useMemo(() => {
     return getMaxScore(filters.subjects, { exam, scoreBasis: SCORE_BASIS.NORMALIZED })
   }, [filters.subjects, exam])
+
+  // 선택한 과목 필터 표시 문자열
+  const subjectFilterLabel = useMemo(() => {
+    if (filters.subjects.length === 0) return null
+    const selectedLabels = subjectFilterGroups.flatMap(group => {
+      if (filters.subjects.includes(group.key)) return []
+      return (group.children || [])
+        .filter(child => filters.subjects.includes(child.key) || filters.subjects.includes(child.legacyKey))
+        .map(child => child.name)
+    })
+    const selectedGroups = subjectFilterGroups
+      .filter(group => filters.subjects.includes(group.key))
+      .map(group => group.name || group.group)
+    return [...selectedGroups, ...selectedLabels].join(', ')
+  }, [filters.subjects, subjectFilterGroups])
 
   /**
    * @brief 데이터 로드 완료 후 기본 모델 필터 설정
@@ -720,19 +736,7 @@ function Dashboard({
                           scoreViewMode === 'bestWorst' ? `${t('charts.bestWorstScore')} (${t('charts.maxPoints', { max: normalizedMaxScore })})` :
                           `${t('charts.totalScore')} (${t('charts.maxPoints', { max: maxScore })})`
                         }
-                        subtitle={(() => {
-                          if (filters.subjects.length === 0) return null
-                          const selectedLabels = subjectFilterGroups.flatMap(group => {
-                            if (filters.subjects.includes(group.key)) return []
-                            return (group.children || [])
-                              .filter(child => filters.subjects.includes(child.key) || filters.subjects.includes(child.legacyKey))
-                              .map(child => child.name)
-                          })
-                          const selectedGroups = subjectFilterGroups
-                            .filter(group => filters.subjects.includes(group.key))
-                            .map(group => group.name || group.group)
-                          return [...selectedGroups, ...selectedLabels].join(', ')
-                        })()}
+                        subtitle={subjectFilterLabel}
                         hoveredModel={hoveredModel}
                         onModelHover={setHoveredModel}
                         modelMetadata={modelMetadata}
@@ -945,6 +949,19 @@ function Dashboard({
                       />
                     </div>
                   </>
+                )}
+
+                {/* 성적 변화 추이 탭 */}
+                {activeTab === 'trend' && (
+                  <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6">
+                    <ScoreTrendChart
+                      key={selectionKey}
+                      scores={overallScores}
+                      modelMetadata={modelMetadata}
+                      maxScore={maxScore}
+                      subtitle={subjectFilterLabel}
+                    />
+                  </div>
                 )}
               </>
             )}

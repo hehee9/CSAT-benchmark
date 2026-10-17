@@ -17,6 +17,7 @@ from .metadata import (
     model_snapshot_for_resume,
     sync_model_metadata,
     validate_knowledge_cutoff,
+    validate_release_date,
     validate_year_month,
 )
 from .evaluation import (
@@ -62,5 +63,6 @@ __all__ = [
     "sync_model_metadata",
     "target_to_section_key",
     "validate_knowledge_cutoff",
+    "validate_release_date",
     "validate_year_month",
 ]

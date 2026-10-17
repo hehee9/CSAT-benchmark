@@ -10,7 +10,11 @@ from typing import Any, Dict, List, Sequence
 
 from dotenv import load_dotenv
 
-from .metadata import validate_knowledge_cutoff, validate_plan_message
+from .metadata import (
+    validate_knowledge_cutoff,
+    validate_plan_message,
+    validate_release_date,
+)
 
 
 class ConfigurationError(ValueError):
@@ -138,6 +142,7 @@ def load_config(
         prepared["knowledge_cutoff"] = validate_knowledge_cutoff(
             prepared.get("knowledge_cutoff")
         )
+        prepared["release_date"] = validate_release_date(prepared.get("release_date"))
         for field_name in ("plan_message_ko", "plan_message_en"):
             if field_name in prepared:
                 prepared[field_name] = validate_plan_message(prepared[field_name], field_name)
