@@ -692,18 +692,19 @@
   "Gemini 4 Argon (high)": {
     "knowledgeCutoff": "2026-03",
     "description": {
-      "ko": "Google AI Pro 사용자용 모델 또는 그와 동급",
-      "en": "For Google AI Pro users or an equivalent model"
+      "ko": "Google AI Ultra부터 이용 가능"
     }
   },
   "Gemini 4 Argon (low)": {
     "knowledgeCutoff": "2026-03",
     "description": {
-      "ko": "Google AI Pro 사용자용 모델 또는 그와 동급",
-      "en": "For Google AI Pro users or an equivalent model"
+      "ko": "Google AI Ultra부터 이용 가능"
     }
   },
   "Jev 1.14": {
     "knowledgeCutoff": null
+  },
+  "DeepSeek V4.1 Flash 1017 (High)": {
+    "knowledgeCutoff": "2026-01"
   }
 }

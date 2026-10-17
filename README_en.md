@@ -195,6 +195,7 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
   - Mistral Small 4 (Thinking / Non-Thinking)
 
 - **DeepSeek series**
+  - DeepSeek V4.1 Flash 1017 (High)
   - DeepSeek V4.1 Flash (High)
   - DeepSeek V4 Flash Vision Exp (None / Max)
   - DeepSeek V4 Flash 0731 (None / Max)
