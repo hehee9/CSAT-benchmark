@@ -952,6 +952,24 @@ class OpenAIClient(APIClient):
                 progress.generation_id
             )
 
+            if (
+                not self._uses_responses_api()
+                and progress.provider_stop_reason == "error"
+            ):
+                return APIResponse(
+                    question_number=question.number,
+                    model_name=self.config.name,
+                    raw_response=raw_response,
+                    timestamp=time.strftime("%Y-%m-%d %H:%M:%S"),
+                    success=False,
+                    error_message="공급자 스트림이 오류로 종료되었습니다 (finish_reason=error).",
+                    input_tokens=input_tokens,
+                    output_tokens=output_tokens,
+                    total_tokens=total_tokens,
+                    answer_status=None,
+                    provider_stop_reason=progress.provider_stop_reason,
+                )
+
             answer_status = (
                 "refusal"
                 if progress.refusal_detected

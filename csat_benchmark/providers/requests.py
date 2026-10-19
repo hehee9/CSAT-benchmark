@@ -720,7 +720,7 @@ def build_chat_options(
 ) -> Dict[str, Any]:
     """@description OpenAI 호환 Chat Completions 전송 옵션 구성"""
     body: Dict[str, Any] = {"model": config.model_id}
-    if config.model_id in _OPENAI_MAX_TOKENS_MODELS or config.api_type in {"vllm"}:
+    if config.model_id in _OPENAI_MAX_TOKENS_MODELS or config.api_type in {"vllm", "deepseek"}:
         body["max_tokens"] = config.max_tokens
     else:
         body["max_completion_tokens"] = config.max_tokens

@@ -891,5 +891,9 @@
       "ko": "ChatGPT 무료 사용자용 모델 또는 그와 동급",
       "en": "For ChatGPT Free users or an equivalent model"
     }
+  },
+  "MiniMax M3.1 Flash (high)": {
+    "knowledgeCutoff": "2026-01",
+    "releaseDate": "2026-10-19"
   }
 }

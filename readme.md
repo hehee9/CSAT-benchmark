@@ -216,6 +216,7 @@
   - Kimi K2.5 (Thinking / Non-Thinking)
 
 - **MiniMax 시리즈**
+  - MiniMax M3.1 Flash (high)
   - MiniMax M3 (Thinking / Non-Thinking)
 
 - **Z.ai GLM 시리즈**

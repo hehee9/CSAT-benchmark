@@ -17,6 +17,7 @@ from csat_benchmark.providers import (
     OpenAIClient,
 )
 from csat_benchmark.providers.factory import create_provider_client
+from csat_benchmark.runs import result_is_completed
 from csat_benchmark.providers import google as google_provider
 from csat_benchmark.providers import openai as openai_provider
 from csat_benchmark.providers import anthropic as anthropic_provider
@@ -391,6 +392,102 @@ def test_openai_chat_stream_preserves_refusal_text_and_stop_reason(monkeypatch):
     assert result.raw_response == "거부 사유"
     assert result.answer_status == "refusal"
     assert result.provider_stop_reason == "refusal"
+
+
+@pytest.mark.parametrize("partial_text", ["", "부분 응답"])
+def test_openai_chat_stream_error_is_failure_and_preserves_diagnostics(
+    partial_text: str,
+    monkeypatch,
+):
+    """@description Chat 스트림 오류 실패 분류·진단 정보 보존 확인"""
+    class FakeTimeout:
+        def __init__(self, **kwargs):
+            self.kwargs = kwargs
+
+    class FakeOpenAI:
+        def __init__(self, **kwargs):
+            self.api_key = kwargs["api_key"]
+            self.chat = SimpleNamespace(completions=SimpleNamespace(create=self.create))
+
+        def create(self, **kwargs):
+            chunks = []
+            if partial_text:
+                chunks.append(_chunk(partial_text))
+            chunks.append(
+                _chunk(
+                    "",
+                    usage=SimpleNamespace(
+                        prompt_tokens=15040,
+                        completion_tokens=0,
+                        total_tokens=15040,
+                    ),
+                    finish_reason="error",
+                )
+            )
+            return iter(chunks)
+
+    monkeypatch.setattr(openai_provider, "_ensure_openai_available", lambda: True)
+    monkeypatch.setattr(openai_provider, "httpx", SimpleNamespace(Timeout=FakeTimeout))
+    monkeypatch.setattr(openai_provider, "OpenAI", FakeOpenAI)
+    monkeypatch.setattr(openai_provider.time, "strftime", lambda *_: "2026-01-01 00:00:00")
+
+    result = openai_provider.OpenAIClient(_config("openai")).send_request(_question())
+
+    assert result.success is False
+    assert result.raw_response == partial_text
+    assert result.answer_status is None
+    assert result.provider_stop_reason == "error"
+    assert result.error_message == "공급자 스트림이 오류로 종료되었습니다 (finish_reason=error)."
+    assert (result.input_tokens, result.output_tokens, result.total_tokens) == (15040, 0, 15040)
+    assert not result_is_completed(vars(result))
+
+
+@pytest.mark.parametrize(
+    ("finish_reason", "expected_answer_status"),
+    [("stop", "no_answer"), ("refusal", "refusal")],
+)
+def test_openai_chat_stream_keeps_empty_non_error_completions(
+    finish_reason: str,
+    expected_answer_status: str,
+    monkeypatch,
+):
+    """@description 빈 정상 종료·거부 응답 분류 유지 확인"""
+    class FakeTimeout:
+        def __init__(self, **kwargs):
+            self.kwargs = kwargs
+
+    class FakeOpenAI:
+        def __init__(self, **kwargs):
+            self.api_key = kwargs["api_key"]
+            self.chat = SimpleNamespace(completions=SimpleNamespace(create=self.create))
+
+        def create(self, **kwargs):
+            return iter(
+                [
+                    _chunk(
+                        "",
+                        usage=SimpleNamespace(
+                            prompt_tokens=4,
+                            completion_tokens=0,
+                            total_tokens=4,
+                        ),
+                        finish_reason=finish_reason,
+                    )
+                ]
+            )
+
+    monkeypatch.setattr(openai_provider, "_ensure_openai_available", lambda: True)
+    monkeypatch.setattr(openai_provider, "httpx", SimpleNamespace(Timeout=FakeTimeout))
+    monkeypatch.setattr(openai_provider, "OpenAI", FakeOpenAI)
+    monkeypatch.setattr(openai_provider.time, "strftime", lambda *_: "2026-01-01 00:00:00")
+
+    result = openai_provider.OpenAIClient(_config("grok")).send_request(_question())
+
+    assert result.success is True
+    assert result.raw_response == ""
+    assert result.answer_status == expected_answer_status
+    assert result.provider_stop_reason == finish_reason
+    assert result_is_completed(vars(result))
 
 
 def test_openai_chat_stream_keeps_token_only_generation(monkeypatch):

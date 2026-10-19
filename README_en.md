@@ -213,6 +213,7 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
   - Kimi K2.5 (Thinking / Non-Thinking)
 
 - **MiniMax series**
+  - MiniMax M3.1 Flash (high)
   - MiniMax M3 (Thinking / Non-Thinking)
 
 - **Z.ai GLM series**
