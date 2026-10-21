@@ -250,6 +250,9 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
   - Motif 3 (Thinking)
   - Motif 12.7B (Thinking)
 
+- **KRAFTON Raon series**
+  - Raon-1 mini preview
+
 - **Typesafe Jev series**
   - Jev 1.14
   - Jev 1.13
@@ -340,6 +343,7 @@ For models without an official provider, the measurement is based on OpenRouter'
 | Gemma 4 31B | 0.14 | 0.4 |
 | Gemma 4 26B A4B | 0.1 | 0.4 |
 | Motif 12.7B (Thinking) | 0.1 | 0.2 |
+| Raon-1 mini preview | 0.1 | 0.4 |
 
 ※ Prices are in USD per 1,000,000 tokens.
 

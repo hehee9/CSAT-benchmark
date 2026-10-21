@@ -253,6 +253,9 @@
   - Motif 3 (Thinking)
   - Motif 12.7B (Thinking)
 
+- **KRAFTON Raon 시리즈**
+  - Raon-1 mini preview
+
 - **Typesafe Jev 시리즈**
   - Jev 1.14
   - Jev 1.13
@@ -347,6 +350,7 @@ API 비용(토큰 사용량)과 점수 간의 상관관계를 분석한 결과�
 | Gemma 4 31B | 0.14 | 0.4 |
 | Gemma 4 26B A4B | 0.1 | 0.4 |
 | Motif 12.7B (Thinking) | 0.1 | 0.2 |
+| Raon-1 mini preview | 0.1 | 0.4 |
 
 ※ 1,000,000토큰 당 달러 기준입니다.
 

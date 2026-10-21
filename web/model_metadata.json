@@ -895,5 +895,10 @@
   "MiniMax M3.1 Flash (high)": {
     "knowledgeCutoff": "2026-01",
     "releaseDate": "2026-10-19"
+  },
+  "Raon-1 mini preview": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-10-21",
+    "supportsVision": false
   }
 }
