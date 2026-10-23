@@ -371115,9 +371115,9 @@
     "subject": "국어",
     "section": "언매",
     "model_name": "Raon-1 mini preview",
-    "score": 15,
+    "score": 18,
     "total_points": 24,
-    "correct_count": 7,
+    "correct_count": 8,
     "total_questions": 11,
     "complete": true,
     "results": [
@@ -371132,21 +371132,21 @@
       },
       {
         "question_number": 36,
-        "extracted_answer": -1,
+        "extracted_answer": 2,
         "correct_answer": 2,
-        "is_correct": false,
+        "is_correct": true,
         "points": 3,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 37,
-        "extracted_answer": -1,
+        "extracted_answer": 1,
         "correct_answer": 4,
         "is_correct": false,
         "points": 2,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 38,
@@ -371349,9 +371349,9 @@
     "subject": "수학",
     "section": "공통",
     "model_name": "Raon-1 mini preview",
-    "score": 66,
+    "score": 70,
     "total_points": 74,
-    "correct_count": 20,
+    "correct_count": 21,
     "total_questions": 22,
     "complete": true,
     "results": [
@@ -371537,21 +371537,21 @@
       },
       {
         "question_number": 21,
-        "extracted_answer": -1,
+        "extracted_answer": 80,
         "correct_answer": 65,
         "is_correct": false,
         "points": 4,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 22,
-        "extracted_answer": -1,
+        "extracted_answer": 457,
         "correct_answer": 457,
-        "is_correct": false,
+        "is_correct": true,
         "points": 4,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       }
     ],
     "price": {
@@ -371565,9 +371565,9 @@
     "subject": "수학",
     "section": "기하",
     "model_name": "Raon-1 mini preview",
-    "score": 18,
+    "score": 26,
     "total_points": 26,
-    "correct_count": 6,
+    "correct_count": 8,
     "total_questions": 8,
     "complete": true,
     "results": [
@@ -371618,21 +371618,21 @@
       },
       {
         "question_number": 28,
-        "extracted_answer": -1,
+        "extracted_answer": 4,
         "correct_answer": 4,
-        "is_correct": false,
+        "is_correct": true,
         "points": 4,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 29,
-        "extracted_answer": -1,
+        "extracted_answer": 360,
         "correct_answer": 360,
-        "is_correct": false,
+        "is_correct": true,
         "points": 4,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 30,
@@ -371655,9 +371655,9 @@
     "subject": "수학",
     "section": "미적",
     "model_name": "Raon-1 mini preview",
-    "score": 22,
+    "score": 26,
     "total_points": 26,
-    "correct_count": 7,
+    "correct_count": 8,
     "total_questions": 8,
     "complete": true,
     "results": [
@@ -371726,12 +371726,12 @@
       },
       {
         "question_number": 30,
-        "extracted_answer": -1,
+        "extracted_answer": 11,
         "correct_answer": 11,
-        "is_correct": false,
+        "is_correct": true,
         "points": 4,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       }
     ],
     "price": {
@@ -372258,9 +372258,9 @@
     "subject": "물리1",
     "section": "탐구",
     "model_name": "Raon-1 mini preview",
-    "score": 25,
+    "score": 27,
     "total_points": 50,
-    "correct_count": 10,
+    "correct_count": 11,
     "total_questions": 20,
     "complete": true,
     "results": [
@@ -372293,12 +372293,12 @@
       },
       {
         "question_number": 4,
-        "extracted_answer": -1,
+        "extracted_answer": 3,
         "correct_answer": 4,
         "is_correct": false,
         "points": 3,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 5,
@@ -372320,12 +372320,12 @@
       },
       {
         "question_number": 7,
-        "extracted_answer": -1,
+        "extracted_answer": 3,
         "correct_answer": 3,
-        "is_correct": false,
+        "is_correct": true,
         "points": 2,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 8,
@@ -372374,12 +372374,12 @@
       },
       {
         "question_number": 13,
-        "extracted_answer": -1,
+        "extracted_answer": 3,
         "correct_answer": 5,
         "is_correct": false,
         "points": 2,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 14,
@@ -372392,12 +372392,12 @@
       },
       {
         "question_number": 15,
-        "extracted_answer": -1,
+        "extracted_answer": 4,
         "correct_answer": 1,
         "is_correct": false,
         "points": 3,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 16,
@@ -372410,21 +372410,21 @@
       },
       {
         "question_number": 17,
-        "extracted_answer": -1,
+        "extracted_answer": 4,
         "correct_answer": 5,
         "is_correct": false,
         "points": 2,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 18,
-        "extracted_answer": -1,
+        "extracted_answer": 4,
         "correct_answer": 2,
         "is_correct": false,
         "points": 2,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 19,
@@ -372437,12 +372437,12 @@
       },
       {
         "question_number": 20,
-        "extracted_answer": -1,
+        "extracted_answer": 3,
         "correct_answer": 1,
         "is_correct": false,
         "points": 3,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       }
     ],
     "price": {
@@ -372456,9 +372456,9 @@
     "subject": "사회문화",
     "section": "탐구",
     "model_name": "Raon-1 mini preview",
-    "score": 30,
+    "score": 35,
     "total_points": 50,
-    "correct_count": 12,
+    "correct_count": 14,
     "total_questions": 20,
     "complete": true,
     "results": [
@@ -372581,12 +372581,12 @@
       },
       {
         "question_number": 14,
-        "extracted_answer": -1,
+        "extracted_answer": 4,
         "correct_answer": 4,
-        "is_correct": false,
+        "is_correct": true,
         "points": 3,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 15,
@@ -372635,12 +372635,12 @@
       },
       {
         "question_number": 20,
-        "extracted_answer": -1,
+        "extracted_answer": 3,
         "correct_answer": 3,
-        "is_correct": false,
+        "is_correct": true,
         "points": 2,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       }
     ],
     "price": {
@@ -372654,9 +372654,9 @@
     "subject": "생명1",
     "section": "탐구",
     "model_name": "Raon-1 mini preview",
-    "score": 29,
+    "score": 40,
     "total_points": 50,
-    "correct_count": 12,
+    "correct_count": 16,
     "total_questions": 20,
     "complete": true,
     "results": [
@@ -372707,12 +372707,12 @@
       },
       {
         "question_number": 6,
-        "extracted_answer": -1,
+        "extracted_answer": 5,
         "correct_answer": 3,
         "is_correct": false,
         "points": 2,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 7,
@@ -372770,21 +372770,21 @@
       },
       {
         "question_number": 13,
-        "extracted_answer": -1,
+        "extracted_answer": 2,
         "correct_answer": 2,
-        "is_correct": false,
+        "is_correct": true,
         "points": 2,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 14,
-        "extracted_answer": -1,
+        "extracted_answer": 4,
         "correct_answer": 4,
-        "is_correct": false,
+        "is_correct": true,
         "points": 3,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 15,
@@ -372806,12 +372806,12 @@
       },
       {
         "question_number": 17,
-        "extracted_answer": -1,
+        "extracted_answer": 2,
         "correct_answer": 2,
-        "is_correct": false,
+        "is_correct": true,
         "points": 3,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 18,
@@ -372824,12 +372824,12 @@
       },
       {
         "question_number": 19,
-        "extracted_answer": -1,
+        "extracted_answer": 5,
         "correct_answer": 5,
-        "is_correct": false,
+        "is_correct": true,
         "points": 3,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 20,
@@ -372852,9 +372852,9 @@
     "subject": "화학1",
     "section": "탐구",
     "model_name": "Raon-1 mini preview",
-    "score": 38,
+    "score": 46,
     "total_points": 50,
-    "correct_count": 15,
+    "correct_count": 18,
     "total_questions": 20,
     "complete": true,
     "results": [
@@ -372941,12 +372941,12 @@
       },
       {
         "question_number": 10,
-        "extracted_answer": -1,
+        "extracted_answer": 1,
         "correct_answer": 1,
-        "is_correct": false,
+        "is_correct": true,
         "points": 3,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 11,
@@ -372968,21 +372968,21 @@
       },
       {
         "question_number": 13,
-        "extracted_answer": -1,
+        "extracted_answer": 4,
         "correct_answer": 4,
-        "is_correct": false,
+        "is_correct": true,
         "points": 3,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 14,
-        "extracted_answer": -1,
+        "extracted_answer": 4,
         "correct_answer": 4,
-        "is_correct": false,
+        "is_correct": true,
         "points": 2,
-        "answer_status": "no_answer",
-        "provider_stop_reason": "length"
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
       },
       {
         "question_number": 15,
