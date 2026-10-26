@@ -56,7 +56,7 @@ def _hard_correct_answer_schema(question_infos: List[Dict[str, Any]]) -> Dict[st
 class AnswerVerifier:
     """@description OpenAI Responses API 기반 답안 추출 검증기"""
 
-    MODEL_ID = "gpt-5.6-terra"
+    MODEL_ID = "gpt-6.1-terra"
     REASONING_EFFORT = "low"
 
     RESPONSE_TRUNCATION_THRESHOLD = 2000

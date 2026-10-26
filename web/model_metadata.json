@@ -900,5 +900,13 @@
     "knowledgeCutoff": null,
     "releaseDate": "2026-10-21",
     "supportsVision": false
+  },
+  "GPT-6.1 Terra (high)": {
+    "knowledgeCutoff": "2026-06",
+    "releaseDate": "2026-10-27"
+  },
+  "GPT-6.1 Terra": {
+    "knowledgeCutoff": "2026-06",
+    "releaseDate": "2026-10-27"
   }
 }
