@@ -266,6 +266,7 @@
   },
   "footer": {
     "supportTests": "Support testing costs",
+    "contact": "Contact email",
     "lastUpdated": "Last updated",
     "unofficial": "This is an unofficial project. Not affiliated with KICE."
   }

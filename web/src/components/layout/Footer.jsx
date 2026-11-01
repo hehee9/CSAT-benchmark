@@ -82,6 +82,28 @@ function GitHubIcon() {
 }
 
 /**
+ * @brief 문의 메일 아이콘 SVG
+ */
+function MailIcon() {
+  return (
+    <svg
+      className="w-5 h-5"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0l-7.5-4.615a2.25 2.25 0 0 1-1.07-1.916V6.75"
+      />
+    </svg>
+  )
+}
+
+/**
  * @brief Footer 컴포넌트
  */
 export default function Footer() {
@@ -96,7 +118,7 @@ export default function Footer() {
     <footer className="bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 px-6 pb-20 md:pb-4">
       <div className="container mx-auto text-center">
         {/* 링크 영역 */}
-        <div className="flex justify-center items-center gap-6 mb-3">
+        <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 mb-3">
           <a
             href="https://github.com/hehee9/CSAT-benchmark"
             target="_blank"
@@ -114,6 +136,15 @@ export default function Footer() {
           >
             <span aria-hidden="true" className="text-lg leading-none">☕</span>
             <span>{t('footer.supportTests')}</span>
+          </a>
+          <a
+            href="mailto:gyugyum@gmail.com"
+            aria-label={t('footer.contact')}
+            title={t('footer.contact')}
+            className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+          >
+            <MailIcon />
+            <span>gyugyum@gmail.com</span>
           </a>
         </div>
 
