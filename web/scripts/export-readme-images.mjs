@@ -56,11 +56,13 @@ function uniqueValues(values) {
 }
 
 function parseArgs(argv) {
+  let rawConcurrency = process.env.EXPORT_CONCURRENCY ?? '1'
   const options = {
     onlyIds: [],
     groups: [],
     positionals: [],
     headed: false,
+    concurrency: 1,
     baseUrl: '',
     outputDir: '',
     publicDir: process.env.CSAT_PUBLIC_DIR || '',
@@ -84,6 +86,12 @@ function parseArgs(argv) {
 
     if (arg === '--headed') {
       options.headed = true
+      continue
+    }
+
+    if (arg === '--concurrency') {
+      rawConcurrency = argv[i + 1] ?? ''
+      i += 1
       continue
     }
 
@@ -123,6 +131,12 @@ function parseArgs(argv) {
       options.positionals.push(arg)
     }
   }
+
+  const concurrency = Number(rawConcurrency)
+  if (!/^\d+$/.test(rawConcurrency) || !Number.isInteger(concurrency) || concurrency < 1) {
+    throw new Error(`Invalid concurrency: ${rawConcurrency}`)
+  }
+  options.concurrency = concurrency
 
   options.onlyIds = uniqueValues(options.onlyIds)
   options.groups = uniqueValues(options.groups.map((group) => group.trim()).filter(Boolean))
@@ -506,18 +520,24 @@ async function runBatch(browser, baseUrl, targets, options) {
     localStorage.setItem('language', 'ko')
     localStorage.setItem('theme', 'light')
   })
-  const results = []
+  const results = new Array(targets.length)
+  let nextTargetIndex = 0
 
   try {
-    for (const target of targets) {
-      const page = await context.newPage()
+    const workerCount = Math.min(options.concurrency, targets.length)
+    await Promise.all(Array.from({ length: workerCount }, async () => {
+      while (nextTargetIndex < targets.length) {
+        const targetIndex = nextTargetIndex
+        nextTargetIndex += 1
+        const page = await context.newPage()
 
-      try {
-        results.push(await exportTarget(page, baseUrl, target))
-      } finally {
-        await page.close()
+        try {
+          results[targetIndex] = await exportTarget(page, baseUrl, targets[targetIndex])
+        } finally {
+          await page.close()
+        }
       }
-    }
+    }))
   } finally {
     await context.close()
   }
