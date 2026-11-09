@@ -908,5 +908,10 @@
   "GPT-6.1 Terra": {
     "knowledgeCutoff": "2026-06",
     "releaseDate": "2026-10-27"
+  },
+  "K-EXAONE 2.5 (high)": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-11-09",
+    "supportsVision": false
   }
 }

@@ -237,6 +237,7 @@
   - Qwen3.5 9B (Thinking / Non-Thinking)
 
 - **LGAI EXAONE 시리즈**
+  - K-EXAONE 2.5 (high)
   - K-EXAONE 2.0 (Thinking / Non-Thinking)
   - K-EXAONE (Thinking / Non-Thinking)
 
