@@ -10,8 +10,10 @@ from typing import Any, Dict, List, Optional, Union
 
 from .answers import CorrectAnswer, _validate_correct_answer
 from .metadata import (
+    validate_access_tier,
     validate_knowledge_cutoff,
     validate_plan_message,
+    validate_product_line,
     validate_release_date,
 )
 
@@ -130,6 +132,8 @@ class ModelConfig:
     plan_message_ko: Optional[str] = None
     plan_message_en: Optional[str] = None
     release_date: Optional[str] = None
+    access_tier: Optional[str] = None
+    product_line: Optional[str] = None
 
     def __post_init__(self) -> None:
         """@description API 타입·요청 제한값 검증"""
@@ -140,6 +144,8 @@ class ModelConfig:
             raise ValueError("concurrent_request_limit은 양의 정수여야 합니다.")
         self.knowledge_cutoff = validate_knowledge_cutoff(self.knowledge_cutoff)
         self.release_date = validate_release_date(self.release_date)
+        self.access_tier = validate_access_tier(self.access_tier)
+        self.product_line = validate_product_line(self.product_line)
         self.plan_message_ko = validate_plan_message(self.plan_message_ko, "plan_message_ko")
         self.plan_message_en = validate_plan_message(self.plan_message_en, "plan_message_en")
 

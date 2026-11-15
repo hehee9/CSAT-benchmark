@@ -110,38 +110,36 @@ export default function BenchmarkNote({
   const { t } = useTranslation()
   const { exam, modelMetadata: contextModelMetadata } = useData()
   const flags = getAnyModelFlags(modelNames, modelMetadata ?? contextModelMetadata, exam?.exam_month)
+  if (!flags.hasNoVision && !flags.hasNonStandard && !flags.hasPostExamKnowledgeCutoff && !flags.hasWebServiceNoTools) return null
 
   return (
     <div className={`${className} export-role-note`}>
-      <p>{t('benchmark.noExternalSearch')}</p>
-      {(flags.hasNoVision || flags.hasNonStandard || flags.hasPostExamKnowledgeCutoff || flags.hasWebServiceNoTools) && (
-        <div className="export-role-legend mt-1 flex flex-wrap gap-x-4 gap-y-1">
-          {flags.hasNoVision && (
-            <span className="inline-flex items-center">
-              <_LegendSwatch type="noVision" />
-              {t('models.noVision')}
-            </span>
-          )}
-          {flags.hasNonStandard && (
-            <span className="inline-flex items-center">
-              <_LegendSwatch type="nonStandard" />
-              {t('models.nonStandard')}
-            </span>
-          )}
-          {flags.hasPostExamKnowledgeCutoff && (
-            <span className="inline-flex items-center">
-              <_LegendSwatch type="postExamKnowledgeCutoff" />
-              {t('models.postExamKnowledgeCutoff')}
-            </span>
-          )}
-          {flags.hasWebServiceNoTools && (
-            <span className="inline-flex items-center">
-              <_LegendSwatch type="webServiceNoTools" />
-              {t('models.webServiceNoTools')}
-            </span>
-          )}
-        </div>
-      )}
+      <div className="export-role-legend flex flex-wrap gap-x-4 gap-y-1">
+        {flags.hasNoVision && (
+          <span className="inline-flex items-center">
+            <_LegendSwatch type="noVision" />
+            {t('models.noVision')}
+          </span>
+        )}
+        {flags.hasNonStandard && (
+          <span className="inline-flex items-center">
+            <_LegendSwatch type="nonStandard" />
+            {t('models.nonStandard')}
+          </span>
+        )}
+        {flags.hasPostExamKnowledgeCutoff && (
+          <span className="inline-flex items-center">
+            <_LegendSwatch type="postExamKnowledgeCutoff" />
+            {t('models.postExamKnowledgeCutoff')}
+          </span>
+        )}
+        {flags.hasWebServiceNoTools && (
+          <span className="inline-flex items-center">
+            <_LegendSwatch type="webServiceNoTools" />
+            {t('models.webServiceNoTools')}
+          </span>
+        )}
+      </div>
     </div>
   )
 }

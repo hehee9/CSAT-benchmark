@@ -1,40 +1,104 @@
 /**
  * @file ModelFilter.jsx
- * @brief 모델 필터 체크박스 컴포넌트 (개발사별 그룹화, Tri-State Checkbox)
+ * @brief 모델 필터 체크박스 컴포넌트 (개발사별 그룹화, Tri-State Checkbox, 빠른 필터, 모델 정보 카드)
  */
 
 import { useRef, useEffect, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useData } from '@/hooks/useData'
+import { ModelInfoPopover, PlanTierIcon } from '@/components/common'
 import { groupModelsByVendor, getSortedVendors } from '@/utils/colorUtils'
 import { formatModelDisplayName, getModelDescription } from '@/utils/modelMeta'
+import { getLatestVersionModelNames, isLegacyModel } from '@/utils/modelFilters'
+
+const HOVER_OPEN_DELAY = 450
+const HOVER_CLOSE_DELAY = 180
+const LONG_PRESS_DELAY = 500
+const LONG_PRESS_MOVE_TOLERANCE = 10
 
 /**
- * @brief 모델명으로 설명 툴팁 ID 생성
+ * @brief 사이드바 아이콘으로 표시할 요금제 반환
  * @param {string} modelName - 모델명
- * @return {string} 툴팁 ID
+ * @param {Object} modelMetadata - 모델별 메타데이터
+ * @param {string} language - 언어 코드
+ * @return {'free' | 'paid' | null} 요금제 설명이 있는 모델의 요금제, 없으면 null
+ *
+ * 기존 요금제 설명(?) 버튼이 있던 모델에만 아이콘을 둔다.
  */
-function _getModelTooltipId(modelName) {
-  return `model-description-${encodeURIComponent(modelName)}`
+function _getIconTier(modelName, modelMetadata, language) {
+  if (!getModelDescription(modelName, language, modelMetadata)) return null
+  const tier = modelMetadata[modelName]?.accessTier
+  return tier === 'free' || tier === 'paid' ? tier : null
+}
+
+/**
+ * @brief 빠른 필터 토글 버튼
+ * @param {{ pressed: boolean, onToggle: function, children: React.ReactNode }} props
+ */
+function _QuickFilterToggle({ pressed, onToggle, children }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={pressed}
+      onClick={onToggle}
+      className={`inline-flex min-h-[36px] items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 md:min-h-0 ${
+        pressed
+          ? 'border-blue-500 bg-blue-500 text-white hover:bg-blue-600'
+          : 'border-gray-300 bg-white text-gray-600 hover:border-gray-400 hover:text-gray-800 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-500 dark:hover:text-gray-100'
+      }`}
+    >
+      {pressed && (
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3" aria-hidden="true">
+          <path d="M3.5 8.5 6.5 11.5 12.5 4.5" />
+        </svg>
+      )}
+      {children}
+    </button>
+  )
 }
 
 /**
  * @brief 모델 필터 컴포넌트
- * @param {Object} props - { selected, onChange, hoveredModel, onModelHover }
+ * @param {Object} props - { selected, onChange, hoveredModel, onModelHover, quickFilters, onQuickFiltersChange }
+ * @param {{ freeOnly: boolean, latestOnly: boolean }} props.quickFilters - 선택 결과 위에 적용할 빠른 필터
+ * @param {function} props.onQuickFiltersChange - 빠른 필터 변경 콜백
  */
-export default function ModelFilter({ selected, onChange, hoveredModel, onModelHover }) {
+export default function ModelFilter({ selected, onChange, hoveredModel, onModelHover, quickFilters, onQuickFiltersChange }) {
   const { t, i18n } = useTranslation()
   const { models, modelMetadata } = useData()
   const checkboxRefs = useRef({})
-  const modelRowRefs = useRef({})
   const [collapsed, setCollapsed] = useState({})
-  const [openModelDescription, setOpenModelDescription] = useState(null)
+  const [infoCard, setInfoCard] = useState(null)
+  const openTimerRef = useRef(null)
+  const closeTimerRef = useRef(null)
+  const pressTimerRef = useRef(null)
+  const pressOriginRef = useRef(null)
+  const longPressFiredRef = useRef(false)
 
   /** @brief 개발사별 그룹화 (이름 내림차순 정렬) */
   const groupedModels = useMemo(() => groupModelsByVendor(models), [models])
 
   /** @brief 개발사 목록 (모델 수 내림차순 정렬) */
   const sortedVendors = useMemo(() => getSortedVendors(groupedModels), [groupedModels])
+
+  /** @brief 등록 모델 전체 기준 제품군별 최신 모델 */
+  const latestVersionModelNames = useMemo(() => getLatestVersionModelNames(modelMetadata), [modelMetadata])
+
+  /** @brief 모델별 요금제 아이콘과 후속 버전 여부 (구형 모델은 아이콘 없음) */
+  const modelMarks = useMemo(() => new Map(models.map(model => {
+    const isLegacy = isLegacyModel(model, latestVersionModelNames, modelMetadata)
+    const iconTier = isLegacy ? null : _getIconTier(model, modelMetadata, i18n.language)
+    return [model, { iconTier, isLegacy }]
+  })), [models, modelMetadata, i18n.language, latestVersionModelNames])
+
+  const legend = useMemo(() => {
+    const marks = Array.from(modelMarks.values())
+    return {
+      hasFree: marks.some(mark => mark.iconTier === 'free'),
+      hasPaid: marks.some(mark => mark.iconTier === 'paid'),
+      hasLegacy: marks.some(mark => mark.isLegacy)
+    }
+  }, [modelMarks])
 
   /**
    * @brief 개발사의 체크박스 상태 계산
@@ -96,29 +160,94 @@ export default function ModelFilter({ selected, onChange, hoveredModel, onModelH
     })
   }, [selected, groupedModels, sortedVendors])
 
-  useEffect(() => {
-    if (!openModelDescription) return undefined
+  /** @brief 언마운트 시 대기 중인 정보 카드 타이머 정리 */
+  useEffect(() => () => {
+    clearTimeout(openTimerRef.current)
+    clearTimeout(closeTimerRef.current)
+    clearTimeout(pressTimerRef.current)
+  }, [])
 
-    const handleOutsidePointerDown = (event) => {
-      const row = modelRowRefs.current[openModelDescription]
-      if (row && !row.contains(event.target)) {
-        setOpenModelDescription(null)
-      }
-    }
+  /** @brief 마우스가 이름과 카드를 모두 벗어나면 잠시 뒤 카드 닫기 */
+  function _scheduleCardClose() {
+    clearTimeout(closeTimerRef.current)
+    closeTimerRef.current = setTimeout(() => setInfoCard(null), HOVER_CLOSE_DELAY)
+  }
 
-    const handleEscape = (event) => {
-      if (event.key === 'Escape') {
-        setOpenModelDescription(null)
-      }
-    }
+  /**
+   * @brief 데스크톱에서 이름에 마우스를 올리면 지연 후 정보 카드 열기
+   * @param {PointerEvent} event - 포인터 진입 이벤트
+   * @param {string} model - 모델명
+   */
+  function handleNamePointerEnter(event, model) {
+    if (event.pointerType !== 'mouse') return
+    const anchorEl = event.currentTarget
+    clearTimeout(closeTimerRef.current)
+    clearTimeout(openTimerRef.current)
+    openTimerRef.current = setTimeout(() => setInfoCard({ model, anchorEl }), HOVER_OPEN_DELAY)
+  }
 
-    document.addEventListener('pointerdown', handleOutsidePointerDown)
-    document.addEventListener('keydown', handleEscape)
-    return () => {
-      document.removeEventListener('pointerdown', handleOutsidePointerDown)
-      document.removeEventListener('keydown', handleEscape)
+  /**
+   * @brief 이름에서 마우스가 벗어나면 열기 대기 취소 후 닫기 예약
+   * @param {PointerEvent} event - 포인터 이탈 이벤트
+   */
+  function handleNamePointerLeave(event) {
+    if (event.pointerType !== 'mouse') return
+    clearTimeout(openTimerRef.current)
+    _scheduleCardClose()
+  }
+
+  /**
+   * @brief 터치로 이름을 길게 누르면 정보 카드 열기
+   * @param {PointerEvent} event - 포인터 누름 이벤트
+   * @param {string} model - 모델명
+   */
+  function handleNamePointerDown(event, model) {
+    longPressFiredRef.current = false
+    if (event.pointerType === 'mouse') return
+    const anchorEl = event.currentTarget
+    pressOriginRef.current = { x: event.clientX, y: event.clientY }
+    clearTimeout(pressTimerRef.current)
+    pressTimerRef.current = setTimeout(() => {
+      longPressFiredRef.current = true
+      pressOriginRef.current = null
+      setInfoCard({ model, anchorEl })
+    }, LONG_PRESS_DELAY)
+  }
+
+  /**
+   * @brief 길게 누르는 중 손가락이 움직이면 스크롤로 보고 취소
+   * @param {PointerEvent} event - 포인터 이동 이벤트
+   */
+  function handleNamePointerMove(event) {
+    const origin = pressOriginRef.current
+    if (origin && Math.hypot(event.clientX - origin.x, event.clientY - origin.y) > LONG_PRESS_MOVE_TOLERANCE) {
+      _cancelLongPress()
     }
-  }, [openModelDescription])
+  }
+
+  /** @brief 길게 누르기 대기 취소 */
+  function _cancelLongPress() {
+    clearTimeout(pressTimerRef.current)
+    pressOriginRef.current = null
+  }
+
+  /**
+   * @brief 길게 눌러 카드를 연 직후의 클릭이 체크박스를 바꾸지 않게 막기
+   * @param {MouseEvent} event - 라벨 클릭 이벤트
+   */
+  function handleLabelClick(event) {
+    if (!longPressFiredRef.current) return
+    event.preventDefault()
+    longPressFiredRef.current = false
+  }
+
+  /**
+   * @brief 길게 누르는 동안 브라우저 기본 메뉴 차단
+   * @param {MouseEvent} event - 컨텍스트 메뉴 이벤트
+   */
+  function handleNameContextMenu(event) {
+    if (pressOriginRef.current || longPressFiredRef.current) event.preventDefault()
+  }
 
   return (
     <div className="mb-6">
@@ -130,6 +259,21 @@ export default function ModelFilter({ selected, onChange, hoveredModel, onModelH
         >
           {selected.length === models.length ? t('sidebar.deselectAll') : t('sidebar.selectAll')}
         </button>
+      </div>
+
+      <div className="mb-3 flex flex-wrap gap-1.5" role="group" aria-label={t('sidebar.quickFilters')}>
+        <_QuickFilterToggle
+          pressed={quickFilters.freeOnly}
+          onToggle={() => onQuickFiltersChange({ ...quickFilters, freeOnly: !quickFilters.freeOnly })}
+        >
+          {t('sidebar.freeOnly')}
+        </_QuickFilterToggle>
+        <_QuickFilterToggle
+          pressed={quickFilters.latestOnly}
+          onToggle={() => onQuickFiltersChange({ ...quickFilters, latestOnly: !quickFilters.latestOnly })}
+        >
+          {t('sidebar.latestOnly')}
+        </_QuickFilterToggle>
       </div>
 
       <div className="space-y-2">
@@ -167,14 +311,10 @@ export default function ModelFilter({ selected, onChange, hoveredModel, onModelH
                 <div className="ml-6 space-y-0.5">
                   {vendorModels.map(model => {
                     const isHovered = hoveredModel === model
-                    const description = getModelDescription(model, i18n.language, modelMetadata)
-                    const hasDescription = Boolean(description)
-                    const isDescriptionOpen = openModelDescription === model
-                    const tooltipId = _getModelTooltipId(model)
+                    const { iconTier, isLegacy } = modelMarks.get(model)
                     return (
                       <div
                         key={model}
-                        ref={element => { modelRowRefs.current[model] = element }}
                         className={`relative flex min-w-0 items-center rounded p-1 transition-colors ${
                           isHovered
                             ? 'bg-blue-50 dark:bg-blue-900/30 ring-1 ring-blue-300 dark:ring-blue-700'
@@ -183,59 +323,27 @@ export default function ModelFilter({ selected, onChange, hoveredModel, onModelH
                         onMouseEnter={() => onModelHover?.(model)}
                         onMouseLeave={() => onModelHover?.(null)}
                       >
-                        <label className="flex min-w-0 flex-1 items-center cursor-pointer">
+                        <label className="flex min-w-0 flex-1 items-center cursor-pointer" onClick={handleLabelClick}>
                           <input
                             type="checkbox"
                             checked={selected.includes(model)}
                             onChange={() => handleModelToggle(model)}
                             className="mr-2 rounded"
                           />
-                          <span className="text-xs text-gray-600 dark:text-gray-400 truncate" title={formatModelDisplayName(model)}>
+                          <span
+                            className={`flex-1 truncate select-none text-xs [-webkit-touch-callout:none] ${isLegacy ? 'text-gray-400 dark:text-gray-500' : 'text-gray-800 dark:text-gray-200'}`}
+                            onPointerEnter={event => handleNamePointerEnter(event, model)}
+                            onPointerLeave={handleNamePointerLeave}
+                            onPointerDown={event => handleNamePointerDown(event, model)}
+                            onPointerMove={handleNamePointerMove}
+                            onPointerUp={_cancelLongPress}
+                            onPointerCancel={_cancelLongPress}
+                            onContextMenu={handleNameContextMenu}
+                          >
                             {formatModelDisplayName(model)}
                           </span>
                         </label>
-                        {hasDescription && (
-                          <button
-                            type="button"
-                            aria-label={isDescriptionOpen ? t('sidebar.hideModelDescription') : t('sidebar.showModelDescription')}
-                            aria-describedby={isDescriptionOpen ? tooltipId : undefined}
-                            className="ml-1 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-gray-300 text-[10px] font-semibold leading-none text-gray-500 transition-colors hover:border-gray-400 hover:bg-gray-100 hover:text-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-1 dark:border-gray-600 dark:text-gray-400 dark:hover:border-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-200 dark:focus-visible:ring-offset-gray-800"
-                            onPointerEnter={(event) => {
-                              if (event.pointerType !== 'touch') {
-                                setOpenModelDescription(model)
-                              }
-                            }}
-                            onPointerLeave={(event) => {
-                              if (event.pointerType !== 'touch' && document.activeElement !== event.currentTarget) {
-                                setOpenModelDescription(current => current === model ? null : current)
-                              }
-                            }}
-                            onPointerDown={(event) => {
-                              if (event.pointerType === 'touch') {
-                                event.preventDefault()
-                                setOpenModelDescription(current => current === model ? null : model)
-                              }
-                            }}
-                            onFocus={() => setOpenModelDescription(model)}
-                            onBlur={() => setOpenModelDescription(current => current === model ? null : current)}
-                            onClick={(event) => {
-                              if (event.detail === 0) {
-                                setOpenModelDescription(current => current === model ? null : model)
-                              }
-                            }}
-                          >
-                            ?
-                          </button>
-                        )}
-                        {isDescriptionOpen && hasDescription && (
-                          <div
-                            id={tooltipId}
-                            role="tooltip"
-                            className="absolute left-6 right-0 top-full z-50 mt-1 break-words whitespace-normal rounded border border-gray-200 bg-white px-2 py-1.5 text-xs leading-snug text-gray-700 shadow-lg dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200"
-                          >
-                            {description}
-                          </div>
-                        )}
+                        {iconTier && <PlanTierIcon tier={iconTier} className="ml-1 h-3.5 w-3.5" />}
                       </div>
                     )
                   })}
@@ -245,6 +353,47 @@ export default function ModelFilter({ selected, onChange, hoveredModel, onModelH
           )
         })}
       </div>
+
+      {(legend.hasFree || legend.hasPaid || legend.hasLegacy) && (
+        <div
+          role="note"
+          aria-label={t('sidebar.modelListLegend')}
+          className="mt-3 space-y-1.5 border-t border-gray-200 pt-3 text-xs leading-snug text-gray-500 dark:border-gray-700 dark:text-gray-400"
+        >
+          {(legend.hasFree || legend.hasPaid) && (
+            <div>
+              <div className="flex flex-col items-start gap-y-1">
+                {legend.hasFree && (
+                  <span className="inline-flex items-center gap-1">
+                    <PlanTierIcon tier="free" decorative className="h-3.5 w-3.5" />
+                    {t('sidebar.legendFree')}
+                  </span>
+                )}
+                {legend.hasPaid && (
+                  <span className="inline-flex items-center gap-1">
+                    <PlanTierIcon tier="paid" decorative className="h-3.5 w-3.5" />
+                    {t('sidebar.legendPaid')}
+                  </span>
+                )}
+              </div>
+              <p className="mt-0.5">{t('sidebar.legendBasis')}</p>
+            </div>
+          )}
+          {legend.hasLegacy && <p>{t('sidebar.legendLegacy')}</p>}
+        </div>
+      )}
+
+      {infoCard && (
+        <ModelInfoPopover
+          key={infoCard.model}
+          model={infoCard.model}
+          anchorEl={infoCard.anchorEl}
+          autoFocus={false}
+          onClose={() => setInfoCard(null)}
+          onPointerEnter={event => event.pointerType === 'mouse' && clearTimeout(closeTimerRef.current)}
+          onPointerLeave={event => event.pointerType === 'mouse' && _scheduleCardClose()}
+        />
+      )}
     </div>
   )
 }

@@ -7,7 +7,7 @@ import { useState, useMemo, useEffect, Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getModelColor, getShortModelName } from '@/utils/colorUtils'
 import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
-import { BenchmarkNote, ExportButton } from '@/components/common'
+import { BenchmarkNote, ExportButton, ModelNameButton, NoWebSearchBadge } from '@/components/common'
 import { formatModelDisplayName } from '@/utils/modelMeta'
 import { formatAnalysisMetricValue } from '@/utils/analysisMetrics'
 
@@ -210,9 +210,12 @@ export default function CostTable({ data, title, showDetail = false, onToggleDet
     return (
       <div ref={ref} className="w-full">
         <div className="flex items-start justify-between mb-4">
-          {title && (
-            <h3 className="export-role-title text-lg font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
-          )}
+          <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
+            {title && (
+              <h3 className="export-role-title text-lg font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+            )}
+            <NoWebSearchBadge />
+          </div>
           <ExportButton
             onClick={() => exportImage(`${t('export.costAnalysis')}.png`)}
             exportKey="cost-table"
@@ -232,7 +235,7 @@ export default function CostTable({ data, title, showDetail = false, onToggleDet
                         className="w-2 h-2 rounded-full shrink-0"
                         style={{ backgroundColor: getModelColor(d.model) }}
                       />
-                      <span className="truncate max-w-[80px]">{getShortModelName(d.model)}</span>
+                      <ModelNameButton model={d.model} className="truncate max-w-[80px]">{getShortModelName(d.model)}</ModelNameButton>
                     </div>
                   </th>
                 ))}
@@ -287,9 +290,12 @@ export default function CostTable({ data, title, showDetail = false, onToggleDet
   return (
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between mb-4">
-        {title && (
-          <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
-        )}
+        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
+          {title && (
+            <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+          )}
+          <NoWebSearchBadge />
+        </div>
         <div className="flex items-start gap-2">
           <span className="hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
           <ExportButton
@@ -328,7 +334,7 @@ export default function CostTable({ data, title, showDetail = false, onToggleDet
                     className="inline-block w-3 h-3 rounded-full mr-2"
                     style={{ backgroundColor: getModelColor(row.model) }}
                   />
-                  {formatModelDisplayName(row.model)}
+                  <ModelNameButton model={row.model} />
                 </td>
                 <td className="px-3 py-2 text-right text-gray-600 dark:text-gray-400">
                   {isRepeatedRun
@@ -391,7 +397,7 @@ export default function CostTable({ data, title, showDetail = false, onToggleDet
                         className="inline-block w-3 h-3 rounded-full mr-2"
                         style={{ backgroundColor: getModelColor(row.model) }}
                       />
-                      {formatModelDisplayName(row.model)}
+                      <ModelNameButton model={row.model} />
                     </td>
                     <td className="px-3 py-2 text-right text-gray-600 dark:text-gray-400">
                       {isRepeatedRun

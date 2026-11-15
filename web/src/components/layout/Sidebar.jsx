@@ -9,11 +9,14 @@ import { ThemeToggle, LanguageSwitcher } from '@/components/common'
 
 /**
  * @brief 사이드바 컴포넌트
- * @param {Object} props - { filters, onFilterChange, hoveredModel, onModelHover, isOpen, onClose }
+ * @param {Object} props - { filters, onFilterChange, quickFilters, onQuickFiltersChange, hoveredModel, onModelHover, isOpen, onClose }
+ * @note quickFilters는 모델 선택과 별개로 선택 결과 위에 덧씌우는 보기 조건입니다.
  */
 export default function Sidebar({
   filters,
   onFilterChange,
+  quickFilters,
+  onQuickFiltersChange,
   subjectFilterGroups = [],
   hoveredModel,
   onModelHover,
@@ -93,6 +96,8 @@ export default function Sidebar({
         <ModelFilter
           selected={filters.models}
           onChange={(models) => onFilterChange({ ...filters, models })}
+          quickFilters={quickFilters}
+          onQuickFiltersChange={onQuickFiltersChange}
           hoveredModel={hoveredModel}
           onModelHover={onModelHover}
         />

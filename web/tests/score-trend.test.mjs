@@ -12,6 +12,7 @@ const server = await createServer({
 const {
   parseReleaseDate,
   buildTrendPoints,
+  buildTierTrendSeries,
   buildVendorStepLines,
   getFrontierModels,
   getMonthTicks
@@ -115,6 +116,57 @@ assert.deepEqual([...getFrontierModels(points)].sort(), [
   'GPT-5.4 (high)',
   'Mystery Model'
 ])
+
+// 무료/유료 계열은 개발사별로 각각 독립된 최고 점수 갱신 기록을 가짐
+const tierMetadata = {
+  'GPT-4o free early': { releaseDate: '2025-01-01', accessTier: 'free' },
+  'GPT-4o paid early': { releaseDate: '2025-02-01', accessTier: 'paid' },
+  'GPT-4o free late': { releaseDate: '2025-03-01', accessTier: 'free' },
+  'GPT-4o paid late': { releaseDate: '2025-04-01', accessTier: 'paid' },
+  'GPT-4o unclassified': { releaseDate: '2025-05-01', accessTier: 'limited' },
+  'Claude free only': { releaseDate: '2025-01-01', accessTier: 'free' },
+  'Claude unclassified': { releaseDate: '2025-02-01', accessTier: 'trial' },
+  'Gemini paid only': { releaseDate: '2025-01-01', accessTier: 'paid' },
+  'Mistral unclassified': { releaseDate: '2025-01-01' },
+  'Grok paid valid': { releaseDate: '2025-01-01', accessTier: 'paid' },
+  'Grok free missing date': { accessTier: 'free' },
+  'DeepSeek paid valid': { releaseDate: '2025-01-01', accessTier: 'paid' },
+  'DeepSeek free invalid date': { releaseDate: '2025-02-30', accessTier: 'free' }
+}
+const tierScores = [
+  { model: 'GPT-4o free early', total: 100 },
+  { model: 'GPT-4o paid early', total: 200 },
+  { model: 'GPT-4o free late', total: 300 },
+  { model: 'GPT-4o paid late', total: 250 },
+  { model: 'GPT-4o unclassified', total: 400 },
+  { model: 'Claude free only', total: 100 },
+  { model: 'Claude unclassified', total: 200 },
+  { model: 'Gemini paid only', total: 100 },
+  { model: 'Mistral unclassified', total: 100 },
+  { model: 'Grok paid valid', total: 100 },
+  { model: 'Grok free missing date', total: 200 },
+  { model: 'DeepSeek paid valid', total: 100 },
+  { model: 'DeepSeek free invalid date', total: 200 }
+]
+const tierTrend = buildTierTrendSeries(tierScores, tierMetadata)
+assert.equal(tierTrend.excludedCount, 2)
+assert.equal(tierTrend.unclassifiedCount, 3)
+assert.deepEqual(tierTrend.series.map(({ vendorId, tier }) => ({ vendorId, tier })), [
+  { vendorId: 'openai', tier: 'free' },
+  { vendorId: 'openai', tier: 'paid' }
+])
+assert.deepEqual(tierTrend.series[0].points.map(point => point.model), ['GPT-4o free early', 'GPT-4o free late'])
+assert.deepEqual(tierTrend.series[0].stepLine, [
+  { time: day('2025-01-01'), score: 100 },
+  { time: day('2025-03-01'), score: 300 }
+])
+assert.deepEqual([...tierTrend.series[0].frontierModels].sort(), ['GPT-4o free early', 'GPT-4o free late'])
+assert.deepEqual(tierTrend.series[1].points.map(point => point.model), ['GPT-4o paid early', 'GPT-4o paid late'])
+assert.deepEqual(tierTrend.series[1].stepLine, [
+  { time: day('2025-02-01'), score: 200 },
+  { time: day('2025-04-01'), score: 250 }
+])
+assert.deepEqual([...tierTrend.series[1].frontierModels].sort(), ['GPT-4o paid early', 'GPT-4o paid late'])
 
 // 월초 눈금
 assert.deepEqual(getMonthTicks(day('2025-01-15'), day('2025-04-20'), 8), [

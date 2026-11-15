@@ -46,6 +46,9 @@ const MODEL_DISPLAY_NAMES = {
  */
 const NON_STANDARD_MODELS = new Set(Object.keys(PARTIAL_BENCHMARK_MODELS))
 
+const DAY_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/
+const MONTH_PATTERN = /^(\d{4})-(\d{2})$/
+
 /**
  * @brief 지원하는 언어 태그를 기본 언어 코드로 정규화
  * @param {string} language - 언어 코드 또는 지역 언어 태그
@@ -91,6 +94,27 @@ export function getModelDescription(modelName, language, modelMetadata = {}) {
   const text = description?.[normalizedLanguage]
 
   return typeof text === 'string' && text.trim() ? text : null
+}
+
+/**
+ * @brief 공개된 정밀도에 맞춰 날짜 문자열 표시 (YYYY-MM-DD는 일, YYYY-MM은 월까지)
+ * @param {string|null|undefined} value - 메타데이터 날짜 문자열
+ * @param {string} locale - 표시 언어
+ * @return {string|null} 표시 문자열, 값이 없으면 null
+ */
+export function formatPublishedDate(value, locale) {
+  if (typeof value !== 'string' || !value.trim()) return null
+  const day = DAY_PATTERN.exec(value)
+  if (day) {
+    return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })
+      .format(Date.UTC(Number(day[1]), Number(day[2]) - 1, Number(day[3])))
+  }
+  const month = MONTH_PATTERN.exec(value)
+  if (month) {
+    return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', timeZone: 'UTC' })
+      .format(Date.UTC(Number(month[1]), Number(month[2]) - 1, 1))
+  }
+  return value
 }
 
 /**

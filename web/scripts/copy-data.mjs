@@ -16,7 +16,9 @@ const __dirname = path.dirname(__filename)
 const webRoot = path.resolve(__dirname, '..')
 const repoRoot = path.resolve(webRoot, '..')
 const CATALOG_SCHEMA_VERSION = 1
-const DEFAULT_EXAM_ID = 'csat-2026'
+const DEFAULT_EXAM_ID = 'csat-2027'
+/** @description 저장소 루트의 기존 공개 파일과 호환용 사본을 사용하는 시험 */
+const LEGACY_EXAM_ID = 'csat-2026'
 const YEAR_MONTH_PATTERN = /^\d{4}-(?:0[1-9]|1[0-2])$/
 const HISTORICAL_MIRRORS = {
   default: { results: 'all_results.json', tokenUsage: 'token_usage.json' },
@@ -274,7 +276,7 @@ function _getModeSourceCandidates(manifest, mode, roots) {
       ? _resolveInside(roots.repoRoot, mode.public_token_usage, 'public_token_usage')
       : null
   }
-  const metadataCandidates = manifest.id === DEFAULT_EXAM_ID
+  const metadataCandidates = manifest.id === LEGACY_EXAM_ID
     ? [
         path.join(roots.repoRoot, 'questions_metadata.json'),
         path.join(roots.webRoot, 'public', 'questions_metadata.json'),
@@ -440,7 +442,7 @@ async function _publishMode(manifest, mode, roots, outputDir) {
     await _writeJson(outputPaths.questionsMetadata, _deriveQuestionsMetadata(results))
   }
 
-  if (manifest.id === DEFAULT_EXAM_ID && HISTORICAL_MIRRORS[mode.id]) {
+  if (manifest.id === LEGACY_EXAM_ID && HISTORICAL_MIRRORS[mode.id]) {
     const mirrors = HISTORICAL_MIRRORS[mode.id]
     await _copyExact(sources.results, path.join(outputDir, mirrors.results))
     await _copyExact(sources.tokenUsage, path.join(outputDir, mirrors.tokenUsage))

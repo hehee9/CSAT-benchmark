@@ -22,7 +22,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { useData } from '@/hooks/useData'
 import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
 import { useBarChartExportLayout } from '@/hooks/useBarChartExportLayout'
-import { BenchmarkNote, ExportButton } from '@/components/common'
+import { BenchmarkNote, ExportButton, NoWebSearchBadge } from '@/components/common'
 import { formatModelDisplayName, getModelFlags } from '@/utils/modelMeta'
 
 const MAX_LINE_LENGTH = 21
@@ -595,9 +595,12 @@ export default function ScoreBarChart({
       <div ref={ref} className="w-full">
         <div className="flex items-start justify-between mb-4">
           <div>
-            {title && (
-              <h3 className="export-role-title text-lg font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
-            )}
+            <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
+              {title && (
+                <h3 className="export-role-title text-lg font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+              )}
+              <NoWebSearchBadge />
+            </div>
             {subtitle && (
               <p className="export-role-subtitle text-sm text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>
             )}
@@ -673,9 +676,12 @@ export default function ScoreBarChart({
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between mb-2">
         <div>
-          {title && (
-            <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
-          )}
+          <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
+            {title && (
+              <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+            )}
+            <NoWebSearchBadge />
+          </div>
           {subtitle && (
             <p className="export-role-subtitle text-base text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>
           )}

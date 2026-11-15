@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next'
 import { getModelColor } from '@/utils/colorUtils'
 import { useTheme } from '@/hooks/useTheme'
 import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
-import { BenchmarkNote, ExportButton } from '@/components/common'
+import { BenchmarkNote, ExportButton, NoWebSearchBadge } from '@/components/common'
 import { formatModelDisplayName } from '@/utils/modelMeta'
 import {
   ANALYSIS_METRIC_IDS,
@@ -726,33 +726,36 @@ export default function CostScatterChart({
   return (
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between gap-3 mb-4">
-        <h3 className={`export-role-title flex flex-wrap items-center gap-2 text-xl text-gray-800 dark:text-gray-200 ${isExporting ? 'font-semibold' : 'font-normal'}`}>
-          <span data-export-hide="true">
-            <label htmlFor="analysis-y-metric" className="sr-only">{t('analysis.yAxis')}</label>
-            <select
-              id="analysis-y-metric"
-              value={resolvedYMetric}
-              onChange={event => onYMetricChange(event.target.value)}
-              className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1 text-lg font-normal"
-            >
-              {metricOptions.map(option => <option key={option.id} value={option.id}>{option.label}</option>)}
-            </select>
-          </span>
-          <span className="hidden export-role-title" data-export-show="true">{yLabel}</span>
-          <span aria-hidden="true">vs</span>
-          <span data-export-hide="true">
-            <label htmlFor="analysis-x-metric" className="sr-only">{t('analysis.xAxis')}</label>
-            <select
-              id="analysis-x-metric"
-              value={resolvedXMetric}
-              onChange={event => onXMetricChange(event.target.value)}
-              className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1 text-lg font-normal"
-            >
-              {metricOptions.map(option => <option key={option.id} value={option.id}>{option.label}</option>)}
-            </select>
-          </span>
-          <span className="hidden export-role-title" data-export-show="true">{xLabel}</span>
-        </h3>
+        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
+          <h3 className={`export-role-title flex flex-wrap items-center gap-2 text-xl text-gray-800 dark:text-gray-200 ${isExporting ? 'font-semibold' : 'font-normal'}`}>
+            <span data-export-hide="true">
+              <label htmlFor="analysis-y-metric" className="sr-only">{t('analysis.yAxis')}</label>
+              <select
+                id="analysis-y-metric"
+                value={resolvedYMetric}
+                onChange={event => onYMetricChange(event.target.value)}
+                className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1 text-lg font-normal"
+              >
+                {metricOptions.map(option => <option key={option.id} value={option.id}>{option.label}</option>)}
+              </select>
+            </span>
+            <span className="hidden export-role-title" data-export-show="true">{yLabel}</span>
+            <span aria-hidden="true">vs</span>
+            <span data-export-hide="true">
+              <label htmlFor="analysis-x-metric" className="sr-only">{t('analysis.xAxis')}</label>
+              <select
+                id="analysis-x-metric"
+                value={resolvedXMetric}
+                onChange={event => onXMetricChange(event.target.value)}
+                className="rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1 text-lg font-normal"
+              >
+                {metricOptions.map(option => <option key={option.id} value={option.id}>{option.label}</option>)}
+              </select>
+            </span>
+            <span className="hidden export-role-title" data-export-show="true">{xLabel}</span>
+          </h3>
+          <NoWebSearchBadge />
+        </div>
         <div className="flex items-start gap-2">
           <span className="export-role-watermark hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
           <ExportButton

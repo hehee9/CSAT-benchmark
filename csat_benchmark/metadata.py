@@ -42,6 +42,26 @@ def validate_release_date(value: Any) -> str | None:
     return value
 
 
+def validate_access_tier(value: Any) -> str | None:
+    """@brief 무료, 유료 또는 해당 없음 접근 등급과 null 검증"""
+    if value is None:
+        return None
+    if not isinstance(value, str) or value not in {"free", "paid", "not_applicable"}:
+        raise ValueError(
+            "access_tier는 'free', 'paid', 'not_applicable' 또는 null이어야 합니다."
+        )
+    return value
+
+
+def validate_product_line(value: Any) -> str | None:
+    """@brief 비어 있지 않은 제품군 문자열 또는 null 검증"""
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("product_line은 비어 있지 않은 문자열 또는 null이어야 합니다.")
+    return value
+
+
 def validate_plan_message(value: Any, field_name: str) -> str | None:
     """@brief 모델 요금제 안내 문구 문자열 또는 null 검증"""
     if value is None:
@@ -58,6 +78,8 @@ def model_snapshot_for_resume(snapshot: Mapping[str, Any]) -> Dict[str, Any]:
     comparable = copy.deepcopy(dict(snapshot))
     comparable.pop("knowledge_cutoff", None)
     comparable.pop("release_date", None)
+    comparable.pop("access_tier", None)
+    comparable.pop("product_line", None)
     comparable.pop("plan_message_ko", None)
     comparable.pop("plan_message_en", None)
     return comparable
@@ -106,6 +128,12 @@ def merge_model_metadata(
         release_date = validate_release_date(record.get("release_date"))
         if release_date is not None:
             item["releaseDate"] = release_date
+        access_tier = validate_access_tier(record.get("access_tier"))
+        if access_tier is not None:
+            item["accessTier"] = access_tier
+        product_line = validate_product_line(record.get("product_line"))
+        if product_line is not None:
+            item["productLine"] = product_line
         for language in ("ko", "en"):
             field_name = f"plan_message_{language}"
             if field_name not in record:
@@ -169,7 +197,9 @@ __all__ = [
     "model_snapshot_for_resume",
     "sync_model_metadata",
     "validate_knowledge_cutoff",
+    "validate_access_tier",
     "validate_plan_message",
+    "validate_product_line",
     "validate_release_date",
     "validate_year_month",
 ]

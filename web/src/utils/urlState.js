@@ -3,7 +3,7 @@
  * @brief URL 쿼리 기반 대시보드 공유 상태 유틸리티
  */
 
-const DEFAULT_EXAM = 'csat-2026'
+const DEFAULT_EXAM = 'csat-2027'
 const DEFAULT_MODE = 'default'
 const DEFAULT_SCORE_BASIS = 'raw'
 const VALID_MODES = new Set(['default', 'easy'])

@@ -16,7 +16,9 @@ from .metadata import (
     merge_model_metadata,
     model_snapshot_for_resume,
     sync_model_metadata,
+    validate_access_tier,
     validate_knowledge_cutoff,
+    validate_product_line,
     validate_release_date,
     validate_year_month,
 )
@@ -62,7 +64,9 @@ __all__ = [
     "save_verified",
     "sync_model_metadata",
     "target_to_section_key",
+    "validate_access_tier",
     "validate_knowledge_cutoff",
+    "validate_product_line",
     "validate_release_date",
     "validate_year_month",
 ]

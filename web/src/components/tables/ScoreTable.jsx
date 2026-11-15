@@ -15,7 +15,7 @@ import {
   getExportFontEmbedCSS
 } from '@/hooks/useExportImage'
 import { useData } from '@/hooks/useData'
-import { BenchmarkNote, ExportButton } from '@/components/common'
+import { BenchmarkNote, ExportButton, ModelNameButton, NoWebSearchBadge } from '@/components/common'
 import { formatModelDisplayName } from '@/utils/modelMeta'
 import './ScoreTable.css'
 
@@ -276,7 +276,7 @@ function CardView({ data, groups, maxScore, scoreBasis, hoveredModel, onModelHov
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: getModelColor(row.model) }} />
-                <span className="export-role-table-model font-semibold text-gray-800 dark:text-gray-200">{_formatModelName(row.model)}</span>
+                <ModelNameButton model={row.model} className="export-role-table-model font-semibold text-gray-800 dark:text-gray-200">{_formatModelName(row.model)}</ModelNameButton>
               </div>
               <span className="export-role-table-head text-sm text-gray-400 dark:text-gray-500 shrink-0">#{index + 1}</span>
             </div>
@@ -387,7 +387,10 @@ export default function ScoreTable({ data, onRowClick, title, showDetail = false
   return (
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between mb-4">
-        {title && <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>}
+        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
+          {title && <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>}
+          <NoWebSearchBadge />
+        </div>
         <div ref={exportDropdownRef} className="flex items-start gap-2 relative">
           {onToggleDetail && (
             <button className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${showDetail ? 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300' : 'bg-blue-500 text-white hover:bg-blue-600'}`} onClick={onToggleDetail} data-export-hide="true">
@@ -455,7 +458,7 @@ export default function ScoreTable({ data, onRowClick, title, showDetail = false
             <tbody>
               {sortedData.map(row => (
                 <tr key={row.model} className={`border-t border-gray-100 dark:border-gray-700 transition-colors ${hoveredModel === row.model ? 'bg-blue-50 dark:bg-blue-900/30' : 'hover:bg-gray-50 dark:hover:bg-gray-700'} ${onRowClick ? 'cursor-pointer' : ''}`} onClick={() => onRowClick?.(row.model)} onMouseEnter={() => onModelHover?.(row.model)} onMouseLeave={() => onModelHover?.(null)}>
-                  <td className={`export-role-table-model px-3 py-2 text-gray-800 dark:text-gray-200 ${hasDetailColumns ? 'min-w-[8.75rem] px-[3px] whitespace-normal break-words' : ''}`}><span className="inline-block w-3 h-3 rounded-full mr-2" style={{ backgroundColor: getModelColor(row.model) }} />{formatModelDisplayName(row.model)}</td>
+                  <td className={`export-role-table-model px-3 py-2 text-gray-800 dark:text-gray-200 ${hasDetailColumns ? 'min-w-[8.75rem] px-[3px] whitespace-normal break-words' : ''}`}><span className="inline-block w-3 h-3 rounded-full mr-2" style={{ backgroundColor: getModelColor(row.model) }} /><ModelNameButton model={row.model} /></td>
                   {groups.flatMap(group => {
                     const detail = row.groupDetails?.find(item => item.group === group.group)
                     if (hasDetailColumns && _hasDetailColumns(group.group)) {

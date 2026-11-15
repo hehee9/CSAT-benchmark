@@ -108,6 +108,11 @@
   line-height: 1.35 !important;
 }
 
+[class*='export-profile-'] .export-role-badge {
+  font-size: var(--export-note-size) !important;
+  line-height: 1.2 !important;
+}
+
 [class*='export-profile-'] .export-role-watermark {
   font-size: 24px !important;
 }

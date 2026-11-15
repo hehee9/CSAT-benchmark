@@ -78,11 +78,11 @@ assert.deepEqual(
 )
 assert.deepEqual(
   getDashboardQueryState('?lang=en&theme=dark&tab=cost&analysisX=tokens'),
-  { exam: 'csat-2026', mode: 'default', scoreBasis: 'raw' }
+  { exam: 'csat-2027', mode: 'default', scoreBasis: 'raw' }
 )
 assert.deepEqual(
   getDashboardQueryState('?scoreBasis=normalized'),
-  { exam: 'csat-2026', mode: 'default', scoreBasis: 'normalized' }
+  { exam: 'csat-2027', mode: 'default', scoreBasis: 'normalized' }
 )
 
 const replacedUrl = replaceDashboardQueryState({

@@ -11,7 +11,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/hooks/useTheme'
 import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
-import { BenchmarkNote, ExportButton } from '@/components/common'
+import { BenchmarkNote, ExportButton, NoWebSearchBadge } from '@/components/common'
 
 /**
  * @brief 정답 선지 표시 문자열 생성
@@ -144,9 +144,12 @@ export default function ChoiceSelectionChart({ data, title }) {
   return (
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between mb-4">
-        {title && (
-          <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
-        )}
+        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
+          {title && (
+            <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+          )}
+          <NoWebSearchBadge />
+        </div>
         <div className="flex items-start gap-2">
           <span className="export-role-watermark hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
           <ExportButton

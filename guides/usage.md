@@ -32,6 +32,8 @@ cp config.example.json config.json
 
 `config.example.json`은 모델별 `api_key_env`와 검증기 `verifier.api_key_env`로 키 이름을 참조합니다. 로컬 `.env`에는 해당 환경 변수의 실제 키를 입력하고, 설정 JSON에는 키 문자열을 기록하지 않습니다. 모델 설정의 `name`, `api_type`, `model_id`를 바꾸거나 모델 항목을 추가해 실행 대상을 정합니다. `knowledge_cutoff`는 모델 지식 컷오프 월을 `YYYY-MM` 형식으로 기록하며, 알 수 없으면 `null`로 둡니다. `plan_message_ko`와 `plan_message_en`은 대시보드에 표시할 한국어·영어 요금제 안내 문구입니다. 두 필드를 생략하면 기존 언어별 설명을 유지하고, 값을 빈 문자열로 지정하면 해당 언어 설명을 삭제합니다. `config.json`은 이 예시를 복사해 만드는 실제 설정 파일이며, 실행기와 배치 실행기의 기본 설정 경로는 저장소 루트 `config.json`입니다.
 
+`access_tier`는 개발사의 공식 홈페이지나 공식 웹 서비스에서 무료 요금제로 사용할 수 있는 모델이면 `"free"`, 유료 요금제로만 사용할 수 있는 모델이면 `"paid"`로 지정합니다. 유료로 출시된 뒤 무료로 전환된 모델은 `"free"`, 일시적으로만 무료였거나 무료에서 유료로 전환된 모델은 `"paid"`로 지정합니다. 공개 가중치 모델이나 API 전용 모델처럼 공식 소비자용 웹 서비스의 요금제가 해당하지 않는 모델은 `"not_applicable"`로 지정하며, 대시보드의 모델 정보에 "대상 아님"으로 표시됩니다. 구분을 알 수 없으면 `null`로 두거나 생략하며, 그 밖의 값은 오류로 처리합니다. `product_line`은 모델이 속한 제품군 이름을 문자열로 지정합니다(예: `Claude Opus`, `GPT Sol`, `Gemini Flash`). 알 수 없으면 `null`로 두거나 생략합니다. 같은 제품군에서는 `release_date`가 가장 최근인 항목들을 최신 버전으로 취급하고 나머지는 구버전으로 취급하므로, 같은 버전의 추론 강도별 항목은 `release_date`와 `product_line`을 동일하게 지정합니다. 이 두 필드는 `knowledge_cutoff`, `release_date`, `plan_message_ko`, `plan_message_en`과 같은 표시용 필드로, 변경해도 실행 재개 시 설정 비교에 영향을 주지 않습니다. `access_tier`는 무료/유료를 기계적으로 구분하는 값이며, 기존 요금제 안내 문구는 계속 별도로 사용합니다.
+
 키 이름은 호출 서비스에 맞춥니다. OpenRouter 주소는 `OPENROUTER_API_KEY`, Upstage 주소는 `UPSTAGE_API_KEY`처럼 참조하며, 같은 서비스에서 여러 키를 쓰면 서로 다른 환경 변수 이름을 지정합니다.
 
 공개 문항 예시와 설정으로 API 호출 없이 실행 조건을 확인할 수 있습니다.
@@ -187,6 +189,8 @@ Excel에는 모델마다 답안 열 하나를 둡니다. `export`는 수동으�
 기존 2026 Excel 자료는 [2026 수능 LLM 풀이.xlsx](../2026%20%EC%88%98%EB%8A%A5%20LLM%20%ED%92%80%EC%9D%B4.xlsx)가 쉬움 기록이고 [2026 수능 LLM 풀이 hard.xlsx](../2026%20%EC%88%98%EB%8A%A5%20LLM%20%ED%92%80%EC%9D%B4%20hard.xlsx)가 일반 기록입니다. 기존 기록과의 호환을 위해 파일명은 유지합니다.
 
 모델 설정의 공개 설명을 수정한 뒤에는 Excel이나 점수 파일을 읽지 않는 다음 명령으로 모델 공개 메타데이터를 동기화합니다. 인증 키가 없어도 실행되며, 출력 경로를 생략하면 설정 파일이 속한 프로젝트의 `web/model_metadata.json`에 저장합니다. `plan_message_ko` 또는 `plan_message_en`을 빈 문자열로 바꾸면 해당 언어 설명이 공개 메타데이터에서 삭제됩니다.
+
+`access_tier`와 `product_line`은 이 명령과 `publish`에서 각각 `accessTier`와 `productLine`으로 동기화하며, `null`로 두거나 생략하면 공개 메타데이터의 기존 값을 유지합니다. 대시보드는 `accessTier`를 무료 모델만 보기 필터와 무료/유료 추이 차트에 사용하고, `productLine`을 최신 버전만 보기 필터와 사이드바의 구버전 모델을 흐리게 표시하는 데 사용합니다. 테스트하지 않은 신형 모델이 있는 제품군은 `web/model_metadata.json`에 해당 모델의 `releaseDate`와 `productLine`만 가진 항목을 직접 추가합니다. 결과가 없는 항목은 대시보드에 표시되지 않으며, 같은 제품군의 기존 모델만 구버전으로 처리됩니다.
 
 ```bash
 python sync_data.py metadata --config config.example.json

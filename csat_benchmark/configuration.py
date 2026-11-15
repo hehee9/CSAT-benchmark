@@ -11,8 +11,10 @@ from typing import Any, Dict, List, Sequence
 from dotenv import load_dotenv
 
 from .metadata import (
+    validate_access_tier,
     validate_knowledge_cutoff,
     validate_plan_message,
+    validate_product_line,
     validate_release_date,
 )
 
@@ -143,6 +145,8 @@ def load_config(
             prepared.get("knowledge_cutoff")
         )
         prepared["release_date"] = validate_release_date(prepared.get("release_date"))
+        prepared["access_tier"] = validate_access_tier(prepared.get("access_tier"))
+        prepared["product_line"] = validate_product_line(prepared.get("product_line"))
         for field_name in ("plan_message_ko", "plan_message_en"):
             if field_name in prepared:
                 prepared[field_name] = validate_plan_message(prepared[field_name], field_name)

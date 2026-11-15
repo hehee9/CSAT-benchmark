@@ -60,6 +60,51 @@ export function buildTrendPoints(scores = [], modelMetadata = {}) {
 }
 
 /**
+ * @brief 개발사별 무료/유료 점수 추이 계열 계산
+ * @param {Array<{model: string, total: number}>} scores - calculateAllModelScores 결과
+ * @param {Object} modelMetadata - 모델명별 메타데이터 (releaseDate, accessTier 포함)
+ * @return {{series: Array<{vendorId: string, tier: 'free'|'paid', points: Array<Object>, stepLine: Array<Object>, frontierModels: Set<string>}>, excludedCount: number, unclassifiedCount: number}} 무료/유료 계열과 제외 모델 수
+ *
+ * 유효한 모델 중 무료와 유료가 모두 있는 개발사만 포함한다. 제외 수는 기존 빌더와 같이 출시일 또는 점수가 유효하지 않은 후보 수이며, 미분류 수는 그 외 유효한 후보 중 accessTier가 free/paid가 아닌 수다.
+ */
+export function buildTierTrendSeries(scores = [], modelMetadata = {}) {
+  const { points, excludedCount } = buildTrendPoints(scores, modelMetadata)
+  const pointsByVendor = new Map()
+  let unclassifiedCount = 0
+
+  points.forEach(point => {
+    const tier = modelMetadata?.[point.model]?.accessTier
+    if (tier !== 'free' && tier !== 'paid') {
+      unclassifiedCount += 1
+      return
+    }
+
+    if (!pointsByVendor.has(point.vendorId)) pointsByVendor.set(point.vendorId, new Map())
+    const pointsByTier = pointsByVendor.get(point.vendorId)
+    if (!pointsByTier.has(tier)) pointsByTier.set(tier, [])
+    pointsByTier.get(tier).push(point)
+  })
+
+  const series = []
+  pointsByVendor.forEach((pointsByTier, vendorId) => {
+    if (!pointsByTier.has('free') || !pointsByTier.has('paid')) return
+
+    for (const tier of ['free', 'paid']) {
+      const tierPoints = pointsByTier.get(tier)
+      series.push({
+        vendorId,
+        tier,
+        points: tierPoints,
+        stepLine: buildVendorStepLines(tierPoints)[vendorId],
+        frontierModels: getFrontierModels(tierPoints)
+      })
+    }
+  })
+
+  return { series, excludedCount, unclassifiedCount }
+}
+
+/**
  * @brief 개발사별 누적 최고 점수 계단선 계산
  * @param {Array<{vendorId: string, time: number, score: number}>} points - buildTrendPoints 결과
  * @return {Object<string, Array<{time: number, score: number}>>} 개발사 ID별 계단선 꼭짓점

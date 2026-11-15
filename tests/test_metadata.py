@@ -16,6 +16,8 @@ from csat_benchmark.metadata import (
     merge_model_metadata,
     model_snapshot_for_resume,
     sync_model_metadata,
+    validate_access_tier,
+    validate_product_line,
 )
 from csat_benchmark.models import APIResponse, ModelConfig
 from csat_benchmark.runner import run_exam
@@ -45,7 +47,81 @@ def test_config_adds_null_cutoff_without_resolving_credentials(tmp_path: Path) -
     )
     config = load_config(config_path, resolve_secrets=False)
     assert config["models"][0]["knowledge_cutoff"] is None
+    assert config["models"][0]["access_tier"] is None
+    assert config["models"][0]["product_line"] is None
     assert "api_key" not in config["models"][0]
+
+
+@pytest.mark.parametrize("value", [None, "free", "paid", "not_applicable"])
+def test_access_tier_validator_accepts_supported_values(value: object) -> None:
+    """@brief 지원하는 접근 등급과 null 검증"""
+    assert validate_access_tier(value) == value
+
+
+@pytest.mark.parametrize("value", ["", "Free", "enterprise", 1, True, []])
+def test_access_tier_validator_rejects_unsupported_values(value: object) -> None:
+    """@brief 지원하지 않는 접근 등급 설정 거부 검증"""
+    with pytest.raises(ValueError, match="access_tier"):
+        validate_access_tier(value)
+
+
+@pytest.mark.parametrize("value", [None, "Claude Opus", "GPT Sol"])
+def test_product_line_validator_accepts_non_empty_values(value: object) -> None:
+    """@brief 제품군 문자열과 null 검증"""
+    assert validate_product_line(value) == value
+
+
+@pytest.mark.parametrize("value", ["", "  ", 1, True, []])
+def test_product_line_validator_rejects_empty_or_non_string_values(value: object) -> None:
+    """@brief 빈 제품군과 비문자열 설정 거부 검증"""
+    with pytest.raises(ValueError, match="product_line"):
+        validate_product_line(value)
+
+
+def test_config_loads_access_tier_and_product_line(tmp_path: Path) -> None:
+    """@brief 모델 설정의 공개 접근 등급과 제품군 로드 검증"""
+    config_path = tmp_path / "config.json"
+    _write_json(
+        config_path,
+        {
+            "models": [
+                {
+                    "name": "모델",
+                    "api_type": "openai",
+                    "model_id": "mock",
+                    "access_tier": "free",
+                    "product_line": "GPT Sol",
+                }
+            ]
+        },
+    )
+
+    config = load_config(config_path, resolve_secrets=False)
+    model = config["models"][0]
+    assert model["access_tier"] == "free"
+    assert model["product_line"] == "GPT Sol"
+    model_config = ModelConfig(
+        name="모델",
+        api_type="openai",
+        api_key="key",
+        model_id="mock",
+        access_tier=model["access_tier"],
+        product_line=model["product_line"],
+    )
+    assert model_config.access_tier == "free"
+    assert model_config.product_line == "GPT Sol"
+
+
+@pytest.mark.parametrize(
+    ("field_name", "value"),
+    [("access_tier", "enterprise"), ("product_line", " ")],
+)
+def test_model_config_rejects_invalid_access_tier_or_product_line(
+    field_name: str, value: object
+) -> None:
+    """@brief 공용 모델 설정의 접근 등급과 제품군 검증"""
+    with pytest.raises(ValueError, match=field_name):
+        ModelConfig("모델", "openai", "key", "mock", **{field_name: value})
 
 
 @pytest.mark.parametrize("value", ["", "2026", "2026-00", "2026-13", 202601])
@@ -130,6 +206,38 @@ def test_merge_model_metadata_sets_release_date_and_preserves_existing_values() 
     assert merged["출시일 갱신"]["releaseDate"] == "2026-01-05"
     assert merged["출시일 누락"]["releaseDate"] == "2024-01-01"
     assert merged["출시일 null"]["releaseDate"] == "2023-01-01"
+
+
+def test_merge_model_metadata_sets_and_preserves_access_tier_and_product_line() -> None:
+    """@brief 접근 등급과 제품군 반영, null 또는 누락 시 기존값 보존 검증"""
+    merged = merge_model_metadata(
+        {
+            "갱신": {"accessTier": "free", "productLine": "기존 제품군"},
+            "null": {"accessTier": "free", "productLine": "기존 제품군"},
+            "누락": {"accessTier": "paid", "productLine": "수동 제품군"},
+            "빈 항목": {},
+        },
+        [
+            {"name": "갱신", "access_tier": "paid", "product_line": "Claude Opus"},
+            {"name": "null", "access_tier": None, "product_line": None},
+            {"name": "누락"},
+            {"name": "빈 항목", "access_tier": None, "product_line": None},
+        ],
+    )
+
+    assert merged["갱신"]["accessTier"] == "paid"
+    assert merged["갱신"]["productLine"] == "Claude Opus"
+    assert merged["null"] == {
+        "knowledgeCutoff": None,
+        "accessTier": "free",
+        "productLine": "기존 제품군",
+    }
+    assert merged["누락"] == {
+        "knowledgeCutoff": None,
+        "accessTier": "paid",
+        "productLine": "수동 제품군",
+    }
+    assert merged["빈 항목"] == {"knowledgeCutoff": None}
 
 
 @pytest.mark.parametrize("value", ["", "2026", "2026-00", "2026-13", 202609])
@@ -288,6 +396,8 @@ def test_display_messages_are_ignored_for_resume_comparison() -> None:
         "model_id": "mock",
         "knowledge_cutoff": "2025-11",
         "release_date": "2025-11-01",
+        "access_tier": "free",
+        "product_line": "기존 제품군",
         "plan_message_ko": "기존 한국어",
         "plan_message_en": "기존 영어",
     }
@@ -295,6 +405,8 @@ def test_display_messages_are_ignored_for_resume_comparison() -> None:
         **original,
         "knowledge_cutoff": "2026-01",
         "release_date": "2026-01-05",
+        "access_tier": "paid",
+        "product_line": "새 제품군",
         "plan_message_ko": "새 한국어",
         "plan_message_en": "새 영어",
     }
@@ -496,6 +608,8 @@ def test_modern_publish_uses_override_metadata_and_manifest_destination(tmp_path
                 "name": "모델",
                 "supports_vision": False,
                 "knowledge_cutoff": "2025-11",
+                "access_tier": "free",
+                "product_line": "GPT Sol",
             }
         ],
         input_context=[{"target": "국어/예시", "question_numbers": [1]}],
@@ -554,6 +668,8 @@ def test_modern_publish_uses_override_metadata_and_manifest_destination(tmp_path
                     "api_key_env": "MISSING_METADATA_KEY",
                     "supports_vision": True,
                     "knowledge_cutoff": "2026-02",
+                    "access_tier": "paid",
+                    "product_line": "GPT Sol",
                 }
             ]
         },
@@ -571,4 +687,6 @@ def test_modern_publish_uses_override_metadata_and_manifest_destination(tmp_path
         "description": {"ko": "기존"},
         "webServiceNoTools": True,
         "knowledgeCutoff": "2026-02",
+        "accessTier": "paid",
+        "productLine": "GPT Sol",
     }

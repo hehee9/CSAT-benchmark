@@ -29,6 +29,7 @@ import { getDashboardQueryState, replaceDashboardQueryState } from '@/utils/urlS
 import { DEFAULT_ANALYSIS_X, DEFAULT_ANALYSIS_Y } from '@/utils/analysisMetrics'
 import { loadBenchmarkCatalog } from '@/utils/dataLoader'
 import { formatModelDisplayName } from '@/utils/modelMeta'
+import { applyQuickFilters } from '@/utils/modelFilters'
 
 /**
  * @brief 탭 정의
@@ -120,6 +121,18 @@ function _translateSubject(name, t) {
 }
 
 /**
+ * @brief 빠른 필터 결과가 비었을 때 표시하는 안내 카드
+ * @param {Object} props - { message }
+ */
+function _QuickFilterEmptyState({ message }) {
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+      <p className="text-gray-500 dark:text-gray-400 text-center py-8">{message}</p>
+    </div>
+  )
+}
+
+/**
  * @brief 대시보드 메인 컴포넌트
  */
 function Dashboard({
@@ -149,6 +162,8 @@ function Dashboard({
   const [selectedSubject, setSelectedSubject] = useState(INITIAL_UI_STATE.selectedSubject)
   const [selectedSection, setSelectedSection] = useState(INITIAL_UI_STATE.selectedSection)
   const [compareModels, setCompareModels] = useState([])
+  /** @brief 빠른 필터 상태 (모델 선택 배열과 별개로 선택 결과에만 적용) */
+  const [quickFilters, setQuickFilters] = useState({ freeOnly: false, latestOnly: false })
   const [hoveredModel, setHoveredModel] = useState(null)
   const [scoreViewMode, setScoreViewMode] = useState(INITIAL_UI_STATE.scoreView)
   const [isModelSelectionTouched, setIsModelSelectionTouched] = useState(false)
@@ -290,6 +305,10 @@ function Dashboard({
       result = result.filter(s => filters.models.includes(s.model))
     }
 
+    // 빠른 필터: 선택 해석이 끝난 목록에 적용하므로 결과가 비어도 전체 표시로 돌아가지 않는다.
+    const quickFilteredModels = new Set(applyQuickFilters(result.map(s => s.model), quickFilters, modelMetadata))
+    result = result.filter(s => quickFilteredModels.has(s.model))
+
     // 정렬
     switch (filters.sortBy) {
       case 'score_asc':
@@ -318,7 +337,9 @@ function Dashboard({
     }
 
     return result
-  }, [overallScores, filters])
+  }, [overallScores, filters, quickFilters, modelMetadata])
+
+  const isQuickFilterActive = quickFilters.freeOnly || quickFilters.latestOnly
 
   // 보기 모드에 따른 점수 차트 데이터
   const scoreChartData = useMemo(() => {
@@ -376,11 +397,16 @@ function Dashboard({
     return transformToHeatmapData(data, selectedSubject, selectedSection)
   }, [data, selectedSubject, selectedSection])
 
+  /** @brief 비교 탭 표시 모델 (선택 상태 유지, 빠른 필터 조건만 적용) */
+  const visibleCompareModels = useMemo(() => {
+    return applyQuickFilters(compareModels, quickFilters, modelMetadata)
+  }, [compareModels, quickFilters, modelMetadata])
+
   // 레이더 차트 데이터
   const radarData = useMemo(() => {
-    if (!overallScores?.length || !compareModels?.length) return []
-    return transformToRadarData(overallScores, compareModels, t, { exam, scoreBasis })
-  }, [overallScores, compareModels, t, exam, scoreBasis])
+    if (!overallScores?.length || !visibleCompareModels?.length) return []
+    return transformToRadarData(overallScores, visibleCompareModels, t, { exam, scoreBasis })
+  }, [overallScores, visibleCompareModels, t, exam, scoreBasis])
 
   // 표시할 모델 목록 (필터 및 정렬 적용 - filteredScores 순서 따름)
   const displayModels = useMemo(() => {
@@ -389,10 +415,11 @@ function Dashboard({
 
   // 문항 상세에서는 전체 결과 중 사용자가 선택한 모델의 부분 결과도 표시
   const detailModels = useMemo(() => {
-    return isModelSelectionTouched && filters.models.length > 0
+    const resolvedModels = isModelSelectionTouched && filters.models.length > 0
       ? filters.models.filter(model => models.includes(model))
       : models
-  }, [filters.models, models, isModelSelectionTouched])
+    return applyQuickFilters(resolvedModels, quickFilters, modelMetadata)
+  }, [filters.models, models, isModelSelectionTouched, quickFilters, modelMetadata])
 
   // 선지 선택률 데이터
   const choiceData = useMemo(() => {
@@ -669,6 +696,8 @@ function Dashboard({
         <Sidebar
           filters={filters}
           onFilterChange={handleFilterChange}
+          quickFilters={quickFilters}
+          onQuickFiltersChange={setQuickFilters}
           subjectFilterGroups={subjectFilterGroups}
           hoveredModel={hoveredModel}
           onModelHover={setHoveredModel}
@@ -713,14 +742,17 @@ function Dashboard({
           <div className="space-y-6">
             {isPreparation ? (
               <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-                <p className="text-gray-500 dark:text-gray-400 text-center py-8">
+                <p className="whitespace-pre-line text-gray-500 dark:text-gray-400 text-center py-8">
                   {t('common.preparingResults')}
                 </p>
               </div>
             ) : (
               <>
                 {/* 종합 대시보드 탭 */}
-                {activeTab === 'overview' && (
+                {activeTab === 'overview' && isQuickFilterActive && filteredScores.length === 0 && (
+                  <_QuickFilterEmptyState message={t('common.noQuickFilterMatch')} />
+                )}
+                {activeTab === 'overview' && !(isQuickFilterActive && filteredScores.length === 0) && (
                   <>
                     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                       <ScoreBarChart
@@ -788,7 +820,13 @@ function Dashboard({
                         )}
                       </div>
 
-                      {selectedSubject && selectedSection && Object.keys(heatmapData).length > 0 && (
+                      {selectedSubject && isQuickFilterActive && detailModels.length === 0 && (
+                        <p className="text-gray-500 dark:text-gray-400 text-center py-8">
+                          {t('common.noQuickFilterMatch')}
+                        </p>
+                      )}
+
+                      {selectedSubject && selectedSection && detailModels.length > 0 && Object.keys(heatmapData).length > 0 && (
                         <QuestionHeatmap
                           data={heatmapData}
                           models={detailModels}
@@ -823,12 +861,16 @@ function Dashboard({
                   const groupedCompareModels = groupModelsByVendor(sortedModels)
                   const sortedVendors = getSortedVendors(groupedCompareModels)
 
+                  if (isQuickFilterActive && sortedModels.length === 0) {
+                    return <_QuickFilterEmptyState message={t('common.noQuickFilterMatch')} />
+                  }
+
                   return (
                     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6">
                       <div className="mb-6">
-                        <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-3">
+                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-3">
                           {t('charts.compareModels')}
-                        </h4>
+                        </h3>
 
                         {/* 모바일: 드롭다운 */}
                         <div className="md:hidden">
@@ -904,7 +946,7 @@ function Dashboard({
                       </div>
                       <ModelCompareChart
                         data={radarData}
-                        selectedModels={compareModels}
+                        selectedModels={visibleCompareModels}
                         allScores={overallScores}
                         title={t(scoreBasis === SCORE_BASIS.RAW ? 'charts.modelCompareRaw' : 'charts.modelCompare')}
                         height={450}
@@ -917,7 +959,10 @@ function Dashboard({
                 })()}
 
                 {/* 상세 분석 탭 */}
-                {activeTab === 'cost' && (
+                {activeTab === 'cost' && isQuickFilterActive && filteredScores.length === 0 && (
+                  <_QuickFilterEmptyState message={t('common.noQuickFilterMatch')} />
+                )}
+                {activeTab === 'cost' && !(isQuickFilterActive && filteredScores.length === 0) && (
                   <>
                     <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                       <CostScatterChart
@@ -953,15 +998,29 @@ function Dashboard({
 
                 {/* 성적 변화 추이 탭 */}
                 {activeTab === 'trend' && (
-                  <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6">
-                    <ScoreTrendChart
-                      key={selectionKey}
-                      scores={overallScores}
-                      modelMetadata={modelMetadata}
-                      maxScore={maxScore}
-                      subtitle={subjectFilterLabel}
-                    />
-                  </div>
+                  <>
+                    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6">
+                      <ScoreTrendChart
+                        key={selectionKey}
+                        scores={overallScores}
+                        modelMetadata={modelMetadata}
+                        maxScore={maxScore}
+                        subtitle={subjectFilterLabel}
+                      />
+                    </div>
+                    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 md:p-6">
+                      <ScoreTrendChart
+                        key={`${selectionKey}:tier`}
+                        grouping="vendorTier"
+                        scores={overallScores}
+                        modelMetadata={modelMetadata}
+                        maxScore={maxScore}
+                        subtitle={subjectFilterLabel}
+                        title={t('trend.tierTitle')}
+                        emptyMessage={t('trend.noTierVendors')}
+                      />
+                    </div>
+                  </>
                 )}
               </>
             )}

@@ -1,6 +1,6 @@
 /**
  * @file ScoreTrendChart.jsx
- * @brief 출시일 기준 개발사별 성적 변화 추이 차트 컴포넌트
+ * @brief 출시일 기준 개발사별(또는 개발사·요금제별) 성적 변화 추이 차트 컴포넌트
  */
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
@@ -15,10 +15,10 @@ import {
 } from 'recharts'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@/hooks/useTheme'
-import { BenchmarkNote } from '@/components/common'
+import { BenchmarkNote, NoWebSearchBadge } from '@/components/common'
 import { VENDORS, darkenColor, lightenColor } from '@/utils/colorUtils'
 import { formatModelDisplayName } from '@/utils/modelMeta'
-import { buildTrendPoints, buildVendorStepLines, getFrontierModels, getMonthTicks } from '@/utils/trendTransform'
+import { buildTierTrendSeries, buildTrendPoints, buildVendorStepLines, getFrontierModels, getMonthTicks } from '@/utils/trendTransform'
 
 const DAY_MS = 24 * 60 * 60 * 1000
 const SCORE_TICK_STEPS = [1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500]
@@ -34,6 +34,7 @@ const MOUSE_LINE_HIT_RADIUS = 7
 const TOUCH_LINE_HIT_RADIUS = 18
 const LINE_TIE_EPSILON = 0.5
 const TOOLTIP_GAP = 12
+const FREE_LINE_DASH = '6 4'
 
 /**
  * @brief HEX 색상의 상대 휘도 계산
@@ -99,6 +100,39 @@ function _formatScore(score, locale) {
 }
 
 /**
+ * @brief 묶음 기준에 따라 추이 계열 목록 생성
+ * @param {'vendor'|'vendorTier'} grouping - 계열 묶음 기준
+ * @param {Array} scores - calculateAllModelScores 결과
+ * @param {Object} modelMetadata - 모델별 메타데이터
+ * @return {{series: Array<{key: string, vendorId: string, tier: ('free'|'paid'|null), points: Array<Object>, stepLine: Array<Object>, frontierModels: Set<string>}>, excludedCount: number, unclassifiedCount: number}} 계열과 제외 모델 수
+ *
+ * 개발사 기준은 개발사마다 계열 하나, 개발사·요금제 기준은 무료와 유료가 모두 있는 개발사마다 계열 두 개를 만든다.
+ */
+function _buildTrendSeries(grouping, scores, modelMetadata) {
+  if (grouping === 'vendorTier') {
+    const { series, excludedCount, unclassifiedCount } = buildTierTrendSeries(scores, modelMetadata)
+    return {
+      series: series.map(item => ({ ...item, key: `${item.vendorId}:${item.tier}` })),
+      excludedCount,
+      unclassifiedCount
+    }
+  }
+
+  const { points, excludedCount } = buildTrendPoints(scores, modelMetadata)
+  const stepLines = buildVendorStepLines(points)
+  const frontierModels = getFrontierModels(points)
+  const series = Object.keys(stepLines).map(vendorId => ({
+    key: vendorId,
+    vendorId,
+    tier: null,
+    points: points.filter(point => point.vendorId === vendorId),
+    stepLine: stepLines[vendorId],
+    frontierModels
+  }))
+  return { series, excludedCount, unclassifiedCount: 0 }
+}
+
+/**
  * @brief 포인터에서 가장 가까운 마커와 같은 위치에 겹친 마커 묶음 탐색
  * @param {Array<{x: number, y: number, point: Object}>} markers - 화면 좌표를 계산한 마커 목록
  * @param {number} pointerX - 차트 영역 기준 포인터 X 좌표
@@ -149,13 +183,13 @@ function _projectOntoSegment(pointerX, pointerY, { x1, y1, x2, y2 }) {
 
 /**
  * @brief 포인터에서 가장 가까운 계단선 구간의 기록 모델 탐색
- * @param {Array<{x1: number, y1: number, x2: number, y2: number, vendorId: string, points: Array<Object>}>} segments - 화면 좌표 계단선 구간
+ * @param {Array<{x1: number, y1: number, x2: number, y2: number, seriesKey: string, points: Array<Object>}>} segments - 화면 좌표 계단선 구간
  * @param {number} pointerX - 차트 영역 기준 포인터 X 좌표
  * @param {number} pointerY - 차트 영역 기준 포인터 Y 좌표
  * @param {number} hitRadius - 선 인식 반경
- * @return {{x: number, y: number, points: Array<Object>, vendorIds: string[], key: string}|null} 호버 대상, 없으면 null
+ * @return {{x: number, y: number, points: Array<Object>, seriesKeys: string[], key: string}|null} 호버 대상, 없으면 null
  *
- * 거리가 같은 다른 개발사 선은 함께 묶고, 같은 개발사 안에서는 가장 가까운 구간 하나만 쓴다.
+ * 거리가 같은 다른 계열 선은 함께 묶고, 같은 계열 안에서는 가장 가까운 구간 하나만 쓴다.
  */
 function _findHoveredLine(segments, pointerX, pointerY, hitRadius) {
   const hits = segments
@@ -165,20 +199,20 @@ function _findHoveredLine(segments, pointerX, pointerY, hitRadius) {
   if (!hits.length) return null
 
   const nearest = hits[0]
-  const tiedByVendor = new Map()
+  const tiedBySeries = new Map()
   hits.forEach(hit => {
-    if (hit.distance - nearest.distance <= LINE_TIE_EPSILON && !tiedByVendor.has(hit.segment.vendorId)) {
-      tiedByVendor.set(hit.segment.vendorId, hit)
+    if (hit.distance - nearest.distance <= LINE_TIE_EPSILON && !tiedBySeries.has(hit.segment.seriesKey)) {
+      tiedBySeries.set(hit.segment.seriesKey, hit)
     }
   })
-  const points = Array.from(tiedByVendor.values())
+  const points = Array.from(tiedBySeries.values())
     .flatMap(hit => hit.segment.points)
     .sort((a, b) => b.score - a.score || a.time - b.time)
   return {
     x: nearest.x,
     y: nearest.y,
     points,
-    vendorIds: Array.from(tiedByVendor.keys()),
+    seriesKeys: Array.from(tiedBySeries.keys()),
     key: points.map(point => point.model).join('\n')
   }
 }
@@ -215,6 +249,11 @@ function _TrendTooltipContent({ points, t, locale, vendorById, dateFormatter }) 
               <p>
                 {t('trend.releaseDate')}: <span className="font-medium text-gray-700 dark:text-gray-300">{dateFormatter.format(point.time)}</span>
               </p>
+              {point.tier && (
+                <p>
+                  {t('trend.plan')}: <span className="font-medium text-gray-700 dark:text-gray-300">{t(point.tier === 'free' ? 'trend.tierFree' : 'trend.tierPaid')}</span>
+                </p>
+              )}
               <p>
                 {t('table.score')}: <span className="font-medium text-gray-700 dark:text-gray-300">{_formatScore(point.score, locale)}</span> {t('common.points')}
               </p>
@@ -223,6 +262,40 @@ function _TrendTooltipContent({ points, t, locale, vendorById, dateFormatter }) 
         )
       })}
     </div>
+  )
+}
+
+/**
+ * @brief 요금제별 선 모양 범례 (유료 실선·채운 점, 무료 점선·빈 점)
+ * @param {Object} props - 번역 함수, 숨긴 요금제 집합과 전환 함수
+ */
+function _TierLineLegend({ t, hiddenTiers, onToggle }) {
+  const items = [
+    { tier: 'paid', label: t('trend.tierPaid'), dash: undefined, filled: true },
+    { tier: 'free', label: t('trend.tierFree'), dash: FREE_LINE_DASH, filled: false }
+  ]
+  return (
+    <ul className="flex flex-wrap gap-x-4 gap-y-1 mb-3 text-xs md:text-sm text-gray-600 dark:text-gray-300" aria-label={t('trend.lineStyleLegend')}>
+      {items.map(item => {
+        const isHidden = hiddenTiers.has(item.tier)
+        return (
+          <li key={item.tier}>
+            <button
+              type="button"
+              onClick={() => onToggle(item.tier)}
+              aria-pressed={!isHidden}
+              className={`flex items-center gap-1.5 px-1.5 md:px-2 py-1 rounded-md text-xs md:text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 ${isHidden ? 'text-gray-400 dark:text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}
+            >
+              <svg width="34" height="12" viewBox="0 0 34 12" aria-hidden="true" className="shrink-0">
+                <line x1="1" y1="6" x2="33" y2="6" stroke="currentColor" strokeWidth="2" strokeDasharray={item.dash} />
+                <circle cx="17" cy="6" r="4" stroke="currentColor" strokeWidth="1.6" className={item.filled ? 'fill-current' : 'fill-white dark:fill-gray-800'} />
+              </svg>
+              <span className={isHidden ? 'line-through' : ''}>{item.label}</span>
+            </button>
+          </li>
+        )
+      })}
+    </ul>
   )
 }
 
@@ -302,25 +375,32 @@ function VendorSelector({ vendors, hiddenVendorIds, onToggle, onSelectAll, onSel
 }
 
 /**
- * @brief 출시일 기준 개발사별 성적 변화 추이 차트
+ * @brief 출시일 기준 성적 변화 추이 차트
  * @param {Object} props - 차트 데이터와 표시 정보
  * @param {Array} props.scores - 모델 필터를 적용한 calculateAllModelScores 결과
- * @param {Object} props.modelMetadata - 모델별 메타데이터 (releaseDate 포함)
+ * @param {Object} props.modelMetadata - 모델별 메타데이터 (releaseDate, accessTier 포함)
  * @param {number} props.maxScore - 현재 시험·과목 필터의 만점
  * @param {string|null} props.subtitle - 선택한 과목 필터 설명
  * @param {number} props.height - 데스크톱 차트 높이
+ * @param {'vendor'|'vendorTier'} props.grouping - 계열 묶음 기준 (개발사, 또는 개발사·요금제)
+ * @param {string} [props.title] - 차트 제목 (기본: 개발사별 추이 제목)
+ * @param {string} [props.emptyMessage] - 표시할 계열이 없을 때의 안내
  */
 export default function ScoreTrendChart({
   scores = [],
   modelMetadata = {},
   maxScore = 450,
   subtitle = null,
-  height = 560
+  height = 560,
+  grouping = 'vendor',
+  title,
+  emptyMessage
 }) {
   const { t, i18n } = useTranslation()
   const { isDark: darkMode } = useTheme()
   const locale = i18n.language === 'en' ? 'en-US' : 'ko-KR'
   const [hiddenVendorIds, setHiddenVendorIds] = useState(() => new Set())
+  const [hiddenTiers, setHiddenTiers] = useState(() => new Set())
   const [focusedVendorId, setFocusedVendorId] = useState(null)
   const [hoveredMarkers, setHoveredMarkers] = useState(null)
   const chartAreaRef = useRef(null)
@@ -336,11 +416,21 @@ export default function ScoreTrendChart({
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const { points, excludedCount } = useMemo(() => buildTrendPoints(scores, modelMetadata), [scores, modelMetadata])
+  const { series, excludedCount, unclassifiedCount } = useMemo(
+    () => _buildTrendSeries(grouping, scores, modelMetadata),
+    [grouping, scores, modelMetadata]
+  )
+  /** @brief 계열 정보를 붙인 출시일 오름차순 좌표 */
+  const points = useMemo(() => series
+    .flatMap(item => item.points.map(point => ({
+      ...point,
+      seriesKey: item.key,
+      tier: item.tier,
+      isFrontier: item.frontierModels.has(point.model)
+    })))
+    .sort((a, b) => a.time - b.time), [series])
   const minTime = points.length ? points[0].time : 0
   const maxTime = points.length ? points[points.length - 1].time : 0
-  const stepLines = useMemo(() => buildVendorStepLines(points), [points])
-  const frontierModels = useMemo(() => getFrontierModels(points), [points])
 
   const vendors = useMemo(() => {
     const statsById = new Map()
@@ -362,7 +452,12 @@ export default function ScoreTrendChart({
   }, [points, t, darkMode])
   const vendorById = useMemo(() => new Map(vendors.map(vendor => [vendor.id, vendor])), [vendors])
   const visibleVendors = vendors.filter(vendor => !hiddenVendorIds.has(vendor.id))
-  const visibleModels = points.filter(point => !hiddenVendorIds.has(point.vendorId)).map(point => point.model)
+  const visibleSeries = visibleVendors
+    .flatMap(vendor => series.filter(item => item.vendorId === vendor.id))
+    .filter(item => item.tier === null || !hiddenTiers.has(item.tier))
+  const visibleModels = points
+    .filter(point => !hiddenVendorIds.has(point.vendorId) && (point.tier === null || !hiddenTiers.has(point.tier)))
+    .map(point => point.model)
 
   const dateFormatter = useMemo(
     () => new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' }),
@@ -385,9 +480,11 @@ export default function ScoreTrendChart({
   const yAxisWidth = isMobile ? 36 : 48
   const marginRight = isMobile ? 8 : 20
   const markerRadius = isMobile ? 4.5 : 5.5
-  const markerPoints = points.filter(point => !hiddenVendorIds.has(point.vendorId) && frontierModels.has(point.model))
+  const markerPoints = points.filter(point => (
+    !hiddenVendorIds.has(point.vendorId) && (point.tier === null || !hiddenTiers.has(point.tier)) && point.isFrontier
+  ))
   const hoveredModels = new Set(hoveredMarkers?.points.map(point => point.model))
-  const lineVendorIds = hoveredMarkers?.vendorIds ?? null
+  const lineSeriesKeys = hoveredMarkers?.seriesKeys ?? null
 
   /**
    * @brief 차트 영역 기준 화면 좌표 변환 함수 생성
@@ -406,21 +503,21 @@ export default function ScoreTrendChart({
   /**
    * @brief 표시 중인 계단선을 기록 모델이 붙은 수평·수직 구간으로 분해
    * @param {function(number, number): {x: number, y: number}} toPixel - 화면 좌표 변환 함수
-   * @return {Array<{x1: number, y1: number, x2: number, y2: number, vendorId: string, points: Array<Object>}>} 계단선 구간
+   * @return {Array<{x1: number, y1: number, x2: number, y2: number, seriesKey: string, points: Array<Object>}>} 계단선 구간
    *
    * 수평 구간은 시작 꼭짓점의 기록 모델, 수직 구간은 그 단계를 만든 모델에 속한다.
    */
-  const _projectLineSegments = (toPixel) => visibleVendors.flatMap(vendor => {
-    const vertices = stepLines[vendor.id]
+  const _projectLineSegments = (toPixel) => visibleSeries.flatMap(item => {
+    const vertices = item.stepLine
     const pixels = vertices.map(vertex => toPixel(vertex.time, vertex.score))
     const recordPoints = vertices.map(vertex => markerPoints.filter(point => (
-      point.vendorId === vendor.id && point.time === vertex.time && point.score === vertex.score
+      point.seriesKey === item.key && point.time === vertex.time && point.score === vertex.score
     )))
     return pixels.slice(1).flatMap((end, index) => {
       const start = pixels[index]
       return [
-        { vendorId: vendor.id, x1: start.x, y1: start.y, x2: end.x, y2: start.y, points: recordPoints[index] },
-        { vendorId: vendor.id, x1: end.x, y1: start.y, x2: end.x, y2: end.y, points: recordPoints[index + 1] }
+        { seriesKey: item.key, x1: start.x, y1: start.y, x2: end.x, y2: start.y, points: recordPoints[index] },
+        { seriesKey: item.key, x1: end.x, y1: start.y, x2: end.x, y2: end.y, points: recordPoints[index + 1] }
       ]
     })
   })
@@ -495,23 +592,40 @@ export default function ScoreTrendChart({
   }
 
   /**
-   * @brief 범례 또는 계단선 호버로 강조한 개발사 외에 흐리게 표시할지 확인
-   * @param {string} vendorId - 개발사 ID
+   * @brief 요금제 계열 표시 여부 전환
+   * @param {'free'|'paid'} tier - 요금제 계열
+   */
+  const handleToggleTier = (tier) => {
+    setHoveredMarkers(null)
+    setHiddenTiers(previous => {
+      const next = new Set(previous)
+      if (next.has(tier)) next.delete(tier)
+      else next.add(tier)
+      return next
+    })
+  }
+
+  /**
+   * @brief 범례로 강조한 개발사 또는 호버한 계단선 계열 외에 흐리게 표시할지 확인
+   * @param {{vendorId: string, key: string}} item - 계열
    * @return {boolean} 흐리게 표시해야 하면 true
    */
-  const _isDimmed = (vendorId) => {
-    if (focusedVendorId !== null && !hiddenVendorIds.has(focusedVendorId)) return focusedVendorId !== vendorId
-    return lineVendorIds !== null && !lineVendorIds.includes(vendorId)
+  const _isDimmed = (item) => {
+    if (focusedVendorId !== null && !hiddenVendorIds.has(focusedVendorId)) return focusedVendorId !== item.vendorId
+    return lineSeriesKeys !== null && !lineSeriesKeys.includes(item.key)
   }
 
   return (
     <div className="w-full">
       <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
         <div className="min-w-0">
-          <h3 className="text-xl font-normal text-gray-800 dark:text-gray-200">
-            {t('trend.title')}
-            <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">({t('charts.maxPoints', { max: maxScore })})</span>
-          </h3>
+          <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
+            <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+              {title ?? t('trend.title')}
+              <span className="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400">({t('charts.maxPoints', { max: maxScore })})</span>
+            </h3>
+            <NoWebSearchBadge />
+          </div>
           {subtitle && <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{subtitle}</p>}
         </div>
         {vendors.length > 0 && (
@@ -557,7 +671,9 @@ export default function ScoreTrendChart({
         </ul>
       )}
 
-      {points.length > 0 ? (
+      {grouping === 'vendorTier' && series.length > 0 && <_TierLineLegend t={t} hiddenTiers={hiddenTiers} onToggle={handleToggleTier} />}
+
+      {series.length > 0 ? (
         <div
           ref={chartAreaRef}
           className="relative"
@@ -594,15 +710,16 @@ export default function ScoreTrendChart({
               tick={{ fill: tickColor, fontSize: isMobile ? 11 : 13 }}
               width={yAxisWidth}
             />
-            {visibleVendors.filter(vendor => stepLines[vendor.id]?.length > 1).map(vendor => (
+            {visibleSeries.filter(item => item.stepLine.length > 1).map(item => (
               <Line
-                key={`line-${vendor.id}`}
-                data={stepLines[vendor.id]}
+                key={`line-${item.key}`}
+                data={item.stepLine}
                 dataKey="score"
                 type="stepAfter"
-                stroke={vendor.displayColor}
-                strokeWidth={lineVendorIds?.includes(vendor.id) ? 3.5 : 2}
-                strokeOpacity={_isDimmed(vendor.id) ? 0.12 : 0.9}
+                stroke={vendorById.get(item.vendorId).displayColor}
+                strokeDasharray={item.tier === 'free' ? FREE_LINE_DASH : undefined}
+                strokeWidth={lineSeriesKeys?.includes(item.key) ? 3.5 : 2}
+                strokeOpacity={_isDimmed(item) ? 0.12 : 0.9}
                 dot={false}
                 activeDot={false}
                 isAnimationActive={false}
@@ -610,34 +727,38 @@ export default function ScoreTrendChart({
                 legendType="none"
               />
             ))}
-            {visibleVendors.map(vendor => (
-              <Scatter
-                key={`points-${vendor.id}`}
-                data={markerPoints.filter(point => point.vendorId === vendor.id)}
-                dataKey="score"
-                isAnimationActive={false}
-                shape={({ cx, cy, payload }) => {
-                  const dimmed = _isDimmed(vendor.id)
-                  return (
-                    <g>
-                      {hoveredModels.has(payload.model) && (
-                        <circle cx={cx} cy={cy} r={markerRadius + 4} fill="none" stroke={vendor.displayColor} strokeWidth={2} strokeOpacity={0.5} />
-                      )}
-                      <circle
-                        cx={cx}
-                        cy={cy}
-                        r={markerRadius}
-                        fill={vendor.displayColor}
-                        fillOpacity={dimmed ? 0.1 : 1}
-                        stroke={markerStroke}
-                        strokeOpacity={dimmed ? 0.2 : 1}
-                        strokeWidth={1.2}
-                      />
-                    </g>
-                  )
-                }}
-              />
-            ))}
+            {visibleSeries.map(item => {
+              const color = vendorById.get(item.vendorId).displayColor
+              const isHollow = item.tier === 'free'
+              return (
+                <Scatter
+                  key={`points-${item.key}`}
+                  data={markerPoints.filter(point => point.seriesKey === item.key)}
+                  dataKey="score"
+                  isAnimationActive={false}
+                  shape={({ cx, cy, payload }) => {
+                    const dimmed = _isDimmed(item)
+                    return (
+                      <g>
+                        {hoveredModels.has(payload.model) && (
+                          <circle cx={cx} cy={cy} r={markerRadius + 4} fill="none" stroke={color} strokeWidth={2} strokeOpacity={0.5} />
+                        )}
+                        <circle
+                          cx={cx}
+                          cy={cy}
+                          r={markerRadius}
+                          fill={isHollow ? markerStroke : color}
+                          fillOpacity={dimmed ? 0.1 : 1}
+                          stroke={isHollow ? color : markerStroke}
+                          strokeOpacity={dimmed ? 0.2 : 1}
+                          strokeWidth={isHollow ? 2 : 1.2}
+                        />
+                      </g>
+                    )
+                  }}
+                />
+              )
+            })}
           </ComposedChart>
         </ResponsiveContainer>
         {hoveredMarkers && (
@@ -652,12 +773,15 @@ export default function ScoreTrendChart({
         </div>
       ) : (
         <div className="flex items-center justify-center h-48 text-gray-500 dark:text-gray-400">
-          {t('trend.noReleaseDates')}
+          {emptyMessage ?? t('trend.noReleaseDates')}
         </div>
       )}
 
       {excludedCount > 0 && (
         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{t('trend.excludedModels', { count: excludedCount })}</p>
+      )}
+      {unclassifiedCount > 0 && (
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">{t('trend.unclassifiedModels', { count: unclassifiedCount })}</p>
       )}
       {visibleModels.length > 0 && <BenchmarkNote modelNames={visibleModels} />}
     </div>

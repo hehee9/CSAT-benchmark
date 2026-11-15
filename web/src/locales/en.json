@@ -37,7 +37,15 @@
     "releaseDate": "Release date",
     "noReleaseDates": "No models have release date information",
     "excludedModels_one": "{{count}} model without a release date is not shown.",
-    "excludedModels_other": "{{count}} models without a release date are not shown."
+    "excludedModels_other": "{{count}} models without a release date are not shown.",
+    "tierTitle": "Paid vs. Free Model Gap",
+    "tierPaid": "Paid",
+    "tierFree": "Free",
+    "plan": "Plan",
+    "lineStyleLegend": "Line style legend",
+    "noTierVendors": "No developer has both free and paid models",
+    "unclassifiedModels_one": "{{count}} model without plan information is not shown.",
+    "unclassifiedModels_other": "{{count}} models without plan information are not shown."
   },
   "analysis": {
     "metrics": { "score": "Score", "cost": "Cost", "tokens": "Tokens", "time": "Time" },
@@ -63,8 +71,14 @@
     "modelFilter": "Model Filter",
     "selectAll": "Select All",
     "deselectAll": "Deselect All",
-    "showModelDescription": "Show model description",
-    "hideModelDescription": "Hide model description",
+    "quickFilters": "Quick filters",
+    "freeOnly": "Free models only",
+    "latestOnly": "Latest versions only",
+    "modelListLegend": "Model list legend",
+    "legendFree": "Available for free",
+    "legendPaid": "Requires a paid plan",
+    "legendBasis": "Based on official website plans",
+    "legendLegacy": "Older models are shown in a lighter color",
     "sort": "Sort",
     "exportImage": "Export as image",
     "sortOptions": {
@@ -217,8 +231,21 @@
     "postExamKnowledgeCutoff": "Possible exposure to exam content",
     "webServiceNoTools": "Web service environment with tools disabled"
   },
-  "benchmark": {
-    "noExternalSearch": "※ These results were produced without external web search."
+  "searchNote": {
+    "badge": "No web search",
+    "body": "AI models are a lot like books.\n<b>Manuscript deadline = knowledge cutoff</b>: the model knows only what existed up to that point.\n<b>Bookstore release date = model release date</b>: the model's knowledge is older than its release.\n\nJust as later knowledge gets into a book only through a revised edition (a new model release) or notes someone writes in it (search or provided material), an AI model cannot know real-time information without such material.\nUnlike this dashboard, official websites and apps come with various tools by default, so their results may differ."
+  },
+  "modelInfo": {
+    "label": "{{model}} model information",
+    "releaseDate": "Release date",
+    "knowledgeCutoff": "Knowledge cutoff",
+    "plan": "Plan",
+    "free": "Free",
+    "paid": "Paid",
+    "notDisclosed": "Not disclosed",
+    "notApplicable": "Not applicable",
+    "cutoffNote": "See the \"No web search\" explanation for what a knowledge cutoff is.",
+    "back": "Back to model information"
   },
   "tooltip": {
     "score": "Score",
@@ -247,7 +274,8 @@
     "loading": "Loading data...",
     "error": "Error occurred",
     "noData": "No data available",
-    "preparingResults": "Results are being prepared.",
+    "preparingResults": "Results are still being prepared.\nChoose a previous exam from the selector at the top left",
+    "noQuickFilterMatch": "No models match the quick filters.",
     "noCostData": "No cost data available",
     "score": "Score",
     "correct": "Correct",
