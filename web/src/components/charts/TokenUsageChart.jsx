@@ -21,7 +21,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { useData } from '@/hooks/useData'
 import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
 import { useBarChartExportLayout } from '@/hooks/useBarChartExportLayout'
-import { BenchmarkNote, ExportButton, NoWebSearchBadge } from '@/components/common'
+import { BenchmarkNote, ExportButton, NoWebSearchBadge, TestEnvCaption } from '@/components/common'
 import { formatModelDisplayName, getModelFlags } from '@/utils/modelMeta'
 
 const EXPORT_AXIS_FONT_SIZE = 24
@@ -469,11 +469,14 @@ export default function TokenUsageChart({
     return (
       <div ref={ref} className="w-full">
         <div className="flex items-start justify-between mb-4">
-          <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
-            {title && (
-              <h3 className="export-role-title text-lg font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
-            )}
-            <NoWebSearchBadge />
+          <div className="min-w-0 grow">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+              {title && (
+                <h3 className="export-role-title text-lg font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+              )}
+              <NoWebSearchBadge />
+            </div>
+            <TestEnvCaption className="mt-1.5" />
           </div>
           <ExportButton
             onClick={() => exportImage(`${t('export.tokenUsage')}.png`)}
@@ -575,11 +578,14 @@ export default function TokenUsageChart({
   return (
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between mb-2">
-        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
-          {title && (
-            <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
-          )}
-          <NoWebSearchBadge />
+        <div className="min-w-0 grow">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+            {title && (
+              <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+            )}
+            <NoWebSearchBadge />
+          </div>
+          <TestEnvCaption className="mt-1.5" />
         </div>
         <div className="flex items-start gap-2">
           <span className="export-role-watermark hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>

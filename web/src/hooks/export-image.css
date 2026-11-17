@@ -170,6 +170,11 @@
   overflow-wrap: anywhere;
 }
 
+/** 좁은 카드에서 시험 환경 캡션이 모델명과 과목 점수보다 두드러지지 않도록 줄인다 */
+.export-profile-score-card .export-role-note {
+  font-size: 16px !important;
+}
+
 .export-profile-overview-score .export-role-axis-label,
 .export-profile-token-usage .export-role-axis-label {
   white-space: pre-line;

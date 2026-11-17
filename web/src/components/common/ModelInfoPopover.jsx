@@ -29,8 +29,9 @@ function _InfoRow({ label, value, emptyLabel, children }) {
 
 /**
  * @brief 모델 정보 카드 내용
- * @param {{ model: string, t: function, language: string, modelMetadata: Object, onShowSearchExplanation: function, autoFocusNote: boolean }} props
+ * @param {{ model: string, t: function, language: string, modelMetadata: Object, onShowSearchExplanation?: function, autoFocusNote?: boolean }} props
  *
+ * onShowSearchExplanation이 없으면 하단 "검색 없이 실행" 안내 버튼을 그리지 않는다.
  * autoFocusNote는 설명에서 돌아와 카드가 다시 그려질 때 하단 안내 버튼으로 포커스를 되돌리는 데 쓴다.
  */
 function _ModelInfoCard({ model, t, language, modelMetadata, onShowSearchExplanation, autoFocusNote }) {
@@ -65,17 +66,30 @@ function _ModelInfoCard({ model, t, language, modelMetadata, onShowSearchExplana
       </dl>
       {description && <p className="mt-2 text-xs leading-relaxed text-gray-600 dark:text-gray-300">{description}</p>}
 
-      <button
-        type="button"
-        autoFocus={autoFocusNote}
-        onClick={onShowSearchExplanation}
-        className="mt-3 flex w-full items-start gap-1.5 rounded-md text-left text-xs leading-relaxed text-blue-700 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:text-blue-300"
-      >
-        <NoSearchIcon className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-        {t('modelInfo.cutoffNote')}
-      </button>
+      {onShowSearchExplanation && (
+        <button
+          type="button"
+          autoFocus={autoFocusNote}
+          onClick={onShowSearchExplanation}
+          className="mt-3 flex w-full items-start gap-1.5 rounded-md text-left text-xs leading-relaxed text-blue-700 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 dark:text-blue-300"
+        >
+          <NoSearchIcon className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+          {t('modelInfo.cutoffNote')}
+        </button>
+      )}
     </div>
   )
+}
+
+/**
+ * @brief 팝오버 밖에서 재사용하는 모델 정보 카드 내용 (검색 설명 버튼 제외)
+ * @param {{ model: string }} props
+ */
+export function ModelInfoContent({ model }) {
+  const { t, i18n } = useTranslation()
+  const { modelMetadata } = useData()
+
+  return <_ModelInfoCard model={model} t={t} language={i18n.language} modelMetadata={modelMetadata} />
 }
 
 /**

@@ -235,6 +235,53 @@
     "badge": "No web search",
     "body": "AI models are a lot like books.\n<b>Manuscript deadline = knowledge cutoff</b>: the model knows only what existed up to that point.\n<b>Bookstore release date = model release date</b>: the model's knowledge is older than its release.\n\nJust as later knowledge gets into a book only through a revised edition (a new model release) or notes someone writes in it (search or provided material), an AI model cannot know real-time information without such material.\nUnlike this dashboard, official websites and apps come with various tools by default, so their results may differ."
   },
+  "testEnv": {
+    "caption": "Via API, no system prompt, no search, tools, or reference materials",
+    "title": "Test environment",
+    "close": "Close",
+    "execution": {
+      "title": "How models were run",
+      "api": "<b>Direct API calls</b>",
+      "noSystemPrompt": "<b>No system prompt</b>",
+      "input": "Actual input: \"제시된 모든 문제를 해결하라.\" (\"Solve all the given problems.\") + the problems",
+      "easyNote": "※ Easy mode presents one problem at a time, so even this instruction is omitted"
+    },
+    "problemInput": {
+      "title": "Problem input",
+      "body": "Each question was transcribed into a <b>text file</b>, with bold text, ranges, tables, and similar elements <b>emphasized using Markdown or another suitable format</b>. Formulas were converted to LaTeX. Photos, graphs, and similar content were attached as images, and models without image input had to solve the problems without them."
+    },
+    "scoring": {
+      "title": "450-point scale",
+      "body": "To approximate a real test taker's 450-point total, Korean and Math use the <b>average across electives</b>, and Science/Social uses <b>the subject average × 2</b>. As a result, a mistake in a common section and a mistake in an elective or Science/Social subject can carry very different weight in the converted score."
+    },
+    "faq": {
+      "title": "Common misconceptions",
+      "prompt": {
+        "q": "Do you use prompts designed to raise accuracy?",
+        "a": "No. No system prompt is provided, and the only instruction added before the problems is a single sentence: \"제시된 모든 문제를 해결하라.\" (\"Solve all the given problems.\") Easy mode does not even include this instruction."
+      },
+      "harness": {
+        "q": "What harness do you use?",
+        "a": "We do not use any harness. You can think of it as simply giving the model the problems and having it solve them.\nSome sources claim that outputs or reasoning from earlier questions are passed on to later requests, but this appears to be a mix-up with how other benchmarks such as ARC-AGI-3 are run."
+      },
+      "training": {
+        "q": "Did you train the models for the CSAT?",
+        "a": "We did not, and we could not. Many of the evaluated models are closed models whose weights are not public, so they cannot be trained separately by design, and the open-weight models also received no additional training such as fine-tuning. Although it is different from training, we also did not provide any problem-solving materials."
+      },
+      "search": {
+        "q": "Didn't the models just search for the published answers?",
+        "a": "Searching is impossible because no tools of any kind, such as search or calculation tools, were provided. Some models released after the CSAT may have learned information about it, but contrary to a common misconception, they do not work by reciting a memorized answer key."
+      },
+      "timeLimit": {
+        "q": "Is there a time limit?",
+        "a": "No separate time limit was set. You can see how long each model took in the 'Detailed Analysis' tab."
+      }
+    },
+    "limits": {
+      "title": "Limitations",
+      "cutoff": "Models released after the exam was published may have learned the problems (see the cutoff marker)"
+    }
+  },
   "modelInfo": {
     "label": "{{model}} model information",
     "releaseDate": "Release date",

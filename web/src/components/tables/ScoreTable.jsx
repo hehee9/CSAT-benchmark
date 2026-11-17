@@ -15,7 +15,7 @@ import {
   getExportFontEmbedCSS
 } from '@/hooks/useExportImage'
 import { useData } from '@/hooks/useData'
-import { BenchmarkNote, ExportButton, ModelNameButton, NoWebSearchBadge } from '@/components/common'
+import { BenchmarkNote, ExportButton, ModelNameButton, NoWebSearchBadge, TestEnvCaption } from '@/components/common'
 import { formatModelDisplayName } from '@/utils/modelMeta'
 import './ScoreTable.css'
 
@@ -232,9 +232,13 @@ function ScoreItem({ label, score, max }) {
  * @param {HTMLElement} card - 캡처할 카드
  * @param {string} backgroundColor - 캡처 배경색
  * @return {Promise<string>} PNG 데이터 URL
+ *
+ * 공용 내보내기 훅을 거치지 않으므로 카드 전용 캡션(data-card-export-show)을 캡처 동안만 직접 표시한다.
  */
 async function _captureScoreCard(card, backgroundColor) {
   const profileCleanup = applyExportProfile(card, 'scoreCard')
+  const cardOnlyElements = [...card.querySelectorAll('[data-card-export-show="true"]')]
+  cardOnlyElements.forEach(element => element.classList.remove('hidden'))
   try {
     await document.fonts.ready
     const fontEmbedCSS = await getExportFontEmbedCSS(card)
@@ -246,6 +250,7 @@ async function _captureScoreCard(card, backgroundColor) {
       style: { padding: '16px' }
     })
   } finally {
+    cardOnlyElements.forEach(element => element.classList.add('hidden'))
     profileCleanup()
   }
 }
@@ -280,6 +285,7 @@ function CardView({ data, groups, maxScore, scoreBasis, hoveredModel, onModelHov
               </div>
               <span className="export-role-table-head text-sm text-gray-400 dark:text-gray-500 shrink-0">#{index + 1}</span>
             </div>
+            <TestEnvCaption asText className="hidden -mt-1 mb-3" data-card-export-show="true" />
             <div className="text-center mb-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
               <span className={`export-role-table-value text-3xl font-bold ${row.total >= maxScore ? 'text-red-600 dark:text-red-400' : 'text-gray-800 dark:text-gray-200'}`}>
                 {row.total.toFixed(1)}
@@ -387,9 +393,12 @@ export default function ScoreTable({ data, onRowClick, title, showDetail = false
   return (
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between mb-4">
-        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
-          {title && <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>}
-          <NoWebSearchBadge />
+        <div className="min-w-0 grow">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+            {title && <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>}
+            <NoWebSearchBadge />
+          </div>
+          <TestEnvCaption className="mt-1.5" />
         </div>
         <div ref={exportDropdownRef} className="flex items-start gap-2 relative">
           {onToggleDetail && (

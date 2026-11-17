@@ -7,7 +7,7 @@ import { useState, useMemo, useEffect, Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getModelColor, getShortModelName } from '@/utils/colorUtils'
 import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
-import { BenchmarkNote, ExportButton, ModelNameButton, NoWebSearchBadge } from '@/components/common'
+import { BenchmarkNote, ExportButton, ModelNameButton, NoWebSearchBadge, TestEnvCaption } from '@/components/common'
 import { formatModelDisplayName } from '@/utils/modelMeta'
 import { formatAnalysisMetricValue } from '@/utils/analysisMetrics'
 
@@ -210,11 +210,14 @@ export default function CostTable({ data, title, showDetail = false, onToggleDet
     return (
       <div ref={ref} className="w-full">
         <div className="flex items-start justify-between mb-4">
-          <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
-            {title && (
-              <h3 className="export-role-title text-lg font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
-            )}
-            <NoWebSearchBadge />
+          <div className="min-w-0 grow">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+              {title && (
+                <h3 className="export-role-title text-lg font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+              )}
+              <NoWebSearchBadge />
+            </div>
+            <TestEnvCaption className="mt-1.5" />
           </div>
           <ExportButton
             onClick={() => exportImage(`${t('export.costAnalysis')}.png`)}
@@ -290,11 +293,14 @@ export default function CostTable({ data, title, showDetail = false, onToggleDet
   return (
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between mb-4">
-        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
-          {title && (
-            <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
-          )}
-          <NoWebSearchBadge />
+        <div className="min-w-0 grow">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+            {title && (
+              <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+            )}
+            <NoWebSearchBadge />
+          </div>
+          <TestEnvCaption className="mt-1.5" />
         </div>
         <div className="flex items-start gap-2">
           <span className="hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>

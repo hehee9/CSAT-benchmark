@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next'
 import { getModelColor } from '@/utils/colorUtils'
 import { useTheme } from '@/hooks/useTheme'
 import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
-import { BenchmarkNote, ExportButton, NoWebSearchBadge } from '@/components/common'
+import { BenchmarkNote, ExportButton, NoWebSearchBadge, TestEnvCaption } from '@/components/common'
 import { formatModelDisplayName } from '@/utils/modelMeta'
 import { addHoveredModelRadarData } from '@/utils/radarTransform'
 
@@ -141,11 +141,14 @@ export default function ModelCompareChart({
   return (
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between mb-4">
-        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
-          {title && (
-            <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
-          )}
-          <NoWebSearchBadge />
+        <div className="min-w-0 grow">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+            {title && (
+              <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+            )}
+            <NoWebSearchBadge />
+          </div>
+          <TestEnvCaption className="mt-1.5" />
         </div>
         <div className="flex items-start gap-2">
           <span className="export-role-watermark hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>

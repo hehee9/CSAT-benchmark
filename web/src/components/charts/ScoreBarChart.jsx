@@ -22,7 +22,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { useData } from '@/hooks/useData'
 import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
 import { useBarChartExportLayout } from '@/hooks/useBarChartExportLayout'
-import { BenchmarkNote, ExportButton, NoWebSearchBadge } from '@/components/common'
+import { BenchmarkNote, ExportButton, ModelInfoContent, NoWebSearchBadge, TestEnvCaption } from '@/components/common'
 import { formatModelDisplayName, getModelFlags } from '@/utils/modelMeta'
 
 const MAX_LINE_LENGTH = 21
@@ -471,6 +471,21 @@ function ExportBestWorstScoreLabels({ x, y, width, value, index, data, formatter
 }
 
 /**
+ * @brief 모델 정보 카드 내용 아래에 점수 줄을 붙인 툴팁 틀
+ * @param {{ model: string, children: React.ReactNode }} props
+ */
+function _ModelTooltip({ model, children }) {
+  return (
+    <div className="w-[min(20rem,calc(100vw-32px))] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 text-left text-sm text-gray-700 dark:text-gray-200">
+      <ModelInfoContent model={model} />
+      <div className="mt-2 border-t border-gray-100 pt-2 dark:border-gray-700">
+        {children}
+      </div>
+    </div>
+  )
+}
+
+/**
  * @brief 커스텀 툴팁 컴포넌트
  * @param {Object} props - { active, payload, t }
  */
@@ -486,8 +501,7 @@ function CustomTooltip({ active, payload, t }) {
     : 0
 
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
-      <p className="font-semibold text-gray-800 dark:text-gray-200 mb-1">{formatModelDisplayName(data.model)}</p>
+    <_ModelTooltip model={data.model}>
       <p className="text-sm text-gray-600 dark:text-gray-400">
         {t('tooltip.score')}: <span className="font-medium">{displayScore}</span> / {data.totalPoints}{t('tooltip.points')}
       </p>
@@ -499,7 +513,7 @@ function CustomTooltip({ active, payload, t }) {
           {t('tooltip.correctCount')}: <span className="font-medium">{data.correctCount}</span> / {data.totalQuestions}{t('tooltip.totalQuestions')}
         </p>
       )}
-    </div>
+    </_ModelTooltip>
   )
 }
 
@@ -594,7 +608,7 @@ export default function ScoreBarChart({
     return (
       <div ref={ref} className="w-full">
         <div className="flex items-start justify-between mb-4">
-          <div>
+          <div className="grow">
             <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
               {title && (
                 <h3 className="export-role-title text-lg font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
@@ -604,6 +618,7 @@ export default function ScoreBarChart({
             {subtitle && (
               <p className="export-role-subtitle text-sm text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>
             )}
+            <TestEnvCaption className="mt-1.5" />
           </div>
           <ExportButton
             onClick={() => exportImage(`${subtitle || t('common.all')}.png`)}
@@ -641,7 +656,8 @@ export default function ScoreBarChart({
               width={isExporting ? 220 : 100}
               tick={createCustomYAxisTick(hoveredModel, onModelHover, darkMode, true, isExporting)}
             />
-            <Tooltip content={<CustomTooltip t={t} />} cursor={{ fill: cursorColor }} />
+            {/* 세로 배치에서는 막대 영역 오른쪽에 붙으면 화면 밖으로 넘치므로 차트 왼쪽 끝에 고정 */}
+            <Tooltip content={<CustomTooltip t={t} />} cursor={{ fill: cursorColor }} position={{ x: 0 }} />
             <ReferenceLine
               x={computedMaxScore}
               stroke={CHART_COLORS.perfect}
@@ -675,7 +691,7 @@ export default function ScoreBarChart({
   return (
     <div ref={ref} className="w-full">
       <div className="flex items-start justify-between mb-2">
-        <div>
+        <div className="grow">
           <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
             {title && (
               <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
@@ -685,6 +701,7 @@ export default function ScoreBarChart({
           {subtitle && (
             <p className="export-role-subtitle text-base text-gray-500 dark:text-gray-400 mt-1">{subtitle}</p>
           )}
+          <TestEnvCaption className="mt-1.5" />
         </div>
         <div className="flex items-start gap-2">
           <span className="export-role-watermark hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
@@ -778,15 +795,14 @@ export default function ScoreBarChart({
                 if (!active || !payload?.length) return null
                 const d = payload[0].payload
                 return (
-                  <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
-                    <p className="font-semibold text-gray-800 dark:text-gray-200 mb-1">{d.model}</p>
+                  <_ModelTooltip model={d.model}>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       {t('charts.bestScore')}: <span className="font-medium">{d.best?.toFixed(1)}</span>{t('tooltip.points')}
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       {t('charts.worstScore')}: <span className="font-medium">{d.worst?.toFixed(1)}</span>{t('tooltip.points')}
                     </p>
-                  </div>
+                  </_ModelTooltip>
                 )
               }}
               cursor={{ fill: cursorColor }}
@@ -888,15 +904,14 @@ export default function ScoreBarChart({
                 if (!active || !payload?.length) return null
                 const d = payload[0].payload
                 return (
-                  <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
-                    <p className="font-semibold text-gray-800 dark:text-gray-200 mb-1">{d.model}</p>
+                  <_ModelTooltip model={d.model}>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       {t('charts.accuracy')}: <span className="font-medium">{d.rate?.toFixed(1)}%</span>
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       {t('tooltip.score')}: <span className="font-medium">{d.score?.toFixed(1)}</span> / {d.maxScore}{t('tooltip.points')}
                     </p>
-                  </div>
+                  </_ModelTooltip>
                 )
               }}
               cursor={{ fill: cursorColor }}
