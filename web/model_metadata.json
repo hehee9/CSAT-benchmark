@@ -6,28 +6,28 @@
     "accessTier": "paid",
     "productLine": "GPT Terra"
   },
-  "DeepSeek V4 Flash (None)": {
+  "DeepSeek V4 Flash (none)": {
     "supportsVision": false,
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-04-24",
     "accessTier": "free",
     "productLine": "DeepSeek Flash"
   },
-  "DeepSeek V4 Flash (Max)": {
+  "DeepSeek V4 Flash (max)": {
     "supportsVision": false,
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-04-24",
     "accessTier": "free",
     "productLine": "DeepSeek Flash"
   },
-  "DeepSeek V4 Pro (None)": {
+  "DeepSeek V4 Pro (none)": {
     "supportsVision": false,
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-04-24",
     "accessTier": "free",
     "productLine": "DeepSeek Flash"
   },
-  "DeepSeek V4 Pro (Max)": {
+  "DeepSeek V4 Pro (max)": {
     "supportsVision": false,
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-04-24",
@@ -302,7 +302,7 @@
     "accessTier": "free",
     "productLine": "Gemini Flash-Lite"
   },
-  "DeepSeek V4 Flash 0731 (None)": {
+  "DeepSeek V4 Flash 0731 (none)": {
     "supportsVision": false,
     "description": {
       "ko": "별도의 유료 DeepSeek 요금제 없음",
@@ -313,7 +313,7 @@
     "accessTier": "free",
     "productLine": "DeepSeek Flash"
   },
-  "DeepSeek V4 Flash 0731 (Max)": {
+  "DeepSeek V4 Flash 0731 (max)": {
     "supportsVision": false,
     "description": {
       "ko": "별도의 유료 DeepSeek 요금제 없음",
@@ -421,7 +421,7 @@
     "productLine": "K-EXAONE",
     "accessTier": "paid"
   },
-  "DeepSeek V4 Pro 0813 (None)": {
+  "DeepSeek V4 Pro 0813 (none)": {
     "supportsVision": false,
     "description": {
       "ko": "별도의 유료 DeepSeek 요금제 없음",
@@ -432,7 +432,7 @@
     "accessTier": "free",
     "productLine": "DeepSeek Flash"
   },
-  "DeepSeek V4 Pro 0813 (Max)": {
+  "DeepSeek V4 Pro 0813 (max)": {
     "supportsVision": false,
     "description": {
       "ko": "별도의 유료 DeepSeek 요금제 없음",
@@ -939,13 +939,13 @@
     "productLine": "Gemini Flash-Lite",
     "accessTier": "not_applicable"
   },
-  "DeepSeek V4 Flash Vision Exp (None)": {
+  "DeepSeek V4 Flash Vision Exp (none)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-08-21",
     "productLine": "DeepSeek Flash",
     "accessTier": "not_applicable"
   },
-  "DeepSeek V4 Flash Vision Exp (Max)": {
+  "DeepSeek V4 Flash Vision Exp (max)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-08-21",
     "productLine": "DeepSeek Flash",
@@ -1188,7 +1188,7 @@
   "모의 모델": {
     "knowledgeCutoff": null
   },
-  "DeepSeek V4.1 Flash (High)": {
+  "DeepSeek V4.1 Flash (high)": {
     "knowledgeCutoff": null,
     "releaseDate": "2026-09-10",
     "accessTier": "free",
@@ -1290,7 +1290,7 @@
     "accessTier": "not_applicable",
     "productLine": "Jev"
   },
-  "DeepSeek V4.1 Flash 1017 (High)": {
+  "DeepSeek V4.1 Flash 1017 (high)": {
     "knowledgeCutoff": "2026-01",
     "releaseDate": "2026-10-17",
     "accessTier": "free",

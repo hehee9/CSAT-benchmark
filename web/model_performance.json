@@ -340,7 +340,7 @@
         "tag": null
       }
     },
-    "DeepSeek V4 Flash (Max)": {
+    "DeepSeek V4 Flash (max)": {
       "modelId": "deepseek/deepseek-v4-flash",
       "tokensPerSecond": 54,
       "providers": [
@@ -368,7 +368,7 @@
         "tag": null
       }
     },
-    "DeepSeek V4 Flash (None)": {
+    "DeepSeek V4 Flash (none)": {
       "modelId": "deepseek/deepseek-v4-flash",
       "tokensPerSecond": 54,
       "providers": [
@@ -396,7 +396,7 @@
         "tag": null
       }
     },
-    "DeepSeek V4 Flash 0731 (Max)": {
+    "DeepSeek V4 Flash 0731 (max)": {
       "modelId": "deepseek/deepseek-v4-flash-0731",
       "tokensPerSecond": 57.5,
       "providers": [
@@ -433,7 +433,7 @@
         "tag": null
       }
     },
-    "DeepSeek V4 Flash 0731 (None)": {
+    "DeepSeek V4 Flash 0731 (none)": {
       "modelId": "deepseek/deepseek-v4-flash-0731",
       "tokensPerSecond": 57.5,
       "providers": [
@@ -470,7 +470,7 @@
         "tag": null
       }
     },
-    "DeepSeek V4 Flash Vision Exp (Max)": {
+    "DeepSeek V4 Flash Vision Exp (max)": {
       "modelId": "deepseek/deepseek-v4-flash-vision-exp",
       "tokensPerSecond": 68.5,
       "providers": [
@@ -487,7 +487,7 @@
         "tag": null
       }
     },
-    "DeepSeek V4 Flash Vision Exp (None)": {
+    "DeepSeek V4 Flash Vision Exp (none)": {
       "modelId": "deepseek/deepseek-v4-flash-vision-exp",
       "tokensPerSecond": 68.5,
       "providers": [
@@ -504,7 +504,7 @@
         "tag": null
       }
     },
-    "DeepSeek V4 Pro (Max)": {
+    "DeepSeek V4 Pro (max)": {
       "modelId": "deepseek/deepseek-v4-pro",
       "tokensPerSecond": 49.5,
       "providers": [
@@ -529,7 +529,7 @@
         "tag": null
       }
     },
-    "DeepSeek V4 Pro (None)": {
+    "DeepSeek V4 Pro (none)": {
       "modelId": "deepseek/deepseek-v4-pro",
       "tokensPerSecond": 49.5,
       "providers": [
@@ -554,7 +554,7 @@
         "tag": null
       }
     },
-    "DeepSeek V4 Pro 0813 (Max)": {
+    "DeepSeek V4 Pro 0813 (max)": {
       "modelId": "deepseek/deepseek-v4-pro-0813",
       "tokensPerSecond": 26,
       "providers": [
@@ -585,7 +585,7 @@
         "tag": "deepseek"
       }
     },
-    "DeepSeek V4 Pro 0813 (None)": {
+    "DeepSeek V4 Pro 0813 (none)": {
       "modelId": "deepseek/deepseek-v4-pro-0813",
       "tokensPerSecond": 26,
       "providers": [
@@ -616,7 +616,7 @@
         "tag": "deepseek"
       }
     },
-    "DeepSeek V4.1 Flash (High)": {
+    "DeepSeek V4.1 Flash (high)": {
       "modelId": "deepseek/deepseek-v4.1-flash",
       "tokensPerSecond": 157,
       "providers": [

@@ -522,7 +522,7 @@
         }
       }
     },
-    "DeepSeek V4 Flash (Max)": {
+    "DeepSeek V4 Flash (max)": {
       "total_input_tokens": 85574,
       "total_output_tokens": 833216,
       "total_tokens": 918790,
@@ -609,7 +609,7 @@
         }
       }
     },
-    "DeepSeek V4 Flash (None)": {
+    "DeepSeek V4 Flash (none)": {
       "total_input_tokens": 84547,
       "total_output_tokens": 32917,
       "total_tokens": 117464,
@@ -696,7 +696,7 @@
         }
       }
     },
-    "DeepSeek V4 Pro (Max)": {
+    "DeepSeek V4 Pro (max)": {
       "total_input_tokens": 85574,
       "total_output_tokens": 824921,
       "total_tokens": 910495,
@@ -783,7 +783,7 @@
         }
       }
     },
-    "DeepSeek V4 Pro (None)": {
+    "DeepSeek V4 Pro (none)": {
       "total_input_tokens": 84547,
       "total_output_tokens": 68758,
       "total_tokens": 153305,
@@ -6090,7 +6090,7 @@
         }
       }
     },
-    "DeepSeek V4 Flash 0731 (Max)": {
+    "DeepSeek V4 Flash 0731 (max)": {
       "total_input_tokens": 85743,
       "total_output_tokens": 646793,
       "total_tokens": 732536,
@@ -6177,7 +6177,7 @@
         }
       }
     },
-    "DeepSeek V4 Flash 0731 (None)": {
+    "DeepSeek V4 Flash 0731 (none)": {
       "total_input_tokens": 84547,
       "total_output_tokens": 49370,
       "total_tokens": 133917,
@@ -6881,7 +6881,7 @@
         }
       }
     },
-    "DeepSeek V4 Pro 0813 (None)": {
+    "DeepSeek V4 Pro 0813 (none)": {
       "total_input_tokens": 84547,
       "total_output_tokens": 41557,
       "total_tokens": 126104,
@@ -6968,7 +6968,7 @@
         }
       }
     },
-    "DeepSeek V4 Pro 0813 (Max)": {
+    "DeepSeek V4 Pro 0813 (max)": {
       "total_input_tokens": 85743,
       "total_output_tokens": 602090,
       "total_tokens": 687833,
@@ -7229,7 +7229,7 @@
         }
       }
     },
-    "DeepSeek V4 Flash Vision Exp (Max)": {
+    "DeepSeek V4 Flash Vision Exp (max)": {
       "total_input_tokens": 107551,
       "total_output_tokens": 650380,
       "total_tokens": 757931,
@@ -7316,7 +7316,7 @@
         }
       }
     },
-    "DeepSeek V4 Flash Vision Exp (None)": {
+    "DeepSeek V4 Flash Vision Exp (none)": {
       "total_input_tokens": 106355,
       "total_output_tokens": 67797,
       "total_tokens": 174152,

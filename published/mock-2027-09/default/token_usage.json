@@ -1719,7 +1719,7 @@
       "question_count": 26,
       "last_updated": "2026-09-09 18:19:49"
     },
-    "DeepSeek V4.1 Flash (High)": {
+    "DeepSeek V4.1 Flash (high)": {
       "sections": {
         "국어-화작": {
           "input_tokens": 7636,
@@ -4584,7 +4584,7 @@
       "question_count": 26,
       "last_updated": "2026-10-15 14:39:25"
     },
-    "DeepSeek V4.1 Flash 1017 (High)": {
+    "DeepSeek V4.1 Flash 1017 (high)": {
       "sections": {
         "지과2": {
           "input_tokens": 26349,
