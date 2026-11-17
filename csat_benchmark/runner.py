@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import copy
 import os
 import threading
 import time
@@ -19,14 +18,14 @@ from .providers.requests import validate_question_media
 from .runs import (
     RUN_RESULT_FILE,
     RunStore,
+    _merge_contexts,
     canonical_results_path,
     create_run,
     get_result,
-    initialize_model_results,
     invalidate_verified_results,
+    merge_run,
     result_is_completed,
     sanitize_model_snapshot,
-    save_run_metadata,
     verified_result_is_completed,
 )
 
@@ -371,63 +370,6 @@ def _run_path(
     return canonical_results_path(exam, mode.id)
 
 
-def _merge_contexts(
-    stored: Sequence[Mapping[str, Any]],
-    current: Sequence[Mapping[str, Any]],
-) -> list[Dict[str, Any]]:
-    """@description 저장 입력 문맥에 현재 선택 문항을 target별 병합"""
-    merged = [copy.deepcopy(dict(context)) for context in stored]
-    by_target = {
-        context.get("target"): context
-        for context in merged
-        if isinstance(context, Mapping) and context.get("target")
-    }
-    for current_context in current:
-        target = current_context["target"]
-        existing = by_target.get(target)
-        if existing is None:
-            copied = copy.deepcopy(dict(current_context))
-            merged.append(copied)
-            by_target[target] = copied
-            continue
-        question_numbers = list(
-            dict.fromkeys(
-                [
-                    *existing.get("question_numbers", []),
-                    *current_context.get("question_numbers", []),
-                ]
-            )
-        )
-        old_questions = {item["number"]: item for item in existing.get("questions", [])}
-        for question in current_context.get("questions", []):
-            old_questions.setdefault(question["number"], copy.deepcopy(question))
-        existing["question_numbers"] = question_numbers
-        existing["questions"] = list(old_questions.values())
-        if "prepared_question" in current_context:
-            existing["prepared_question"] = copy.deepcopy(current_context["prepared_question"])
-    return merged
-
-
-def _merge_stored_run(
-    stored: Mapping[str, Any],
-    current: Mapping[str, Any],
-) -> Dict[str, Any]:
-    """@description 기존 정본과 현재 선택 범위·모델 설정 병합"""
-    merged = copy.deepcopy(dict(stored))
-    merged["selected_targets"] = list(stored["selected_targets"])
-    for target in current["selected_targets"]:
-        if target not in merged["selected_targets"]:
-            merged["selected_targets"].append(target)
-    model_by_name = {model["name"]: model for model in stored["selected_models"]}
-    for model in current["selected_models"]:
-        model_by_name[model["name"]] = copy.deepcopy(model)
-    merged["selected_models"] = list(model_by_name.values())
-    merged["input_context"] = _merge_contexts(stored.get("input_context", []), current["input_context"])
-    merged["system_prompt"] = current.get("system_prompt", stored.get("system_prompt", ""))
-    merged["results"] = copy.deepcopy(stored.get("results", []))
-    return merged
-
-
 def _response_record(response: APIResponse, job: ImmediateJob) -> Dict[str, Any]:
     """@description 공용 APIResponse를 정본 결과 레코드로 변환"""
     if not isinstance(response, APIResponse):
@@ -471,7 +413,6 @@ def run_exam(
     if output is not None and output_dir is not None:
         raise RunnerError("output과 output_dir은 함께 사용할 수 없습니다.")
     run_path = _run_path(manifest, selected_mode, output=output, output_dir=output_dir)
-    existing_path = run_path.is_file()
     selected_sections = select_sections(
         manifest,
         targets=targets,
@@ -502,20 +443,11 @@ def run_exam(
         input_context=contexts,
         system_prompt=system_prompt,
     )
-    stored_model_names: set[str] = set()
-    if existing_path:
-        stored_run = RunStore.load(run_path).run
-        if stored_run["exam_id"] != manifest.id or stored_run["mode"] != selected_mode.id:
-            raise RunnerError("기존 정본 시험·mode가 현재 선택과 다릅니다.")
-        stored_model_names = {model["name"] for model in stored_run["selected_models"]}
-        run = _merge_stored_run(stored_run, current_run)
-    else:
-        run = current_run
+    run = current_run
+    merge_run(run, run_path)
     # merge는 정본 구조에서 항상 선택 key upsert가 되므로 별도 latest 조회가 필요 없다.
     _ = merge
     store = RunStore(run, run_path)
-    if not existing_path:
-        store.save()
 
     context_by_target = {context["target"]: context for context in contexts}
     selected_model_names = list(model_configs)
@@ -547,12 +479,6 @@ def run_exam(
                         question=question,
                     )
                 )
-
-    if existing_path:
-        new_raw_model_names = sorted({job.model_name for job in jobs} - stored_model_names)
-        if new_raw_model_names:
-            initialize_model_results(run, run_path, new_raw_model_names)
-            save_run_metadata(run, run_path)
 
     print(
         f"준비된 작업: 시험={manifest.id} 모드={selected_mode.id} "
@@ -616,8 +542,6 @@ def run_exam(
                 if not response.success:
                     progress += f" 오류={response.error_message or '알 수 없는 오류'}"
                 print(progress, flush=True)
-    elif existing_path:
-        save_run_metadata(store.run, run_path)
     return store.run
 
 

@@ -3,23 +3,158 @@
 from __future__ import annotations
 
 import json
+import multiprocessing
 from pathlib import Path
 
 import pytest
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import PatternFill
 
-from csat_benchmark.evaluation import grade_run, save_verified
+from csat_benchmark.evaluation import grade_run, load_verified, save_verified
 from csat_benchmark.exams import load_exam
 from csat_benchmark.exports import (
     _merge_token_scope,
     _new_token_record,
+    _write_json,
+    _write_json_if_changed,
     export_run_to_excel,
     import_excel_corrections,
     publish_run,
 )
-from csat_benchmark.runs import canonical_results_path, create_run, save_run
+from csat_benchmark.runs import (
+    canonical_results_path, create_run, invalidate_verified_results,
+    model_verified_path, save_run,
+)
 from sync_data import DataConverter, ExcelHandler, ModelNameMapper, PathMapper
+
+
+def _publish_process(barrier, manifest_path: str, output_dir: str, run, verified) -> None:
+    """@description 동시 공개 회귀 검증을 위해 별도 프로세스에서 시험 결과 공개"""
+    barrier.wait(timeout=30)
+    exam = load_exam(manifest_path, project_root=Path(manifest_path).parent)
+    publish_run(exam, run, verified, output_dir=output_dir, targets=run["selected_targets"])
+
+
+def _make_parallel_publish_exam(tmp_path: Path):
+    """@description 병렬 공개 검증용 두 target 시험 및 모델 입력 생성"""
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    sections = []
+    targets = [("국어/예시1", "국어", "예시1"), ("수학/예시2", "수학", "예시2")]
+    for target, subject, section in targets:
+        section_dir = data_dir / section
+        section_dir.mkdir()
+        (section_dir / "questions.json").write_text(
+            json.dumps(
+                {
+                    "subject": subject,
+                    "section": section,
+                    "questions": [
+                        {"number": 1, "correct_answer": 2, "points": 2, "question_path": "1.txt"},
+                        {"number": 2, "correct_answer": 1, "points": 2, "question_path": "2.txt"},
+                    ],
+                },
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
+        (section_dir / "1.txt").write_text("첫 번째 문항", encoding="utf-8")
+        (section_dir / "2.txt").write_text("두 번째 문항", encoding="utf-8")
+        sections.append(
+            {
+                "target": target,
+                "subject": subject,
+                "section": section,
+                "group": subject,
+                "kind": "common",
+                "questions": f"{section}/questions.json",
+                "max_points": 4,
+            }
+        )
+    manifest_path = tmp_path / "exam.json"
+    manifest_path.write_text(
+        json.dumps(
+            {
+                "schema_version": 1,
+                "id": "parallel-publish-test",
+                "title": "병렬 공개 시험",
+                "short_name": "병렬 공개 시험",
+                "exam_month": None,
+                "data_dir": "data",
+                "results_dir": "results",
+                "publish": True,
+                "sections": sections,
+                "modes": [{"id": "default", "label": "default", "input_mode": "section"}],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    exam = load_exam(manifest_path, project_root=tmp_path)
+    inputs = []
+    for (target, subject, section), model_name, cutoff in zip(
+        targets,
+        ("모델 A", "모델 B"),
+        ("2025-01", "2025-02"),
+    ):
+        timestamp = "2026-09-08T00:00:00+00:00"
+        run = create_run(
+            exam_id=exam.id,
+            mode="default",
+            input_mode="section",
+            selected_targets=[target],
+            selected_models=[
+                {"name": model_name, "price": {"input": 1.0}, "knowledge_cutoff": cutoff}
+            ],
+            input_context=[{"target": target, "question_numbers": [1, 2]}],
+        )
+        run["results"].append(
+            {
+                "target": target,
+                "subject": subject,
+                "section": section,
+                "model_name": model_name,
+                "question_number": 0,
+                "raw_response": "2,1",
+                "timestamp": timestamp,
+                "success": True,
+                "error_message": None,
+                "input_tokens": 5,
+                "output_tokens": 7,
+                "total_tokens": 12,
+                "answer_status": None,
+                "provider_stop_reason": None,
+                "error_details": None,
+            }
+        )
+        verified = {
+            "schema_version": 1,
+            "exam_id": exam.id,
+            "mode": "default",
+            "selected_models": [model_name],
+            "results": [
+                {
+                    "target": target,
+                    "subject": subject,
+                    "section": section,
+                    "model_name": model_name,
+                    "question_number": number,
+                    "extracted_answer": answer,
+                    "correct_answer": correct,
+                    "is_correct": answer == correct,
+                    "points": 2,
+                    "answer_status": "answered",
+                    "provider_stop_reason": None,
+                    "complete": True,
+                    "provenance": "graded",
+                    "raw_response": "2,1",
+                    "timestamp": timestamp,
+                }
+                for number, answer, correct in ((1, 2, 2), (2, 1, 1))
+            ],
+        }
+        inputs.append((run, verified))
+    return manifest_path, exam, inputs
 
 
 class _SectionVerifier:
@@ -48,6 +183,90 @@ class _QuestionVerifier:
 
     def verify_answer(self, raw_response, correct_answer, question_number, question_text):
         return int(raw_response)
+
+
+def test_grading_only_saves_new_rows_and_reused_rows_stay_invalidated(tmp_path: Path):
+    """@description 실제 채점 결과의 신규 행 추적과 재사용 행 부활 방지"""
+    exam = _make_exam(tmp_path)
+    run = _make_run(exam, mode="default", input_mode="section")
+    index = canonical_results_path(exam, "default")
+    save_run(run, index)
+    first = grade_run(index, exam, _SectionVerifier())
+    assert len(first["graded_keys"]) == 2
+    save_verified(first, index)
+    reused = grade_run(index, exam, _SectionVerifier())
+    assert len(reused["results"]) == 2
+    assert reused["graded_keys"] == []
+    invalidate_verified_results(index, "모의 모델", "국어/예시", 0, input_mode="section", question_numbers=[1, 2])
+    save_verified(reused, index)
+    assert json.loads(model_verified_path(index, "모의 모델").read_text(encoding="utf-8"))["results"] == []
+
+
+def test_invalidation_while_section_verifier_runs_discards_newly_graded_rows(tmp_path: Path):
+    """@description 추출기 실행 중 무효화된 실제 채점 결과 저장 차단"""
+    exam = _make_exam(tmp_path)
+    run = _make_run(exam, mode="default", input_mode="section")
+    index = canonical_results_path(exam, "default")
+    save_run(run, index)
+
+    class _InvalidatingVerifier(_SectionVerifier):
+        """@description 답안 추출 중 원본 재생성 시작을 모의하는 검증기"""
+
+        def verify_hard_answers(self, raw_response, question_infos):
+            invalidate_verified_results(index, "모의 모델", "국어/예시", 0, input_mode="section", question_numbers=[1, 2])
+            return super().verify_hard_answers(raw_response, question_infos)
+
+    graded = grade_run(index, exam, _InvalidatingVerifier())
+    assert len(graded["graded_keys"]) == 2
+    save_verified(graded, index)
+    assert json.loads(model_verified_path(index, "모의 모델").read_text(encoding="utf-8"))["results"] == []
+
+
+def test_mapping_based_grading_saves_to_fresh_destination(tmp_path: Path):
+    """@description 원본 파일 없는 메모리 실행 채점 결과의 새 경로 저장 보존"""
+    exam = _make_exam(tmp_path)
+    run = _make_run(exam, mode="default", input_mode="section")
+    graded = grade_run(run, exam, _SectionVerifier())
+    assert len(graded["graded_keys"]) == 2
+    assert graded["raw_index_path"] is None
+    output = tmp_path / "alternate" / "results.json"
+    save_verified(graded, output)
+    assert load_verified(model_verified_path(output, "모의 모델"))["results"] == graded["results"]
+
+
+def test_alternate_output_snapshots_current_source_reused_rows(tmp_path: Path):
+    """@description 별도 출력은 재사용 행의 최신 원본 검증 상태를 복사하고 무효화 반영"""
+    exam = _make_exam(tmp_path)
+    run = _make_run(exam, mode="default", input_mode="section")
+    index = canonical_results_path(exam, "default")
+    save_run(run, index)
+    save_verified(grade_run(index, exam, _SectionVerifier()), index)
+    reused = grade_run(index, exam, _SectionVerifier())
+    assert reused["graded_keys"] == []
+    latest = load_verified(index)
+    latest["results"][0]["extracted_answer"] = 4
+    latest["results"][0]["is_correct"] = False
+    save_verified(latest, index)
+    output = tmp_path / "alternate" / "results.json"
+    save_verified(reused, output)
+    assert load_verified(model_verified_path(output, "모의 모델"))["results"] == latest["results"]
+    invalidate_verified_results(index, "모의 모델", "국어/예시", 0, input_mode="section", question_numbers=[1, 2])
+    save_verified(reused, output)
+    assert load_verified(model_verified_path(output, "모의 모델"))["results"] == []
+
+
+def test_alternate_output_rejects_source_invalidated_during_grading(tmp_path: Path, capsys):
+    """@description 별도 출력의 빈 검증 기록과 무관하게 원본 무효화로 저장 차단"""
+    exam = _make_exam(tmp_path)
+    run = _make_run(exam, mode="default", input_mode="section")
+    index = canonical_results_path(exam, "default")
+    save_run(run, index)
+    graded = grade_run(index, exam, _SectionVerifier())
+    invalidate_verified_results(index, "모의 모델", "국어/예시", 0, input_mode="section", question_numbers=[1, 2])
+    output = tmp_path / "alternate" / "results.json"
+    save_verified(graded, output)
+    assert load_verified(model_verified_path(output, "모의 모델"))["results"] == []
+    assert "2개 저장 건너뜀 (채점 시작 후 원본 무효화)" in capsys.readouterr().out
 
 
 def _make_exam(tmp_path: Path, *, mode: str = "default", input_mode: str = "section"):
@@ -155,6 +374,81 @@ def test_single_run_flat_public_and_excel_round_trip(tmp_path: Path):
     assert token["models"]["모의 모델"]["sections"]["국어-예시"]["total_tokens"] == 12
     assert token["models"]["모의 모델"]["sections"]["국어-예시"]["last_updated"] == "2026-09-08T00:00:00+00:00"
     assert token["models"]["모의 모델"]["last_updated"] == "2026-09-08T00:00:00+00:00"
+
+
+def test_atomic_json_writer_preserves_format_and_removes_temp_files(tmp_path: Path, monkeypatch):
+    """@description 원자적 JSON 저장의 기존 바이트 형식과 unchanged 생략 확인"""
+    path = tmp_path / "public.json"
+    payload = {"모델": {"description": "한국어", "values": [1, 2]}}
+    expected_path = tmp_path / "expected.json"
+    expected_path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    expected = expected_path.read_bytes()
+
+    _write_json(path, payload)
+
+    assert path.read_bytes() == expected
+    assert list(tmp_path.glob(".*.tmp")) == []
+
+    def unexpected_replace(*_args):
+        raise AssertionError("unchanged JSON must skip replacement")
+
+    monkeypatch.setattr("csat_benchmark.exports.os.replace", unexpected_replace)
+    _write_json_if_changed(path, payload)
+    assert path.read_bytes() == expected
+    assert list(tmp_path.glob(".*.tmp")) == []
+
+
+def test_parallel_publish_merges_disjoint_groups_across_processes(tmp_path: Path):
+    """@description 별도 프로세스의 동시 공개가 결과·토큰·문항·모델 메타데이터를 보존"""
+    manifest_path, exam, inputs = _make_parallel_publish_exam(tmp_path)
+    output_dir = tmp_path / "published"
+    context = multiprocessing.get_context("spawn")
+    barrier = context.Barrier(2)
+    processes = [
+        context.Process(
+            target=_publish_process,
+            args=(barrier, str(manifest_path), str(output_dir), run, verified),
+        )
+        for run, verified in inputs
+    ]
+    try:
+        for process in processes:
+            process.start()
+        for process in processes:
+            process.join(timeout=45)
+        assert all(not process.is_alive() for process in processes)
+        assert [process.exitcode for process in processes] == [0, 0]
+    finally:
+        for process in processes:
+            if process.is_alive():
+                process.terminate()
+                process.join()
+
+    records = json.loads((output_dir / "results.json").read_text(encoding="utf-8"))
+    record_keys = {(record["target"], record["model_name"]) for record in records}
+    assert record_keys == {("국어/예시1", "모델 A"), ("수학/예시2", "모델 B")}
+
+    tokens = json.loads((output_dir / "token_usage.json").read_text(encoding="utf-8"))
+    assert tokens["models"]["모델 A"]["sections"]["국어-예시1"]["total_tokens"] == 12
+    assert tokens["models"]["모델 B"]["sections"]["수학-예시2"]["total_tokens"] == 12
+
+    questions = json.loads((output_dir / "questions_metadata.json").read_text(encoding="utf-8"))
+    assert questions["국어-예시1"] == {
+        "1": {"hasImage": False, "points": 2},
+        "2": {"hasImage": False, "points": 2},
+    }
+    assert questions["수학-예시2"] == {
+        "1": {"hasImage": False, "points": 2},
+        "2": {"hasImage": False, "points": 2},
+    }
+
+    model_metadata = json.loads(
+        (exam.project_root / "web" / "model_metadata.json").read_text(encoding="utf-8")
+    )
+    assert model_metadata["모델 A"]["knowledgeCutoff"] == "2025-01"
+    assert model_metadata["모델 B"]["knowledgeCutoff"] == "2025-02"
 
 
 def test_existing_workbook_preserves_unselected_cells_and_styles(tmp_path: Path):

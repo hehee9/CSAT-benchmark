@@ -5,18 +5,24 @@ from __future__ import annotations
 import copy
 import json
 import os
-import tempfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable, Mapping, Sequence
 
 from .answers import _validate_correct_answer
 from .configuration import ConfigurationError, load_config
 from .exams import ExamManifest, ModeManifest, SectionManifest, load_exam, load_section_questions
+from .file_lock import file_lock
 from .grading.extractor import AnswerVerifier
 from .grading.single import VerificationResult, verify_hard_single_result, verify_single_result
-from .runs import canonical_results_path, load_run, model_verified_path, result_identity, result_is_completed
+from .runs import (
+    _load_run_unlocked,
+    _write_json_atomically as _write_json,
+    canonical_results_path, load_run, model_verified_path,
+    result_identity, result_is_completed, utc_now,
+)
 from .runner import RunnerError, select_sections
 
 
@@ -37,6 +43,7 @@ class _SectionGrading:
     manual_review: list[tuple[Any, ...]]
     task_count: int = 0
     skipped_count: int = 0
+    updated_keys: set[tuple[str, str, int]] = field(default_factory=set)
 
 
 def _mode_for_exam(
@@ -303,6 +310,8 @@ def _load_verified_sidecar(path: Path, *, model_name: str | None = None) -> dict
         "mode": payload.get("mode"),
         "model_name": sidecar_model,
         "results": normalized,
+        "invalidations": copy.deepcopy(payload.get("invalidations", {})),
+        "question_invalidations": copy.deepcopy(payload.get("question_invalidations", {})),
     }
 
 
@@ -450,6 +459,7 @@ def _grade_question_section(
     manual_review: list[tuple[Any, ...]] = []
     tasks: list[tuple[tuple[str, str, int], str, Mapping[str, Any], Mapping[str, Any]]] = []
     skipped_count = 0
+    updated_keys: set[tuple[str, str, int]] = set()
 
     for model_name in selected_models:
         for number, info in info_by_number.items():
@@ -463,6 +473,7 @@ def _grade_question_section(
                 continue
             if not result_is_completed(source):
                 rows[key] = _incomplete_row(source, info)
+                updated_keys.add(key)
                 skipped_count += 1
                 continue
             if not regrade and key in prior_complete_keys:
@@ -500,6 +511,7 @@ def _grade_question_section(
                 key, model_name, question_number = task_futures[future]
                 verification, manual_review_data = future.result()
                 rows[key] = _verified_row(verification, raw_by_key[key], complete=True)
+                updated_keys.add(key)
                 if manual_review_data:
                     manual_review.append(manual_review_data)
                 completed += 1
@@ -511,7 +523,7 @@ def _grade_question_section(
                     flush=True,
                 )
 
-    return _SectionGrading(target, rows, expected_by_model, manual_review, len(tasks), skipped_count)
+    return _SectionGrading(target, rows, expected_by_model, manual_review, len(tasks), skipped_count, updated_keys)
 
 
 def _grade_section_input(
@@ -536,6 +548,7 @@ def _grade_section_input(
     manual_review: list[tuple[Any, ...]] = []
     tasks: list[tuple[str, Mapping[str, Any], list[Mapping[str, Any]]]] = []
     skipped_count = 0
+    updated_keys: set[tuple[str, str, int]] = set()
 
     for model_name in selected_models:
         for number in info_by_number:
@@ -551,6 +564,7 @@ def _grade_section_input(
         if not result_is_completed(source):
             for number, info in info_by_number.items():
                 rows[(target, model_name, number)] = _incomplete_row(source, info)
+                updated_keys.add((target, model_name, number))
                 skipped_count += 1
             continue
         pending_infos = [
@@ -598,6 +612,7 @@ def _grade_section_input(
                     number = int(info["number"])
                     key = (target, model_name, number)
                     rows[key] = _verified_row(by_number[number], source, complete=True)
+                    updated_keys.add(key)
                 if manual_review_data:
                     manual_review.extend(manual_review_data)
                 completed += 1
@@ -610,7 +625,7 @@ def _grade_section_input(
                     flush=True,
                 )
 
-    return _SectionGrading(target, rows, expected_by_model, manual_review, len(tasks), skipped_count)
+    return _SectionGrading(target, rows, expected_by_model, manual_review, len(tasks), skipped_count, updated_keys)
 
 
 def _print_section_summary(
@@ -679,6 +694,7 @@ def grade_run(
     grading_description: str | None = None,
 ) -> dict[str, Any]:
     """@description 단일 생성 결과를 선택 범위만 채점"""
+    grading_started_at = utc_now()
     manifest = exam if isinstance(exam, ExamManifest) else load_exam(exam)
     run_path: Path | None = None
     if isinstance(run, (str, Path)):
@@ -815,6 +831,7 @@ def grade_run(
         print(flush=True)
 
     graded_by_key: dict[tuple[str, str, int], dict[str, Any]] = {}
+    updated_keys: set[tuple[str, str, int]] = set()
     expected_by_model: dict[str, set[tuple[str, str, int]]] = {
         model_name: {
             key
@@ -830,6 +847,7 @@ def grade_run(
     def _collect(section_result: _SectionGrading, completed: int, total: int) -> None:
         """@description 조정 스레드 섹션 결과 수집 및 완료 출력"""
         _merge_section_grading(section_result, graded_by_key, expected_by_model, manual_review)
+        updated_keys.update(section_result.updated_keys)
         nonlocal task_count, skipped_count
         task_count += section_result.task_count
         skipped_count += section_result.skipped_count
@@ -946,33 +964,12 @@ def grade_run(
         "selected_targets": [section_manifest.target for section_manifest in sections],
         "selected_models": selected_models,
         "results": rows,
+        "grading_started_at": grading_started_at,
+        "graded_keys": [list(key) for key in sorted(updated_keys)],
+        "raw_index_path": str(run_path) if run_path is not None else None,
     }
     _attach_summary(result, expected_by_model=expected_by_model)
     return result
-
-
-def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
-    """@description JSON 원자적 저장"""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary_path: str | None = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            mode="w",
-            encoding="utf-8",
-            dir=path.parent,
-            prefix=f".{path.name}.",
-            suffix=".tmp",
-            delete=False,
-        ) as file:
-            temporary_path = file.name
-            json.dump(payload, file, ensure_ascii=False, indent=2)
-            file.write("\n")
-            file.flush()
-            os.fsync(file.fileno())
-        os.replace(temporary_path, path)
-    finally:
-        if temporary_path and os.path.exists(temporary_path):
-            os.unlink(temporary_path)
 
 
 def _merge_verified_rows(
@@ -1023,13 +1020,38 @@ def save_verified(verified: Mapping[str, Any], path: str | Path) -> Path:
         models = [one_model]
     if not models:
         models = sorted({row.get("model_name") for row in rows if row.get("model_name")})
-    for model_name in models:
-        model_rows = [
-            _normal_verified_row(row, model_name)
-            for row in rows
-            if row.get("model_name") == model_name
-        ]
-        sidecar_path = model_verified_path(index_path, model_name)
+    persisted_source = "graded_keys" in verified and verified.get("raw_index_path") is not None
+    raw_path = Path(verified["raw_index_path"] if persisted_source else index_path).expanduser().resolve()
+    with file_lock(raw_path):
+        current_raw = _load_run_unlocked(raw_path) if persisted_source and raw_path.is_file() else None
+        for model_name in models:
+            model_rows = [
+                _normal_verified_row(row, model_name)
+                for row in rows
+                if row.get("model_name") == model_name
+            ]
+            source_verified = None
+            if persisted_source:
+                source_path = model_verified_path(raw_path, model_name)
+                with file_lock(source_path):
+                    source_verified = _load_verified_sidecar(source_path, model_name=model_name)
+            # 역방향 출력 간 교착 방지를 위해 원본 verified 잠금 해제 후 목적지 잠금 획득
+            _save_verified_model(
+                verified, model_verified_path(index_path, model_name), model_name,
+                model_rows, current_raw, source_verified,
+                persisted_source=persisted_source, alternate_output=raw_path != index_path,
+            )
+    return requested_path
+
+
+def _save_verified_model(
+    verified: Mapping[str, Any], sidecar_path: Path, model_name: str,
+    model_rows: list[dict[str, Any]], current_raw: Mapping[str, Any] | None,
+    source_verified: Mapping[str, Any] | None, *, persisted_source: bool, alternate_output: bool,
+) -> None:
+    """@description 원본 저장 상태로 유효성을 확인한 채점 변경분 또는 선택 스냅샷 저장"""
+    exam_id, mode = verified["exam_id"], verified["mode"]
+    with file_lock(sidecar_path):
         existing = _load_verified_sidecar(sidecar_path, model_name=model_name)
         if existing is not None:
             if exam_id is not None and existing.get("exam_id") not in (None, exam_id):
@@ -1039,17 +1061,65 @@ def save_verified(verified: Mapping[str, Any], path: str | Path) -> Path:
             existing_rows = existing["results"]
         else:
             existing_rows = []
-        if not model_rows and existing is not None:
-            continue
+        invalidations = existing.get("invalidations", {}) if existing else {}
+        question_invalidations = existing.get("question_invalidations", {}) if existing else {}
+        if persisted_source:
+            graded_keys = {tuple(key) for key in verified["graded_keys"]}
+            selected_keys = {result_identity(row) for row in model_rows}
+            source_rows = {
+                result_identity(row): row for row in source_verified["results"]
+            } if source_verified else {}
+            if alternate_output:
+                model_rows = [
+                    row if result_identity(row) in graded_keys else source_rows[result_identity(row)]
+                    for row in model_rows
+                    if result_identity(row) in graded_keys or result_identity(row) in source_rows
+                ]
+                existing_rows = [row for row in existing_rows if result_identity(row) not in selected_keys]
+            else:
+                model_rows = [row for row in model_rows if result_identity(row) in graded_keys]
+            started = datetime.fromisoformat(verified["grading_started_at"])
+            raw_by_key = _raw_results_by_key(current_raw) if current_raw is not None else {}
+            source_invalidations = source_verified.get("invalidations", {}) if source_verified else {}
+            question_times = source_verified.get("question_invalidations", {}) if source_verified else {}
+            kept = []
+            skipped: dict[str, int] = {}
+            for row in model_rows:
+                invalidated_at = source_invalidations.get(row["target"])
+                question_time = question_times.get(row["target"], {}).get(str(row["question_number"]))
+                invalidation_times = [value for value in (invalidated_at, question_time) if value is not None]
+                reason = None
+                newly_graded = result_identity(row) in graded_keys
+                if newly_graded and any(datetime.fromisoformat(value) > started for value in invalidation_times):
+                    reason = "채점 시작 후 원본 무효화"
+                else:
+                    number = row["question_number"]
+                    if current_raw is not None and current_raw["input_mode"] == "section":
+                        number = 0
+                    raw = raw_by_key.get((row["target"], model_name, number))
+                    if (newly_graded or row.get("provenance") == "graded") and (
+                        raw is None or raw["raw_response"] != row.get("raw_response")
+                    ):
+                        reason = "현재 원본 응답과 채점 원본 불일치"
+                if reason:
+                    skipped[reason] = skipped.get(reason, 0) + 1
+                else:
+                    kept.append(row)
+            model_rows = kept
+            for reason, count in skipped.items():
+                print(f"경고: {model_name} 검증 결과 {count}개 저장 건너뜀 ({reason})", flush=True)
+        if not model_rows and existing is not None and not (persisted_source and alternate_output):
+            return
         envelope = {
             "schema_version": VERIFIED_SCHEMA_VERSION,
             "exam_id": exam_id,
             "mode": mode,
             "model_name": model_name,
             "results": _merge_verified_rows(existing_rows, model_rows),
+            "invalidations": invalidations,
+            "question_invalidations": question_invalidations,
         }
         _write_json(sidecar_path, envelope)
-    return requested_path
 
 
 def load_verified(path: str | Path) -> dict[str, Any]:

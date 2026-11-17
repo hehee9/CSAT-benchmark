@@ -10,6 +10,8 @@ from datetime import date
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
+from .file_lock import file_lock
+
 
 _YEAR_MONTH_PATTERN = re.compile(r"^\d{4}-(?:0[1-9]|1[0-2])$")
 _RELEASE_DATE_PATTERN = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
@@ -174,22 +176,23 @@ def sync_model_metadata(
     if not model_records:
         return False
     path = Path(metadata_path).expanduser().resolve()
-    if path.is_file():
-        original_text = path.read_text(encoding="utf-8")
-        try:
-            existing = json.loads(original_text)
-        except json.JSONDecodeError as error:
-            raise ValueError(f"모델 메타데이터 JSON 파싱 실패: {path}") from error
-    else:
-        original_text = ""
-        existing = {}
-    merged = merge_model_metadata(existing, model_records)
-    updated_text = f"{json.dumps(merged, ensure_ascii=False, indent=2)}\n"
-    if updated_text == original_text:
-        return False
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(updated_text, encoding="utf-8")
-    return True
+    with file_lock(path, timeout=120.0):
+        if path.is_file():
+            original_text = path.read_text(encoding="utf-8")
+            try:
+                existing = json.loads(original_text)
+            except json.JSONDecodeError as error:
+                raise ValueError(f"모델 메타데이터 JSON 파싱 실패: {path}") from error
+        else:
+            original_text = ""
+            existing = {}
+        merged = merge_model_metadata(existing, model_records)
+        updated_text = f"{json.dumps(merged, ensure_ascii=False, indent=2)}\n"
+        if updated_text == original_text:
+            return False
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(updated_text, encoding="utf-8")
+        return True
 
 
 __all__ = [

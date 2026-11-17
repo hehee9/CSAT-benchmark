@@ -6,13 +6,16 @@ import argparse
 import copy
 import hashlib
 import json
+import os
 import re
 import time
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Mapping, MutableMapping, Sequence
 
 from .exams import ExamManifest, ModeManifest, SectionManifest, load_exam
+from .file_lock import file_lock
 from .models import ModelConfig, Question
 from .providers.batch import anthropic as anthropic_batch
 from .providers.batch import google as google_batch
@@ -29,7 +32,6 @@ from .providers.requests import (
 from .runner import (
     RunnerError,
     _load_model_configs,
-    _merge_stored_run,
     _prepare_sections,
     _resolve_mode,
     _resolve_manifest,
@@ -38,13 +40,13 @@ from .runner import (
 )
 from .runs import (
     RunStore,
+    _write_json_atomically,
     create_run,
     get_result,
-    initialize_model_results,
     invalidate_verified_results,
+    merge_run,
     model_results_path,
     result_is_completed,
-    save_run_metadata,
     verified_result_is_completed,
 )
 
@@ -675,34 +677,134 @@ def _validate_batch_state(state: Mapping[str, Any], run: Mapping[str, Any]) -> N
             raise BatchError("batch 상태에는 실행 ID·시도 필드를 저장할 수 없습니다.")
 
 
-def _load_batch_state(index_path: Path, run: Mapping[str, Any]) -> Dict[str, Any]:
+class _BatchState(dict):
+    """@description 프로세스가 로드한 기준본을 보관하는 batch 상태"""
+
+    def __init__(self, payload: Mapping[str, Any]) -> None:
+        super().__init__(copy.deepcopy(dict(payload)))
+        self.baseline = copy.deepcopy(dict(self))
+        self.reservation_ids: set[str] = set()
+
+
+def _load_batch_state(index_path: Path, run: Mapping[str, Any]) -> _BatchState:
     """@description 정본 mode별 현재 batch 상태 로드"""
-    path = _state_path(index_path)
+    return _read_batch_state(_state_path(index_path), run)
+
+
+def _read_batch_state(path: Path, run: Mapping[str, Any]) -> _BatchState:
+    """@description 지정 상태 파일 로드 및 시험 일치 검증"""
     if not path.is_file():
-        return _new_batch_state(run)
+        return _BatchState(_new_batch_state(run))
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, Mapping):
         raise BatchError(f"batch 상태가 객체가 아닙니다: {path}")
-    state = copy.deepcopy(dict(payload))
+    state = _BatchState(payload)
     _validate_batch_state(state, run)
     return state
 
 
-def _save_json(path: Path, payload: Mapping[str, Any]) -> None:
-    """@description batch 상태 JSON 원자적 교체 저장"""
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary_path = path.with_name(
-        f".{path.name}.{hashlib.sha256(str(time.time_ns()).encode()).hexdigest()[:8]}.tmp"
+def _job_key(job: Mapping[str, Any]) -> tuple[str, ...]:
+    """@description 신규 예약 또는 기존 공급자 작업의 안정 식별키"""
+    if job.get("job_id"):
+        return (job["job_id"],)
+    return job["provider"], job["model_name"], job["provider_batch_id"]
+
+
+def _status_order(job: Mapping[str, Any]) -> tuple[int, int]:
+    """@description 종료 우선, 같은 단계에서는 관측 시각 우선 상태 순서"""
+    info = job.get("status_info") or {"status": job.get("status", "")}
+    if _is_terminal(info):
+        rank = 4
+    else:
+        status = str(job.get("status", "")).lower()
+        rank = {
+            "finalizing": 3,
+            "in_progress": 2,
+            "running": 2,
+            "job_state_running": 2,
+            "batch_state_running": 2,
+            "validating": 1,
+            "queued": 1,
+            "pending": 1,
+            "job_state_pending": 1,
+            "job_state_queued": 1,
+            "batch_state_pending": 1,
+        }.get(status, 0)
+    return rank, job.get("status_observed_at", 0)
+
+
+def _refresh_batch_state(state: _BatchState, latest: Mapping[str, Any]) -> None:
+    """@description 콜백의 작업 참조를 유지하며 병합 결과 및 기준본 갱신"""
+    references = {_job_key(job): job for job in state["jobs"]}
+    refreshed = copy.deepcopy(dict(latest))
+    for index, job in enumerate(refreshed["jobs"]):
+        reference = references.get(_job_key(job))
+        if reference is not None:
+            reference.clear()
+            reference.update(job)
+            refreshed["jobs"][index] = reference
+    state.clear()
+    state.update(refreshed)
+    state.baseline = copy.deepcopy(dict(state))
+
+
+def _save_json(path: Path, payload: _BatchState) -> None:
+    """@description 잠금 안에서 변경한 작업 필드만 최신 상태에 원자적 병합"""
+    with file_lock(path, timeout=120.0):
+        latest = _read_batch_state(path, payload)
+        baseline_jobs = {_job_key(job): job for job in payload.baseline["jobs"]}
+        latest_jobs = {_job_key(job): job for job in latest["jobs"]}
+        for job in payload["jobs"]:
+            key = _job_key(job)
+            baseline = baseline_jobs.get(key)
+            if baseline == job:
+                continue
+            current = latest_jobs.get(key)
+            if current is None:
+                if baseline is not None:
+                    continue
+                current = copy.deepcopy(job)
+                latest["jobs"].append(current)
+                latest_jobs[key] = current
+                continue
+            changed = {
+                field: copy.deepcopy(value)
+                for field, value in job.items()
+                if baseline is None or baseline.get(field) != value
+            }
+            if _status_order(job) < _status_order(current):
+                for field in ("status", "status_info", "status_observed_at"):
+                    changed.pop(field, None)
+            changed["downloaded"] = bool(current.get("downloaded") or job.get("downloaded"))
+            merged_ids = set(current.get("merged_request_ids", []))
+            merged_ids.update(job.get("merged_request_ids", []))
+            changed["merged_request_ids"] = [
+                request_id for request_id in current["request_ids"] if request_id in merged_ids
+            ]
+            if current["request_ids"] and set(current["request_ids"]).issubset(merged_ids):
+                changed["downloaded"] = True
+            current.update(changed)
+        for request_id, metadata in payload["request_map"].items():
+            if payload.baseline["request_map"].get(request_id) != metadata:
+                latest["request_map"][request_id] = copy.deepcopy(metadata)
+        _write_json_atomically(path, latest)
+        _refresh_batch_state(payload, latest)
+
+
+def _update_job_status(job: MutableMapping[str, Any], status_info: Mapping[str, Any], observed_at: int) -> None:
+    """@description 공급자 상태 관측값과 조회 시작 시각 기록"""
+    candidate = dict(
+        job,
+        status=status_info.get("status"),
+        status_info=dict(status_info),
+        status_observed_at=observed_at,
     )
-    try:
-        temporary_path.write_text(
-            json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
+    if _status_order(candidate) >= _status_order(job):
+        job.update(
+            status=candidate["status"],
+            status_info=candidate["status_info"],
+            status_observed_at=observed_at,
         )
-        temporary_path.replace(path)
-    finally:
-        if temporary_path.exists():
-            temporary_path.unlink()
 
 
 def _is_terminal(status_info: Mapping[str, Any]) -> bool:
@@ -785,13 +887,8 @@ def _prepare_submit_context(
         input_context=contexts,
         system_prompt=system_prompt,
     )
-    if index_path.is_file():
-        stored_run = RunStore.load(index_path).run
-        if stored_run["exam_id"] != manifest.id or stored_run["mode"] != selected_mode.id:
-            raise RunnerError("기존 정본 시험·mode가 현재 선택과 다릅니다.")
-        run = _merge_stored_run(stored_run, current_run)
-    else:
-        run = current_run
+    run = current_run
+    merge_run(run, index_path)
     return {
         "exam": manifest,
         "mode": selected_mode,
@@ -859,9 +956,146 @@ def _job_identities(job: Mapping[str, Any]) -> set[tuple[str, str, int]]:
 
 def _job_is_active(job: Mapping[str, Any]) -> bool:
     """@description 아직 결과를 회수하지 않은 비종료 batch 여부 반환"""
+    if _job_is_reservation(job):
+        if job.get("reservation_released"):
+            return False
+        return _submission_owner_is_active(job)
+    if _xai_submission_is_active(job):
+        return True
     if job.get("downloaded") is True:
         return False
     return not _is_terminal(job.get("status_info") or {"status": job.get("status", "")})
+
+
+def _job_is_reservation(job: Mapping[str, Any]) -> bool:
+    """@description 공급자 ID를 아직 받지 않은 로컬 제출 예약 확인"""
+    return str(job["provider_batch_id"]).startswith("reserved:")
+
+
+def _submission_owner_is_active(job: Mapping[str, Any]) -> bool:
+    """@description 제출 프로세스 생존 확인 및 조회 불가 시 예약 시각 기준 판정"""
+    if "owner_pid" not in job:
+        return False
+    alive = _pid_is_alive(job["owner_pid"])
+    return alive if alive is not None else time.time() - job["reserved_at"] < 1800
+
+
+def _xai_submission_is_active(job: Mapping[str, Any]) -> bool:
+    """@description 살아 있는 프로세스가 xAI 요청 청크를 추가 중인지 확인"""
+    return (
+        job["provider"] == "grok"
+        and job.get("submission_status") in {"created", "in_progress"}
+        and _submission_owner_is_active(job)
+    )
+
+
+def _pid_is_alive(pid: int) -> bool | None:
+    """@description 플랫폼 프로세스 생존 여부, 권한상 판단 불가 시 None 반환"""
+    if os.name == "nt":
+        import ctypes
+        from ctypes import wintypes
+
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        kernel32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+        kernel32.OpenProcess.restype = wintypes.HANDLE
+        kernel32.GetExitCodeProcess.argtypes = [wintypes.HANDLE, ctypes.POINTER(wintypes.DWORD)]
+        kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+        handle = kernel32.OpenProcess(0x1000, False, pid)
+        if not handle:
+            return False if ctypes.get_last_error() == 87 else None
+        try:
+            code = wintypes.DWORD()
+            if not kernel32.GetExitCodeProcess(handle, ctypes.byref(code)):
+                return None
+            return code.value == 259
+        finally:
+            kernel32.CloseHandle(handle)
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return None
+    return True
+
+
+def _reserve_batch_jobs(
+    context: Mapping[str, Any],
+    slots_by_model: Mapping[str, Sequence[BatchSlot]],
+    selected_protocol: bool,
+) -> tuple[_BatchState, Dict[str, Dict[str, Any]]]:
+    """@description 요청 준비 후 중복 확인과 모든 모델 제출 예약을 단일 잠금으로 저장"""
+    submissions = {}
+    for model_name, slots in slots_by_model.items():
+        model_config = context["model_configs"][model_name]
+        requests = _build_run_requests(
+            model_config,
+            use_responses_api=selected_protocol,
+            system_prompt=context["system_prompt"],
+            slots=slots,
+        )
+        key_digest = hashlib.sha256(
+            "\x1f".join(sorted(_identity_key(slot.identity) for slot in slots)).encode("utf-8")
+        ).hexdigest()[:12]
+        job_id = uuid.uuid4().hex
+        model_dir = model_results_path(context["path"], model_name).parent
+        input_path = model_dir / (
+            f"batch-input-{_safe_id(model_name, 20)}-{key_digest}-{job_id[:12]}"
+            f"{_input_suffix(model_config.api_type)}"
+        )
+        job = {
+            "job_id": job_id,
+            "owner_pid": os.getpid(),
+            "reserved_at": time.time(),
+            "model_name": model_name,
+            "provider": model_config.api_type,
+            "scopes": _scope_records(slots, context["contexts"]),
+            "provider_batch_id": f"reserved:{job_id}",
+            "request_ids": [slot.request_id for slot in slots],
+            "request_map": {slot.request_id: _request_metadata(slot) for slot in slots},
+            "status": "reserved",
+            "status_info": {},
+            "downloaded": False,
+            "merged_request_ids": [],
+            "input_path": str(input_path),
+            "use_responses_api": selected_protocol,
+        }
+        submissions[model_name] = {
+            "job": job,
+            "requests": requests,
+            "batch_name": f"{context['exam'].id}-{context['mode'].id}-{_safe_id(model_name, 20)}-{key_digest}",
+        }
+    selected_keys = {slot.identity for slots in slots_by_model.values() for slot in slots}
+    with file_lock(_state_path(context["path"]), timeout=120.0):
+        state = _load_batch_state(context["path"], context["run"])
+        state.reservation_ids = {item["job"]["job_id"] for item in submissions.values()}
+        overlap = {
+            identity
+            for job in state["jobs"] if _job_is_active(job)
+            for identity in _job_identities(job) if identity in selected_keys
+        }
+        if overlap:
+            raise BatchError(
+                "선택한 target·모델·문항 중 이미 처리 중인 batch가 있습니다: "
+                + ", ".join(map(str, sorted(overlap)))
+            )
+        for submission in submissions.values():
+            job = submission["job"]
+            state["jobs"].append(job)
+            for request_id, metadata in job["request_map"].items():
+                state["request_map"][request_id] = dict(metadata, provider_batch_id=job["provider_batch_id"])
+        _save_json(_state_path(context["path"]), state)
+    return state, submissions
+
+
+def _release_reservations(index_path: Path, state: _BatchState) -> None:
+    """@description 실패한 제출 프로세스 소유 예약의 비활성화"""
+    for job in state["jobs"]:
+        if _job_is_reservation(job) and job["job_id"] in state.reservation_ids:
+            job["status"] = "failed"
+            job["status_info"] = {"status": "failed"}
+            job["reservation_released"] = True
+    _save_json(_state_path(index_path), state)
 
 
 def _scope_targets(
@@ -975,15 +1209,10 @@ def _save_run_before_batch(
     context: Mapping[str, Any],
     slots: Sequence[BatchSlot],
 ) -> RunStore:
-    """@description 정본 metadata와 신규 raw sidecar를 요청 전에 준비"""
+    """@description 시작 트랜잭션에서 준비한 정본을 batch 저장소에 연결"""
     run = context["run"]
     path = context["path"]
-    model_names = sorted({slot.model_name for slot in slots})
-    if model_names:
-        initialize_model_results(run, path, model_names)
     store = RunStore(run, path)
-    # 선택 target·model union은 raw sidecar를 다시 쓰지 않고 metadata만 갱신한다.
-    save_run_metadata(run, path)
     return store
 
 
@@ -1059,7 +1288,6 @@ def submit_exam(
         output_dir=output_dir,
     )
     run = context["run"]
-    state = _load_batch_state(context["path"], run)
     selected_transport = _resolve_transport(transport, transport_factory)
     selected_protocol = bool(use_responses_api)
 
@@ -1081,82 +1309,51 @@ def submit_exam(
             slots_by_model[model_name] = slots
             all_slots.extend(slots)
 
-    selected_keys = {slot.identity for slot in all_slots}
-    active_overlap = {
-        identity
-        for job in state["jobs"]
-        if _job_is_active(job)
-        for identity in _job_identities(job)
-        if identity in selected_keys
-    }
-    if active_overlap:
-        raise BatchError(
-            "선택한 target·모델·문항 중 이미 처리 중인 batch가 있습니다: "
-            + ", ".join(map(str, sorted(active_overlap)))
-        )
+    state, submissions = _reserve_batch_jobs(context, slots_by_model, selected_protocol)
 
-    store = _save_run_before_batch(context, all_slots)
-    for slot in all_slots:
-        invalidate_verified_results(
-            context["path"],
-            slot.model_name,
-            slot.target,
-            slot.question_number,
-            input_mode=context["contexts"][slot.target]["input_mode"],
-            question_numbers=context["contexts"][slot.target]["question_numbers"],
-        )
+    try:
+        store = _save_run_before_batch(context, all_slots)
+        for slot in all_slots:
+            invalidate_verified_results(
+                context["path"],
+                slot.model_name,
+                slot.target,
+                slot.question_number,
+                input_mode=context["contexts"][slot.target]["input_mode"],
+                question_numbers=context["contexts"][slot.target]["question_numbers"],
+            )
+    except BaseException:
+        _release_reservations(context["path"], state)
+        raise
 
     for model_name, slots in slots_by_model.items():
         model_config = context["model_configs"][model_name]
-        requests = _build_run_requests(
-            model_config,
-            use_responses_api=selected_protocol,
-            system_prompt=context["system_prompt"],
-            slots=slots,
-        )
-        key_digest = hashlib.sha256(
-            "\x1f".join(sorted(_identity_key(slot.identity) for slot in slots)).encode("utf-8")
-        ).hexdigest()[:12]
-        model_dir = model_results_path(context["path"], model_name).parent
-        model_dir.mkdir(parents=True, exist_ok=True)
-        input_path = model_dir / (
-            f"batch-input-{_safe_id(model_name, 20)}-{key_digest}"
-            f"{_input_suffix(model_config.api_type)}"
-        )
-        batch_name = f"{context['exam'].id}-{context['mode'].id}-{_safe_id(model_name, 20)}-{key_digest}"
-        request_map = {
-            slot.request_id: _request_metadata(slot)
-            for slot in slots
-        }
-        if model_config.api_type == "grok":
-            provider_batch_id = selected_transport.create(
-                model_config,
-                requests,
-                input_path=input_path,
-                batch_name=batch_name,
-            )
-        else:
-            provider_batch_id = selected_transport.submit(
-                model_config,
-                requests,
-                input_path=input_path,
-                batch_name=batch_name,
-                use_responses_api=selected_protocol,
-            )
-        job = {
-            "model_name": model_name,
-            "provider": model_config.api_type,
-            "scopes": _scope_records(slots, context["contexts"]),
-            "provider_batch_id": str(provider_batch_id),
-            "request_ids": [slot.request_id for slot in slots],
-            "request_map": request_map,
-            "status": "submitted",
-            "status_info": {},
-            "downloaded": False,
-            "merged_request_ids": [],
-            "input_path": str(input_path),
-            "use_responses_api": selected_protocol,
-        }
+        submission = submissions[model_name]
+        job = submission["job"]
+        requests = submission["requests"]
+        input_path = Path(job["input_path"])
+        try:
+            input_path.parent.mkdir(parents=True, exist_ok=True)
+            if model_config.api_type == "grok":
+                provider_batch_id = selected_transport.create(
+                    model_config,
+                    requests,
+                    input_path=input_path,
+                    batch_name=submission["batch_name"],
+                )
+            else:
+                provider_batch_id = selected_transport.submit(
+                    model_config,
+                    requests,
+                    input_path=input_path,
+                    batch_name=submission["batch_name"],
+                    use_responses_api=selected_protocol,
+                )
+        except BaseException:
+            _release_reservations(context["path"], state)
+            raise
+        job["provider_batch_id"] = str(provider_batch_id)
+        job["status"] = "submitted"
         if model_config.api_type == "grok":
             job.update(
                 {
@@ -1174,8 +1371,7 @@ def submit_exam(
                     },
                 }
             )
-        state["jobs"].append(job)
-        for request_id, metadata in request_map.items():
+        for request_id, metadata in job["request_map"].items():
             current = dict(metadata)
             current["provider_batch_id"] = str(provider_batch_id)
             state["request_map"][request_id] = current
@@ -1225,7 +1421,7 @@ def submit_exam(
                 )
             except (RuntimeError, TimeoutError):
                 job["submission_status"] = "failed"
-                _save_json(_state_path(context["path"]), state)
+                _release_reservations(context["path"], state)
                 raise
             job["submission_status"] = "complete"
             _save_json(_state_path(context["path"]), state)
@@ -1243,19 +1439,30 @@ def submit_exam(
 
 
 def _selected_operation_jobs(
-    context: Mapping[str, Any],
+    context: MutableMapping[str, Any],
 ) -> List[MutableMapping[str, Any]]:
     """@description 조회 선택자에 포함된 batch job 목록 반환"""
-    return [
-        job
-        for job in context["state"]["jobs"]
-        if _job_matches(
+    selected = []
+    submitting = 0
+    for job in context["state"]["jobs"]:
+        if not _job_matches(
             job,
             selected_models=context["selected_models"],
             selected_targets=context["selected_targets"],
             question_numbers=context["question_numbers"],
-        )
-    ]
+        ):
+            continue
+        if _job_is_reservation(job):
+            submitting += int(_job_is_active(job))
+            continue
+        if _xai_submission_is_active(job):
+            submitting += 1
+            continue
+        selected.append(job)
+    if submitting and not context.get("submission_notice_shown"):
+        print(f"다른 프로세스에서 제출 중인 배치 작업 {submitting}개를 건너뜁니다.")
+        context["submission_notice_shown"] = True
+    return selected
 
 
 def _selected_request_ids(
@@ -1351,9 +1558,9 @@ def status_exam(
     statuses: List[Dict[str, Any]] = []
     for job in _selected_operation_jobs(context):
         model_config = context["model_configs"][job["model_name"]]
+        observed_at = time.time_ns()
         status_info = selected_transport.status(job["provider_batch_id"], model_config)
-        job["status"] = status_info.get("status")
-        job["status_info"] = status_info
+        _update_job_status(job, status_info, observed_at)
         statuses.append(
             dict(
                 status_info,
@@ -1502,12 +1709,12 @@ def wait_exam(
             if batch_id not in announced_batch_ids:
                 _print_wait_banner(model_config.api_type, batch_id, check_interval)
                 announced_batch_ids.add(batch_id)
+            observed_at = time.time_ns()
             status_info = selected_transport.status(job["provider_batch_id"], model_config)
             _report_batch_progress(job, status_info)
-            terminal = _is_terminal(status_info)
+            _update_job_status(job, status_info, observed_at)
+            terminal = _is_terminal(job["status_info"])
             _print_wait_status(model_config.api_type, status_info, terminal=terminal)
-            job["status"] = status_info.get("status")
-            job["status_info"] = status_info
             statuses.append(
                 dict(
                     status_info,
@@ -1589,26 +1796,45 @@ def download_exam(
         if not selected_request_ids:
             continue
         model_config = context["model_configs"][job["model_name"]]
+        observed_at = time.time_ns()
         status_info = selected_transport.status(job["provider_batch_id"], model_config)
-        job["status"] = status_info.get("status")
-        job["status_info"] = status_info
-        if not _is_terminal(status_info):
+        _update_job_status(job, status_info, observed_at)
+        if not _is_terminal(job["status_info"]):
             continue
+        status_info = job["status_info"]
         model_dir = model_results_path(context["path"], model_config.name).parent
         model_dir.mkdir(parents=True, exist_ok=True)
         raw_path = Path(job.get("raw_path") or (model_dir / (
             f"batch-raw-{_safe_id(job['provider_batch_id'], 40)}"
             f"{_result_suffix(model_config.api_type)}"
         )))
+        if model_config.api_type == "grok":
+            submission_snapshot = {
+                "status": job.get("submission_status"),
+                "submitted": job.get("submitted_request_ids", []),
+                "in_flight": job.get("in_flight_request_ids", []),
+            }
+            snapshot_digest = hashlib.sha256(
+                json.dumps(submission_snapshot, sort_keys=True).encode("utf-8")
+            ).hexdigest()[:12]
+            raw_path = model_dir / (
+                f"batch-raw-{_safe_id(job['provider_batch_id'], 40)}-{snapshot_digest}"
+                f"{_result_suffix(model_config.api_type)}"
+            )
         if raw_path.is_file():
             downloaded_path = raw_path
         else:
+            temporary_raw = raw_path.with_name(f".{raw_path.stem}-{uuid.uuid4().hex}{raw_path.suffix}")
             try:
                 downloaded_path = selected_transport.download(
                     job["provider_batch_id"],
                     model_config,
-                    raw_path,
+                    temporary_raw,
                 )
+                with file_lock(_state_path(context["path"]), timeout=120.0):
+                    if not raw_path.is_file():
+                        Path(downloaded_path).replace(raw_path)
+                downloaded_path = raw_path
             except RuntimeError as error:
                 status_name = str(status_info.get("status", "")).lower()
                 if status_name not in {
@@ -1627,6 +1853,9 @@ def download_exam(
                 downloaded += 1
                 _save_json(_state_path(context["path"]), context["state"])
                 continue
+            finally:
+                if temporary_raw.exists():
+                    temporary_raw.unlink()
             downloaded += 1
             job["raw_path"] = str(downloaded_path)
         input_requests = _load_input_requests(Path(job["input_path"]))
@@ -1636,29 +1865,45 @@ def download_exam(
             use_responses_api=bool(job.get("use_responses_api")),
             input_requests=input_requests,
         )
-        merged_request_ids = set(job.get("merged_request_ids", []))
-        for result in parsed:
-            request_id = result.get("request_id")
-            if request_id not in selected_request_ids:
-                continue
-            if _record_batch_result(
-                context["run"],
-                store,
-                result,
-                job["request_map"],
-                context["state"],
-                job["provider_batch_id"],
+        with file_lock(_state_path(context["path"]), timeout=120.0):
+            latest = _load_batch_state(context["path"], context["run"])
+            current = next((item for item in latest["jobs"] if _job_key(item) == _job_key(job)), None)
+            if (
+                current is None
+                or current["provider_batch_id"] != job["provider_batch_id"]
+                or current["request_map"] != job["request_map"]
             ):
-                saved_results += 1
-            merged_request_ids.add(request_id)
-        job["merged_request_ids"] = [
-            request_id
-            for request_id in job["request_ids"]
-            if request_id in merged_request_ids
-        ]
-        job["downloaded"] = set(job["request_ids"]).issubset(merged_request_ids)
-        job["status"] = status_info.get("status")
-        _save_json(_state_path(context["path"]), context["state"])
+                print(f"⚠️ batch 작업 정보가 변경되어 결과 병합을 건너뜁니다: {job['provider_batch_id']}")
+                continue
+            current_request_ids = {
+                request_id for request_id in selected_request_ids
+                if latest["request_map"].get(request_id)
+                == dict(job["request_map"][request_id], provider_batch_id=job["provider_batch_id"])
+            }
+            if current_request_ids != selected_request_ids:
+                print(f"⚠️ 새 batch로 대체된 요청 결과 병합을 건너뜁니다: {job['provider_batch_id']}")
+            merged_request_ids = set(job.get("merged_request_ids", []))
+            for result in parsed:
+                request_id = result.get("request_id")
+                if request_id not in selected_request_ids:
+                    continue
+                if request_id in current_request_ids and _record_batch_result(
+                    context["run"],
+                    store,
+                    result,
+                    job["request_map"],
+                    latest,
+                    job["provider_batch_id"],
+                ):
+                    saved_results += 1
+                merged_request_ids.add(request_id)
+            job["merged_request_ids"] = [
+                request_id
+                for request_id in job["request_ids"]
+                if request_id in merged_request_ids
+            ]
+            job["downloaded"] = set(job["request_ids"]).issubset(merged_request_ids)
+            _save_json(_state_path(context["path"]), context["state"])
     _save_json(_state_path(context["path"]), context["state"])
     return {
         "run": store.run,

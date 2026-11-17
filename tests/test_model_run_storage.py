@@ -122,7 +122,7 @@ class ModelRunStorageTest(unittest.TestCase):
             with patch.object(run_storage, "_write_json_atomically", wraps=run_storage._write_json_atomically) as writer:
                 upsert_result(run, self._result("모델 A"), path=index)
             self.assertEqual(
-                [model_results_path(index, "모델 A"), index],
+                [model_results_path(index, "모델 A"), model_verified_path(index, "모델 A"), index],
                 [call.args[0] for call in writer.call_args_list],
             )
             self.assertEqual(model_b_before, model_b_path.read_bytes())

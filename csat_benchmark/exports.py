@@ -5,6 +5,8 @@ from __future__ import annotations
 import copy
 import json
 import math
+import os
+import tempfile
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
@@ -14,6 +16,7 @@ from .answers import CorrectAnswer, _is_correct_answer
 from .configuration import load_config
 from .evaluation import load_verified, save_verified
 from .exams import ExamManifest, SectionManifest, load_exam, load_section_questions
+from .file_lock import file_lock
 from .metadata import merge_model_metadata
 from .runner import RunnerError, select_sections
 from .runs import load_run, result_identity, result_is_completed
@@ -65,7 +68,23 @@ def _load_json(path: Path, default: Any) -> Any:
 def _write_json(path: Path, payload: Any) -> Path:
     """@description UTF-8 JSON 파일 저장"""
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    content = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as temporary_file:
+            temporary_path = Path(temporary_file.name)
+            temporary_file.write(content)
+        os.replace(temporary_path, path)
+    finally:
+        if temporary_path is not None and temporary_path.exists():
+            temporary_path.unlink()
     return path
 
 
@@ -729,31 +748,34 @@ def _public_record(
     return record
 
 
-def publish_run(
-    exam: ExamManifest | str | Path,
+def _publish_run_locked(
+    manifest: ExamManifest,
     run: Mapping[str, Any] | str | Path,
     verified: Mapping[str, Any] | str | Path,
     *,
-    output_dir: str | Path | None = None,
-    config_path: str | Path | None = None,
-    model_names: Sequence[str] | None = None,
-    targets: Sequence[str] | None = None,
-    subject: str | None = None,
-    section: str | None = None,
-    subjects: Sequence[str] | None = None,
-    benchmark_all: bool = False,
-    question_numbers: Sequence[int] | None = None,
+    mode_id: str,
+    mode_dir: Path,
+    config_path: str | Path | None,
+    model_names: Sequence[str] | None,
+    targets: Sequence[str] | None,
+    subject: str | None,
+    section: str | None,
+    subjects: Sequence[str] | None,
+    benchmark_all: bool,
+    question_numbers: Sequence[int] | None,
 ) -> dict[str, Path]:
-    """@description 완료된 단일 실행 범위를 기존 공개 결과에 병합"""
-    manifest = _as_exam(exam)
+    """@description 공개 잠금 내부에서 입력을 검증하고 기존 산출물에 병합"""
     run_data = _as_run(run)
     if run_data is None:
         raise ValueError("공개에는 실행 정본이 필요합니다.")
     if run_data.get("exam_id") != manifest.id:
         raise ValueError("시험과 실행 identity가 일치하지 않습니다.")
-    mode_id = run_data.get("mode")
     mode = next((item for item in manifest.modes if item.id == mode_id), None)
-    if mode is None or run_data.get("input_mode") != mode.input_mode:
+    if (
+        mode is None
+        or run_data.get("mode") != mode.id
+        or run_data.get("input_mode") != mode.input_mode
+    ):
         raise ValueError("실행 mode와 input_mode가 시험 매니페스트와 다릅니다.")
     sections, models = _selected_scope(
         manifest,
@@ -811,11 +833,6 @@ def publish_run(
                 )
             ):
                 raise ValueError(f"정본 원본이 없는 stale graded 결과는 공개할 수 없습니다: {target}/{model}")
-    mode_dir = (
-        Path(output_dir).expanduser().resolve()
-        if output_dir is not None
-        else manifest.project_root / "published" / manifest.id / mode.id
-    )
     results_path = mode_dir / "results.json"
     token_path = mode_dir / "token_usage.json"
     metadata_path = mode_dir / "questions_metadata.json"
@@ -884,21 +901,78 @@ def publish_run(
         current_config = load_config(config_path, model_names=models, resolve_secrets=False)
         metadata_models = current_config["models"]
     model_metadata_path = manifest.project_root / "web" / "model_metadata.json"
-    existing_model_metadata = _load_json(model_metadata_path, {})
-    if not changed_scopes and config_path is None:
-        merged_model_metadata = existing_model_metadata
-    else:
-        merged_model_metadata = merge_model_metadata(existing_model_metadata, metadata_models)
-    _write_json_if_changed(results_path, list(existing.values()))
-    _write_json_if_changed(token_path, merged_tokens)
-    _write_json_if_changed(metadata_path, merged_metadata)
-    _write_json_if_changed(model_metadata_path, merged_model_metadata)
+    with file_lock(model_metadata_path, timeout=120.0):
+        existing_model_metadata = _load_json(model_metadata_path, {})
+        if not changed_scopes and config_path is None:
+            merged_model_metadata = existing_model_metadata
+        else:
+            merged_model_metadata = merge_model_metadata(existing_model_metadata, metadata_models)
+        _write_json_if_changed(results_path, list(existing.values()))
+        _write_json_if_changed(token_path, merged_tokens)
+        _write_json_if_changed(metadata_path, merged_metadata)
+        _write_json_if_changed(model_metadata_path, merged_model_metadata)
     return {
         "results": results_path,
         "token_usage": token_path,
         "questions_metadata": metadata_path,
         "model_metadata": model_metadata_path,
     }
+
+
+def publish_run(
+    exam: ExamManifest | str | Path,
+    run: Mapping[str, Any] | str | Path,
+    verified: Mapping[str, Any] | str | Path,
+    *,
+    output_dir: str | Path | None = None,
+    config_path: str | Path | None = None,
+    model_names: Sequence[str] | None = None,
+    targets: Sequence[str] | None = None,
+    subject: str | None = None,
+    section: str | None = None,
+    subjects: Sequence[str] | None = None,
+    benchmark_all: bool = False,
+    question_numbers: Sequence[int] | None = None,
+) -> dict[str, Path]:
+    """@description 완료된 단일 실행 범위를 기존 공개 결과에 병합"""
+    manifest = _as_exam(exam)
+    mode_id = (
+        run.get("mode")
+        if isinstance(run, Mapping)
+        else Path(run).expanduser().resolve().parent.name
+    )
+    mode = next((item for item in manifest.modes if item.id == mode_id), None)
+    if mode is None:
+        run_data = _as_run(run)
+        if run_data is None:
+            raise ValueError("공개에는 실행 정본이 필요합니다.")
+        if run_data.get("exam_id") != manifest.id:
+            raise ValueError("시험과 실행 identity가 일치하지 않습니다.")
+        mode_id = run_data.get("mode")
+        mode = next((item for item in manifest.modes if item.id == mode_id), None)
+        if mode is None or run_data.get("input_mode") != mode.input_mode:
+            raise ValueError("실행 mode와 input_mode가 시험 매니페스트와 다릅니다.")
+    mode_dir = (
+        Path(output_dir).expanduser().resolve()
+        if output_dir is not None
+        else manifest.project_root / "published" / manifest.id / mode.id
+    )
+    with file_lock(mode_dir / "publish", timeout=120.0):
+        return _publish_run_locked(
+            manifest,
+            run,
+            verified,
+            mode_id=mode.id,
+            mode_dir=mode_dir,
+            config_path=config_path,
+            model_names=model_names,
+            targets=targets,
+            subject=subject,
+            section=section,
+            subjects=subjects,
+            benchmark_all=benchmark_all,
+            question_numbers=question_numbers,
+        )
 
 
 __all__ = [

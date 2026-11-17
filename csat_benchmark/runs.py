@@ -8,7 +8,7 @@ import json
 import os
 import re
 import tempfile
-import threading
+import time
 import unicodedata
 from dataclasses import asdict, is_dataclass
 from datetime import datetime, timezone
@@ -16,6 +16,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any, Dict, Mapping, MutableMapping, Sequence
 
 from .exams import ExamManifest
+from .file_lock import file_lock
 from .models import EMPTY_RESPONSE_ERROR
 
 
@@ -29,7 +30,16 @@ _CREDENTIAL_FIELDS = {
     "api_key", "vertex_key", "api_key_env", "vertex_key_env",
     "vertex_project", "vertex_location", "vertex_batch_gcs_uri",
 }
-_RUN_STORAGE_LOCK = threading.RLock()
+
+
+class _Run(dict):
+    """@description 저장 문서와 별도로 현재 호출자의 선택 범위 보존"""
+
+    def __init__(self, values: Mapping[str, Any]):
+        """@description JSON에 저장하지 않는 호출자별 모델·영역 선택 범위 설정"""
+        super().__init__(values)
+        self.selected_model_names = {model["name"] for model in self["selected_models"]}
+        self.selected_target_names = set(self["selected_targets"])
 
 
 def utc_now() -> str:
@@ -279,7 +289,7 @@ def create_run(
     normalized_targets = list(selected_targets)
     normalized_models = [sanitize_model_snapshot(model) for model in selected_models]
     timestamp = created_at or utc_now()
-    run = {
+    run = _Run({
         "schema_version": RUN_SCHEMA_VERSION,
         "exam_id": exam_id,
         "mode": mode,
@@ -291,7 +301,7 @@ def create_run(
         "system_prompt": system_prompt,
         "input_context": copy.deepcopy(list(input_context or [])),
         "results": [],
-    }
+    })
     _validate_run(run)
     return run
 
@@ -381,7 +391,14 @@ def _write_json_atomically(path: Path, payload: Mapping[str, Any]) -> None:
             temporary_file.write("\n")
             temporary_file.flush()
             os.fsync(temporary_file.fileno())
-        os.replace(temporary_path, path)
+        for attempt in range(20):
+            try:
+                os.replace(temporary_path, path)
+                break
+            except PermissionError:
+                if attempt == 19:
+                    raise
+                time.sleep(0.05)
     finally:
         if temporary_path and os.path.exists(temporary_path):
             os.unlink(temporary_path)
@@ -414,9 +431,8 @@ def _load_canonical_run(run_path: Path, metadata: Mapping[str, Any]) -> Dict[str
     return loaded
 
 
-def load_run(path: str | Path) -> Dict[str, Any]:
-    """@description 정본 실행 색인 로드 및 저장 계약 검증"""
-    run_path = Path(path).expanduser().resolve()
+def _load_run_unlocked(run_path: Path) -> Dict[str, Any]:
+    """@description 실행 잠금 내부에서 정본 색인과 sidecar 조립"""
     if not run_path.is_file():
         raise FileNotFoundError(f"실행 결과 파일을 찾을 수 없습니다: {run_path}")
     run = _read_json(run_path)
@@ -424,14 +440,122 @@ def load_run(path: str | Path) -> Dict[str, Any]:
         raise ValueError("실행 결과 파일은 객체여야 합니다.")
     if run.get("schema_version") != RUN_SCHEMA_VERSION:
         raise ValueError(f"지원하지 않는 run schema_version입니다: {run.get('schema_version')}")
-    return _load_canonical_run(run_path, run)
+    return _Run(_load_canonical_run(run_path, run))
+
+
+def load_run(path: str | Path) -> Dict[str, Any]:
+    """@description 실행 잠금으로 일관된 색인과 모델별 결과 로드"""
+    run_path = Path(path).expanduser().resolve()
+    with file_lock(run_path):
+        return _load_run_unlocked(run_path)
+
+
+def _merge_contexts(
+    stored: Sequence[Mapping[str, Any]], current: Sequence[Mapping[str, Any]],
+) -> list[Dict[str, Any]]:
+    """@description target별 문항 순서와 기존 문항 정보를 유지하며 입력 문맥 병합"""
+    merged = copy.deepcopy(list(stored))
+    by_target = {context.get("target"): context for context in merged if context.get("target")}
+    for context in current:
+        existing = by_target.get(context["target"])
+        if existing is None:
+            copied = copy.deepcopy(dict(context))
+            merged.append(copied)
+            by_target[context["target"]] = copied
+            continue
+        existing["question_numbers"] = list(dict.fromkeys([
+            *existing.get("question_numbers", []), *context.get("question_numbers", []),
+        ]))
+        questions = {item["number"]: item for item in existing.get("questions", [])}
+        for question in context.get("questions", []):
+            questions.setdefault(question["number"], copy.deepcopy(question))
+        existing["questions"] = list(questions.values())
+        if "prepared_question" in context:
+            existing["prepared_question"] = copy.deepcopy(context["prepared_question"])
+    return merged
+
+
+def _merge_run_unlocked(
+    run: Mapping[str, Any], path: Path, *, update_models: bool = False,
+    update_prompt: bool = False, update_contexts: bool = False,
+) -> Dict[str, Any]:
+    """@description 최신 저장 상태에 현재 호출자의 선택 메타데이터만 병합"""
+    _validate_run(run)
+    if not path.is_file():
+        merged = copy.deepcopy(dict(run))
+        merged["results"] = []
+        return merged
+    merged = _load_run_unlocked(path)
+    for field in ("exam_id", "mode", "input_mode"):
+        if merged[field] != run[field]:
+            raise ValueError(f"기존 정본 {field}가 현재 실행과 다릅니다.")
+    selected_models = getattr(run, "selected_model_names", {m["name"] for m in run["selected_models"]})
+    selected_targets = getattr(run, "selected_target_names", set(run["selected_targets"]))
+    merged["selected_targets"] = list(dict.fromkeys([
+        *merged["selected_targets"],
+        *(target for target in run["selected_targets"] if target in selected_targets),
+    ]))
+    models = {model["name"]: model for model in merged["selected_models"]}
+    for model in run["selected_models"]:
+        if model["name"] in selected_models and (update_models or model["name"] not in models):
+            models[model["name"]] = copy.deepcopy(model)
+    merged["selected_models"] = list(models.values())
+    stored_contexts = merged.get("input_context", [])
+    stored_targets = {context.get("target") for context in stored_contexts}
+    merged["input_context"] = _merge_contexts(stored_contexts, [
+        context for context in run.get("input_context", [])
+        if context.get("target") in selected_targets
+        and (update_contexts or context.get("target") not in stored_targets)
+    ])
+    if update_prompt:
+        merged["system_prompt"] = run.get("system_prompt", "")
+    return merged
+
+
+def _write_model_unlocked(run: Mapping[str, Any], path: Path, model_name: str) -> None:
+    """@description 단일 모델의 현재 원본 결과 저장"""
+    sidecar = {
+        "schema_version": RUN_SCHEMA_VERSION, "exam_id": run["exam_id"],
+        "mode": run["mode"], "model_name": model_name,
+        "results": [row for row in run["results"] if row["model_name"] == model_name],
+    }
+    _validate_model_sidecar(sidecar, run, model_name)
+    _write_json_atomically(model_results_path(path, model_name), sidecar)
+
+
+def _finish_run_unlocked(run: Mapping[str, Any], merged: Dict[str, Any], path: Path) -> None:
+    """@description 신규 모델 sidecar와 색인 저장 후 호출자 객체를 제자리 갱신"""
+    _validate_run(merged)
+    for model in merged["selected_models"]:
+        name = model["name"]
+        if not model_results_path(path, name).is_file() and not model_verified_path(path, name).is_file():
+            _write_model_unlocked(merged, path, name)
+    merged["updated_at"] = utc_now()
+    common = copy.deepcopy(dict(merged))
+    common.pop("results")
+    common["model_results"] = _model_results_mapping(merged, path)
+    _write_json_atomically(path, common)
+    if isinstance(run, MutableMapping):
+        run.clear()
+        run.update(merged)
+
+
+def merge_run(run: Mapping[str, Any], path: str | Path) -> Path:
+    """@description 시작 시 최신 정본과 현재 선택 범위를 한 트랜잭션으로 병합"""
+    run_path = Path(path).expanduser().resolve()
+    with file_lock(run_path):
+        merged = _merge_run_unlocked(
+            run, run_path, update_models=True, update_prompt=True, update_contexts=True,
+        )
+        _finish_run_unlocked(run, merged, run_path)
+    return run_path
 
 
 def save_run(run: Mapping[str, Any], path: str | Path) -> Path:
     """@description 정본 메타데이터·모델별 원본 결과 원자적 저장"""
-    with _RUN_STORAGE_LOCK:
+    run_path = Path(path).expanduser().resolve()
+    with file_lock(run_path):
         _validate_run(run)
-        run_path = Path(path).expanduser().resolve()
         payload = copy.deepcopy(dict(run))
         payload["updated_at"] = utc_now()
         _validate_run(payload)
@@ -459,19 +583,11 @@ def save_run(run: Mapping[str, Any], path: str | Path) -> Path:
 
 def save_run_metadata(run: Mapping[str, Any], path: str | Path) -> Path:
     """@description 모델별 원본을 건드리지 않고 정본 메타데이터 원자적 저장"""
-    with _RUN_STORAGE_LOCK:
-        _validate_run(run)
-        run_path = Path(path).expanduser().resolve()
-        payload = copy.deepcopy(dict(run))
-        payload["updated_at"] = utc_now()
-        common = copy.deepcopy(payload)
-        common.pop("results", None)
-        common["model_results"] = _model_results_mapping(payload, run_path)
-        _validate_run(common, require_results=False)
-        _write_json_atomically(run_path, common)
-        if isinstance(run, MutableMapping):
-            run["updated_at"] = payload["updated_at"]
-        return run_path
+    run_path = Path(path).expanduser().resolve()
+    with file_lock(run_path):
+        merged = _merge_run_unlocked(run, run_path, update_models=True, update_contexts=True)
+        _finish_run_unlocked(run, merged, run_path)
+    return run_path
 
 
 def initialize_model_results(
@@ -480,26 +596,27 @@ def initialize_model_results(
     model_names: Sequence[str],
 ) -> Path:
     """@description 신규 raw 모델의 빈 sidecar 선행 초기화"""
-    with _RUN_STORAGE_LOCK:
-        _validate_run(run)
-        run_path = Path(path).expanduser().resolve()
-        known_models = {model["name"] for model in run["selected_models"]}
+    run_path = Path(path).expanduser().resolve()
+    with file_lock(run_path):
+        merged = _merge_run_unlocked(run, run_path)
+        known_models = {model["name"] for model in merged["selected_models"]}
         requested_models = list(dict.fromkeys(model_names))
         if any(model_name not in known_models for model_name in requested_models):
             raise ValueError("초기화할 모델이 정본 selected_models에 없습니다.")
         for model_name in requested_models:
             model_path = model_results_path(run_path, model_name)
-            if model_path.is_file():
+            if model_path.is_file() or model_verified_path(run_path, model_name).is_file():
                 continue
             sidecar = {
                 "schema_version": RUN_SCHEMA_VERSION,
-                "exam_id": run["exam_id"],
-                "mode": run["mode"],
+                "exam_id": merged["exam_id"],
+                "mode": merged["mode"],
                 "model_name": model_name,
                 "results": [],
             }
-            _validate_model_sidecar(sidecar, run, model_name)
+            _validate_model_sidecar(sidecar, merged, model_name)
             _write_json_atomically(model_path, sidecar)
+        _finish_run_unlocked(run, merged, run_path)
         return run_path
 
 
@@ -510,51 +627,65 @@ def upsert_result(
     path: str | Path | None = None,
 ) -> Dict[str, Any]:
     """@description target·모델·문항 번호 결과 교체 및 즉시 저장"""
-    with _RUN_STORAGE_LOCK:
-        _validate_run(run)
-        normalized_result = copy.deepcopy(dict(result))
-        _validate_result(normalized_result)
-        identity = result_identity(normalized_result)
-        results = run["results"]
-        for index, existing in enumerate(results):
-            if result_identity(existing) == identity:
-                results[index] = normalized_result
-                break
-        else:
-            results.append(normalized_result)
-        _validate_run(run)
-        if path is not None:
-            run_path = Path(path).expanduser().resolve()
-            if not run_path.exists():
-                save_run(run, run_path)
-            else:
-                _save_upsert(run, run_path, normalized_result["model_name"])
-        return normalized_result
+    normalized_result = copy.deepcopy(dict(result))
+    _validate_result(normalized_result)
+    if path is None:
+        _upsert_in_memory(run, normalized_result)
+    else:
+        run_path = Path(path).expanduser().resolve()
+        with file_lock(run_path):
+            merged = _merge_run_unlocked(run, run_path)
+            _upsert_in_memory(merged, normalized_result)
+            _write_model_unlocked(merged, run_path, normalized_result["model_name"])
+            _invalidate_changed_raw_unlocked(run_path, merged, normalized_result)
+            _finish_run_unlocked(run, merged, run_path)
+    return normalized_result
 
 
-def _save_upsert(run: Mapping[str, Any], run_path: Path, model_name: str) -> None:
-    """@description 변경 모델 원본·공통 메타데이터 단독 저장"""
-    existing = load_run(run_path)
-    if existing["exam_id"] != run["exam_id"] or existing["mode"] != run["mode"]:
-        raise ValueError("기존 정본 시험·mode가 현재 실행과 다릅니다.")
-    grouped_results = _results_by_model(run)
-    sidecar = {
-        "schema_version": RUN_SCHEMA_VERSION,
-        "exam_id": run["exam_id"],
-        "mode": run["mode"],
-        "model_name": model_name,
-        "results": grouped_results[model_name],
-    }
-    _validate_model_sidecar(sidecar, run, model_name)
-    _write_json_atomically(model_results_path(run_path, model_name), sidecar)
-    common = copy.deepcopy(dict(run))
-    common.pop("results", None)
-    common["updated_at"] = utc_now()
-    common["model_results"] = _model_results_mapping(run, run_path)
-    _validate_run(common, require_results=False)
-    _write_json_atomically(run_path, common)
-    if isinstance(run, MutableMapping):
-        run["updated_at"] = common["updated_at"]
+def _upsert_in_memory(run: MutableMapping[str, Any], result: Dict[str, Any]) -> None:
+    """@description 단일 identity 결과만 메모리 목록에 교체"""
+    identity = result_identity(result)
+    for index, existing in enumerate(run["results"]):
+        if result_identity(existing) == identity:
+            run["results"][index] = result
+            break
+    else:
+        run["results"].append(result)
+    _validate_run(run)
+
+
+def _invalidate_changed_raw_unlocked(
+    path: Path, run: Mapping[str, Any], result: Mapping[str, Any],
+) -> None:
+    """@description 새 원본과 다른 응답을 채점한 행 제거 및 생성 시점 무효화 기록"""
+    model_name, target = result["model_name"], result["target"]
+    verified_path = model_verified_path(path, model_name)
+    with file_lock(verified_path):
+        envelope = _verified_envelope(verified_path)
+        if envelope is None:
+            envelope = {
+                "schema_version": 1, "exam_id": run["exam_id"], "mode": run["mode"],
+                "model_name": model_name, "results": [],
+            }
+        kept = [row for row in envelope["results"] if not (
+            row.get("target") == target
+            and (run["input_mode"] == "section" or row.get("question_number") == result["question_number"])
+            and row.get("raw_response") != result["raw_response"]
+        )]
+        updated = copy.deepcopy(dict(envelope))
+        updated["results"] = kept
+        _record_verified_invalidation(updated, target, result["question_number"], run["input_mode"])
+        _write_json_atomically(verified_path, updated)
+
+
+def _record_verified_invalidation(
+    envelope: MutableMapping[str, Any], target: str, question_number: int, input_mode: str,
+) -> None:
+    """@description 문항별 입력은 해당 문항만, 섹션 입력은 전체 영역의 무효화 시각 기록"""
+    if input_mode == "question":
+        envelope.setdefault("question_invalidations", {}).setdefault(target, {})[str(question_number)] = utc_now()
+    else:
+        envelope.setdefault("invalidations", {})[target] = utc_now()
 
 
 def get_result(
@@ -610,10 +741,13 @@ def verified_completed_keys(
     model_name: str,
 ) -> set[tuple[str, str, int]]:
     """@description 모델별 verified envelope의 완료 결과 키 반환"""
-    envelope = _verified_envelope(model_verified_path(raw_index_path, model_name))
-    if envelope is None:
-        return set()
-    _validate_verified_identity(envelope, raw_index_path, model_name)
+    index_path = Path(raw_index_path).expanduser().resolve()
+    verified_path = model_verified_path(index_path, model_name)
+    with file_lock(index_path), file_lock(verified_path):
+        envelope = _verified_envelope(verified_path)
+        if envelope is None:
+            return set()
+        _validate_verified_identity(envelope, raw_index_path, model_name)
     completed: set[tuple[str, str, int]] = set()
     for result in envelope["results"]:
         if not isinstance(result, Mapping) or result.get("complete") is not True:
@@ -653,11 +787,6 @@ def invalidate_verified_results(
     question_numbers: Sequence[int] | None = None,
 ) -> bool:
     """@description 원본 재생성 대상 verified 결과 무효화"""
-    verified_path = model_verified_path(raw_index_path, model_name)
-    envelope = _verified_envelope(verified_path)
-    if envelope is None:
-        return False
-    _validate_verified_identity(envelope, raw_index_path, model_name)
     if input_mode == "question":
         invalidated = {(target, model_name, question_number)}
     elif input_mode == "section":
@@ -666,18 +795,26 @@ def invalidate_verified_results(
         }
     else:
         raise ValueError(f"지원하지 않는 input_mode입니다: {input_mode}")
-    kept = []
-    changed = False
-    for result in envelope["results"]:
-        if isinstance(result, Mapping) and result.get("model_name", model_name) == model_name:
-            identity = result_identity(result)
-            if identity in invalidated:
-                changed = True
-                continue
-        kept.append(result)
-    if changed:
+    index_path = Path(raw_index_path).expanduser().resolve()
+    verified_path = model_verified_path(index_path, model_name)
+    with file_lock(index_path), file_lock(verified_path):
+        envelope = _verified_envelope(verified_path)
+        if envelope is None:
+            metadata = _read_json(index_path)
+            envelope = {
+                "schema_version": 1, "exam_id": metadata["exam_id"], "mode": metadata["mode"],
+                "model_name": model_name, "results": [],
+            }
+        _validate_verified_identity(envelope, raw_index_path, model_name)
+        kept = [result for result in envelope["results"] if not (
+            isinstance(result, Mapping)
+            and result.get("model_name", model_name) == model_name
+            and result_identity(result) in invalidated
+        )]
+        changed = len(kept) != len(envelope["results"])
         updated = copy.deepcopy(dict(envelope))
         updated["results"] = kept
+        _record_verified_invalidation(updated, target, question_number, input_mode)
         _write_json_atomically(verified_path, updated)
     return changed
 
@@ -723,6 +860,7 @@ __all__ = [
     "is_technical_failure",
     "is_verified_result_completed",
     "load_run",
+    "merge_run",
     "model_results_path",
     "model_verified_path",
     "result_identity",
