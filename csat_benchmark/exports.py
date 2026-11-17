@@ -7,6 +7,7 @@ import json
 import math
 import os
 import tempfile
+import time
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
@@ -81,7 +82,14 @@ def _write_json(path: Path, payload: Any) -> Path:
         ) as temporary_file:
             temporary_path = Path(temporary_file.name)
             temporary_file.write(content)
-        os.replace(temporary_path, path)
+        for attempt in range(20):
+            try:
+                os.replace(temporary_path, path)
+                break
+            except PermissionError:
+                if attempt == 19:
+                    raise
+                time.sleep(0.05)
     finally:
         if temporary_path is not None and temporary_path.exists():
             temporary_path.unlink()

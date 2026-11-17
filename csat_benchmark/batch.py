@@ -695,7 +695,15 @@ def _read_batch_state(path: Path, run: Mapping[str, Any]) -> _BatchState:
     """@description 지정 상태 파일 로드 및 시험 일치 검증"""
     if not path.is_file():
         return _BatchState(_new_batch_state(run))
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    for attempt in range(20):
+        try:
+            text = path.read_text(encoding="utf-8")
+            break
+        except PermissionError:
+            if attempt == 19:
+                raise
+            time.sleep(0.05)
+    payload = json.loads(text)
     if not isinstance(payload, Mapping):
         raise BatchError(f"batch 상태가 객체가 아닙니다: {path}")
     state = _BatchState(payload)

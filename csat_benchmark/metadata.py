@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import re
+import tempfile
+import time
 from dataclasses import asdict, is_dataclass
 from datetime import date
 from pathlib import Path
@@ -108,6 +111,33 @@ def _iter_model_records(models: Mapping[str, Any] | Iterable[Any]) -> Iterable[D
         yield _model_record(model)
 
 
+def _write_text_atomically(path: Path, content: str) -> None:
+    """@description UTF-8 텍스트 파일을 원자적으로 저장"""
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as temporary_file:
+            temporary_path = Path(temporary_file.name)
+            temporary_file.write(content)
+        for attempt in range(20):
+            try:
+                os.replace(temporary_path, path)
+                break
+            except PermissionError:
+                if attempt == 19:
+                    raise
+                time.sleep(0.05)
+    finally:
+        if temporary_path is not None and temporary_path.exists():
+            temporary_path.unlink()
+
+
 def merge_model_metadata(
     existing: Mapping[str, Any],
     models: Mapping[str, Any] | Iterable[Any],
@@ -191,7 +221,7 @@ def sync_model_metadata(
         if updated_text == original_text:
             return False
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(updated_text, encoding="utf-8")
+        _write_text_atomically(path, updated_text)
         return True
 
 
