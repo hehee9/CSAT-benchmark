@@ -343,6 +343,21 @@ def _write_config(
     return config_path
 
 
+def test_openrouter_job_records_provider_and_uses_chat_requests(tmp_path: Path, monkeypatch):
+    """@description OpenRouter 배치 공급자 기록 및 채팅 요청 확인"""
+    monkeypatch.setenv("BATCH_TEST_KEY", "test-key")
+    exam = _write_exam(tmp_path, questions=1)
+    config_path = _write_config(tmp_path, ["모의 모델"])
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    config["models"][0]["base_url"] = "https://openrouter.ai/api/v1"
+    config_path.write_text(json.dumps(config, ensure_ascii=False), encoding="utf-8")
+    transport = _FakeBatchTransport()
+    result = submit_exam(exam, config_path=config_path, model_names=["모의 모델"],
+                         transport=transport, use_responses_api=True)
+    assert result["batch_state"]["jobs"][0]["provider"] == "openrouter"
+    assert transport.submissions[0][1][0]["url"] == "/v1/chat/completions"
+
+
 def test_default_and_easy_submit_once_per_key(tmp_path: Path, monkeypatch):
     """default는 section 한 번, easy는 문항별 한 번만 제출한다."""
     monkeypatch.setenv("BATCH_TEST_KEY", "test-key")

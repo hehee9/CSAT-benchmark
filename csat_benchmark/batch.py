@@ -21,6 +21,7 @@ from .providers.batch import anthropic as anthropic_batch
 from .providers.batch import google as google_batch
 from .providers.batch import google_vertex
 from .providers.batch import openai as openai_batch
+from .providers.batch import openrouter as openrouter_batch
 from .providers.batch import xai as xai_batch
 from .providers.requests import (
     build_anthropic_params,
@@ -241,6 +242,12 @@ class ProviderBatchTransport(BatchTransport):
             params=params,
         )
 
+    def _openrouter_request(self, method, path, model_config, json_body=None):
+        """@description OpenRouter Batch REST 요청 위임"""
+        return openrouter_batch.request(
+            method, path, model_config, self._resolve_api_key, BatchError, json_body=json_body
+        )
+
     def submit(
         self,
         model_config: ModelConfig,
@@ -253,6 +260,10 @@ class ProviderBatchTransport(BatchTransport):
         """@description 공급자별 Batch 직접 제출 및 ID 반환"""
         provider = model_config.api_type
         requests_list = [copy.deepcopy(dict(item)) for item in requests]
+        if openrouter_batch.enabled(model_config):
+            payload = openrouter_batch.create_payload(model_config, requests_list)
+            self._save_json(payload, input_path)
+            return str(self._openrouter_request("POST", "/batches", model_config, payload)["id"])
         if provider == "grok":
             batch_id = self.create(
                 model_config,
@@ -327,6 +338,8 @@ class ProviderBatchTransport(BatchTransport):
 
     def status(self, batch_id: str, model_config: ModelConfig) -> Dict[str, Any]:
         """@description 공급자별 Batch 상태 조회 위임"""
+        if openrouter_batch.enabled(model_config):
+            return openrouter_batch.check_batch_status(batch_id, model_config, self._openrouter_request)
         if model_config.api_type == "grok":
             return xai_batch.check_batch_status(batch_id, model_config, self._xai_request)
         if model_config.api_type == "anthropic":
@@ -339,6 +352,10 @@ class ProviderBatchTransport(BatchTransport):
 
     def download(self, batch_id: str, model_config: ModelConfig, output_path: Path) -> Path:
         """@description 공급자별 Batch 결과 다운로드 위임"""
+        if openrouter_batch.enabled(model_config):
+            return openrouter_batch.download_results(
+                batch_id, model_config, output_path, self._openrouter_request, self._save_json
+            )
         if model_config.api_type == "grok":
             return xai_batch.download_results(
                 batch_id,
@@ -399,6 +416,8 @@ class ProviderBatchTransport(BatchTransport):
     ) -> List[Dict[str, Any]]:
         """@description 공급자 원본 결과 전체 파일 파싱"""
         provider = model_config.api_type
+        if openrouter_batch.enabled(model_config):
+            return openrouter_batch.parse_results(result_path, model_config.name)
         if provider == "grok":
             return xai_batch.parse_results(result_path, model_config.name)
         if provider == "anthropic":
@@ -433,12 +452,12 @@ class ProviderBatchTransport(BatchTransport):
 
 def _result_suffix(provider: str) -> str:
     """@description 공급자 원본 결과 파일 확장자 반환"""
-    return ".json" if provider in {"google", "grok"} else ".jsonl"
+    return ".json" if provider in {"google", "grok", "openrouter"} else ".jsonl"
 
 
 def _input_suffix(provider: str) -> str:
     """@description 공급자 batch 입력 파일 확장자 반환"""
-    return ".json" if provider in {"google", "grok", "anthropic"} else ".jsonl"
+    return ".json" if provider in {"google", "grok", "anthropic", "openrouter"} else ".jsonl"
 
 
 def _anthropic_params_by_id(
@@ -517,6 +536,8 @@ def _base_request(
     system_prompt: str,
 ) -> Dict[str, Any]:
     """@description 기존 공급자 요청 생성기를 이용한 단일 batch 요청 생성"""
+    if openrouter_batch.enabled(model_config):
+        use_responses_api = False
     if provider == "anthropic":
         return {
             "custom_id": f"q{question.number}",
@@ -1047,16 +1068,17 @@ def _reserve_batch_jobs(
         ).hexdigest()[:12]
         job_id = uuid.uuid4().hex
         model_dir = model_results_path(context["path"], model_name).parent
+        provider = "openrouter" if openrouter_batch.enabled(model_config) else model_config.api_type
         input_path = model_dir / (
             f"batch-input-{_safe_id(model_name, 20)}-{key_digest}-{job_id[:12]}"
-            f"{_input_suffix(model_config.api_type)}"
+            f"{_input_suffix(provider)}"
         )
         job = {
             "job_id": job_id,
             "owner_pid": os.getpid(),
             "reserved_at": time.time(),
             "model_name": model_name,
-            "provider": model_config.api_type,
+            "provider": provider,
             "scopes": _scope_records(slots, context["contexts"]),
             "provider_batch_id": f"reserved:{job_id}",
             "request_ids": [slot.request_id for slot in slots],
@@ -1814,7 +1836,7 @@ def download_exam(
         model_dir.mkdir(parents=True, exist_ok=True)
         raw_path = Path(job.get("raw_path") or (model_dir / (
             f"batch-raw-{_safe_id(job['provider_batch_id'], 40)}"
-            f"{_result_suffix(model_config.api_type)}"
+            f"{_result_suffix('openrouter' if openrouter_batch.enabled(model_config) else model_config.api_type)}"
         )))
         if model_config.api_type == "grok":
             submission_snapshot = {

@@ -6,9 +6,11 @@ import json
 from pathlib import Path
 from types import SimpleNamespace
 
-from csat_benchmark.batch import ProviderBatchTransport
-from csat_benchmark.models import ModelConfig
-from csat_benchmark.providers.batch import anthropic, google, openai, xai
+import pytest
+
+from csat_benchmark.batch import BatchError, ProviderBatchTransport, _base_request, _is_terminal
+from csat_benchmark.models import ModelConfig, Question
+from csat_benchmark.providers.batch import anthropic, google, openai, openrouter, xai
 from csat_benchmark.runs import is_technical_failure, result_is_completed
 
 
@@ -20,6 +22,101 @@ def _model_config(api_type: str) -> ModelConfig:
         api_key="test-key",
         model_id="fixture-model",
     )
+
+
+def test_openrouter_transport_payload_status_and_results(tmp_path, monkeypatch):
+    """@description OpenRouter 제출, 상태 및 인라인 결과 계약 확인"""
+    config = _model_config("openai")
+    config.base_url = "https://openrouter.ai/api/v1"
+    config.model_id = "z-ai/glm-5.3"
+    config.extra_body = {"provider": {"order": ["morph/fp8"], "allow_fallbacks": False}, "reasoning": {"effort": "high"}}
+    calls = []
+    data = {"id": "batch-1", "status": "completed", "created_at": 1, "finalized_at": 2,
+            "request_counts": {"total": 3, "completed": 3, "failed": 0}, "results": None}
+
+    def fake_request(method, url, **kwargs):
+        calls.append((method, url, kwargs))
+        return SimpleNamespace(status_code=202 if method == "POST" else 200, ok=True,
+                               json=lambda: {"id": "batch-1"} if method == "POST" else data)
+
+    monkeypatch.setattr(openrouter.requests, "request", fake_request)
+    transport = ProviderBatchTransport()
+    question = Question(number=1, correct_answer=1, points=2, question_text="문제")
+    item = _base_request(config, question, provider="openai", use_responses_api=True, system_prompt="지시")
+    input_path = tmp_path / "input.json"
+    assert transport.submit(config, [item], input_path=input_path, batch_name="test", use_responses_api=True) == "batch-1"
+    payload = json.loads(input_path.read_text(encoding="utf-8"))
+    assert list(payload)[-1] == "requests"
+    assert payload["provider"] == {"only": ["morph/fp8"], "allow_fallbacks": False}
+    body = payload["requests"][0]["body"]
+    assert body["reasoning"] == {"effort": "high"}
+    assert "messages" in body and "max_completion_tokens" in body
+    assert not {"model", "stream", "provider", "extra_body"} & body.keys()
+    assert calls[0][2]["json"] == payload
+    status = transport.status("batch-1", config)
+    assert status["status"] == "finalizing" and not _is_terminal(status)
+    assert status["request_counts"] == data["request_counts"]
+    data["results"] = [
+        {"custom_id": "q3", "response": {"status_code": 429, "body": {"error": {"message": "제한"}}}, "error": None},
+        {"custom_id": "q1", "response": {"status_code": 200, "body": {"choices": [{"message": {"content": "정답"}, "finish_reason": "stop"}], "usage": {"prompt_tokens": 5, "completion_tokens": 3, "total_tokens": 8}}}, "error": None},
+        {"custom_id": "q2", "response": None, "error": {"message": "실패"}},
+    ]
+    assert transport.status("batch-1", config)["status"] == "completed"
+    output = transport.download("batch-1", config, tmp_path / "result.json")
+    parsed = transport.parse(output, config, use_responses_api=True, input_requests=[])
+    assert [row["question_number"] for row in parsed] == [1, 2, 3]
+    assert parsed[0]["raw_response"] == "정답" and parsed[0]["total_tokens"] == 8
+    assert [row["error_message"] for row in parsed[1:]] == ["실패", "제한"]
+    output.write_text(json.dumps({"status": "failed", "results": None}), encoding="utf-8")
+    assert transport.parse(output, config, use_responses_api=True, input_requests=[]) == []
+
+    monkeypatch.setattr(openrouter.requests, "request", lambda *args, **kwargs: SimpleNamespace(status_code=402, ok=False))
+    with pytest.raises(BatchError, match="충전.*재제출 불필요"):
+        transport.status("batch-1", config)
+    with pytest.raises(BatchError, match="충전.*재제출 불필요"):
+        transport.download("batch-1", config, tmp_path / "result.json")
+    config.extra_body = {"reasoning": {"effort": "high"}}
+    assert "provider" not in openrouter.create_payload(config, [item])
+
+
+@pytest.mark.parametrize(
+    ("extra_body", "expected"),
+    [({}, {"effort": "medium"}), ({"reasoning": {"effort": "high"}}, {"effort": "high"})],
+)
+def test_openrouter_reasoning_effort_normalization(extra_body, expected):
+    """@description 추론 강도 변환 및 extra_body 우선순위 확인"""
+    config = _model_config("openai")
+    config.base_url = "https://openrouter.ai/api/v1"
+    config.reasoning_effort = "medium"
+    config.extra_body = extra_body
+    question = Question(number=1, correct_answer=1, points=2, question_text="문제")
+    item = _base_request(config, question, provider="openai", use_responses_api=False, system_prompt="지시")
+    body = openrouter.create_payload(config, [item])["requests"][0]["body"]
+    assert body["reasoning"] == expected
+    assert "reasoning_effort" not in body
+
+
+def test_openrouter_get_retries_temporarily_missing_batch(monkeypatch):
+    """@description 생성 직후 조회 지연과 재시도 한도 확인"""
+    config = _model_config("openai")
+    calls = []
+    sleeps = []
+
+    def fake_request(*args, **kwargs):
+        calls.append(1)
+        if len(calls) == 1:
+            return SimpleNamespace(status_code=404, ok=False, text="not found")
+        return SimpleNamespace(status_code=200, ok=True, json=lambda: {"status": "in_progress"})
+
+    monkeypatch.setattr(openrouter.requests, "request", fake_request)
+    assert openrouter.request("GET", "/batches/id", config, lambda _: "key", BatchError, sleep=sleeps.append) == {"status": "in_progress"}
+    assert len(calls) == 2 and sleeps == [5]
+
+    monkeypatch.setattr(openrouter.requests, "request", lambda *args, **kwargs: SimpleNamespace(status_code=404, ok=False, text="not found"))
+    sleeps.clear()
+    with pytest.raises(BatchError, match="404"):
+        openrouter.request("GET", "/batches/id", config, lambda _: "key", BatchError, sleep=sleeps.append)
+    assert sleeps == [5] * 24
 
 
 def test_provider_transport_openai_delegates_direct_provider_functions(tmp_path: Path, monkeypatch):

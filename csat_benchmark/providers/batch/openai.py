@@ -127,6 +127,41 @@ def extract_raw_response(response_body: Dict[str, Any], use_responses_api: bool)
     return ""
 
 
+def _response_record(
+    custom_id: str, question_number: int, model_name: str,
+    response_body: Dict[str, Any], use_responses_api: bool,
+) -> dict:
+    """@description 응답 본문을 공용 결과 레코드로 변환"""
+    usage_fields = extract_usage_fields(response_body.get("usage"))
+    raw_response = extract_raw_response(response_body, use_responses_api)
+    choices = response_body.get("choices", [])
+    choice = choices[0] if choices else {}
+    message = choice.get("message", {}) if isinstance(choice, dict) else {}
+    stop_reason = choice.get("finish_reason") if isinstance(choice, dict) else None
+    refusal = message.get("refusal") if isinstance(message, dict) else None
+    is_refusal = (
+        stop_reason in {"refusal", "content_filter"}
+        or isinstance(refusal, str)
+        or contains_refusal(response_body)
+    )
+    answer_status = "refusal" if is_refusal else "answered" if raw_response else "no_answer"
+    has_generation = _has_response_or_token_usage(
+        raw_response, usage_fields["input_tokens"],
+        usage_fields["output_tokens"], usage_fields["total_tokens"],
+    )
+    return {
+        "request_id": custom_id,
+        "question_number": question_number,
+        "model_name": model_name,
+        "raw_response": raw_response,
+        "success": has_generation or is_refusal,
+        "error_message": None if has_generation or is_refusal else EMPTY_RESPONSE_ERROR,
+        "answer_status": answer_status,
+        "provider_stop_reason": stop_reason,
+        **usage_fields,
+    }
+
+
 def parse_results(
     result_path: Path,
     model_name: str,
@@ -172,42 +207,8 @@ def parse_results(
                 continue
 
             response_body = result_obj.get("response", {}).get("body", {})
-            usage_fields = extract_usage_fields(response_body.get("usage"))
-            raw_response = extract_raw_response(response_body, use_responses_api)
-            choices = response_body.get("choices", [])
-            choice = choices[0] if choices else {}
-            message = choice.get("message", {}) if isinstance(choice, dict) else {}
-            stop_reason = choice.get("finish_reason") if isinstance(choice, dict) else None
-            refusal = message.get("refusal") if isinstance(message, dict) else None
-            is_refusal = (
-                stop_reason in {"refusal", "content_filter"}
-                or isinstance(refusal, str)
-                or contains_refusal(response_body)
-            )
-            answer_status = (
-                "refusal"
-                if is_refusal
-                else "answered" if raw_response else "no_answer"
-            )
-            has_generation = _has_response_or_token_usage(
-                raw_response,
-                usage_fields["input_tokens"],
-                usage_fields["output_tokens"],
-                usage_fields["total_tokens"],
-            )
-
             results.append(
-                {
-                    "request_id": custom_id,
-                    "question_number": question_number,
-                    "model_name": model_name,
-                    "raw_response": raw_response,
-                    "success": has_generation or is_refusal,
-                    "error_message": None if has_generation or is_refusal else EMPTY_RESPONSE_ERROR,
-                    "answer_status": answer_status,
-                    "provider_stop_reason": stop_reason,
-                    **usage_fields,
-                }
+                _response_record(custom_id, question_number, model_name, response_body, use_responses_api)
             )
 
     results.sort(key=lambda item: item["question_number"])
