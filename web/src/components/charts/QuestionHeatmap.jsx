@@ -108,20 +108,19 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
 
   return (
     <div ref={ref} className="w-full">
-      <div className="flex items-start justify-between mb-4">
-        <div className="min-w-0 grow">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-            {title && (
-              <h3 className="export-role-title text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
-            )}
-            <NoWebSearchBadge />
-          </div>
-          <TestEnvCaption className="mt-1.5" />
+      {/* 모바일에서는 제목이 첫 줄 전체를 쓰고, 배지 줄 오른쪽에 버튼을 둔다 */}
+      <div className="mb-4 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-2">
+        <div className="contents sm:col-start-1 sm:row-start-1 sm:flex sm:min-w-0 sm:flex-wrap sm:items-center sm:gap-x-3 sm:gap-y-1.5">
+          {title && (
+            <h3 className="export-role-title col-span-2 row-start-1 text-xl font-semibold text-gray-800 dark:text-gray-200">{title}</h3>
+          )}
+          <NoWebSearchBadge className="col-start-1 row-start-2 mt-1.5 self-center justify-self-start sm:mt-0" />
         </div>
-        <div className="flex items-start gap-2">
+        <TestEnvCaption className="col-span-2 col-start-1 row-start-3 mt-1.5 sm:col-span-1 sm:row-start-2" />
+        <div className="col-start-2 row-start-2 mt-1.5 flex items-start gap-2 sm:row-span-2 sm:row-start-1 sm:mt-0">
           <span className="export-role-watermark hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
           <button
-            className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+            className={`whitespace-nowrap px-3 py-1.5 text-sm rounded-lg transition-colors ${
               showAnswerNumbers
                 ? 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
                 : 'bg-blue-500 text-white hover:bg-blue-600'
