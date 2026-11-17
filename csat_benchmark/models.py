@@ -123,6 +123,9 @@ class ModelConfig:
     price: Optional[Dict[str, float]] = None
     extra_body: Optional[Dict[str, Any]] = None
     vertex_key: Optional[str] = None
+    vertex_project: Optional[str] = None
+    vertex_location: Optional[str] = None
+    vertex_batch_gcs_uri: Optional[str] = None
     modalities: Optional[List[str]] = None
     image_url_mode: str = "data_url"
     merge_multiple_images: bool = False

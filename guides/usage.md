@@ -129,6 +129,26 @@ python batch_solver.py retry --exam EXAM --config CONFIG
 
 배치 입력과 다운로드 원본은 해당 모드의 `models/<모델별 폴더>/`에 함께 저장됩니다.
 
+### Vertex AI Gemini 배치 설정
+
+Google Cloud 프로젝트에서 Vertex AI API를 사용 설정하고 Cloud Storage 버킷을 준비한 뒤, Google Cloud CLI에서 다음 명령으로 애플리케이션 기본 사용자 인증 정보를 설정하세요.
+
+```bash
+gcloud auth application-default login
+```
+
+설정 파일 최상위에 다음 항목을 추가하면 Google 모델에 기본값으로 적용됩니다. 인증 계정에는 해당 프로젝트의 Vertex AI 작업 생성 권한과 버킷 읽기 및 쓰기 권한이 필요합니다.
+
+```json
+"vertex_batch": {
+  "project": "프로젝트-ID",
+  "location": "global",
+  "gcs_uri": "gs://버킷-이름/선택-경로"
+}
+```
+
+모델별로 `vertex_project`, `vertex_location`, `vertex_batch_gcs_uri`를 지정해 기본값을 덮어쓸 수 있습니다. 프로젝트와 버킷 URI가 모두 설정된 Google 모델은 Vertex AI 배치를 사용하며, 그렇지 않으면 기존 Gemini Developer API 배치를 사용합니다. 위치를 생략하면 `global`을 사용합니다.
+
 ## 5. 답안 추출과 채점
 
 실행이 끝나면 다음 명령으로 비공개 `verified.json`을 생성합니다.

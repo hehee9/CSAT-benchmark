@@ -407,6 +407,40 @@ def test_batch_lifecycle_retries_only_technical_failure(tmp_path: Path, monkeypa
     assert {job["provider_batch_id"] for job in completed["batch_state"]["jobs"]} == {"fake-1", "fake-2"}
 
 
+def test_missing_batch_result_remains_retriable(tmp_path: Path, monkeypatch):
+    """@description 누락 응답의 미병합 상태 및 재시도 대상 유지"""
+    monkeypatch.setenv("BATCH_TEST_KEY", "test-key")
+    exam = _write_exam(tmp_path, questions=2)
+    config_path = _write_config(tmp_path, ["모의 모델"])
+    transport = _FakeBatchTransport()
+    original_parse = transport.parse
+    monkeypatch.setattr(transport, "parse", lambda *args, **kwargs: original_parse(*args, **kwargs)[:1])
+    submit_exam(exam, config_path=config_path, easy=True, transport=transport)
+    downloaded = download_exam(exam, config_path=config_path, easy=True, transport=transport)
+    assert downloaded["saved_results"] == 1
+    assert downloaded["batch_state"]["jobs"][0]["downloaded"] is False
+    retried = submit_exam(exam, config_path=config_path, easy=True, retry_failed=True, transport=transport)
+    assert retried["submitted"] == 1
+    assert len(transport.submissions[-1][1]) == 1
+
+
+@pytest.mark.parametrize("state", ["JOB_STATE_CANCELLED", "JOB_STATE_EXPIRED"])
+def test_terminal_vertex_without_output_records_failure(tmp_path: Path, monkeypatch, state):
+    """@description 취소 또는 만료된 Vertex 작업의 결과 부재 기록"""
+    monkeypatch.setenv("BATCH_TEST_KEY", "test-key")
+    exam = _write_exam(tmp_path, questions=1)
+    config_path = _write_config(tmp_path, ["모의 모델"])
+    transport = _FakeBatchTransport()
+    monkeypatch.setattr(transport, "status", lambda batch_id, config: {"id": batch_id, "status": state, "vertex_batch": True})
+    def no_output(*args):
+        raise RuntimeError("결과 저장 경로가 없습니다")
+    monkeypatch.setattr(transport, "download", no_output)
+    submit_exam(exam, config_path=config_path, transport=transport)
+    result = download_exam(exam, config_path=config_path, transport=transport)
+    assert result["batch_state"]["jobs"][0]["downloaded"] is True
+    assert "결과 저장 경로" in result["batch_state"]["jobs"][0]["download_error"]
+
+
 def test_ordinary_submit_replaces_completed_key(tmp_path: Path, monkeypatch):
     """일반 제출은 완료 결과도 선택 key에 대해 새 Batch로 교체한다."""
     monkeypatch.setenv("BATCH_TEST_KEY", "test-key")

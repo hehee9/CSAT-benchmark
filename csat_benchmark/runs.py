@@ -25,7 +25,10 @@ VERIFIED_RESULT_FILE = "verified.json"
 _MODEL_DIRECTORY_INVALID_CHARS = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
 _MODEL_DIRECTORY_MAX_LENGTH = 48
 _MODEL_DIRECTORY_PREFIX = "model-"
-_CREDENTIAL_FIELDS = {"api_key", "vertex_key", "api_key_env", "vertex_key_env"}
+_CREDENTIAL_FIELDS = {
+    "api_key", "vertex_key", "api_key_env", "vertex_key_env",
+    "vertex_project", "vertex_location", "vertex_batch_gcs_uri",
+}
 _RUN_STORAGE_LOCK = threading.RLock()
 
 

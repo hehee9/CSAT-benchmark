@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
+import warnings
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Sequence
 
@@ -296,12 +298,19 @@ def parse_results(
     result_path: Path,
     model_name: str,
     input_custom_ids: Sequence[str] = (),
+    *,
+    vertex: bool = False,
+    input_requests: Sequence[Dict[str, Any]] = (),
 ) -> List[dict]:
     """@description Gemini Batch 결과 파싱"""
     results = []
-    for index, item in enumerate(load_inlined_responses(result_path)):
+    responses = (
+        _vertex_responses(result_path, input_requests)
+        if vertex else load_inlined_responses(result_path)
+    )
+    for index, item in enumerate(responses):
         custom_id = response_custom_id(item)
-        if custom_id is None and index < len(input_custom_ids):
+        if not vertex and custom_id is None and index < len(input_custom_ids):
             custom_id = input_custom_ids[index]
         question_number = extract_question_number(custom_id)
         if question_number is None:
@@ -374,12 +383,19 @@ def parse_hard_results(
     model_name: str,
     custom_id: str,
     input_custom_ids: Sequence[str] = (),
+    *,
+    vertex: bool = False,
+    input_requests: Sequence[Dict[str, Any]] = (),
 ) -> List[dict]:
     """@description Gemini hard 섹션 Batch 결과 파싱"""
     results = []
-    for index, item in enumerate(load_inlined_responses(result_path)):
+    responses = (
+        _vertex_responses(result_path, input_requests)
+        if vertex else load_inlined_responses(result_path)
+    )
+    for index, item in enumerate(responses):
         item_custom_id = response_custom_id(item)
-        if item_custom_id is None and index < len(input_custom_ids):
+        if not vertex and item_custom_id is None and index < len(input_custom_ids):
             item_custom_id = input_custom_ids[index]
         if item_custom_id != custom_id:
             continue
@@ -422,6 +438,66 @@ def parse_hard_results(
 
     print(f"✅ Gemini hard 결과 {len(results)}개 파싱 완료")
     return results
+
+
+def _vertex_request_digest(request: Dict[str, Any]) -> str:
+    """@description Vertex 요청 본문의 매칭용 지문 계산"""
+    body = {key: request[key] for key in ("contents", "systemInstruction") if key in request}
+    encoded = json.dumps(
+        _vertex_without_nulls(body), sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _vertex_without_nulls(value: Any) -> Any:
+    """@description Vertex 요청 본문의 null과 빈 객체 제거"""
+    if isinstance(value, dict):
+        cleaned = {key: _vertex_without_nulls(item) for key, item in value.items() if item is not None}
+        return {key: item for key, item in cleaned.items() if item != {}}
+    if isinstance(value, list):
+        cleaned = [_vertex_without_nulls(item) for item in value if item is not None]
+        return [item for item in cleaned if item != {}]
+    return value
+
+
+def _vertex_responses(result_path: Path, input_requests: Sequence[Dict[str, Any]]) -> List[dict]:
+    """@description Vertex 응답 라벨 또는 요청 본문으로 입력 ID 복원"""
+    ids = {}
+    bodies: Dict[str, List[str]] = {}
+    for item in input_requests:
+        custom_id = item["metadata"]["custom_id"]
+        ids[hashlib.sha256(custom_id.encode("utf-8")).hexdigest()[:32]] = custom_id
+        bodies.setdefault(_vertex_request_digest(item["request"]), []).append(custom_id)
+    with result_path.open(encoding="utf-8") as file:
+        responses = json.load(file)["responses"]
+    converted = []
+    seen = set()
+    skipped = {"일치 없음": 0, "다중 일치": 0, "중복 응답": 0}
+    for item in responses:
+        label = item.get("request", {}).get("labels", {}).get("csat_req")
+        custom_id = ids.get(label)
+        if custom_id is None:
+            matches = bodies.get(_vertex_request_digest(item.get("request", {})), [])
+            if len(matches) != 1:
+                skipped["다중 일치" if matches else "일치 없음"] += 1
+                continue
+            custom_id = matches[0]
+        if custom_id in seen:
+            skipped["중복 응답"] += 1
+            continue
+        seen.add(custom_id)
+        result = {"metadata": {"custom_id": custom_id}}
+        if item.get("status"):
+            result["error"] = item["status"]
+        elif not item.get("response"):
+            result["error"] = "Vertex 응답이 비어 있습니다."
+        else:
+            result["response"] = item["response"]
+        converted.append(result)
+    if any(skipped.values()):
+        details = ", ".join(f"{reason} {count}건" for reason, count in skipped.items() if count)
+        warnings.warn(f"Vertex 응답 {sum(skipped.values())}건을 건너뜁니다: {details}", stacklevel=2)
+    return converted
 
 
 __all__ = [

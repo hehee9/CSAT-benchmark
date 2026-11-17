@@ -1,5 +1,10 @@
 {
   "system_prompt": "",
+  "vertex_batch": {
+    "project": "",
+    "location": "global",
+    "gcs_uri": ""
+  },
   "models": [
     {
       "name": "GPT-5.6 Sol (low)",

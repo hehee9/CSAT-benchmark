@@ -141,6 +141,18 @@ def load_config(
     prepared_models = []
     for model in selected_models:
         prepared = _prepare_record(model, resolve_secrets)
+        if prepared.get("api_type") == "google":
+            defaults = config.get("vertex_batch") or {}
+            for field, key in (
+                ("vertex_project", "project"),
+                ("vertex_location", "location"),
+                ("vertex_batch_gcs_uri", "gcs_uri"),
+            ):
+                if field not in prepared and key in defaults:
+                    prepared[field] = defaults[key]
+            if (prepared.get("vertex_project") and prepared.get("vertex_batch_gcs_uri")
+                    and not prepared.get("vertex_location")):
+                prepared["vertex_location"] = "global"
         prepared["knowledge_cutoff"] = validate_knowledge_cutoff(
             prepared.get("knowledge_cutoff")
         )

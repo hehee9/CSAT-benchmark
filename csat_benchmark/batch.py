@@ -16,6 +16,7 @@ from .exams import ExamManifest, ModeManifest, SectionManifest, load_exam
 from .models import ModelConfig, Question
 from .providers.batch import anthropic as anthropic_batch
 from .providers.batch import google as google_batch
+from .providers.batch import google_vertex
 from .providers.batch import openai as openai_batch
 from .providers.batch import xai as xai_batch
 from .providers.requests import (
@@ -267,6 +268,8 @@ class ProviderBatchTransport(BatchTransport):
 
         if provider == "google":
             self._save_json({"requests": requests_list}, input_path)
+            if google_vertex.enabled(model_config):
+                return google_vertex.create_batch(model_config, requests_list, batch_name)
             batch = google_batch.create_batch(
                 model_config,
                 requests_list,
@@ -327,6 +330,8 @@ class ProviderBatchTransport(BatchTransport):
         if model_config.api_type == "anthropic":
             return anthropic_batch.check_batch_status(self._client(model_config), batch_id)
         if model_config.api_type == "google":
+            if google_vertex.enabled(model_config):
+                return google_vertex.check_batch_status(batch_id, model_config)
             return google_batch.check_batch_status(batch_id, model_config, self._google_request)
         return openai_batch.check_batch_status(self._client(model_config), batch_id)
 
@@ -349,6 +354,10 @@ class ProviderBatchTransport(BatchTransport):
                 str,
             )
         if model_config.api_type == "google":
+            if google_vertex.enabled(model_config):
+                return google_vertex.download_results(
+                    batch_id, model_config, output_path, self._save_json
+                )
             return google_batch.download_results(
                 batch_id,
                 model_config,
@@ -410,6 +419,8 @@ class ProviderBatchTransport(BatchTransport):
                 result_path,
                 model_config.name,
                 input_custom_ids,
+                vertex=google_vertex.enabled(model_config),
+                input_requests=input_requests,
             )
         return openai_batch.parse_results(
             result_path,
@@ -697,6 +708,8 @@ def _save_json(path: Path, payload: Mapping[str, Any]) -> None:
 def _is_terminal(status_info: Mapping[str, Any]) -> bool:
     """@description 공급자 상태 종료 여부 확인"""
     status = str(status_info.get("status", "")).lower()
+    if status_info.get("vertex_batch"):
+        return status.startswith("job_state_") and status in _TERMINAL_STATUSES
     if status in _TERMINAL_STATUSES:
         return True
     counts = status_info.get("request_counts") or {}
@@ -1604,6 +1617,8 @@ def download_exam(
                     "canceled",
                     "expired",
                     "job_state_failed",
+                    "job_state_cancelled",
+                    "job_state_expired",
                     "batch_state_failed",
                 }:
                     raise
