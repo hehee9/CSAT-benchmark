@@ -3,7 +3,7 @@
  * @brief 문항별 정답/오답 히트맵 컴포넌트
  */
 
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getModelColor, getHeatmapColor } from '@/utils/colorUtils'
 import { useTheme } from '@/hooks/useTheme'
@@ -11,6 +11,22 @@ import { getQuestionNumbers, calculateModelAccuracy } from '@/utils/heatmapTrans
 import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
 import { BenchmarkNote, ExportButton, NoWebSearchBadge, TestEnvCaption } from '@/components/common'
 import { formatModelDisplayName } from '@/utils/modelMeta'
+
+/** @brief 내보내기 이미지의 데이터 행 높이(px) */
+const EXPORT_ROW_HEIGHT = 48
+/** @brief 내보내기 이미지의 머리 행 높이(px) */
+const EXPORT_HEAD_HEIGHT = 48
+/** @brief 내보내기 이미지의 문항 열 최소·최대 폭(px) */
+const EXPORT_QUESTION_MIN_WIDTH = 48
+const EXPORT_QUESTION_MAX_WIDTH = 64
+/** @brief 문항 수가 적을 때 머리말·범례가 지나치게 좁아지지 않도록 보장할 내보내기 최소 폭(px) */
+const EXPORT_MIN_WIDTH = 960
+/** @brief 모델명·정답 수 열에서 측정한 글자 폭에 더할 여유 폭(px) */
+const EXPORT_TEXT_GAP = 16
+/** @brief 문항 열에서 측정한 글자 폭에 더할 여유 폭(px) */
+const EXPORT_QUESTION_GAP = 8
+/** @brief 표 외곽 테두리 좌우 합(px) */
+const FRAME_BORDER_WIDTH = 2
 
 /**
  * @brief 문항별 정답률 계산
@@ -68,6 +84,63 @@ function _formatAnswer(cell, t) {
 }
 
 /**
+ * @brief 열에 속한 셀 내용이 한 줄로 들어가는 최대 셀 폭 측정
+ * @param {HTMLElement} element - 내보내기 대상 요소
+ * @param {string} column - 셀의 data-heatmap-col 값
+ * @return {number} 패딩과 테두리를 포함한 최대 셀 폭(px)
+ */
+function _measureColumnWidth(element, column) {
+  const range = document.createRange()
+  let maxWidth = 0
+  element.querySelectorAll(`[data-heatmap-col="${column}"]`).forEach(cell => {
+    range.selectNodeContents(cell)
+    const style = getComputedStyle(cell)
+    const boxWidth = range.getBoundingClientRect().width
+      + parseFloat(style.paddingLeft) + parseFloat(style.paddingRight)
+      + parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth)
+    maxWidth = Math.max(maxWidth, boxWidth)
+  })
+  return Math.ceil(maxWidth)
+}
+
+/**
+ * @brief 내보내기용 열 폭을 측정해 표와 이미지 폭을 일치시키는 레이아웃 적용
+ * @description 모델명과 정답 수는 한 줄에 들어가는 폭을 쓰고, 문항 열은 기본 내보내기 폭을
+ * 채우도록 늘리되 최소·최대 폭 안에서 정한다. 이미지 폭은 표 폭과 정확히 같게 맞춘다.
+ * @param {HTMLElement} element - 내보내기 대상 요소
+ * @param {number} questionCount - 문항 수
+ * @return {function} CSS 변수 복원 함수
+ */
+function _applyExportLayout(element, questionCount) {
+  const modelWidth = _measureColumnWidth(element, 'model') + EXPORT_TEXT_GAP
+  const summaryWidth = _measureColumnWidth(element, 'summary') + EXPORT_TEXT_GAP
+  const questionMinWidth = Math.max(
+    EXPORT_QUESTION_MIN_WIDTH,
+    _measureColumnWidth(element, 'question') + EXPORT_QUESTION_GAP
+  )
+  const fixedWidth = modelWidth + summaryWidth + FRAME_BORDER_WIDTH
+  const fillWidth = Math.floor((README_EXPORT_WIDTH - fixedWidth) / questionCount)
+  const questionWidth = Math.max(
+    questionMinWidth,
+    Math.min(EXPORT_QUESTION_MAX_WIDTH, fillWidth),
+    Math.ceil((EXPORT_MIN_WIDTH - fixedWidth) / questionCount)
+  )
+  const exportWidth = fixedWidth + questionWidth * questionCount
+
+  element.style.setProperty('--heatmap-model-width', `${modelWidth}px`)
+  element.style.setProperty('--heatmap-question-width', `${questionWidth}px`)
+  element.style.setProperty('--heatmap-summary-width', `${summaryWidth}px`)
+  element.style.width = `${exportWidth}px`
+  element.style.minWidth = `${exportWidth}px`
+
+  return () => {
+    element.style.removeProperty('--heatmap-model-width')
+    element.style.removeProperty('--heatmap-question-width')
+    element.style.removeProperty('--heatmap-summary-width')
+  }
+}
+
+/**
  * @brief 문항별 정답/오답 히트맵 컴포넌트
  * @param {Object} props - { data, models, title, subjectName, modelMetadata }
  * @param {Object} props.data - { questionNumber: { modelName: { isCorrect, points } } }
@@ -80,9 +153,14 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
   const { isDark: darkMode } = useTheme()
   const [showAnswerNumbers, setShowAnswerNumbers] = useState(false)
   const questions = useMemo(() => getQuestionNumbers(data), [data])
+  const prepareExport = useCallback(
+    element => _applyExportLayout(element, questions.length),
+    [questions.length]
+  )
   const { ref, exportImage, isExporting } = useExportImage({
     exportWidth: README_EXPORT_WIDTH,
-    exportProfile: 'questionHeatmap'
+    exportProfile: 'questionHeatmap',
+    prepareExport
   })
 
   if (!data || !models?.length || !questions.length) {
@@ -93,18 +171,23 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
     )
   }
 
-  const modelColumnStyle = {
-    width: isExporting ? 260 : 144,
-    minWidth: isExporting ? 260 : 144
-  }
-  const questionColumnStyle = {
-    width: isExporting ? 44 : 32,
-    minWidth: isExporting ? 44 : 32
-  }
-  const summaryColumnStyle = {
-    width: isExporting ? 140 : 80,
-    minWidth: isExporting ? 140 : 80
-  }
+  // 내보내기 중에는 _applyExportLayout이 측정한 CSS 변수 폭과 고정 행 높이를 쓴다
+  const modelColumnStyle = isExporting
+    ? { width: 'var(--heatmap-model-width)', minWidth: 'var(--heatmap-model-width)' }
+    : { width: 144, minWidth: 144 }
+  const questionColumnStyle = isExporting
+    ? { width: 'var(--heatmap-question-width)', minWidth: 'var(--heatmap-question-width)' }
+    : { width: 32, minWidth: 32 }
+  const summaryColumnStyle = isExporting
+    ? { width: 'var(--heatmap-summary-width)', minWidth: 'var(--heatmap-summary-width)' }
+    : { width: 80, minWidth: 80 }
+  const exportHeadStyle = isExporting
+    ? { height: EXPORT_HEAD_HEIGHT, display: 'flex', alignItems: 'center' }
+    : null
+  const exportRowStyle = isExporting
+    ? { height: EXPORT_ROW_HEIGHT, display: 'flex', alignItems: 'center' }
+    : null
+  const exportCenterStyle = isExporting ? { justifyContent: 'center' } : null
 
   return (
     <div ref={ref} className="w-full">
@@ -117,8 +200,9 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
           <NoWebSearchBadge className="col-start-1 row-start-2 mt-1.5 self-center justify-self-start sm:mt-0" />
         </div>
         <TestEnvCaption className="col-span-2 col-start-1 row-start-3 mt-1.5 sm:col-span-1 sm:row-start-2" />
-        <div className="col-start-2 row-start-2 mt-1.5 flex items-start gap-2 sm:row-span-2 sm:row-start-1 sm:mt-0">
-          <span className="export-role-watermark hidden text-base text-gray-400 mt-8" data-export-show="true">Github/hehee9</span>
+        {/* 내보내기 이미지에서는 워터마크를 머리말 아래쪽, 표 오른쪽 끝에 맞춘다 */}
+        <div className={`col-start-2 row-start-2 mt-1.5 flex items-start gap-2 sm:row-span-2 sm:row-start-1 sm:mt-0 ${isExporting ? 'self-end' : ''}`}>
+          <span className="export-role-watermark hidden text-base leading-tight text-gray-400" data-export-show="true">Github/hehee9</span>
           <button
             className={`whitespace-nowrap px-3 py-1.5 text-sm rounded-lg transition-colors ${
               showAnswerNumbers
@@ -142,7 +226,8 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
           <div className="flex border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700">
             <div
               className="export-role-table-head w-36 p-2 font-semibold text-sm text-gray-700 dark:text-gray-300 shrink-0"
-              style={modelColumnStyle}
+              style={{ ...modelColumnStyle, ...exportHeadStyle }}
+              data-heatmap-col="model"
             >
               {t('table.model')}
             </div>
@@ -150,14 +235,16 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
               <div
                 key={q}
                 className="export-role-table-head w-8 p-1 text-center text-xs font-medium text-gray-600 dark:text-gray-400 shrink-0"
-                style={questionColumnStyle}
+                style={{ ...questionColumnStyle, ...exportHeadStyle, ...exportCenterStyle }}
+                data-heatmap-col="question"
               >
                 {q}
               </div>
             ))}
             <div
               className="export-role-table-head w-20 p-2 text-center font-semibold text-sm text-gray-700 dark:text-gray-300 shrink-0"
-              style={summaryColumnStyle}
+              style={{ ...summaryColumnStyle, ...exportHeadStyle, ...exportCenterStyle }}
+              data-heatmap-col="summary"
             >
               {t('heatmap.correctCount')}
             </div>
@@ -172,11 +259,13 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
                 className="flex items-center border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 <div
-                  className={`export-role-table-model w-36 p-2 text-xs shrink-0 text-gray-800 dark:text-gray-200 ${isExporting ? 'whitespace-normal break-words' : 'truncate'}`}
+                  className={`export-role-table-model w-36 p-2 text-xs shrink-0 text-gray-800 dark:text-gray-200 ${isExporting ? 'whitespace-nowrap' : 'truncate'}`}
                   style={{
                     ...modelColumnStyle,
+                    ...exportRowStyle,
                     borderLeft: `3px solid ${getModelColor(model)}`
                   }}
+                  data-heatmap-col="model"
                   title={formatModelDisplayName(model)}
                 >
                   {formatModelDisplayName(model)}
@@ -198,7 +287,8 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
                     <div
                       key={q}
                       className="export-role-table-value w-8 h-8 flex items-center justify-center text-xs shrink-0 border-r border-gray-50 dark:border-gray-700"
-                      style={{ ...questionColumnStyle, backgroundColor: bgColor }}
+                      style={{ ...questionColumnStyle, ...exportRowStyle, ...exportCenterStyle, backgroundColor: bgColor }}
+                      data-heatmap-col="question"
                       title={cellTitle}
                     >
                       {showAnswerNumbers ? (
@@ -226,8 +316,9 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
                   )
                 })}
                 <div
-                  className="export-role-table-value w-20 p-2 text-center text-sm font-medium shrink-0 text-gray-800 dark:text-gray-200"
-                  style={summaryColumnStyle}
+                  className={`export-role-table-value w-20 p-2 text-center text-sm font-medium shrink-0 text-gray-800 dark:text-gray-200 ${isExporting ? 'whitespace-nowrap' : ''}`}
+                  style={{ ...summaryColumnStyle, ...exportRowStyle, ...exportCenterStyle }}
+                  data-heatmap-col="summary"
                 >
                   {accuracy.correct}/{accuracy.total}
                   <span className="export-role-value text-gray-400 dark:text-gray-500 text-xs ml-1">
@@ -242,9 +333,11 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
           <div className="flex items-center border-t-2 border-gray-300 dark:border-gray-600">
             <div
               className="export-role-table-head w-36 p-2 text-xs font-semibold text-gray-700 dark:text-gray-300 shrink-0 bg-gray-100 dark:bg-gray-700"
-              style={modelColumnStyle}
+              style={{ ...modelColumnStyle, ...exportRowStyle }}
+              data-heatmap-col="model"
             >
-              {t('heatmap.accuracy')}
+              {/* 내보내기 이미지는 좁은 문항 열에 숫자만 넣고 단위를 머리글로 옮긴다 */}
+              {isExporting ? `${t('heatmap.accuracy')} (%)` : t('heatmap.accuracy')}
             </div>
             {questions.map(q => {
               const qAccuracy = _calculateQuestionAccuracy(data, models, q)
@@ -252,18 +345,19 @@ export default function QuestionHeatmap({ data, models, title, subjectName, mode
                 <div
                   key={q}
                   className="export-role-table-value w-8 h-8 flex items-center justify-center text-xs shrink-0"
-                  style={{ ...questionColumnStyle, backgroundColor: _getAccuracyColor(qAccuracy, darkMode) }}
+                  style={{ ...questionColumnStyle, ...exportRowStyle, ...exportCenterStyle, backgroundColor: _getAccuracyColor(qAccuracy, darkMode) }}
+                  data-heatmap-col="question"
                   title={`${t('heatmap.question')} ${q} ${t('heatmap.accuracy')}: ${qAccuracy.toFixed(0)}%`}
                 >
                   <span className={`export-role-value font-medium text-xs ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
-                    {qAccuracy.toFixed(0)}%
+                    {qAccuracy.toFixed(0)}{isExporting ? '' : '%'}
                   </span>
                 </div>
               )
             })}
             <div
               className="w-20 shrink-0 bg-gray-100 dark:bg-gray-700"
-              style={summaryColumnStyle}
+              style={{ ...summaryColumnStyle, ...exportRowStyle }}
             />
           </div>
         </div>

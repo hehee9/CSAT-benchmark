@@ -1027,13 +1027,13 @@
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-02-16",
     "accessTier": "free",
-    "productLine": "Qwen 397B"
+    "productLine": "Qwen Plus"
   },
   "Qwen3.5 397B (Thinking)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-02-16",
     "accessTier": "free",
-    "productLine": "Qwen 397B"
+    "productLine": "Qwen Plus"
   },
   "Qwen3.5 27B (Non-Thinking)": {
     "knowledgeCutoff": "2025-05",
@@ -1062,13 +1062,13 @@
   "Qwen3.5 9B (Non-Thinking)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-03-02",
-    "productLine": "Qwen 9B",
+    "productLine": "Qwen 27B",
     "accessTier": "not_applicable"
   },
   "Qwen3.5 9B (Thinking)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-03-02",
-    "productLine": "Qwen 9B",
+    "productLine": "Qwen 27B",
     "accessTier": "not_applicable"
   },
   "Kanana-o 9.8B": {
@@ -1189,7 +1189,7 @@
     "knowledgeCutoff": null
   },
   "DeepSeek V4.1 Flash (high)": {
-    "knowledgeCutoff": null,
+    "knowledgeCutoff": "2026-01",
     "releaseDate": "2026-09-10",
     "accessTier": "free",
     "productLine": "DeepSeek Flash"
@@ -1447,5 +1447,161 @@
     "knowledgeCutoff": null,
     "releaseDate": "2026-04-09",
     "productLine": "EXAONE 32B"
+  },
+  "GPT-6.2 Sol (high)": {
+    "knowledgeCutoff": "2026-06",
+    "releaseDate": "2026-11-18",
+    "accessTier": "paid",
+    "productLine": "GPT Sol"
+  },
+  "GPT-6.2 Sol (low)": {
+    "knowledgeCutoff": "2026-06",
+    "releaseDate": "2026-11-18",
+    "accessTier": "paid",
+    "productLine": "GPT Sol"
+  },
+  "GPT-6.2 Astra (high)": {
+    "knowledgeCutoff": "2026-05",
+    "releaseDate": "2026-11-18",
+    "accessTier": "paid",
+    "productLine": "GPT Astra",
+    "description": {
+      "ko": "ChatGPT Plus 사용자용 모델 또는 그와 동급",
+      "en": "For ChatGPT Plus users or an equivalent model"
+    }
+  },
+  "GPT-6.2 Astra (low)": {
+    "knowledgeCutoff": "2026-05",
+    "releaseDate": "2026-11-18",
+    "accessTier": "paid",
+    "productLine": "GPT Astra",
+    "description": {
+      "ko": "ChatGPT Plus 사용자용 모델 또는 그와 동급",
+      "en": "For ChatGPT Plus users or an equivalent model"
+    }
+  },
+  "Claude Fable 5.2 (high)": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-11-09",
+    "accessTier": "paid",
+    "productLine": "Claude Fable",
+    "description": {
+      "ko": "Claude Max 사용자용 모델 또는 그와 동급",
+      "en": "For Claude Max users or an equivalent model"
+    }
+  },
+  "Gemini 4 Hydrogen (high)": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-11-12",
+    "accessTier": "paid",
+    "productLine": "Gemini Flash",
+    "description": {
+      "ko": "Google AI Plus 사용자용 모델 또는 그와 동급",
+      "en": "For Google AI Plus users or an equivalent model"
+    }
+  },
+  "Gemini 4 Hydrogen (low)": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-11-12",
+    "accessTier": "paid",
+    "productLine": "Gemini Flash",
+    "description": {
+      "ko": "Google AI Plus 사용자용 모델 또는 그와 동급",
+      "en": "For Google AI Plus users or an equivalent model"
+    }
+  },
+  "Gemini 4 Carbon (high)": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-11-10",
+    "accessTier": "paid",
+    "productLine": "Gemini Pro",
+    "description": {
+      "ko": "Google AI Pro 사용자용 모델 또는 그와 동급",
+      "en": "For Google AI Pro users or an equivalent model"
+    }
+  },
+  "Gemini 4 Carbon (low)": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-11-10",
+    "accessTier": "paid",
+    "productLine": "Gemini Pro",
+    "description": {
+      "ko": "Google AI Pro 사용자용 모델 또는 그와 동급",
+      "en": "For Google AI Pro users or an equivalent model"
+    }
+  },
+  "Grok 4.7 (high)": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-09-21",
+    "accessTier": "free",
+    "productLine": "Grok"
+  },
+  "K-EXAONE 2.5 Public API (high)": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-11-09",
+    "accessTier": "not_applicable",
+    "productLine": "K-EXAONE",
+    "supportsVision": false
+  },
+  "Solar Mini 4.5 Preview (max)": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-11-14",
+    "accessTier": "free",
+    "productLine": "Solar Mini",
+    "supportsVision": false
+  },
+  "Solar Mini 4.5 Preview": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-11-14",
+    "accessTier": "free",
+    "productLine": "Solar Mini",
+    "supportsVision": false
+  },
+  "Kimi K3.1 Pro (high)": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-10-23",
+    "accessTier": "free",
+    "productLine": "Kimi K"
+  },
+  "GLM-5.3 (high)": {
+    "knowledgeCutoff": "2026-02",
+    "releaseDate": "2026-08-14",
+    "accessTier": "free",
+    "productLine": "GLM",
+    "supportsVision": false
+  },
+  "Qwen4 Max (high)": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-11-16",
+    "accessTier": "free",
+    "productLine": "Qwen Max"
+  },
+  "Qwen3.8 27B (xhigh)": {
+    "knowledgeCutoff": "2025-05",
+    "releaseDate": "2026-08-14",
+    "accessTier": "free",
+    "productLine": "Qwen 27B"
+  },
+  "Qwen3.8 Flash (xhigh)": {
+    "knowledgeCutoff": "2025-03",
+    "releaseDate": "2026-08-26",
+    "productLine": "Qwen Flash"
+  },
+  "Mi:dm K 3.0 Pro": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-10-29",
+    "productLine": "Mi:dm K Pro",
+    "supportsVision": false
+  },
+  "Muse Ember (high)": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-11-09",
+    "accessTier": "free",
+    "productLine": "Muse Ember"
+  },
+  "Muse Wonder (high)": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-10-12",
+    "productLine": "Muse Wonder"
   }
 }
