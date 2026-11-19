@@ -50,13 +50,20 @@
           "total_tokens": 12591,
           "question_count": 1,
           "last_updated": "2026-11-19 14:17:26"
+        },
+        "영어-공통": {
+          "input_tokens": 20659,
+          "output_tokens": 2289,
+          "total_tokens": 22948,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:12:33"
         }
       },
-      "total_input_tokens": 96552,
-      "total_output_tokens": 7974,
-      "total_tokens": 104526,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:17:26"
+      "total_input_tokens": 117211,
+      "total_output_tokens": 10263,
+      "total_tokens": 127474,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:12:33"
     },
     "GPT-6 Luna Decisions": {
       "sections": {
@@ -108,13 +115,20 @@
           "total_tokens": 4467,
           "question_count": 1,
           "last_updated": "2026-11-19 14:17:32"
+        },
+        "영어-공통": {
+          "input_tokens": 20526,
+          "output_tokens": 0,
+          "total_tokens": 20526,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:12:44"
         }
       },
-      "total_input_tokens": 74868,
+      "total_input_tokens": 95394,
       "total_output_tokens": 0,
-      "total_tokens": 74868,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:17:38"
+      "total_tokens": 95394,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:12:44"
     },
     "Gemini Decision 1": {
       "sections": {
@@ -166,13 +180,20 @@
           "total_tokens": 5126,
           "question_count": 1,
           "last_updated": "2026-11-19 14:17:33"
+        },
+        "영어-공통": {
+          "input_tokens": 19116,
+          "output_tokens": 0,
+          "total_tokens": 19116,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:12:43"
         }
       },
-      "total_input_tokens": 70440,
+      "total_input_tokens": 89556,
       "total_output_tokens": 0,
-      "total_tokens": 70440,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:17:38"
+      "total_tokens": 89556,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:12:43"
     },
     "Solar Decide": {
       "sections": {
@@ -224,13 +245,20 @@
           "total_tokens": 118781,
           "question_count": 1,
           "last_updated": "2026-11-19 14:18:09"
+        },
+        "영어-공통": {
+          "input_tokens": 537021,
+          "output_tokens": 45,
+          "total_tokens": 537066,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:13:11"
         }
       },
-      "total_input_tokens": 736174,
-      "total_output_tokens": 128,
-      "total_tokens": 736302,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:18:09"
+      "total_input_tokens": 1273195,
+      "total_output_tokens": 173,
+      "total_tokens": 1273368,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:13:11"
     },
     "Qwen3.5 9B (Thinking)": {
       "sections": {
@@ -282,13 +310,20 @@
           "total_tokens": 33877,
           "question_count": 1,
           "last_updated": "2026-11-19 14:21:06"
+        },
+        "영어-공통": {
+          "input_tokens": 13010,
+          "output_tokens": 25983,
+          "total_tokens": 38993,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:15:46"
         }
       },
-      "total_input_tokens": 47912,
-      "total_output_tokens": 193912,
-      "total_tokens": 241824,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:22:27"
+      "total_input_tokens": 60922,
+      "total_output_tokens": 219895,
+      "total_tokens": 280817,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:15:46"
     },
     "Qwen3.8 27B (xhigh)": {
       "sections": {
@@ -340,13 +375,20 @@
           "total_tokens": 41059,
           "question_count": 1,
           "last_updated": "2026-11-19 14:20:54"
+        },
+        "영어-공통": {
+          "input_tokens": 13053,
+          "output_tokens": 17085,
+          "total_tokens": 30138,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:15:01"
         }
       },
-      "total_input_tokens": 48216,
-      "total_output_tokens": 175395,
-      "total_tokens": 223611,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:20:54"
+      "total_input_tokens": 61269,
+      "total_output_tokens": 192480,
+      "total_tokens": 253749,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:15:01"
     },
     "GPT-6.1 Terra (high)": {
       "sections": {
@@ -398,13 +440,20 @@
           "total_tokens": 10819,
           "question_count": 1,
           "last_updated": "2026-11-19 14:19:00"
+        },
+        "영어-공통": {
+          "input_tokens": 12795,
+          "output_tokens": 2148,
+          "total_tokens": 14943,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:13:26"
         }
       },
-      "total_input_tokens": 53280,
-      "total_output_tokens": 24019,
-      "total_tokens": 77299,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:19:00"
+      "total_input_tokens": 66075,
+      "total_output_tokens": 26167,
+      "total_tokens": 92242,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:13:26"
     },
     "GPT-6 Luna (high)": {
       "sections": {
@@ -456,13 +505,20 @@
           "total_tokens": 26187,
           "question_count": 1,
           "last_updated": "2026-11-19 14:21:07"
+        },
+        "영어-공통": {
+          "input_tokens": 12795,
+          "output_tokens": 3144,
+          "total_tokens": 15939,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:13:23"
         }
       },
-      "total_input_tokens": 53280,
-      "total_output_tokens": 86300,
-      "total_tokens": 139580,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:21:07"
+      "total_input_tokens": 66075,
+      "total_output_tokens": 89444,
+      "total_tokens": 155519,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:13:23"
     },
     "Mi:dm K 3.0 Pro": {
       "sections": {
@@ -514,13 +570,20 @@
           "total_tokens": 21179,
           "question_count": 1,
           "last_updated": "2026-11-19 14:19:34"
+        },
+        "영어-공통": {
+          "input_tokens": 11610,
+          "output_tokens": 14472,
+          "total_tokens": 26082,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:13:27"
         }
       },
-      "total_input_tokens": 32920,
-      "total_output_tokens": 212060,
-      "total_tokens": 244980,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:20:59"
+      "total_input_tokens": 44530,
+      "total_output_tokens": 226532,
+      "total_tokens": 271062,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:13:27"
     },
     "GPT-6.2 Sol (high)": {
       "sections": {
@@ -572,13 +635,20 @@
           "total_tokens": 10552,
           "question_count": 1,
           "last_updated": "2026-11-19 14:18:50"
+        },
+        "영어-공통": {
+          "input_tokens": 12795,
+          "output_tokens": 2039,
+          "total_tokens": 14834,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:13:22"
         }
       },
-      "total_input_tokens": 53280,
-      "total_output_tokens": 21136,
-      "total_tokens": 74416,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:18:50"
+      "total_input_tokens": 66075,
+      "total_output_tokens": 23175,
+      "total_tokens": 89250,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:13:22"
     },
     "Qwen4 Max (high)": {
       "sections": {
@@ -630,13 +700,20 @@
           "total_tokens": 17580,
           "question_count": 1,
           "last_updated": "2026-11-19 14:21:35"
+        },
+        "영어-공통": {
+          "input_tokens": 13023,
+          "output_tokens": 2820,
+          "total_tokens": 15843,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:13:36"
         }
       },
-      "total_input_tokens": 48006,
-      "total_output_tokens": 59691,
-      "total_tokens": 107697,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:21:35"
+      "total_input_tokens": 61029,
+      "total_output_tokens": 62511,
+      "total_tokens": 123540,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:13:36"
     },
     "GPT-6 Luna (low)": {
       "sections": {
@@ -688,13 +765,20 @@
           "total_tokens": 5657,
           "question_count": 1,
           "last_updated": "2026-11-19 14:18:20"
+        },
+        "영어-공통": {
+          "input_tokens": 12795,
+          "output_tokens": 227,
+          "total_tokens": 13022,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:12:54"
         }
       },
-      "total_input_tokens": 53280,
-      "total_output_tokens": 20058,
-      "total_tokens": 73338,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:18:26"
+      "total_input_tokens": 66075,
+      "total_output_tokens": 20285,
+      "total_tokens": 86360,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:12:54"
     },
     "Solar Pro 4 (max)": {
       "sections": {
@@ -746,13 +830,20 @@
           "total_tokens": 84090,
           "question_count": 1,
           "last_updated": "2026-11-19 14:33:17"
+        },
+        "영어-공통": {
+          "input_tokens": 10910,
+          "output_tokens": 6092,
+          "total_tokens": 17002,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:14:04"
         }
       },
-      "total_input_tokens": 27369,
-      "total_output_tokens": 216763,
-      "total_tokens": 244132,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:33:17"
+      "total_input_tokens": 38279,
+      "total_output_tokens": 222855,
+      "total_tokens": 261134,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:14:04"
     },
     "Solar Mini 4.5 Preview (max)": {
       "sections": {
@@ -804,13 +895,20 @@
           "total_tokens": 12808,
           "question_count": 1,
           "last_updated": "2026-11-19 14:18:46"
+        },
+        "영어-공통": {
+          "input_tokens": 10909,
+          "output_tokens": 12455,
+          "total_tokens": 23364,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:13:39"
         }
       },
-      "total_input_tokens": 27374,
-      "total_output_tokens": 217617,
-      "total_tokens": 244991,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:23:07"
+      "total_input_tokens": 38283,
+      "total_output_tokens": 230072,
+      "total_tokens": 268355,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:13:39"
     },
     "Kimi K3.1 Pro (high)": {
       "sections": {
@@ -862,13 +960,20 @@
           "total_tokens": 10791,
           "question_count": 1,
           "last_updated": "2026-11-19 14:21:55"
+        },
+        "영어-공통": {
+          "input_tokens": 13683,
+          "output_tokens": 4769,
+          "total_tokens": 18452,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:14:57"
         }
       },
-      "total_input_tokens": 65657,
-      "total_output_tokens": 83869,
-      "total_tokens": 149526,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:24:40"
+      "total_input_tokens": 79340,
+      "total_output_tokens": 88638,
+      "total_tokens": 167978,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:14:57"
     },
     "GPT-6.2 Astra (high)": {
       "sections": {
@@ -920,13 +1025,20 @@
           "total_tokens": 9510,
           "question_count": 1,
           "last_updated": "2026-11-19 14:18:48"
+        },
+        "영어-공통": {
+          "input_tokens": 12795,
+          "output_tokens": 2290,
+          "total_tokens": 15085,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:13:27"
         }
       },
-      "total_input_tokens": 53280,
-      "total_output_tokens": 19183,
-      "total_tokens": 72463,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:18:48"
+      "total_input_tokens": 66075,
+      "total_output_tokens": 21473,
+      "total_tokens": 87548,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:13:27"
     },
     "GLM-5.3 Flash (high)": {
       "sections": {
@@ -978,13 +1090,20 @@
           "total_tokens": 25929,
           "question_count": 1,
           "last_updated": "2026-11-19 14:22:58"
+        },
+        "영어-공통": {
+          "input_tokens": 13617,
+          "output_tokens": 5017,
+          "total_tokens": 18634,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:14:40"
         }
       },
-      "total_input_tokens": 64015,
-      "total_output_tokens": 145165,
-      "total_tokens": 209180,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:26:03"
+      "total_input_tokens": 77632,
+      "total_output_tokens": 150182,
+      "total_tokens": 227814,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:14:40"
     },
     "Qwen3.8 Flash (xhigh)": {
       "sections": {
@@ -1036,13 +1155,20 @@
           "total_tokens": 20936,
           "question_count": 1,
           "last_updated": "2026-11-19 14:37:44"
+        },
+        "영어-공통": {
+          "input_tokens": 13062,
+          "output_tokens": 15015,
+          "total_tokens": 28077,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:16:05"
         }
       },
-      "total_input_tokens": 48279,
-      "total_output_tokens": 191884,
-      "total_tokens": 240163,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:37:44"
+      "total_input_tokens": 61341,
+      "total_output_tokens": 206899,
+      "total_tokens": 268240,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:16:05"
     },
     "K-EXAONE 2.5 (high)": {
       "sections": {
@@ -1094,13 +1220,20 @@
           "total_tokens": 30852,
           "question_count": 1,
           "last_updated": "2026-11-19 14:19:36"
+        },
+        "영어-공통": {
+          "input_tokens": 9718,
+          "output_tokens": 12784,
+          "total_tokens": 22502,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:13:33"
         }
       },
-      "total_input_tokens": 27337,
-      "total_output_tokens": 181657,
-      "total_tokens": 208994,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:19:36"
+      "total_input_tokens": 37055,
+      "total_output_tokens": 194441,
+      "total_tokens": 231496,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:13:33"
     },
     "DeepSeek V4.1 Flash 1017 (high)": {
       "sections": {
@@ -1152,13 +1285,20 @@
           "total_tokens": 23324,
           "question_count": 1,
           "last_updated": "2026-11-19 14:19:26"
+        },
+        "영어-공통": {
+          "input_tokens": 12496,
+          "output_tokens": 8224,
+          "total_tokens": 20720,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:13:39"
         }
       },
-      "total_input_tokens": 48772,
-      "total_output_tokens": 131163,
-      "total_tokens": 179935,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:20:06"
+      "total_input_tokens": 61268,
+      "total_output_tokens": 139387,
+      "total_tokens": 200655,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:13:39"
     },
     "Gemma 4 26B A4B (high)": {
       "sections": {
@@ -1210,13 +1350,20 @@
           "total_tokens": 29992,
           "question_count": 1,
           "last_updated": "2026-11-19 14:39:27"
+        },
+        "영어-공통": {
+          "input_tokens": 12479,
+          "output_tokens": 15422,
+          "total_tokens": 27901,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:16:02"
         }
       },
-      "total_input_tokens": 41138,
-      "total_output_tokens": 141109,
-      "total_tokens": 182247,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:39:48"
+      "total_input_tokens": 53617,
+      "total_output_tokens": 156531,
+      "total_tokens": 210148,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:16:02"
     },
     "Raon-1 mini preview": {
       "sections": {
@@ -1268,13 +1415,20 @@
           "total_tokens": 54703,
           "question_count": 1,
           "last_updated": "2026-11-19 14:35:05"
+        },
+        "영어-공통": {
+          "input_tokens": 8694,
+          "output_tokens": 46665,
+          "total_tokens": 55359,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:16:51"
         }
       },
-      "total_input_tokens": 26144,
-      "total_output_tokens": 404935,
-      "total_tokens": 431079,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:35:05"
+      "total_input_tokens": 34838,
+      "total_output_tokens": 451600,
+      "total_tokens": 486438,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:16:51"
     },
     "Gemma 4 31B (high)": {
       "sections": {
@@ -1326,13 +1480,20 @@
           "total_tokens": 15928,
           "question_count": 1,
           "last_updated": "2026-11-19 14:37:56"
+        },
+        "영어-공통": {
+          "input_tokens": 12479,
+          "output_tokens": 8950,
+          "total_tokens": 21429,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:14:46"
         }
       },
-      "total_input_tokens": 41193,
-      "total_output_tokens": 96723,
-      "total_tokens": 137916,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:37:56"
+      "total_input_tokens": 53672,
+      "total_output_tokens": 105673,
+      "total_tokens": 159345,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:14:46"
     },
     "Claude Fable 5.2 (high)": {
       "sections": {
@@ -1384,13 +1545,20 @@
           "total_tokens": 11575,
           "question_count": 1,
           "last_updated": "2026-11-19T14:34:22+0900"
+        },
+        "영어-공통": {
+          "input_tokens": 19510,
+          "output_tokens": 2597,
+          "total_tokens": 22107,
+          "question_count": 1,
+          "last_updated": "2026-11-19T17:17:56+0900"
         }
       },
-      "total_input_tokens": 80131,
-      "total_output_tokens": 36231,
-      "total_tokens": 116362,
-      "question_count": 7,
-      "last_updated": "2026-11-19T14:34:23+0900"
+      "total_input_tokens": 99641,
+      "total_output_tokens": 38828,
+      "total_tokens": 138469,
+      "question_count": 8,
+      "last_updated": "2026-11-19T17:17:56+0900"
     },
     "Claude Sonnet 5.5 (high)": {
       "sections": {
@@ -1442,13 +1610,20 @@
           "total_tokens": 11897,
           "question_count": 1,
           "last_updated": "2026-11-19T14:34:26+0900"
+        },
+        "영어-공통": {
+          "input_tokens": 19510,
+          "output_tokens": 1833,
+          "total_tokens": 21343,
+          "question_count": 1,
+          "last_updated": "2026-11-19T17:17:59+0900"
         }
       },
-      "total_input_tokens": 80131,
-      "total_output_tokens": 51118,
-      "total_tokens": 131249,
-      "question_count": 7,
-      "last_updated": "2026-11-19T14:34:26+0900"
+      "total_input_tokens": 99641,
+      "total_output_tokens": 52951,
+      "total_tokens": 152592,
+      "question_count": 8,
+      "last_updated": "2026-11-19T17:17:59+0900"
     },
     "GLM-5.3 (high)": {
       "sections": {
@@ -1500,13 +1675,20 @@
           "total_tokens": 25807,
           "question_count": 1,
           "last_updated": "2026-11-19T14:34:31+0900"
+        },
+        "영어-공통": {
+          "input_tokens": 12229,
+          "output_tokens": 5647,
+          "total_tokens": 17876,
+          "question_count": 1,
+          "last_updated": "2026-11-19T17:18:02+0900"
         }
       },
-      "total_input_tokens": 47234,
-      "total_output_tokens": 143950,
-      "total_tokens": 191184,
-      "question_count": 7,
-      "last_updated": "2026-11-19T14:34:31+0900"
+      "total_input_tokens": 59463,
+      "total_output_tokens": 149597,
+      "total_tokens": 209060,
+      "question_count": 8,
+      "last_updated": "2026-11-19T17:18:02+0900"
     },
     "Claude Haiku 5.5 (high)": {
       "sections": {
@@ -1558,13 +1740,20 @@
           "total_tokens": 23464,
           "question_count": 1,
           "last_updated": "2026-11-19T14:34:27+0900"
+        },
+        "영어-공통": {
+          "input_tokens": 19510,
+          "output_tokens": 6797,
+          "total_tokens": 26307,
+          "question_count": 1,
+          "last_updated": "2026-11-19T17:18:00+0900"
         }
       },
-      "total_input_tokens": 80131,
-      "total_output_tokens": 137523,
-      "total_tokens": 217654,
-      "question_count": 7,
-      "last_updated": "2026-11-19T14:34:28+0900"
+      "total_input_tokens": 99641,
+      "total_output_tokens": 144320,
+      "total_tokens": 243961,
+      "question_count": 8,
+      "last_updated": "2026-11-19T17:18:00+0900"
     },
     "Claude Opus 5.5 (high)": {
       "sections": {
@@ -1616,13 +1805,20 @@
           "total_tokens": 17080,
           "question_count": 1,
           "last_updated": "2026-11-19T14:34:24+0900"
+        },
+        "영어-공통": {
+          "input_tokens": 19510,
+          "output_tokens": 2803,
+          "total_tokens": 22313,
+          "question_count": 1,
+          "last_updated": "2026-11-19T17:17:58+0900"
         }
       },
-      "total_input_tokens": 80131,
-      "total_output_tokens": 39898,
-      "total_tokens": 120029,
-      "question_count": 7,
-      "last_updated": "2026-11-19T14:34:24+0900"
+      "total_input_tokens": 99641,
+      "total_output_tokens": 42701,
+      "total_tokens": 142342,
+      "question_count": 8,
+      "last_updated": "2026-11-19T17:17:58+0900"
     },
     "Gemini 4 Carbon (high)": {
       "sections": {
@@ -1674,13 +1870,20 @@
           "total_tokens": 26922,
           "question_count": 1,
           "last_updated": "2026-11-19 14:21:48"
+        },
+        "영어-공통": {
+          "input_tokens": 13931,
+          "output_tokens": 18483,
+          "total_tokens": 32414,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:16:38"
         }
       },
-      "total_input_tokens": 51987,
-      "total_output_tokens": 188036,
-      "total_tokens": 240023,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:23:46"
+      "total_input_tokens": 65918,
+      "total_output_tokens": 206519,
+      "total_tokens": 272437,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:16:38"
     },
     "Gemini 4 Hydrogen (high)": {
       "sections": {
@@ -1732,13 +1935,20 @@
           "total_tokens": 23248,
           "question_count": 1,
           "last_updated": "2026-11-19 14:18:41"
+        },
+        "영어-공통": {
+          "input_tokens": 13931,
+          "output_tokens": 6544,
+          "total_tokens": 20475,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:13:24"
         }
       },
-      "total_input_tokens": 51987,
-      "total_output_tokens": 104447,
-      "total_tokens": 156434,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:18:52"
+      "total_input_tokens": 65918,
+      "total_output_tokens": 110991,
+      "total_tokens": 176909,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:13:24"
     },
     "Gemini 3.5 Flash-Lite (high)": {
       "sections": {
@@ -1790,12 +2000,19 @@
           "total_tokens": 26219,
           "question_count": 1,
           "last_updated": "2026-11-19 14:18:42"
+        },
+        "영어-공통": {
+          "input_tokens": 14104,
+          "output_tokens": 7135,
+          "total_tokens": 21239,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:13:12"
         }
       },
-      "total_input_tokens": 54136,
-      "total_output_tokens": 160483,
-      "total_tokens": 214619,
-      "question_count": 7,
+      "total_input_tokens": 68240,
+      "total_output_tokens": 167618,
+      "total_tokens": 235858,
+      "question_count": 8,
       "last_updated": "2026-11-19T12:21:50+0900"
     },
     "Gemini 4 Neon (high)": {
@@ -1848,13 +2065,20 @@
           "total_tokens": 25038,
           "question_count": 1,
           "last_updated": "2026-11-19 14:20:14"
+        },
+        "영어-공통": {
+          "input_tokens": 13931,
+          "output_tokens": 7971,
+          "total_tokens": 21902,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:13:57"
         }
       },
-      "total_input_tokens": 51987,
-      "total_output_tokens": 129624,
-      "total_tokens": 181611,
-      "question_count": 7,
-      "last_updated": "2026-11-19 14:20:58"
+      "total_input_tokens": 65918,
+      "total_output_tokens": 137595,
+      "total_tokens": 203513,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:13:57"
     },
     "Gemini 4 Argon (high)": {
       "sections": {
@@ -1906,12 +2130,19 @@
           "total_tokens": 27222,
           "question_count": 1,
           "last_updated": "2026-11-19 14:21:32"
+        },
+        "영어-공통": {
+          "input_tokens": 13931,
+          "output_tokens": 10540,
+          "total_tokens": 24471,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:14:51"
         }
       },
-      "total_input_tokens": 51987,
-      "total_output_tokens": 107843,
-      "total_tokens": 159830,
-      "question_count": 7,
+      "total_input_tokens": 65918,
+      "total_output_tokens": 118383,
+      "total_tokens": 184301,
+      "question_count": 8,
       "last_updated": "2026-11-19T12:22:02+0900"
     }
   }

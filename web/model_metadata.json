@@ -1615,5 +1615,11 @@
   },
   "Gemini Decision 1": {
     "knowledgeCutoff": "2025-01"
+  },
+  "Gemma 4 E2B (Q8 local)": {
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2026-04-02",
+    "accessTier": "not_applicable",
+    "productLine": "Gemma E2B"
   }
 }

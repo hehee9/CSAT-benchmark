@@ -420,5 +420,187 @@
       "hasImage": true,
       "points": 4
     }
+  },
+  "영어-영어": {
+    "1": {
+      "hasImage": false,
+      "points": 2
+    },
+    "2": {
+      "hasImage": false,
+      "points": 2
+    },
+    "3": {
+      "hasImage": false,
+      "points": 2
+    },
+    "4": {
+      "hasImage": true,
+      "points": 2
+    },
+    "5": {
+      "hasImage": false,
+      "points": 2
+    },
+    "6": {
+      "hasImage": false,
+      "points": 2
+    },
+    "7": {
+      "hasImage": false,
+      "points": 2
+    },
+    "8": {
+      "hasImage": false,
+      "points": 2
+    },
+    "9": {
+      "hasImage": false,
+      "points": 2
+    },
+    "10": {
+      "hasImage": false,
+      "points": 2
+    },
+    "11": {
+      "hasImage": false,
+      "points": 2
+    },
+    "12": {
+      "hasImage": false,
+      "points": 3
+    },
+    "13": {
+      "hasImage": false,
+      "points": 2
+    },
+    "14": {
+      "hasImage": false,
+      "points": 3
+    },
+    "15": {
+      "hasImage": false,
+      "points": 3
+    },
+    "16": {
+      "hasImage": false,
+      "points": 2
+    },
+    "17": {
+      "hasImage": false,
+      "points": 2
+    },
+    "18": {
+      "hasImage": false,
+      "points": 2
+    },
+    "19": {
+      "hasImage": false,
+      "points": 2
+    },
+    "20": {
+      "hasImage": false,
+      "points": 2
+    },
+    "21": {
+      "hasImage": false,
+      "points": 3
+    },
+    "22": {
+      "hasImage": false,
+      "points": 2
+    },
+    "23": {
+      "hasImage": false,
+      "points": 2
+    },
+    "24": {
+      "hasImage": false,
+      "points": 2
+    },
+    "25": {
+      "hasImage": true,
+      "points": 2
+    },
+    "26": {
+      "hasImage": false,
+      "points": 2
+    },
+    "27": {
+      "hasImage": false,
+      "points": 2
+    },
+    "28": {
+      "hasImage": false,
+      "points": 2
+    },
+    "29": {
+      "hasImage": false,
+      "points": 2
+    },
+    "30": {
+      "hasImage": false,
+      "points": 3
+    },
+    "31": {
+      "hasImage": false,
+      "points": 2
+    },
+    "32": {
+      "hasImage": false,
+      "points": 2
+    },
+    "33": {
+      "hasImage": false,
+      "points": 3
+    },
+    "34": {
+      "hasImage": false,
+      "points": 3
+    },
+    "35": {
+      "hasImage": false,
+      "points": 2
+    },
+    "36": {
+      "hasImage": false,
+      "points": 2
+    },
+    "37": {
+      "hasImage": false,
+      "points": 3
+    },
+    "38": {
+      "hasImage": false,
+      "points": 2
+    },
+    "39": {
+      "hasImage": false,
+      "points": 3
+    },
+    "40": {
+      "hasImage": false,
+      "points": 2
+    },
+    "41": {
+      "hasImage": false,
+      "points": 2
+    },
+    "42": {
+      "hasImage": false,
+      "points": 3
+    },
+    "43": {
+      "hasImage": false,
+      "points": 2
+    },
+    "44": {
+      "hasImage": false,
+      "points": 2
+    },
+    "45": {
+      "hasImage": false,
+      "points": 2
+    }
   }
 }
