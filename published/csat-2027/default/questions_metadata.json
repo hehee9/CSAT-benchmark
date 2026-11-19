@@ -228,5 +228,197 @@
       "hasImage": true,
       "points": 3
     }
+  },
+  "수학-공통": {
+    "1": {
+      "hasImage": false,
+      "points": 2
+    },
+    "2": {
+      "hasImage": false,
+      "points": 2
+    },
+    "3": {
+      "hasImage": false,
+      "points": 3
+    },
+    "4": {
+      "hasImage": true,
+      "points": 3
+    },
+    "5": {
+      "hasImage": false,
+      "points": 3
+    },
+    "6": {
+      "hasImage": false,
+      "points": 3
+    },
+    "7": {
+      "hasImage": false,
+      "points": 3
+    },
+    "8": {
+      "hasImage": false,
+      "points": 3
+    },
+    "9": {
+      "hasImage": false,
+      "points": 4
+    },
+    "10": {
+      "hasImage": false,
+      "points": 4
+    },
+    "11": {
+      "hasImage": false,
+      "points": 4
+    },
+    "12": {
+      "hasImage": false,
+      "points": 4
+    },
+    "13": {
+      "hasImage": false,
+      "points": 4
+    },
+    "14": {
+      "hasImage": true,
+      "points": 4
+    },
+    "15": {
+      "hasImage": false,
+      "points": 4
+    },
+    "16": {
+      "hasImage": false,
+      "points": 3
+    },
+    "17": {
+      "hasImage": false,
+      "points": 3
+    },
+    "18": {
+      "hasImage": false,
+      "points": 3
+    },
+    "19": {
+      "hasImage": false,
+      "points": 3
+    },
+    "20": {
+      "hasImage": false,
+      "points": 4
+    },
+    "21": {
+      "hasImage": false,
+      "points": 4
+    },
+    "22": {
+      "hasImage": false,
+      "points": 4
+    }
+  },
+  "수학-확통": {
+    "23": {
+      "hasImage": false,
+      "points": 2
+    },
+    "24": {
+      "hasImage": false,
+      "points": 3
+    },
+    "25": {
+      "hasImage": false,
+      "points": 3
+    },
+    "26": {
+      "hasImage": false,
+      "points": 3
+    },
+    "27": {
+      "hasImage": false,
+      "points": 3
+    },
+    "28": {
+      "hasImage": true,
+      "points": 4
+    },
+    "29": {
+      "hasImage": false,
+      "points": 4
+    },
+    "30": {
+      "hasImage": true,
+      "points": 4
+    }
+  },
+  "수학-미적": {
+    "23": {
+      "hasImage": false,
+      "points": 2
+    },
+    "24": {
+      "hasImage": false,
+      "points": 3
+    },
+    "25": {
+      "hasImage": false,
+      "points": 3
+    },
+    "26": {
+      "hasImage": true,
+      "points": 3
+    },
+    "27": {
+      "hasImage": false,
+      "points": 3
+    },
+    "28": {
+      "hasImage": false,
+      "points": 4
+    },
+    "29": {
+      "hasImage": false,
+      "points": 4
+    },
+    "30": {
+      "hasImage": false,
+      "points": 4
+    }
+  },
+  "수학-기하": {
+    "23": {
+      "hasImage": false,
+      "points": 2
+    },
+    "24": {
+      "hasImage": false,
+      "points": 3
+    },
+    "25": {
+      "hasImage": false,
+      "points": 3
+    },
+    "26": {
+      "hasImage": false,
+      "points": 3
+    },
+    "27": {
+      "hasImage": true,
+      "points": 3
+    },
+    "28": {
+      "hasImage": false,
+      "points": 4
+    },
+    "29": {
+      "hasImage": true,
+      "points": 4
+    },
+    "30": {
+      "hasImage": true,
+      "points": 4
+    }
   }
 }

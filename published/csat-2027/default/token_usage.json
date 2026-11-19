@@ -22,13 +22,41 @@
           "total_tokens": 20415,
           "question_count": 1,
           "last_updated": "2026-11-19 11:08:40"
+        },
+        "수학-확통": {
+          "input_tokens": 5827,
+          "output_tokens": 837,
+          "total_tokens": 6664,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:26"
+        },
+        "수학-미적": {
+          "input_tokens": 8139,
+          "output_tokens": 837,
+          "total_tokens": 8976,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:26"
+        },
+        "수학-공통": {
+          "input_tokens": 13016,
+          "output_tokens": 2607,
+          "total_tokens": 15623,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:26"
+        },
+        "수학-기하": {
+          "input_tokens": 11754,
+          "output_tokens": 837,
+          "total_tokens": 12591,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:26"
         }
       },
-      "total_input_tokens": 57816,
-      "total_output_tokens": 2856,
-      "total_tokens": 60672,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:08:40"
+      "total_input_tokens": 96552,
+      "total_output_tokens": 7974,
+      "total_tokens": 104526,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:17:26"
     },
     "GPT-6 Luna Decisions": {
       "sections": {
@@ -52,13 +80,41 @@
           "total_tokens": 9999,
           "question_count": 1,
           "last_updated": "2026-11-19 11:08:45"
+        },
+        "수학-공통": {
+          "input_tokens": 11619,
+          "output_tokens": 0,
+          "total_tokens": 11619,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:32"
+        },
+        "수학-기하": {
+          "input_tokens": 6872,
+          "output_tokens": 0,
+          "total_tokens": 6872,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:38"
+        },
+        "수학-미적": {
+          "input_tokens": 5686,
+          "output_tokens": 0,
+          "total_tokens": 5686,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:31"
+        },
+        "수학-확통": {
+          "input_tokens": 4467,
+          "output_tokens": 0,
+          "total_tokens": 4467,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:32"
         }
       },
-      "total_input_tokens": 46224,
+      "total_input_tokens": 74868,
       "total_output_tokens": 0,
-      "total_tokens": 46224,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:09:01"
+      "total_tokens": 74868,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:17:38"
     },
     "Gemini Decision 1": {
       "sections": {
@@ -82,13 +138,41 @@
           "total_tokens": 14420,
           "question_count": 1,
           "last_updated": "2026-11-19 11:09:02"
+        },
+        "수학-기하": {
+          "input_tokens": 6308,
+          "output_tokens": 0,
+          "total_tokens": 6308,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:38"
+        },
+        "수학-공통": {
+          "input_tokens": 10304,
+          "output_tokens": 0,
+          "total_tokens": 10304,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:33"
+        },
+        "수학-미적": {
+          "input_tokens": 4088,
+          "output_tokens": 0,
+          "total_tokens": 4088,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:31"
+        },
+        "수학-확통": {
+          "input_tokens": 5126,
+          "output_tokens": 0,
+          "total_tokens": 5126,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:33"
         }
       },
-      "total_input_tokens": 44614,
+      "total_input_tokens": 70440,
       "total_output_tokens": 0,
-      "total_tokens": 44614,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:09:02"
+      "total_tokens": 70440,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:17:38"
     },
     "Solar Decide": {
       "sections": {
@@ -112,13 +196,41 @@
           "total_tokens": 441107,
           "question_count": 1,
           "last_updated": "2026-11-19 11:09:11"
+        },
+        "수학-미적": {
+          "input_tokens": 19864,
+          "output_tokens": 12,
+          "total_tokens": 19876,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:38"
+        },
+        "수학-기하": {
+          "input_tokens": 19456,
+          "output_tokens": 12,
+          "total_tokens": 19468,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:40"
+        },
+        "수학-확통": {
+          "input_tokens": 19336,
+          "output_tokens": 12,
+          "total_tokens": 19348,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:17:38"
+        },
+        "수학-공통": {
+          "input_tokens": 118745,
+          "output_tokens": 36,
+          "total_tokens": 118781,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:09"
         }
       },
-      "total_input_tokens": 558773,
-      "total_output_tokens": 56,
-      "total_tokens": 558829,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:09:11"
+      "total_input_tokens": 736174,
+      "total_output_tokens": 128,
+      "total_tokens": 736302,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:18:09"
     },
     "Qwen3.5 9B (Thinking)": {
       "sections": {
@@ -142,13 +254,41 @@
           "total_tokens": 36511,
           "question_count": 1,
           "last_updated": "2026-11-19 11:11:08"
+        },
+        "수학-확통": {
+          "input_tokens": 2092,
+          "output_tokens": 27123,
+          "total_tokens": 29215,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:51"
+        },
+        "수학-미적": {
+          "input_tokens": 3354,
+          "output_tokens": 36140,
+          "total_tokens": 39494,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:21:58"
+        },
+        "수학-기하": {
+          "input_tokens": 4453,
+          "output_tokens": 32435,
+          "total_tokens": 36888,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:22:27"
+        },
+        "수학-공통": {
+          "input_tokens": 4623,
+          "output_tokens": 29254,
+          "total_tokens": 33877,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:21:06"
         }
       },
-      "total_input_tokens": 33390,
-      "total_output_tokens": 68960,
-      "total_tokens": 102350,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:12:21"
+      "total_input_tokens": 47912,
+      "total_output_tokens": 193912,
+      "total_tokens": 241824,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:22:27"
     },
     "Qwen3.8 27B (xhigh)": {
       "sections": {
@@ -172,13 +312,41 @@
           "total_tokens": 57654,
           "question_count": 1,
           "last_updated": "2026-11-19 11:13:37"
+        },
+        "수학-확통": {
+          "input_tokens": 2135,
+          "output_tokens": 8722,
+          "total_tokens": 10857,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:30"
+        },
+        "수학-미적": {
+          "input_tokens": 3396,
+          "output_tokens": 37230,
+          "total_tokens": 40626,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:54"
+        },
+        "수학-기하": {
+          "input_tokens": 4497,
+          "output_tokens": 13620,
+          "total_tokens": 18117,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:53"
+        },
+        "수학-공통": {
+          "input_tokens": 4666,
+          "output_tokens": 36393,
+          "total_tokens": 41059,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:54"
         }
       },
-      "total_input_tokens": 33522,
-      "total_output_tokens": 79430,
-      "total_tokens": 112952,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:13:37"
+      "total_input_tokens": 48216,
+      "total_output_tokens": 175395,
+      "total_tokens": 223611,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:20:54"
     },
     "GPT-6.1 Terra (high)": {
       "sections": {
@@ -202,13 +370,41 @@
           "total_tokens": 8897,
           "question_count": 1,
           "last_updated": "2026-11-19 11:08:47"
+        },
+        "수학-확통": {
+          "input_tokens": 2242,
+          "output_tokens": 2788,
+          "total_tokens": 5030,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:20"
+        },
+        "수학-미적": {
+          "input_tokens": 3662,
+          "output_tokens": 4576,
+          "total_tokens": 8238,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:36"
+        },
+        "수학-기하": {
+          "input_tokens": 5092,
+          "output_tokens": 4169,
+          "total_tokens": 9261,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:40"
+        },
+        "수학-공통": {
+          "input_tokens": 4651,
+          "output_tokens": 6168,
+          "total_tokens": 10819,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:00"
         }
       },
-      "total_input_tokens": 37633,
-      "total_output_tokens": 6318,
-      "total_tokens": 43951,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:09:35"
+      "total_input_tokens": 53280,
+      "total_output_tokens": 24019,
+      "total_tokens": 77299,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:19:00"
     },
     "GPT-6 Luna (high)": {
       "sections": {
@@ -232,13 +428,41 @@
           "total_tokens": 30807,
           "question_count": 1,
           "last_updated": "2026-11-19 11:10:43"
+        },
+        "수학-미적": {
+          "input_tokens": 3662,
+          "output_tokens": 11442,
+          "total_tokens": 15104,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:37"
+        },
+        "수학-확통": {
+          "input_tokens": 2242,
+          "output_tokens": 5584,
+          "total_tokens": 7826,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:34"
+        },
+        "수학-기하": {
+          "input_tokens": 5092,
+          "output_tokens": 12713,
+          "total_tokens": 17805,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:12"
+        },
+        "수학-공통": {
+          "input_tokens": 4651,
+          "output_tokens": 21536,
+          "total_tokens": 26187,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:21:07"
         }
       },
-      "total_input_tokens": 37633,
-      "total_output_tokens": 35025,
-      "total_tokens": 72658,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:11:32"
+      "total_input_tokens": 53280,
+      "total_output_tokens": 86300,
+      "total_tokens": 139580,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:21:07"
     },
     "Mi:dm K 3.0 Pro": {
       "sections": {
@@ -262,13 +486,41 @@
           "total_tokens": 17916,
           "question_count": 1,
           "last_updated": "2026-11-19 11:09:57"
+        },
+        "수학-기하": {
+          "input_tokens": 1570,
+          "output_tokens": 30555,
+          "total_tokens": 32125,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:22"
+        },
+        "수학-공통": {
+          "input_tokens": 3135,
+          "output_tokens": 38238,
+          "total_tokens": 41373,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:59"
+        },
+        "수학-미적": {
+          "input_tokens": 1499,
+          "output_tokens": 26279,
+          "total_tokens": 27778,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:03"
+        },
+        "수학-확통": {
+          "input_tokens": 1534,
+          "output_tokens": 19645,
+          "total_tokens": 21179,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:34"
         }
       },
-      "total_input_tokens": 25182,
-      "total_output_tokens": 97343,
-      "total_tokens": 122525,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:17:54"
+      "total_input_tokens": 32920,
+      "total_output_tokens": 212060,
+      "total_tokens": 244980,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:20:59"
     },
     "GPT-6.2 Sol (high)": {
       "sections": {
@@ -292,13 +544,41 @@
           "total_tokens": 20935,
           "question_count": 1,
           "last_updated": "2026-11-19 11:09:12"
+        },
+        "수학-미적": {
+          "input_tokens": 3662,
+          "output_tokens": 3492,
+          "total_tokens": 7154,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:25"
+        },
+        "수학-확통": {
+          "input_tokens": 2242,
+          "output_tokens": 2290,
+          "total_tokens": 4532,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:10"
+        },
+        "수학-기하": {
+          "input_tokens": 5092,
+          "output_tokens": 3633,
+          "total_tokens": 8725,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:26"
+        },
+        "수학-공통": {
+          "input_tokens": 4651,
+          "output_tokens": 5901,
+          "total_tokens": 10552,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:50"
         }
       },
-      "total_input_tokens": 37633,
-      "total_output_tokens": 5820,
-      "total_tokens": 43453,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:09:12"
+      "total_input_tokens": 53280,
+      "total_output_tokens": 21136,
+      "total_tokens": 74416,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:18:50"
     },
     "Qwen4 Max (high)": {
       "sections": {
@@ -322,13 +602,41 @@
           "total_tokens": 17417,
           "question_count": 1,
           "last_updated": "2026-11-19 11:11:01"
+        },
+        "수학-확통": {
+          "input_tokens": 2105,
+          "output_tokens": 7928,
+          "total_tokens": 10033,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:03"
+        },
+        "수학-미적": {
+          "input_tokens": 3366,
+          "output_tokens": 11375,
+          "total_tokens": 14741,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:21:18"
+        },
+        "수학-기하": {
+          "input_tokens": 4467,
+          "output_tokens": 7118,
+          "total_tokens": 11585,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:47"
+        },
+        "수학-공통": {
+          "input_tokens": 4636,
+          "output_tokens": 12944,
+          "total_tokens": 17580,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:21:35"
         }
       },
-      "total_input_tokens": 33432,
-      "total_output_tokens": 20326,
-      "total_tokens": 53758,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:11:08"
+      "total_input_tokens": 48006,
+      "total_output_tokens": 59691,
+      "total_tokens": 107697,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:21:35"
     },
     "GPT-6 Luna (low)": {
       "sections": {
@@ -352,13 +660,41 @@
           "total_tokens": 20732,
           "question_count": 1,
           "last_updated": "2026-11-19 11:09:00"
+        },
+        "수학-미적": {
+          "input_tokens": 3662,
+          "output_tokens": 3098,
+          "total_tokens": 6760,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:16"
+        },
+        "수학-기하": {
+          "input_tokens": 5092,
+          "output_tokens": 4512,
+          "total_tokens": 9604,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:26"
+        },
+        "수학-공통": {
+          "input_tokens": 4651,
+          "output_tokens": 2435,
+          "total_tokens": 7086,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:14"
+        },
+        "수학-확통": {
+          "input_tokens": 2242,
+          "output_tokens": 3415,
+          "total_tokens": 5657,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:20"
         }
       },
-      "total_input_tokens": 37633,
-      "total_output_tokens": 6598,
-      "total_tokens": 44231,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:09:15"
+      "total_input_tokens": 53280,
+      "total_output_tokens": 20058,
+      "total_tokens": 73338,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:18:26"
     },
     "Solar Pro 4 (max)": {
       "sections": {
@@ -382,13 +718,41 @@
           "total_tokens": 28233,
           "question_count": 1,
           "last_updated": "2026-11-19 11:26:43"
+        },
+        "수학-미적": {
+          "input_tokens": 1109,
+          "output_tokens": 48810,
+          "total_tokens": 49919,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:27:34"
+        },
+        "수학-확통": {
+          "input_tokens": 1126,
+          "output_tokens": 35276,
+          "total_tokens": 36402,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:26:14"
+        },
+        "수학-기하": {
+          "input_tokens": 1133,
+          "output_tokens": 13660,
+          "total_tokens": 14793,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:52"
+        },
+        "수학-공통": {
+          "input_tokens": 2587,
+          "output_tokens": 81503,
+          "total_tokens": 84090,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:33:17"
         }
       },
-      "total_input_tokens": 21414,
-      "total_output_tokens": 37514,
-      "total_tokens": 58928,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:26:43"
+      "total_input_tokens": 27369,
+      "total_output_tokens": 216763,
+      "total_tokens": 244132,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:33:17"
     },
     "Solar Mini 4.5 Preview (max)": {
       "sections": {
@@ -412,13 +776,41 @@
           "total_tokens": 45876,
           "question_count": 1,
           "last_updated": "2026-11-19 11:12:22"
+        },
+        "수학-미적": {
+          "input_tokens": 1108,
+          "output_tokens": 21756,
+          "total_tokens": 22864,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:37"
+        },
+        "수학-기하": {
+          "input_tokens": 1134,
+          "output_tokens": 17342,
+          "total_tokens": 18476,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:38"
+        },
+        "수학-공통": {
+          "input_tokens": 2590,
+          "output_tokens": 46534,
+          "total_tokens": 49124,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:23:07"
+        },
+        "수학-확통": {
+          "input_tokens": 1125,
+          "output_tokens": 11683,
+          "total_tokens": 12808,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:46"
         }
       },
-      "total_input_tokens": 21417,
-      "total_output_tokens": 120302,
-      "total_tokens": 141719,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:13:31"
+      "total_input_tokens": 27374,
+      "total_output_tokens": 217617,
+      "total_tokens": 244991,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:23:07"
     },
     "Kimi K3.1 Pro (high)": {
       "sections": {
@@ -442,13 +834,41 @@
           "total_tokens": 31884,
           "question_count": 1,
           "last_updated": "2026-11-19 11:17:46"
+        },
+        "수학-미적": {
+          "input_tokens": 3945,
+          "output_tokens": 14591,
+          "total_tokens": 18536,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:24:40"
+        },
+        "수학-기하": {
+          "input_tokens": 5564,
+          "output_tokens": 12617,
+          "total_tokens": 18181,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:23:42"
+        },
+        "수학-공통": {
+          "input_tokens": 4973,
+          "output_tokens": 15084,
+          "total_tokens": 20057,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:24:20"
+        },
+        "수학-확통": {
+          "input_tokens": 2519,
+          "output_tokens": 8272,
+          "total_tokens": 10791,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:21:55"
         }
       },
-      "total_input_tokens": 48656,
-      "total_output_tokens": 33305,
-      "total_tokens": 81961,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:17:46"
+      "total_input_tokens": 65657,
+      "total_output_tokens": 83869,
+      "total_tokens": 149526,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:24:40"
     },
     "GPT-6.2 Astra (high)": {
       "sections": {
@@ -472,13 +892,41 @@
           "total_tokens": 13639,
           "question_count": 1,
           "last_updated": "2026-11-19 11:09:20"
+        },
+        "수학-확통": {
+          "input_tokens": 2242,
+          "output_tokens": 2224,
+          "total_tokens": 4466,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:15"
+        },
+        "수학-미적": {
+          "input_tokens": 3662,
+          "output_tokens": 2824,
+          "total_tokens": 6486,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:23"
+        },
+        "수학-기하": {
+          "input_tokens": 5092,
+          "output_tokens": 3898,
+          "total_tokens": 8990,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:44"
+        },
+        "수학-공통": {
+          "input_tokens": 4651,
+          "output_tokens": 4859,
+          "total_tokens": 9510,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:48"
         }
       },
-      "total_input_tokens": 37633,
-      "total_output_tokens": 5378,
-      "total_tokens": 43011,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:09:26"
+      "total_input_tokens": 53280,
+      "total_output_tokens": 19183,
+      "total_tokens": 72463,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:18:48"
     },
     "GLM-5.3 Flash (high)": {
       "sections": {
@@ -502,13 +950,41 @@
           "total_tokens": 38738,
           "question_count": 1,
           "last_updated": "2026-11-19 11:16:51"
+        },
+        "수학-기하": {
+          "input_tokens": 5507,
+          "output_tokens": 16856,
+          "total_tokens": 22363,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:21:51"
+        },
+        "수학-공통": {
+          "input_tokens": 4977,
+          "output_tokens": 33286,
+          "total_tokens": 38263,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:26:03"
+        },
+        "수학-확통": {
+          "input_tokens": 2469,
+          "output_tokens": 7786,
+          "total_tokens": 10255,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:44"
+        },
+        "수학-미적": {
+          "input_tokens": 3953,
+          "output_tokens": 21976,
+          "total_tokens": 25929,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:22:58"
         }
       },
-      "total_input_tokens": 47109,
-      "total_output_tokens": 65261,
-      "total_tokens": 112370,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:17:02"
+      "total_input_tokens": 64015,
+      "total_output_tokens": 145165,
+      "total_tokens": 209180,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:26:03"
     },
     "Qwen3.8 Flash (xhigh)": {
       "sections": {
@@ -532,13 +1008,41 @@
           "total_tokens": 76178,
           "question_count": 1,
           "last_updated": "2026-11-19 11:22:08"
+        },
+        "수학-확통": {
+          "input_tokens": 2144,
+          "output_tokens": 8076,
+          "total_tokens": 10220,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:45"
+        },
+        "수학-기하": {
+          "input_tokens": 4506,
+          "output_tokens": 9279,
+          "total_tokens": 13785,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:23"
+        },
+        "수학-공통": {
+          "input_tokens": 4675,
+          "output_tokens": 36629,
+          "total_tokens": 41304,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:26:24"
+        },
+        "수학-미적": {
+          "input_tokens": 3405,
+          "output_tokens": 17531,
+          "total_tokens": 20936,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:37:44"
         }
       },
-      "total_input_tokens": 33549,
-      "total_output_tokens": 120369,
-      "total_tokens": 153918,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:22:08"
+      "total_input_tokens": 48279,
+      "total_output_tokens": 191884,
+      "total_tokens": 240163,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:37:44"
     },
     "K-EXAONE 2.5 (high)": {
       "sections": {
@@ -562,13 +1066,41 @@
           "total_tokens": 62652,
           "question_count": 1,
           "last_updated": "2026-11-19 11:11:58"
+        },
+        "수학-확통": {
+          "input_tokens": 1115,
+          "output_tokens": 10784,
+          "total_tokens": 11899,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:37"
+        },
+        "수학-미적": {
+          "input_tokens": 1098,
+          "output_tokens": 20201,
+          "total_tokens": 21299,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:12"
+        },
+        "수학-기하": {
+          "input_tokens": 1144,
+          "output_tokens": 21383,
+          "total_tokens": 22527,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:12"
+        },
+        "수학-공통": {
+          "input_tokens": 2648,
+          "output_tokens": 28204,
+          "total_tokens": 30852,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:36"
         }
       },
-      "total_input_tokens": 21332,
-      "total_output_tokens": 101085,
-      "total_tokens": 122417,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:11:58"
+      "total_input_tokens": 27337,
+      "total_output_tokens": 181657,
+      "total_tokens": 208994,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:19:36"
     },
     "DeepSeek V4.1 Flash 1017 (high)": {
       "sections": {
@@ -592,13 +1124,41 @@
           "total_tokens": 38825,
           "question_count": 1,
           "last_updated": "2026-11-19 11:13:15"
+        },
+        "수학-미적": {
+          "input_tokens": 2202,
+          "output_tokens": 24012,
+          "total_tokens": 26214,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:06"
+        },
+        "수학-확통": {
+          "input_tokens": 1817,
+          "output_tokens": 9725,
+          "total_tokens": 11542,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:36"
+        },
+        "수학-기하": {
+          "input_tokens": 3274,
+          "output_tokens": 14922,
+          "total_tokens": 18196,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:04"
+        },
+        "수학-공통": {
+          "input_tokens": 3795,
+          "output_tokens": 19529,
+          "total_tokens": 23324,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:26"
         }
       },
-      "total_input_tokens": 37684,
-      "total_output_tokens": 62975,
-      "total_tokens": 100659,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:13:15"
+      "total_input_tokens": 48772,
+      "total_output_tokens": 131163,
+      "total_tokens": 179935,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:20:06"
     },
     "Gemma 4 26B A4B (high)": {
       "sections": {
@@ -622,13 +1182,41 @@
           "total_tokens": 18740,
           "question_count": 1,
           "last_updated": "2026-11-19 11:13:06"
+        },
+        "수학-확통": {
+          "input_tokens": 1887,
+          "output_tokens": 19502,
+          "total_tokens": 21389,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:06"
+        },
+        "수학-기하": {
+          "input_tokens": 2187,
+          "output_tokens": 18240,
+          "total_tokens": 20427,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:05"
+        },
+        "수학-공통": {
+          "input_tokens": 3630,
+          "output_tokens": 28958,
+          "total_tokens": 32588,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:39:48"
+        },
+        "수학-미적": {
+          "input_tokens": 1571,
+          "output_tokens": 28421,
+          "total_tokens": 29992,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:39:27"
         }
       },
-      "total_input_tokens": 31863,
-      "total_output_tokens": 45988,
-      "total_tokens": 77851,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:47:37"
+      "total_input_tokens": 41138,
+      "total_output_tokens": 141109,
+      "total_tokens": 182247,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:39:48"
     },
     "Raon-1 mini preview": {
       "sections": {
@@ -652,13 +1240,41 @@
           "total_tokens": 34336,
           "question_count": 1,
           "last_updated": "2026-11-19 11:17:41"
+        },
+        "수학-공통": {
+          "input_tokens": 2655,
+          "output_tokens": 62401,
+          "total_tokens": 65056,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:22:24"
+        },
+        "수학-미적": {
+          "input_tokens": 1119,
+          "output_tokens": 51110,
+          "total_tokens": 52229,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:31:31"
+        },
+        "수학-확통": {
+          "input_tokens": 1045,
+          "output_tokens": 64404,
+          "total_tokens": 65449,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:28:07"
+        },
+        "수학-기하": {
+          "input_tokens": 1139,
+          "output_tokens": 53564,
+          "total_tokens": 54703,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:35:05"
         }
       },
-      "total_input_tokens": 20186,
-      "total_output_tokens": 173456,
-      "total_tokens": 193642,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:24:47"
+      "total_input_tokens": 26144,
+      "total_output_tokens": 404935,
+      "total_tokens": 431079,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:35:05"
     },
     "Gemma 4 31B (high)": {
       "sections": {
@@ -682,13 +1298,41 @@
           "total_tokens": 13566,
           "question_count": 1,
           "last_updated": "2026-11-19 11:29:11"
+        },
+        "수학-기하": {
+          "input_tokens": 2187,
+          "output_tokens": 18983,
+          "total_tokens": 21170,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:22:03"
+        },
+        "수학-공통": {
+          "input_tokens": 3630,
+          "output_tokens": 21094,
+          "total_tokens": 24724,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:22:26"
+        },
+        "수학-미적": {
+          "input_tokens": 1571,
+          "output_tokens": 19742,
+          "total_tokens": 21313,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:22:18"
+        },
+        "수학-확통": {
+          "input_tokens": 1887,
+          "output_tokens": 14041,
+          "total_tokens": 15928,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:37:56"
         }
       },
-      "total_input_tokens": 31918,
-      "total_output_tokens": 22863,
-      "total_tokens": 54781,
-      "question_count": 3,
-      "last_updated": "2026-11-19 11:57:24"
+      "total_input_tokens": 41193,
+      "total_output_tokens": 96723,
+      "total_tokens": 137916,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:37:56"
     },
     "Claude Fable 5.2 (high)": {
       "sections": {
@@ -712,13 +1356,41 @@
           "total_tokens": 16210,
           "question_count": 1,
           "last_updated": "2026-11-19T12:20:45+0900"
+        },
+        "수학-공통": {
+          "input_tokens": 6252,
+          "output_tokens": 8352,
+          "total_tokens": 14604,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:22+0900"
+        },
+        "수학-확통": {
+          "input_tokens": 2942,
+          "output_tokens": 3387,
+          "total_tokens": 6329,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:23+0900"
+        },
+        "수학-기하": {
+          "input_tokens": 6108,
+          "output_tokens": 5442,
+          "total_tokens": 11550,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:22+0900"
+        },
+        "수학-미적": {
+          "input_tokens": 4520,
+          "output_tokens": 7055,
+          "total_tokens": 11575,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:22+0900"
         }
       },
-      "total_input_tokens": 60309,
-      "total_output_tokens": 11995,
-      "total_tokens": 72304,
-      "question_count": 3,
-      "last_updated": "2026-11-19T12:20:45+0900"
+      "total_input_tokens": 80131,
+      "total_output_tokens": 36231,
+      "total_tokens": 116362,
+      "question_count": 7,
+      "last_updated": "2026-11-19T14:34:23+0900"
     },
     "Claude Sonnet 5.5 (high)": {
       "sections": {
@@ -742,13 +1414,41 @@
           "total_tokens": 38482,
           "question_count": 1,
           "last_updated": "2026-11-19T12:20:48+0900"
+        },
+        "수학-공통": {
+          "input_tokens": 6252,
+          "output_tokens": 12219,
+          "total_tokens": 18471,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:26+0900"
+        },
+        "수학-확통": {
+          "input_tokens": 2942,
+          "output_tokens": 4335,
+          "total_tokens": 7277,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:26+0900"
+        },
+        "수학-기하": {
+          "input_tokens": 6108,
+          "output_tokens": 5992,
+          "total_tokens": 12100,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:26+0900"
+        },
+        "수학-미적": {
+          "input_tokens": 4520,
+          "output_tokens": 7377,
+          "total_tokens": 11897,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:26+0900"
         }
       },
-      "total_input_tokens": 60309,
-      "total_output_tokens": 21195,
-      "total_tokens": 81504,
-      "question_count": 3,
-      "last_updated": "2026-11-19T12:20:48+0900"
+      "total_input_tokens": 80131,
+      "total_output_tokens": 51118,
+      "total_tokens": 131249,
+      "question_count": 7,
+      "last_updated": "2026-11-19T14:34:26+0900"
     },
     "GLM-5.3 (high)": {
       "sections": {
@@ -772,13 +1472,41 @@
           "total_tokens": 29657,
           "question_count": 1,
           "last_updated": "2026-11-19T12:22:04+0900"
+        },
+        "수학-공통": {
+          "input_tokens": 3131,
+          "output_tokens": 52288,
+          "total_tokens": 55419,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:31+0900"
+        },
+        "수학-확통": {
+          "input_tokens": 1415,
+          "output_tokens": 10390,
+          "total_tokens": 11805,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:30+0900"
+        },
+        "수학-기하": {
+          "input_tokens": 1483,
+          "output_tokens": 15768,
+          "total_tokens": 17251,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:30+0900"
+        },
+        "수학-미적": {
+          "input_tokens": 1359,
+          "output_tokens": 24448,
+          "total_tokens": 25807,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:31+0900"
         }
       },
-      "total_input_tokens": 39846,
-      "total_output_tokens": 41056,
-      "total_tokens": 80902,
-      "question_count": 3,
-      "last_updated": "2026-11-19T12:22:04+0900"
+      "total_input_tokens": 47234,
+      "total_output_tokens": 143950,
+      "total_tokens": 191184,
+      "question_count": 7,
+      "last_updated": "2026-11-19T14:34:31+0900"
     },
     "Claude Haiku 5.5 (high)": {
       "sections": {
@@ -802,13 +1530,41 @@
           "total_tokens": 53920,
           "question_count": 1,
           "last_updated": "2026-11-19T12:20:51+0900"
+        },
+        "수학-공통": {
+          "input_tokens": 6252,
+          "output_tokens": 25350,
+          "total_tokens": 31602,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:27+0900"
+        },
+        "수학-확통": {
+          "input_tokens": 2942,
+          "output_tokens": 8283,
+          "total_tokens": 11225,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:27+0900"
+        },
+        "수학-기하": {
+          "input_tokens": 6108,
+          "output_tokens": 14533,
+          "total_tokens": 20641,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:28+0900"
+        },
+        "수학-미적": {
+          "input_tokens": 4520,
+          "output_tokens": 18944,
+          "total_tokens": 23464,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:27+0900"
         }
       },
-      "total_input_tokens": 60309,
-      "total_output_tokens": 70413,
-      "total_tokens": 130722,
-      "question_count": 3,
-      "last_updated": "2026-11-19T12:20:51+0900"
+      "total_input_tokens": 80131,
+      "total_output_tokens": 137523,
+      "total_tokens": 217654,
+      "question_count": 7,
+      "last_updated": "2026-11-19T14:34:28+0900"
     },
     "Claude Opus 5.5 (high)": {
       "sections": {
@@ -832,13 +1588,41 @@
           "total_tokens": 34844,
           "question_count": 1,
           "last_updated": "2026-11-19T12:20:47+0900"
+        },
+        "수학-확통": {
+          "input_tokens": 2942,
+          "output_tokens": 4086,
+          "total_tokens": 7028,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:24+0900"
+        },
+        "수학-기하": {
+          "input_tokens": 6108,
+          "output_tokens": 6419,
+          "total_tokens": 12527,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:24+0900"
+        },
+        "수학-미적": {
+          "input_tokens": 4520,
+          "output_tokens": 7040,
+          "total_tokens": 11560,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:24+0900"
+        },
+        "수학-공통": {
+          "input_tokens": 6252,
+          "output_tokens": 10828,
+          "total_tokens": 17080,
+          "question_count": 1,
+          "last_updated": "2026-11-19T14:34:24+0900"
         }
       },
-      "total_input_tokens": 60309,
-      "total_output_tokens": 11525,
-      "total_tokens": 71834,
-      "question_count": 3,
-      "last_updated": "2026-11-19T12:20:47+0900"
+      "total_input_tokens": 80131,
+      "total_output_tokens": 39898,
+      "total_tokens": 120029,
+      "question_count": 7,
+      "last_updated": "2026-11-19T14:34:24+0900"
     },
     "Gemini 4 Carbon (high)": {
       "sections": {
@@ -862,13 +1646,41 @@
           "total_tokens": 20320,
           "question_count": 1,
           "last_updated": "2026-11-19 12:40:30"
+        },
+        "수학-기하": {
+          "input_tokens": 4646,
+          "output_tokens": 27004,
+          "total_tokens": 31650,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:22:22"
+        },
+        "수학-공통": {
+          "input_tokens": 5320,
+          "output_tokens": 34736,
+          "total_tokens": 40056,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:23:27"
+        },
+        "수학-미적": {
+          "input_tokens": 2404,
+          "output_tokens": 38034,
+          "total_tokens": 40438,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:23:46"
+        },
+        "수학-확통": {
+          "input_tokens": 3468,
+          "output_tokens": 23454,
+          "total_tokens": 26922,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:21:48"
         }
       },
-      "total_input_tokens": 36149,
-      "total_output_tokens": 64808,
-      "total_tokens": 100957,
-      "question_count": 3,
-      "last_updated": "2026-11-19 12:44:23"
+      "total_input_tokens": 51987,
+      "total_output_tokens": 188036,
+      "total_tokens": 240023,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:23:46"
     },
     "Gemini 4 Hydrogen (high)": {
       "sections": {
@@ -892,13 +1704,41 @@
           "total_tokens": 34796,
           "question_count": 1,
           "last_updated": "2026-11-19 12:39:29"
+        },
+        "수학-공통": {
+          "input_tokens": 5320,
+          "output_tokens": 20705,
+          "total_tokens": 26025,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:52"
+        },
+        "수학-확통": {
+          "input_tokens": 3468,
+          "output_tokens": 12469,
+          "total_tokens": 15937,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:27"
+        },
+        "수학-미적": {
+          "input_tokens": 2404,
+          "output_tokens": 15889,
+          "total_tokens": 18293,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:37"
+        },
+        "수학-기하": {
+          "input_tokens": 4646,
+          "output_tokens": 18602,
+          "total_tokens": 23248,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:41"
         }
       },
-      "total_input_tokens": 36149,
-      "total_output_tokens": 36782,
-      "total_tokens": 72931,
-      "question_count": 3,
-      "last_updated": "2026-11-19 12:39:29"
+      "total_input_tokens": 51987,
+      "total_output_tokens": 104447,
+      "total_tokens": 156434,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:18:52"
     },
     "Gemini 3.5 Flash-Lite (high)": {
       "sections": {
@@ -922,12 +1762,40 @@
           "total_tokens": 19523,
           "question_count": 1,
           "last_updated": "2026-11-19 13:27:19"
+        },
+        "수학-공통": {
+          "input_tokens": 5286,
+          "output_tokens": 36037,
+          "total_tokens": 41323,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:21"
+        },
+        "수학-확통": {
+          "input_tokens": 3456,
+          "output_tokens": 21010,
+          "total_tokens": 24466,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:41"
+        },
+        "수학-미적": {
+          "input_tokens": 2378,
+          "output_tokens": 41218,
+          "total_tokens": 43596,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:31"
+        },
+        "수학-기하": {
+          "input_tokens": 4626,
+          "output_tokens": 21593,
+          "total_tokens": 26219,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:18:42"
         }
       },
-      "total_input_tokens": 38390,
-      "total_output_tokens": 40625,
-      "total_tokens": 79015,
-      "question_count": 3,
+      "total_input_tokens": 54136,
+      "total_output_tokens": 160483,
+      "total_tokens": 214619,
+      "question_count": 7,
       "last_updated": "2026-11-19T12:21:50+0900"
     },
     "Gemini 4 Neon (high)": {
@@ -952,13 +1820,41 @@
           "total_tokens": 25839,
           "question_count": 1,
           "last_updated": "2026-11-19 12:39:19"
+        },
+        "수학-기하": {
+          "input_tokens": 4646,
+          "output_tokens": 20326,
+          "total_tokens": 24972,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:02"
+        },
+        "수학-공통": {
+          "input_tokens": 5320,
+          "output_tokens": 26985,
+          "total_tokens": 32305,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:58"
+        },
+        "수학-확통": {
+          "input_tokens": 3468,
+          "output_tokens": 14947,
+          "total_tokens": 18415,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:18"
+        },
+        "수학-미적": {
+          "input_tokens": 2404,
+          "output_tokens": 22634,
+          "total_tokens": 25038,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:14"
         }
       },
-      "total_input_tokens": 36149,
-      "total_output_tokens": 44732,
-      "total_tokens": 80881,
-      "question_count": 3,
-      "last_updated": "2026-11-19 12:40:57"
+      "total_input_tokens": 51987,
+      "total_output_tokens": 129624,
+      "total_tokens": 181611,
+      "question_count": 7,
+      "last_updated": "2026-11-19 14:20:58"
     },
     "Gemini 4 Argon (high)": {
       "sections": {
@@ -982,12 +1878,40 @@
           "total_tokens": 35491,
           "question_count": 1,
           "last_updated": "2026-11-19T12:22:02+0900"
+        },
+        "수학-확통": {
+          "input_tokens": 3468,
+          "output_tokens": 10786,
+          "total_tokens": 14254,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:19:46"
+        },
+        "수학-미적": {
+          "input_tokens": 2404,
+          "output_tokens": 19372,
+          "total_tokens": 21776,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:21:09"
+        },
+        "수학-기하": {
+          "input_tokens": 4646,
+          "output_tokens": 17610,
+          "total_tokens": 22256,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:20:55"
+        },
+        "수학-공통": {
+          "input_tokens": 5320,
+          "output_tokens": 21902,
+          "total_tokens": 27222,
+          "question_count": 1,
+          "last_updated": "2026-11-19 14:21:32"
         }
       },
-      "total_input_tokens": 36149,
-      "total_output_tokens": 38173,
-      "total_tokens": 74322,
-      "question_count": 3,
+      "total_input_tokens": 51987,
+      "total_output_tokens": 107843,
+      "total_tokens": 159830,
+      "question_count": 7,
       "last_updated": "2026-11-19T12:22:02+0900"
     }
   }
