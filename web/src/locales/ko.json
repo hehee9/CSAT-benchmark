@@ -321,7 +321,7 @@
     "noData": "데이터가 없습니다",
     "preparingResults": "아직 시험 결과를 준비 중입니다.\n좌상단 선택기에서 이전 시험을 선택해보세요",
     "releaseSchedule": {
-      "title": "과목별 문제 공개 일정 시각",
+      "title": "과목별 문제 공개 예정 시각",
       "korean": "국어",
       "math": "수학",
       "english": "영어",

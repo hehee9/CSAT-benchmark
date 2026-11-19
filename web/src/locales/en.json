@@ -323,7 +323,7 @@
     "noData": "No data available",
     "preparingResults": "Results are still being prepared.\nChoose a previous exam from the selector at the top left",
     "releaseSchedule": {
-      "title": "Question release schedule by subject",
+      "title": "Expected question release time by subject",
       "korean": "Korean",
       "math": "Math",
       "english": "English",
