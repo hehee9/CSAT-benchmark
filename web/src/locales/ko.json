@@ -285,6 +285,7 @@
     "releaseDate": "출시일",
     "knowledgeCutoff": "지식 컷오프",
     "plan": "요금제",
+    "quantization": "양자화 수준",
     "free": "무료",
     "paid": "유료",
     "notDisclosed": "공개되지 않음",

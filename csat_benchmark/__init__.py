@@ -19,6 +19,7 @@ from .metadata import (
     validate_access_tier,
     validate_knowledge_cutoff,
     validate_product_line,
+    validate_quantization,
     validate_release_date,
     validate_year_month,
 )
@@ -67,6 +68,7 @@ __all__ = [
     "validate_access_tier",
     "validate_knowledge_cutoff",
     "validate_product_line",
+    "validate_quantization",
     "validate_release_date",
     "validate_year_month",
 ]

@@ -18,6 +18,7 @@ from csat_benchmark.metadata import (
     sync_model_metadata,
     validate_access_tier,
     validate_product_line,
+    validate_quantization,
 )
 from csat_benchmark.models import APIResponse, ModelConfig
 from csat_benchmark.runner import run_exam
@@ -49,6 +50,7 @@ def test_config_adds_null_cutoff_without_resolving_credentials(tmp_path: Path) -
     assert config["models"][0]["knowledge_cutoff"] is None
     assert config["models"][0]["access_tier"] is None
     assert config["models"][0]["product_line"] is None
+    assert "quantization" not in config["models"][0]
     assert "api_key" not in config["models"][0]
 
 
@@ -76,6 +78,21 @@ def test_product_line_validator_rejects_empty_or_non_string_values(value: object
     """@brief 빈 제품군과 비문자열 설정 거부 검증"""
     with pytest.raises(ValueError, match="product_line"):
         validate_product_line(value)
+
+
+@pytest.mark.parametrize("value", ["FP8", "Q4_K_M", None, ""])
+def test_quantization_validator_accepts_supported_values(value: object) -> None:
+    """@brief 양자화 문자열, 빈 문자열과 null 검증"""
+    assert validate_quantization(value) == value
+
+
+@pytest.mark.parametrize("value", ["  ", 8, True, ["FP8"]])
+def test_quantization_validator_rejects_whitespace_or_non_string_values(
+    value: object,
+) -> None:
+    """@brief 공백 양자화 문자열과 비문자열 설정 거부 검증"""
+    with pytest.raises(ValueError, match="quantization"):
+        validate_quantization(value)
 
 
 def test_config_loads_access_tier_and_product_line(tmp_path: Path) -> None:
@@ -142,6 +159,26 @@ def test_invalid_knowledge_cutoff_is_rejected(tmp_path: Path, value: object) -> 
         },
     )
     with pytest.raises(ValueError, match="knowledge_cutoff"):
+        load_config(config_path, resolve_secrets=False)
+
+
+def test_invalid_quantization_is_rejected_by_config(tmp_path: Path) -> None:
+    """@brief 잘못된 양자화 설정 로드 거부 검증"""
+    config_path = tmp_path / "config.json"
+    _write_json(
+        config_path,
+        {
+            "models": [
+                {
+                    "name": "모델",
+                    "api_type": "openai",
+                    "model_id": "mock",
+                    "quantization": "  ",
+                }
+            ]
+        },
+    )
+    with pytest.raises(ValueError, match="quantization"):
         load_config(config_path, resolve_secrets=False)
 
 
@@ -238,6 +275,32 @@ def test_merge_model_metadata_sets_and_preserves_access_tier_and_product_line() 
         "productLine": "수동 제품군",
     }
     assert merged["빈 항목"] == {"knowledgeCutoff": None}
+
+
+def test_merge_model_metadata_sets_or_removes_quantization_conditionally() -> None:
+    """@brief 양자화 메타데이터 설정, 삭제와 누락 시 보존 검증"""
+    merged = merge_model_metadata(
+        {
+            "누락": {"quantization": "기존 양자화"},
+            "null": {"quantization": "기존 양자화"},
+            "문자열": {},
+            "삭제": {"quantization": "기존 양자화"},
+            "신규 누락": {},
+        },
+        [
+            {"name": "누락"},
+            {"name": "null", "quantization": None},
+            {"name": "문자열", "quantization": "Q4_K_M"},
+            {"name": "삭제", "quantization": ""},
+            {"name": "신규 누락"},
+        ],
+    )
+
+    assert merged["누락"]["quantization"] == "기존 양자화"
+    assert merged["null"]["quantization"] is None
+    assert merged["문자열"]["quantization"] == "Q4_K_M"
+    assert "quantization" not in merged["삭제"]
+    assert "quantization" not in merged["신규 누락"]
 
 
 @pytest.mark.parametrize("value", ["", "2026", "2026-00", "2026-13", 202609])
@@ -368,6 +431,18 @@ def test_metadata_sync_maps_plan_messages_and_removes_empty_language(tmp_path: P
     assert "description" not in metadata["누락 모델"]
 
 
+def test_metadata_sync_writes_quantization(tmp_path: Path) -> None:
+    """@brief 설정 양자화 수준의 공개 메타데이터 동기화 검증"""
+    metadata_path = tmp_path / "web" / "model_metadata.json"
+    assert sync_model_metadata(
+        [{"name": "모델", "quantization": "FP8"}],
+        metadata_path,
+    )
+
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    assert metadata["모델"]["quantization"] == "FP8"
+
+
 @pytest.mark.parametrize("field_name", ["plan_message_ko", "plan_message_en"])
 def test_plan_message_rejects_non_string_values(tmp_path: Path, field_name: str) -> None:
     """@description 요금제 안내 문구의 null 외 비문자열 설정 거부 검증"""
@@ -398,6 +473,7 @@ def test_display_messages_are_ignored_for_resume_comparison() -> None:
         "release_date": "2025-11-01",
         "access_tier": "free",
         "product_line": "기존 제품군",
+        "quantization": "FP8",
         "plan_message_ko": "기존 한국어",
         "plan_message_en": "기존 영어",
     }
@@ -407,6 +483,7 @@ def test_display_messages_are_ignored_for_resume_comparison() -> None:
         "release_date": "2026-01-05",
         "access_tier": "paid",
         "product_line": "새 제품군",
+        "quantization": "Q4_K_M",
         "plan_message_ko": "새 한국어",
         "plan_message_en": "새 영어",
     }

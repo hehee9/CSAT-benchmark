@@ -11,28 +11,32 @@
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-04-24",
     "accessTier": "free",
-    "productLine": "DeepSeek Flash"
+    "productLine": "DeepSeek Flash",
+    "quantization": "FP8 + MXFP4 (MoE)"
   },
   "DeepSeek V4 Flash (max)": {
     "supportsVision": false,
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-04-24",
     "accessTier": "free",
-    "productLine": "DeepSeek Flash"
+    "productLine": "DeepSeek Flash",
+    "quantization": "FP8 + MXFP4 (MoE)"
   },
   "DeepSeek V4 Pro (none)": {
     "supportsVision": false,
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-04-24",
     "accessTier": "free",
-    "productLine": "DeepSeek Flash"
+    "productLine": "DeepSeek Flash",
+    "quantization": "FP8 + MXFP4 (MoE)"
   },
   "DeepSeek V4 Pro (max)": {
     "supportsVision": false,
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-04-24",
     "accessTier": "free",
-    "productLine": "DeepSeek Flash"
+    "productLine": "DeepSeek Flash",
+    "quantization": "FP8 + MXFP4 (MoE)"
   },
   "DeepSeek V3.2 (Non-Thinking)": {
     "supportsVision": false,
@@ -53,21 +57,24 @@
     "knowledgeCutoff": "2025-03",
     "releaseDate": "2025-12-01",
     "productLine": "DeepSeek Flash",
-    "accessTier": "not_applicable"
+    "accessTier": "not_applicable",
+    "quantization": "FP8"
   },
   "K-EXAONE (Thinking)": {
     "supportsVision": false,
     "knowledgeCutoff": "2024-12",
     "releaseDate": "2025-12-31",
     "productLine": "K-EXAONE",
-    "accessTier": "not_applicable"
+    "accessTier": "not_applicable",
+    "quantization": "BF16"
   },
   "K-EXAONE (Non-Thinking)": {
     "supportsVision": false,
     "knowledgeCutoff": "2024-12",
     "releaseDate": "2025-12-31",
     "productLine": "K-EXAONE",
-    "accessTier": "not_applicable"
+    "accessTier": "not_applicable",
+    "quantization": "BF16"
   },
   "Solar Pro 3 (high)": {
     "supportsVision": false,
@@ -88,21 +95,24 @@
     "knowledgeCutoff": null,
     "releaseDate": "2025-08-05",
     "accessTier": "not_applicable",
-    "productLine": "GPT Terra"
+    "productLine": "GPT Terra",
+    "quantization": "MXFP4"
   },
   "GLM-5 (Thinking)": {
     "supportsVision": false,
     "knowledgeCutoff": "2025-12",
     "releaseDate": "2026-02-11",
     "accessTier": "free",
-    "productLine": "GLM"
+    "productLine": "GLM",
+    "quantization": "BF16"
   },
   "GLM-5 (Non-Thinking)": {
     "supportsVision": false,
     "knowledgeCutoff": "2025-12",
     "releaseDate": "2026-02-11",
     "accessTier": "free",
-    "productLine": "GLM"
+    "productLine": "GLM",
+    "quantization": "BF16"
   },
   "Solar Pro 3 0323 (high)": {
     "supportsVision": false,
@@ -135,14 +145,16 @@
     "knowledgeCutoff": "2025-12",
     "releaseDate": "2026-03-27",
     "accessTier": "free",
-    "productLine": "GLM"
+    "productLine": "GLM",
+    "quantization": "FP8"
   },
   "GLM-5.1 (Non-Thinking)": {
     "supportsVision": false,
     "knowledgeCutoff": "2025-12",
     "releaseDate": "2026-03-27",
     "accessTier": "free",
-    "productLine": "GLM"
+    "productLine": "GLM",
+    "quantization": "FP8"
   },
   "GPT-5.5 Pro": {
     "supportsVision": true,
@@ -311,7 +323,8 @@
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-07-31",
     "accessTier": "free",
-    "productLine": "DeepSeek Flash"
+    "productLine": "DeepSeek Flash",
+    "quantization": "FP8 + MXFP4 (MoE)"
   },
   "DeepSeek V4 Flash 0731 (max)": {
     "supportsVision": false,
@@ -322,7 +335,8 @@
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-07-31",
     "accessTier": "free",
-    "productLine": "DeepSeek Flash"
+    "productLine": "DeepSeek Flash",
+    "quantization": "FP8 + MXFP4 (MoE)"
   },
   "Solar Pro 3 (0126, high)": {
     "supportsVision": false,
@@ -343,21 +357,24 @@
     "knowledgeCutoff": "2026-02",
     "releaseDate": "2026-06-16",
     "accessTier": "free",
-    "productLine": "GLM"
+    "productLine": "GLM",
+    "quantization": "FP8"
   },
   "GLM-5.2 (Non-Thinking)": {
     "supportsVision": false,
     "knowledgeCutoff": "2026-02",
     "releaseDate": "2026-06-16",
     "accessTier": "free",
-    "productLine": "GLM"
+    "productLine": "GLM",
+    "quantization": "FP8"
   },
   "Motif 12.7B (Thinking)": {
     "supportsVision": false,
     "knowledgeCutoff": null,
     "releaseDate": "2025-12-04",
     "productLine": "Motif",
-    "accessTier": "free"
+    "accessTier": "free",
+    "quantization": "FP32"
   },
   "Solar Pro 4 (xhigh)": {
     "supportsVision": false,
@@ -412,14 +429,16 @@
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-07-31",
     "productLine": "K-EXAONE",
-    "accessTier": "paid"
+    "accessTier": "paid",
+    "quantization": "BF16"
   },
   "K-EXAONE 2.0 (Non-Thinking)": {
     "supportsVision": false,
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-07-31",
     "productLine": "K-EXAONE",
-    "accessTier": "paid"
+    "accessTier": "paid",
+    "quantization": "BF16"
   },
   "DeepSeek V4 Pro 0813 (none)": {
     "supportsVision": false,
@@ -430,7 +449,8 @@
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-08-13",
     "accessTier": "free",
-    "productLine": "DeepSeek Flash"
+    "productLine": "DeepSeek Flash",
+    "quantization": "FP8 + MXFP4 (MoE)"
   },
   "DeepSeek V4 Pro 0813 (max)": {
     "supportsVision": false,
@@ -441,21 +461,24 @@
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-08-13",
     "accessTier": "free",
-    "productLine": "DeepSeek Flash"
+    "productLine": "DeepSeek Flash",
+    "quantization": "FP8 + MXFP4 (MoE)"
   },
   "Motif 3 (Thinking)": {
     "supportsVision": false,
     "knowledgeCutoff": "2026-03",
     "releaseDate": "2026-08-12",
     "accessTier": "free",
-    "productLine": "Motif"
+    "productLine": "Motif",
+    "quantization": "BF16"
   },
   "Motif 3 (Non-Thinking)": {
     "supportsVision": false,
     "knowledgeCutoff": "2026-03",
     "releaseDate": "2026-08-12",
     "accessTier": "free",
-    "productLine": "Motif"
+    "productLine": "Motif",
+    "quantization": "BF16"
   },
   "GPT-6 Astra (low)": {
     "knowledgeCutoff": "2026-04",
@@ -943,13 +966,15 @@
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-08-21",
     "productLine": "DeepSeek Flash",
-    "accessTier": "not_applicable"
+    "accessTier": "not_applicable",
+    "quantization": "FP8 + MXFP4 (MoE)"
   },
   "DeepSeek V4 Flash Vision Exp (max)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-08-21",
     "productLine": "DeepSeek Flash",
-    "accessTier": "not_applicable"
+    "accessTier": "not_applicable",
+    "quantization": "FP8 + MXFP4 (MoE)"
   },
   "Grok 4": {
     "knowledgeCutoff": "2024-11",
@@ -1003,73 +1028,85 @@
     "knowledgeCutoff": "2025-01",
     "releaseDate": "2026-01-27",
     "accessTier": "free",
-    "productLine": "Kimi K"
+    "productLine": "Kimi K",
+    "quantization": "INT4"
   },
   "Kimi K2.5 (Non-Thinking)": {
     "knowledgeCutoff": "2025-01",
     "releaseDate": "2026-01-27",
     "accessTier": "free",
-    "productLine": "Kimi K"
+    "productLine": "Kimi K",
+    "quantization": "INT4"
   },
   "Kimi K2.6 (Thinking)": {
     "knowledgeCutoff": "2025-04",
     "releaseDate": "2026-04-20",
     "accessTier": "free",
-    "productLine": "Kimi K"
+    "productLine": "Kimi K",
+    "quantization": "INT4"
   },
   "Kimi K2.6 (Non-Thinking)": {
     "knowledgeCutoff": "2025-04",
     "releaseDate": "2026-04-20",
     "accessTier": "free",
-    "productLine": "Kimi K"
+    "productLine": "Kimi K",
+    "quantization": "INT4"
   },
   "Qwen3.5 397B (Non-Thinking)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-02-16",
     "accessTier": "free",
-    "productLine": "Qwen Plus"
+    "productLine": "Qwen Plus",
+    "quantization": "BF16"
   },
   "Qwen3.5 397B (Thinking)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-02-16",
     "accessTier": "free",
-    "productLine": "Qwen Plus"
+    "productLine": "Qwen Plus",
+    "quantization": "BF16"
   },
   "Qwen3.5 27B (Non-Thinking)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-02-24",
     "accessTier": "free",
-    "productLine": "Qwen 27B"
+    "productLine": "Qwen 27B",
+    "quantization": "BF16"
   },
   "Qwen3.5 27B (Thinking)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-02-24",
     "accessTier": "free",
-    "productLine": "Qwen 27B"
+    "productLine": "Qwen 27B",
+    "quantization": "BF16"
   },
   "Qwen3.5 35B A3B (Non-Thinking)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-02-24",
     "accessTier": "free",
-    "productLine": "Qwen 35B-A3B"
+    "productLine": "Qwen 35B-A3B",
+    "quantization": "BF16"
   },
   "Qwen3.5 35B A3B (Thinking)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-02-24",
     "accessTier": "free",
-    "productLine": "Qwen 35B-A3B"
+    "productLine": "Qwen 35B-A3B",
+    "quantization": "BF16"
   },
   "Qwen3.5 9B (Non-Thinking)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-03-02",
     "productLine": "Qwen 27B",
-    "accessTier": "not_applicable"
+    "accessTier": "not_applicable",
+    "quantization": "BF16"
   },
   "Qwen3.5 9B (Thinking)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-03-02",
     "productLine": "Qwen 27B",
-    "accessTier": "not_applicable"
+    "accessTier": "not_applicable",
+    "quantization": "BF16"
   },
   "Kanana-o 9.8B": {
     "knowledgeCutoff": "2024-06",
@@ -1081,13 +1118,15 @@
     "knowledgeCutoff": "2026-01",
     "releaseDate": "2026-06-01",
     "accessTier": "free",
-    "productLine": "MiniMax M"
+    "productLine": "MiniMax M",
+    "quantization": "BF16"
   },
   "MiniMax M3 (Thinking)": {
     "knowledgeCutoff": "2026-01",
     "releaseDate": "2026-06-01",
     "accessTier": "free",
-    "productLine": "MiniMax M"
+    "productLine": "MiniMax M",
+    "quantization": "BF16"
   },
   "Muse Spark 1.3 (high)": {
     "knowledgeCutoff": "2026-08",
@@ -1135,55 +1174,64 @@
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-04-22",
     "accessTier": "free",
-    "productLine": "Qwen 27B"
+    "productLine": "Qwen 27B",
+    "quantization": "BF16"
   },
   "Qwen3.6 27B (Thinking)": {
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-04-22",
     "accessTier": "free",
-    "productLine": "Qwen 27B"
+    "productLine": "Qwen 27B",
+    "quantization": "BF16"
   },
   "Gemma 4 26B A4B": {
     "knowledgeCutoff": "2025-01",
     "releaseDate": "2026-04-02",
     "productLine": "Gemma 26B A4B",
-    "accessTier": "not_applicable"
+    "accessTier": "not_applicable",
+    "quantization": "BF16"
   },
   "Gemma 4 26B A4B (high)": {
     "knowledgeCutoff": "2025-01",
     "releaseDate": "2026-04-02",
     "productLine": "Gemma 26B A4B",
-    "accessTier": "not_applicable"
+    "accessTier": "not_applicable",
+    "quantization": "BF16"
   },
   "Gemma 4 31B": {
     "knowledgeCutoff": "2025-01",
     "releaseDate": "2026-04-02",
     "productLine": "Gemma 31B",
-    "accessTier": "not_applicable"
+    "accessTier": "not_applicable",
+    "quantization": "BF16"
   },
   "Gemma 4 31B (high)": {
     "knowledgeCutoff": "2025-01",
     "releaseDate": "2026-04-02",
     "productLine": "Gemma 31B",
-    "accessTier": "not_applicable"
+    "accessTier": "not_applicable",
+    "quantization": "BF16"
   },
   "GLM-5.3 Flash (high)": {
     "knowledgeCutoff": "2026-02",
     "releaseDate": "2026-08-26",
     "accessTier": "free",
-    "productLine": "GLM Flash"
+    "productLine": "GLM Flash",
+    "quantization": "FP8"
   },
   "Mistral Small 4 (Thinking)": {
     "knowledgeCutoff": "2024-11",
     "releaseDate": "2026-03-16",
     "productLine": "Mistral Small",
-    "accessTier": "not_applicable"
+    "accessTier": "not_applicable",
+    "quantization": "FP8"
   },
   "Mistral Small 4 (Non-Thinking)": {
     "knowledgeCutoff": "2024-11",
     "releaseDate": "2026-03-16",
     "productLine": "Mistral Small",
-    "accessTier": "not_applicable"
+    "accessTier": "not_applicable",
+    "quantization": "FP8"
   },
   "모의 모델": {
     "knowledgeCutoff": null
@@ -1192,7 +1240,8 @@
     "knowledgeCutoff": "2026-01",
     "releaseDate": "2026-09-10",
     "accessTier": "free",
-    "productLine": "DeepSeek Flash"
+    "productLine": "DeepSeek Flash",
+    "quantization": "FP8 + MXFP4 (MoE)"
   },
   "Solar Mini 4 Preview (max)": {
     "knowledgeCutoff": "2026-02",
@@ -1212,25 +1261,29 @@
     "knowledgeCutoff": null,
     "releaseDate": "2025-09-29",
     "productLine": "DeepSeek Flash",
-    "accessTier": "free"
+    "accessTier": "free",
+    "quantization": "FP8"
   },
   "DeepSeek V3.2 Exp (Non-Thinking)": {
     "knowledgeCutoff": null,
     "releaseDate": "2025-09-29",
     "productLine": "DeepSeek Flash",
-    "accessTier": "free"
+    "accessTier": "free",
+    "quantization": "FP8"
   },
   "DeepSeek-V3.2 (Thinking)": {
     "knowledgeCutoff": "2025-03",
     "releaseDate": "2025-12-01",
     "productLine": "DeepSeek Flash",
-    "accessTier": "free"
+    "accessTier": "free",
+    "quantization": "FP8"
   },
   "DeepSeek-V3.2 (Non-Thinking)": {
     "knowledgeCutoff": "2025-03",
     "releaseDate": "2025-12-01",
     "productLine": "DeepSeek Flash",
-    "accessTier": "free"
+    "accessTier": "free",
+    "quantization": "FP8"
   },
   "Jev 1.13": {
     "knowledgeCutoff": null,
@@ -1294,7 +1347,8 @@
     "knowledgeCutoff": "2026-01",
     "releaseDate": "2026-10-17",
     "accessTier": "free",
-    "productLine": "DeepSeek Flash"
+    "productLine": "DeepSeek Flash",
+    "quantization": "FP8 + MXFP4 (MoE)"
   },
   "GPT-6 Luna (low)": {
     "knowledgeCutoff": "2026-04",
@@ -1310,14 +1364,16 @@
     "knowledgeCutoff": "2026-01",
     "releaseDate": "2026-10-19",
     "accessTier": "free",
-    "productLine": "MiniMax Flash"
+    "productLine": "MiniMax Flash",
+    "quantization": "MXFP8 + NVFP4 (MoE)"
   },
   "Raon-1 mini preview": {
     "knowledgeCutoff": null,
     "releaseDate": "2026-10-21",
     "supportsVision": false,
     "productLine": "Raon mini",
-    "accessTier": "not_applicable"
+    "accessTier": "not_applicable",
+    "quantization": "MXFP8"
   },
   "GPT-6.1 Terra (high)": {
     "knowledgeCutoff": "2026-06",
@@ -1561,14 +1617,16 @@
     "knowledgeCutoff": null,
     "releaseDate": "2026-10-23",
     "accessTier": "free",
-    "productLine": "Kimi K"
+    "productLine": "Kimi K",
+    "quantization": "MXFP4"
   },
   "GLM-5.3 (high)": {
     "knowledgeCutoff": "2026-02",
     "releaseDate": "2026-08-14",
     "accessTier": "free",
     "productLine": "GLM",
-    "supportsVision": false
+    "supportsVision": false,
+    "quantization": "FP8"
   },
   "Qwen4 Max (high)": {
     "knowledgeCutoff": null,
@@ -1580,12 +1638,14 @@
     "knowledgeCutoff": "2025-05",
     "releaseDate": "2026-08-14",
     "accessTier": "free",
-    "productLine": "Qwen 27B"
+    "productLine": "Qwen 27B",
+    "quantization": "FP8"
   },
   "Qwen3.8 Flash (xhigh)": {
     "knowledgeCutoff": "2025-03",
     "releaseDate": "2026-08-26",
-    "productLine": "Qwen Flash"
+    "productLine": "Qwen Flash",
+    "quantization": "BF16"
   },
   "Mi:dm K 3.0 Pro": {
     "knowledgeCutoff": null,
@@ -1620,12 +1680,14 @@
     "knowledgeCutoff": "2025-01",
     "releaseDate": "2026-04-02",
     "accessTier": "not_applicable",
-    "productLine": "Gemma E2B"
+    "productLine": "Gemma E2B",
+    "quantization": "Q8_0"
   },
   "Gemma 4 E4B (high)": {
     "knowledgeCutoff": "2025-01",
     "releaseDate": "2026-04-02",
     "accessTier": "not_applicable",
-    "productLine": "Gemma E4B"
+    "productLine": "Gemma E4B",
+    "quantization": "Q4_0 (QAT)"
   }
 }

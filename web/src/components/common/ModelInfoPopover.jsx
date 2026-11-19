@@ -1,6 +1,6 @@
 /**
  * @file ModelInfoPopover.jsx
- * @brief 모델 정보 카드 팝오버 (개발사, 출시일, 지식 컷오프, 요금제)
+ * @brief 모델 정보 카드 팝오버 (개발사, 출시일, 지식 컷오프, 요금제, 양자화 수준)
  */
 
 import { useState } from 'react'
@@ -66,6 +66,9 @@ function _ModelInfoCard({ model, t, language, modelMetadata, onShowSearchExplana
             </span>
           ) : metadata.accessTier === 'not_applicable' ? t('modelInfo.notApplicable') : null}
         </_InfoRow>
+        {Object.hasOwn(metadata, 'quantization') && (
+          <_InfoRow label={t('modelInfo.quantization')} value={metadata.quantization ?? null} emptyLabel={emptyLabel} />
+        )}
       </dl>
       {description && <p className="mt-2 text-xs leading-relaxed text-gray-600 dark:text-gray-300">{description}</p>}
 

@@ -15,6 +15,7 @@ from .metadata import (
     validate_knowledge_cutoff,
     validate_plan_message,
     validate_product_line,
+    validate_quantization,
     validate_release_date,
 )
 
@@ -162,6 +163,8 @@ def load_config(
         for field_name in ("plan_message_ko", "plan_message_en"):
             if field_name in prepared:
                 prepared[field_name] = validate_plan_message(prepared[field_name], field_name)
+        if "quantization" in prepared:
+            prepared["quantization"] = validate_quantization(prepared["quantization"])
         prepared_models.append(prepared)
     output["models"] = prepared_models
     if isinstance(output.get("verifier"), dict):

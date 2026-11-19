@@ -48696,7 +48696,11 @@
         "answer_status": "answered",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.04,
+      "output": 0.08
+    }
   },
   {
     "sheet_name": "국어-언매",
@@ -48809,7 +48813,11 @@
         "answer_status": "answered",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.04,
+      "output": 0.08
+    }
   },
   {
     "sheet_name": "국어-화작",
@@ -48922,7 +48930,11 @@
         "answer_status": "no_answer",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.04,
+      "output": 0.08
+    }
   },
   {
     "sheet_name": "수학-공통",
@@ -49134,7 +49146,11 @@
         "answer_status": "answered",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.04,
+      "output": 0.08
+    }
   },
   {
     "sheet_name": "수학-기하",
@@ -49220,7 +49236,11 @@
         "answer_status": "no_answer",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.04,
+      "output": 0.08
+    }
   },
   {
     "sheet_name": "수학-미적",
@@ -49306,7 +49326,11 @@
         "answer_status": "answered",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.04,
+      "output": 0.08
+    }
   },
   {
     "sheet_name": "수학-확통",
@@ -49392,7 +49416,11 @@
         "answer_status": "answered",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.04,
+      "output": 0.08
+    }
   },
   {
     "sheet_name": "영어",
@@ -49811,7 +49839,11 @@
         "answer_status": "answered",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.04,
+      "output": 0.08
+    }
   },
   {
     "sheet_name": "국어-공통",
@@ -50131,7 +50163,11 @@
         "answer_status": "answered",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.2
+    }
   },
   {
     "sheet_name": "국어-언매",
@@ -50244,7 +50280,11 @@
         "answer_status": "answered",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.2
+    }
   },
   {
     "sheet_name": "국어-화작",
@@ -50357,7 +50397,11 @@
         "answer_status": "no_answer",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.2
+    }
   },
   {
     "sheet_name": "수학-공통",
@@ -50569,7 +50613,11 @@
         "answer_status": "no_answer",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.2
+    }
   },
   {
     "sheet_name": "수학-기하",
@@ -50655,7 +50703,11 @@
         "answer_status": "answered",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.2
+    }
   },
   {
     "sheet_name": "수학-미적",
@@ -50741,7 +50793,11 @@
         "answer_status": "answered",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.2
+    }
   },
   {
     "sheet_name": "수학-확통",
@@ -50827,7 +50883,11 @@
         "answer_status": "no_answer",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.2
+    }
   },
   {
     "sheet_name": "영어",
@@ -51246,6 +51306,10 @@
         "answer_status": "answered",
         "provider_stop_reason": "stop"
       }
-    ]
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.2
+    }
   }
 ]
