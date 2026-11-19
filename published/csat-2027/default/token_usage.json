@@ -2145,7 +2145,7 @@
       "question_count": 8,
       "last_updated": "2026-11-19T12:22:02+0900"
     },
-    "Gemma 4 E4B (Q4 local)": {
+    "Gemma 4 E4B (high)": {
       "sections": {
         "국어-공통": {
           "input_tokens": 17002,
@@ -2210,7 +2210,7 @@
       "question_count": 8,
       "last_updated": "2026-11-19 18:44:01"
     },
-    "Gemma 4 E2B (Q8 local)": {
+    "Gemma 4 E2B (high)": {
       "sections": {
         "수학-미적": {
           "input_tokens": 2180,

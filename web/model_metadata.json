@@ -1616,13 +1616,13 @@
   "Gemini Decision 1": {
     "knowledgeCutoff": "2025-01"
   },
-  "Gemma 4 E2B (Q8 local)": {
+  "Gemma 4 E2B (high)": {
     "knowledgeCutoff": "2025-01",
     "releaseDate": "2026-04-02",
     "accessTier": "not_applicable",
     "productLine": "Gemma E2B"
   },
-  "Gemma 4 E4B (Q4 local)": {
+  "Gemma 4 E4B (high)": {
     "knowledgeCutoff": "2025-01",
     "releaseDate": "2026-04-02",
     "accessTier": "not_applicable",
