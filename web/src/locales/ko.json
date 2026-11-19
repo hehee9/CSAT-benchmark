@@ -320,6 +320,13 @@
     "error": "오류 발생",
     "noData": "데이터가 없습니다",
     "preparingResults": "아직 시험 결과를 준비 중입니다.\n좌상단 선택기에서 이전 시험을 선택해보세요",
+    "releaseSchedule": {
+      "title": "과목별 문제 공개 일정 시각",
+      "korean": "국어",
+      "math": "수학",
+      "english": "영어",
+      "historyInquiry": "한국사, 탐구"
+    },
     "noQuickFilterMatch": "빠른 필터 조건에 맞는 모델이 없습니다.",
     "noCostData": "비용 데이터가 없습니다",
     "score": "점수",

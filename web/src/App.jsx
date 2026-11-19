@@ -3,7 +3,7 @@
  * @brief 2026 수능 LLM 풀이 대시보드 - 메인 App 컴포넌트
  */
 
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
+import { Fragment, useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DataProvider, useData } from '@/hooks/useData'
 import { ThemeProvider } from '@/hooks/useTheme'
@@ -35,6 +35,16 @@ import { applyQuickFilters } from '@/utils/modelFilters'
  * @brief 탭 정의
  */
 const TAB_KEYS = ['overview', 'subjects', 'compare', 'cost', 'trend']
+
+/**
+ * @brief 결과 준비 중 화면에 표시할 과목별 문제 공개 시각
+ */
+const _RELEASE_SCHEDULE = [
+  { key: 'korean', time: '10:56' },
+  { key: 'math', time: '14:10' },
+  { key: 'english', time: '17:04' },
+  { key: 'historyInquiry', time: '20:15' },
+]
 
 /**
  * @brief 점수 기준 선택 컨트롤
@@ -745,6 +755,17 @@ function Dashboard({
                 <p className="whitespace-pre-line text-gray-500 dark:text-gray-400 text-center py-8">
                   {t('common.preparingResults')}
                 </p>
+                <div className="pb-8 text-center text-gray-500 dark:text-gray-400">
+                  <p className="mt-4 mb-3 font-medium">{t('common.releaseSchedule.title')}</p>
+                  <dl className="inline-grid grid-cols-[auto_auto] gap-x-16 gap-y-1 text-left">
+                    {_RELEASE_SCHEDULE.map(({ key, time }) => (
+                      <Fragment key={key}>
+                        <dt>{t(`common.releaseSchedule.${key}`)}</dt>
+                        <dd className="text-right tabular-nums">{time}</dd>
+                      </Fragment>
+                    ))}
+                  </dl>
+                </div>
               </div>
             ) : (
               <>

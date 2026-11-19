@@ -29,12 +29,13 @@ function _InfoRow({ label, value, emptyLabel, children }) {
 
 /**
  * @brief 모델 정보 카드 내용
- * @param {{ model: string, t: function, language: string, modelMetadata: Object, onShowSearchExplanation?: function, autoFocusNote?: boolean }} props
+ * @param {{ model: string, t: function, language: string, modelMetadata: Object, onShowSearchExplanation?: function, autoFocusNote?: boolean, children?: React.ReactNode }} props
  *
  * onShowSearchExplanation이 없으면 하단 "검색 없이 실행" 안내 버튼을 그리지 않는다.
  * autoFocusNote는 설명에서 돌아와 카드가 다시 그려질 때 하단 안내 버튼으로 포커스를 되돌리는 데 쓴다.
+ * children은 모델 이름과 항목 목록 사이에 끼워 넣는다 (차트 툴팁의 점수 영역).
  */
-function _ModelInfoCard({ model, t, language, modelMetadata, onShowSearchExplanation, autoFocusNote }) {
+function _ModelInfoCard({ model, t, language, modelMetadata, onShowSearchExplanation, autoFocusNote, children }) {
   const locale = language === 'en' ? 'en-US' : 'ko-KR'
   const metadata = modelMetadata[model] ?? {}
   const vendor = getVendor(model)
@@ -51,6 +52,8 @@ function _ModelInfoCard({ model, t, language, modelMetadata, onShowSearchExplana
           <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">{vendor.id === 'other' ? t('trend.otherVendor') : vendor.name}</p>
         </div>
       </div>
+
+      {children}
 
       <dl className="mt-3 divide-y divide-gray-100 border-y border-gray-100 dark:divide-gray-700 dark:border-gray-700">
         <_InfoRow label={t('modelInfo.releaseDate')} value={formatPublishedDate(metadata.releaseDate, locale)} emptyLabel={emptyLabel} />
@@ -83,13 +86,17 @@ function _ModelInfoCard({ model, t, language, modelMetadata, onShowSearchExplana
 
 /**
  * @brief 팝오버 밖에서 재사용하는 모델 정보 카드 내용 (검색 설명 버튼 제외)
- * @param {{ model: string }} props
+ * @param {{ model: string, children?: React.ReactNode }} props - children은 모델 이름 바로 아래에 표시
  */
-export function ModelInfoContent({ model }) {
+export function ModelInfoContent({ model, children }) {
   const { t, i18n } = useTranslation()
   const { modelMetadata } = useData()
 
-  return <_ModelInfoCard model={model} t={t} language={i18n.language} modelMetadata={modelMetadata} />
+  return (
+    <_ModelInfoCard model={model} t={t} language={i18n.language} modelMetadata={modelMetadata}>
+      {children}
+    </_ModelInfoCard>
+  )
 }
 
 /**

@@ -322,6 +322,13 @@
     "error": "Error occurred",
     "noData": "No data available",
     "preparingResults": "Results are still being prepared.\nChoose a previous exam from the selector at the top left",
+    "releaseSchedule": {
+      "title": "Question release schedule by subject",
+      "korean": "Korean",
+      "math": "Math",
+      "english": "English",
+      "historyInquiry": "Korean History, Inquiry"
+    },
     "noQuickFilterMatch": "No models match the quick filters.",
     "noCostData": "No cost data available",
     "score": "Score",

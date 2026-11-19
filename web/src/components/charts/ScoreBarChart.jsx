@@ -3,7 +3,7 @@
  * @brief 모델별 점수 가로 막대 차트 컴포넌트
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import {
   BarChart,
   Bar,
@@ -44,6 +44,10 @@ const EXPORT_BEST_WORST_BAR_GAP = 8
 const EXPORT_BEST_WORST_GROUP_SLOT = 122
 const EXPORT_Y_AXIS_WIDTH = 60
 const EXPORT_CHART_HEIGHT = 830
+// 툴팁과 화면 위·아래 끝 사이에 남길 여백. 아래에 두면 바닥 여백을 침범할 때만 포인터 위로 옮긴다 (px)
+const TOOLTIP_VIEWPORT_MARGIN = 12
+// 차트 밖으로 나간 툴팁이 모바일 하단 탭(z-40)과 상단 헤더(z-50)에 가려지지 않고, 모델 정보 팝오버(z-[70])보다는 아래에 오도록 하는 값
+const TOOLTIP_Z_INDEX = 60
 
 /**
  * @brief 보기 모드 정의
@@ -471,25 +475,105 @@ function ExportBestWorstScoreLabels({ x, y, width, value, index, data, formatter
 }
 
 /**
- * @brief 모델 정보 카드 내용 아래에 점수 줄을 붙인 툴팁 틀
- * @param {{ model: string, children: React.ReactNode }} props
+ * @brief 화면(뷰포트) 안에 들어오도록 툴팁 배치 결정
+ * @param {HTMLElement} element - 툴팁 내용 루트 요소
+ * @param {number} coordinateY - 차트 기준 툴팁 기준점 y (Recharts coordinate.y)
+ * @param {number} offset - 기준점과 툴팁 사이 간격 (Recharts offset)
+ * @return {'below'|'above'|number} 포인터 아래, 포인터 위, 또는 위아래 모두 넘칠 때 고정할 차트 기준 y
+ *
+ * Recharts 기본 배치는 차트 영역을 넘을 때 뒤집으므로, 화면 위·아래 끝 기준으로 직접 판단한다.
+ * 결과는 현재 배치와 무관한 값(차트 위치, 기준점, 툴팁 높이)으로만 정해진다.
  */
-function _ModelTooltip({ model, children }) {
+function _getTooltipPlacement(element, coordinateY, offset) {
+  const chartElement = element.closest('.recharts-wrapper')
+  if (!chartElement) return 'below'
+  const chartTop = chartElement.getBoundingClientRect().top
+  const height = element.offsetHeight
+  const anchorTop = chartTop + coordinateY
+  const bottomLimit = document.documentElement.clientHeight - TOOLTIP_VIEWPORT_MARGIN
+  if (anchorTop + offset + height <= bottomLimit) return 'below'
+  if (anchorTop - offset - height >= TOOLTIP_VIEWPORT_MARGIN) return 'above'
+  // 위아래 어느 쪽에도 다 들어가지 않으면 바닥 여백에 맞춰 고정하되, 화면보다 크면 위쪽(모델 이름)을 남긴다
+  return Math.round(Math.max(bottomLimit - height, TOOLTIP_VIEWPORT_MARGIN) - chartTop)
+}
+
+/**
+ * @brief 툴팁을 포인터 아래 기본, 화면 바닥을 넘을 때만 위에 두도록 하는 배치 상태와 Tooltip 속성
+ * @return {{ getPlacementProps: function, setPlacement: function }} Tooltip에 펼칠 속성 생성 함수와 ModelTooltip에 넘길 배치 setter
+ *
+ * getPlacementProps(position)은 가로 고정 등 기존 position 값을 받아 세로 고정 값과 합친다.
+ */
+function useViewportTooltipPlacement() {
+  const [placement, setPlacement] = useState('below')
+  const getPlacementProps = (position) => ({
+    allowEscapeViewBox: { x: false, y: true },
+    reverseDirection: { x: false, y: placement === 'above' },
+    position: { ...position, y: typeof placement === 'number' ? placement : undefined },
+    wrapperStyle: { zIndex: TOOLTIP_Z_INDEX }
+  })
+  return { getPlacementProps, setPlacement }
+}
+
+/**
+ * @brief 툴팁 점수 영역의 크게 보이는 수치
+ * @param {{ label: string, value: React.ReactNode, suffix?: React.ReactNode }} props
+ */
+function _TooltipStat({ label, value, suffix }) {
   return (
-    <div className="w-[min(20rem,calc(100vw-32px))] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 text-left text-sm text-gray-700 dark:text-gray-200">
-      <ModelInfoContent model={model} />
-      <div className="mt-2 border-t border-gray-100 pt-2 dark:border-gray-700">
-        {children}
-      </div>
+    <div className="min-w-0">
+      <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
+      <p className="mt-1 whitespace-nowrap leading-none tabular-nums">
+        <span className="text-2xl font-bold text-gray-900 dark:text-white">{value}</span>
+        {suffix && <span className="ml-0.5 text-sm font-medium text-gray-500 dark:text-gray-400">{suffix}</span>}
+      </p>
+    </div>
+  )
+}
+
+/**
+ * @brief 툴팁 점수 영역의 보조 수치 한 줄
+ * @param {{ label: string, value: React.ReactNode, suffix?: React.ReactNode }} props
+ */
+function _TooltipDetail({ label, value, suffix }) {
+  return (
+    <p className="text-xs text-gray-500 dark:text-gray-400">
+      {label}: <span className="font-semibold tabular-nums text-gray-800 dark:text-gray-100">{value}</span>{suffix}
+    </p>
+  )
+}
+
+/**
+ * @brief 모델 이름 바로 아래에 점수 영역을 끼운 모델 정보 툴팁
+ * @param {{ model: string, coordinate?: { y: number }, offset: number, onPlacementChange: function, children: React.ReactNode }} props
+ *
+ * 그릴 때마다 화면 안에 들어오는 배치를 재서 onPlacementChange로 알린다.
+ * 판단은 현재 배치와 무관하므로 배치가 바뀌어 다시 그려져도 결과가 흔들리지 않는다.
+ */
+function ModelTooltip({ model, coordinate, offset, onPlacementChange, children }) {
+  const rootRef = useRef(null)
+  const coordinateY = coordinate?.y
+
+  useLayoutEffect(() => {
+    if (!rootRef.current || typeof coordinateY !== 'number') return
+    onPlacementChange(_getTooltipPlacement(rootRef.current, coordinateY, offset))
+  })
+
+  return (
+    <div ref={rootRef} className="w-[min(20rem,calc(100vw-32px))] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 text-left text-sm text-gray-700 dark:text-gray-200">
+      <ModelInfoContent model={model}>
+        <div className="mt-3 rounded-md bg-gray-50 px-3 py-2.5 dark:bg-gray-900/40">
+          {children}
+        </div>
+      </ModelInfoContent>
     </div>
   )
 }
 
 /**
  * @brief 커스텀 툴팁 컴포넌트
- * @param {Object} props - { active, payload, t }
+ * @param {Object} props - { active, payload, coordinate, offset, t, onPlacementChange }
  */
-function CustomTooltip({ active, payload, t }) {
+function CustomTooltip({ active, payload, coordinate, offset, t, onPlacementChange }) {
   if (!active || !payload?.length) return null
 
   const data = payload[0].payload
@@ -501,19 +585,15 @@ function CustomTooltip({ active, payload, t }) {
     : 0
 
   return (
-    <_ModelTooltip model={data.model}>
-      <p className="text-sm text-gray-600 dark:text-gray-400">
-        {t('tooltip.score')}: <span className="font-medium">{displayScore}</span> / {data.totalPoints}{t('tooltip.points')}
-      </p>
-      <p className="text-sm text-gray-600 dark:text-gray-400">
-        {t('tooltip.accuracy')}: <span className="font-medium">{accuracy}%</span>
-      </p>
-      {data.correctCount !== undefined && (
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          {t('tooltip.correctCount')}: <span className="font-medium">{data.correctCount}</span> / {data.totalQuestions}{t('tooltip.totalQuestions')}
-        </p>
-      )}
-    </_ModelTooltip>
+    <ModelTooltip model={data.model} coordinate={coordinate} offset={offset} onPlacementChange={onPlacementChange}>
+      <_TooltipStat label={t('tooltip.score')} value={displayScore} suffix={` / ${data.totalPoints}${t('tooltip.points')}`} />
+      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-0.5">
+        <_TooltipDetail label={t('tooltip.accuracy')} value={`${accuracy}%`} />
+        {data.correctCount !== undefined && (
+          <_TooltipDetail label={t('tooltip.correctCount')} value={data.correctCount} suffix={` / ${data.totalQuestions}${t('tooltip.totalQuestions')}`} />
+        )}
+      </div>
+    </ModelTooltip>
   )
 }
 
@@ -551,6 +631,7 @@ export default function ScoreBarChart({
   const { isDark: darkMode } = useTheme()
   const { exam } = useData()
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+  const { getPlacementProps: getTooltipPlacementProps, setPlacement: setTooltipPlacement } = useViewportTooltipPlacement()
   const {
     prepareExport,
     xAxisHeight: exportXAxisHeight,
@@ -657,7 +738,11 @@ export default function ScoreBarChart({
               tick={createCustomYAxisTick(hoveredModel, onModelHover, darkMode, true, isExporting)}
             />
             {/* 세로 배치에서는 막대 영역 오른쪽에 붙으면 화면 밖으로 넘치므로 차트 왼쪽 끝에 고정 */}
-            <Tooltip content={<CustomTooltip t={t} />} cursor={{ fill: cursorColor }} position={{ x: 0 }} />
+            <Tooltip
+              {...getTooltipPlacementProps({ x: 0 })}
+              content={<CustomTooltip t={t} onPlacementChange={setTooltipPlacement} />}
+              cursor={{ fill: cursorColor }}
+            />
             <ReferenceLine
               x={computedMaxScore}
               stroke={CHART_COLORS.perfect}
@@ -791,18 +876,17 @@ export default function ScoreBarChart({
               strokeWidth={1.5}
             />
             <Tooltip
-              content={({ active, payload }) => {
+              {...getTooltipPlacementProps()}
+              content={({ active, payload, coordinate, offset }) => {
                 if (!active || !payload?.length) return null
                 const d = payload[0].payload
                 return (
-                  <_ModelTooltip model={d.model}>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {t('charts.bestScore')}: <span className="font-medium">{d.best?.toFixed(1)}</span>{t('tooltip.points')}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {t('charts.worstScore')}: <span className="font-medium">{d.worst?.toFixed(1)}</span>{t('tooltip.points')}
-                    </p>
-                  </_ModelTooltip>
+                  <ModelTooltip model={d.model} coordinate={coordinate} offset={offset} onPlacementChange={setTooltipPlacement}>
+                    <div className="grid grid-cols-2 gap-3">
+                      <_TooltipStat label={t('charts.bestScore')} value={d.best?.toFixed(1)} suffix={t('tooltip.points')} />
+                      <_TooltipStat label={t('charts.worstScore')} value={d.worst?.toFixed(1)} suffix={t('tooltip.points')} />
+                    </div>
+                  </ModelTooltip>
                 )
               }}
               cursor={{ fill: cursorColor }}
@@ -900,18 +984,17 @@ export default function ScoreBarChart({
               strokeWidth={1.5}
             />
             <Tooltip
-              content={({ active, payload }) => {
+              {...getTooltipPlacementProps()}
+              content={({ active, payload, coordinate, offset }) => {
                 if (!active || !payload?.length) return null
                 const d = payload[0].payload
                 return (
-                  <_ModelTooltip model={d.model}>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {t('charts.accuracy')}: <span className="font-medium">{d.rate?.toFixed(1)}%</span>
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {t('tooltip.score')}: <span className="font-medium">{d.score?.toFixed(1)}</span> / {d.maxScore}{t('tooltip.points')}
-                    </p>
-                  </_ModelTooltip>
+                  <ModelTooltip model={d.model} coordinate={coordinate} offset={offset} onPlacementChange={setTooltipPlacement}>
+                    <_TooltipStat label={t('charts.accuracy')} value={`${d.rate?.toFixed(1)}%`} />
+                    <div className="mt-2">
+                      <_TooltipDetail label={t('tooltip.score')} value={d.score?.toFixed(1)} suffix={` / ${d.maxScore}${t('tooltip.points')}`} />
+                    </div>
+                  </ModelTooltip>
                 )
               }}
               cursor={{ fill: cursorColor }}
@@ -978,7 +1061,11 @@ export default function ScoreBarChart({
               stroke={axisColor}
               strokeDasharray="3 3"
             />
-            <Tooltip content={<CustomTooltip t={t} />} cursor={{ fill: cursorColor }} />
+            <Tooltip
+              {...getTooltipPlacementProps()}
+              content={<CustomTooltip t={t} onPlacementChange={setTooltipPlacement} />}
+              cursor={{ fill: cursorColor }}
+            />
             <HatchPatternDefs darkMode={darkMode} />
             <Bar
               dataKey="score"
