@@ -174,6 +174,8 @@
 - **Google Gemma 시리즈**
   - Gemma 4 31B (high / minimal)
   - Gemma 4 26B A4B (high / minimal)
+  - Gemma 4 E4B (high)
+  - Gemma 4 E2B (high)
 
 - **Anthropic Claude 시리즈**
   - Claude Fable 5.1 (high)
@@ -344,6 +346,8 @@ API 비용(토큰 사용량)과 점수 간의 상관관계를 분석한 결과�
 | GPT-OSS 120B | 0.15 | 0.6 |
 | Gemma 4 31B | 0.14 | 0.4 |
 | Gemma 4 26B A4B | 0.1 | 0.4 |
+| Gemma 4 E4B | 0.1 | 0.2 |
+| Gemma 4 E2B | 0.04 | 0.08 |
 | Motif 12.7B (Thinking) | 0.1 | 0.2 |
 | Raon-1 mini preview | 0.1 | 0.4 |
 

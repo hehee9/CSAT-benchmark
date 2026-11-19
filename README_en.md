@@ -171,6 +171,8 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
 - **Google Gemma series**
   - Gemma 4 31B (high / minimal)
   - Gemma 4 26B A4B (high / minimal)
+  - Gemma 4 E4B (high)
+  - Gemma 4 E2B (high)
 
 - **Anthropic Claude series**
   - Claude Fable 5.1 (high)
@@ -339,6 +341,8 @@ For models without an official provider, the measurement is based on OpenRouter'
 | GPT-OSS 120B | 0.15 | 0.6 |
 | Gemma 4 31B | 0.14 | 0.4 |
 | Gemma 4 26B A4B | 0.1 | 0.4 |
+| Gemma 4 E4B | 0.1 | 0.2 |
+| Gemma 4 E2B | 0.04 | 0.08 |
 | Motif 12.7B (Thinking) | 0.1 | 0.2 |
 | Raon-1 mini preview | 0.1 | 0.4 |
 

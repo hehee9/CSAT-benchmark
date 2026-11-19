@@ -442,16 +442,20 @@ function Dashboard({
     return subjectFilterGroups.map(group => group.group)
   }, [subjectFilterGroups])
 
-  // 과목 선택 시 섹션 목록
-  const availableSections = useMemo(() => {
+  // 선택 과목의 실제 섹션 목록
+  const subjectSectionNames = useMemo(() => {
     if (!selectedSubject) return []
 
     const group = subjectFilterGroups.find(item => item.group === selectedSubject)
     if (!group) return []
-    const sectionNames = group.sections.map(section => section.group === '탐구' ? section.subject : section.section)
-    if (sectionNames.length === 1 && sectionNames[0] === selectedSubject) return []
-    return sectionNames
+    return group.sections.map(section => section.group === '탐구' ? section.subject : section.section)
   }, [selectedSubject, subjectFilterGroups])
+
+  // 섹션 드롭다운 목록 (과목명과 같은 단일 섹션은 숨김)
+  const availableSections = useMemo(() => {
+    if (subjectSectionNames.length === 1 && subjectSectionNames[0] === selectedSubject) return []
+    return subjectSectionNames
+  }, [selectedSubject, subjectSectionNames])
 
   /**
    * @brief 시험 전환 시 현재 필터와 상세 선택을 유효한 값으로 정리
@@ -474,10 +478,10 @@ function Dashboard({
       return
     }
 
-    if (selectedSection && !availableSections.includes(selectedSection)) {
+    if (selectedSection && !subjectSectionNames.includes(selectedSection)) {
       setSelectedSection('')
     }
-  }, [subjectFilterGroups, selectedSubject, selectedSection, availableSections])
+  }, [subjectFilterGroups, selectedSubject, selectedSection, subjectSectionNames])
 
   /**
    * @brief PC 헤더 스크롤 감지 (원본 헤더가 화면 밖으로 나갔는지)
