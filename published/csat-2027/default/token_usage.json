@@ -839,6 +839,156 @@
       "total_tokens": 71834,
       "question_count": 3,
       "last_updated": "2026-11-19T12:20:47+0900"
+    },
+    "Gemini 4 Carbon (high)": {
+      "sections": {
+        "국어-언매": {
+          "input_tokens": 12407,
+          "output_tokens": 24331,
+          "total_tokens": 36738,
+          "question_count": 1,
+          "last_updated": "2026-11-19 12:43:14"
+        },
+        "국어-공통": {
+          "input_tokens": 15707,
+          "output_tokens": 28192,
+          "total_tokens": 43899,
+          "question_count": 1,
+          "last_updated": "2026-11-19 12:44:23"
+        },
+        "국어-화작": {
+          "input_tokens": 8035,
+          "output_tokens": 12285,
+          "total_tokens": 20320,
+          "question_count": 1,
+          "last_updated": "2026-11-19 12:40:30"
+        }
+      },
+      "total_input_tokens": 36149,
+      "total_output_tokens": 64808,
+      "total_tokens": 100957,
+      "question_count": 3,
+      "last_updated": "2026-11-19 12:44:23"
+    },
+    "Gemini 4 Hydrogen (high)": {
+      "sections": {
+        "국어-화작": {
+          "input_tokens": 8035,
+          "output_tokens": 7457,
+          "total_tokens": 15492,
+          "question_count": 1,
+          "last_updated": "2026-11-19 12:38:38"
+        },
+        "국어-언매": {
+          "input_tokens": 12407,
+          "output_tokens": 10236,
+          "total_tokens": 22643,
+          "question_count": 1,
+          "last_updated": "2026-11-19 12:38:49"
+        },
+        "국어-공통": {
+          "input_tokens": 15707,
+          "output_tokens": 19089,
+          "total_tokens": 34796,
+          "question_count": 1,
+          "last_updated": "2026-11-19 12:39:29"
+        }
+      },
+      "total_input_tokens": 36149,
+      "total_output_tokens": 36782,
+      "total_tokens": 72931,
+      "question_count": 3,
+      "last_updated": "2026-11-19 12:39:29"
+    },
+    "Gemini 3.5 Flash-Lite (high)": {
+      "sections": {
+        "국어-언매": {
+          "input_tokens": 12939,
+          "output_tokens": 13373,
+          "total_tokens": 26312,
+          "question_count": 1,
+          "last_updated": "2026-11-19 13:28:38"
+        },
+        "국어-공통": {
+          "input_tokens": 16986,
+          "output_tokens": 16194,
+          "total_tokens": 33180,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:21:50+0900"
+        },
+        "국어-화작": {
+          "input_tokens": 8465,
+          "output_tokens": 11058,
+          "total_tokens": 19523,
+          "question_count": 1,
+          "last_updated": "2026-11-19 13:27:19"
+        }
+      },
+      "total_input_tokens": 38390,
+      "total_output_tokens": 40625,
+      "total_tokens": 79015,
+      "question_count": 3,
+      "last_updated": "2026-11-19T12:21:50+0900"
+    },
+    "Gemini 4 Neon (high)": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 15707,
+          "output_tokens": 22106,
+          "total_tokens": 37813,
+          "question_count": 1,
+          "last_updated": "2026-11-19 12:40:57"
+        },
+        "국어-화작": {
+          "input_tokens": 8035,
+          "output_tokens": 9194,
+          "total_tokens": 17229,
+          "question_count": 1,
+          "last_updated": "2026-11-19 12:39:07"
+        },
+        "국어-언매": {
+          "input_tokens": 12407,
+          "output_tokens": 13432,
+          "total_tokens": 25839,
+          "question_count": 1,
+          "last_updated": "2026-11-19 12:39:19"
+        }
+      },
+      "total_input_tokens": 36149,
+      "total_output_tokens": 44732,
+      "total_tokens": 80881,
+      "question_count": 3,
+      "last_updated": "2026-11-19 12:40:57"
+    },
+    "Gemini 4 Argon (high)": {
+      "sections": {
+        "국어-화작": {
+          "input_tokens": 8035,
+          "output_tokens": 7968,
+          "total_tokens": 16003,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:22:02+0900"
+        },
+        "국어-언매": {
+          "input_tokens": 12407,
+          "output_tokens": 10421,
+          "total_tokens": 22828,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:22:02+0900"
+        },
+        "국어-공통": {
+          "input_tokens": 15707,
+          "output_tokens": 19784,
+          "total_tokens": 35491,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:22:02+0900"
+        }
+      },
+      "total_input_tokens": 36149,
+      "total_output_tokens": 38173,
+      "total_tokens": 74322,
+      "question_count": 3,
+      "last_updated": "2026-11-19T12:22:02+0900"
     }
   }
 }

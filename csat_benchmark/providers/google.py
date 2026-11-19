@@ -26,6 +26,10 @@ _GOOGLE_REFUSAL_REASONS = {
     "BLOCKLIST",
     "PROHIBITED_CONTENT",
 }
+_GOOGLE_MALFORMED_RESPONSE_REASON = "MALFORMED_RESPONSE"
+_GOOGLE_MALFORMED_RESPONSE_ERROR = (
+    f"Gemini가 응답 본문 없이 {_GOOGLE_MALFORMED_RESPONSE_REASON}로 종료했습니다."
+)
 
 
 def _stringify_google_stop_reason(reason: Any) -> str | None:
@@ -469,6 +473,23 @@ class GoogleClient(APIClient):
                 if thoughts_tokens and output_tokens:
                     output_tokens = output_tokens + thoughts_tokens
 
+            if (
+                stop_reason == _GOOGLE_MALFORMED_RESPONSE_REASON
+                and not raw_response
+            ):
+                return APIResponse(
+                    question_number=question.number,
+                    model_name=self.config.name,
+                    raw_response="",
+                    timestamp=time.strftime("%Y-%m-%d %H:%M:%S"),
+                    success=False,
+                    error_message=_GOOGLE_MALFORMED_RESPONSE_ERROR,
+                    input_tokens=input_tokens,
+                    output_tokens=output_tokens,
+                    total_tokens=total_tokens,
+                    provider_stop_reason=stop_reason,
+                )
+
             is_refusal = _is_google_refusal(stop_reason)
 
             return APIResponse(
@@ -695,6 +716,23 @@ class GoogleClient(APIClient):
             is_refusal = bool(prompt_feedback_reason) or _is_google_refusal(
                 stop_reason
             )
+
+            if (
+                stop_reason == _GOOGLE_MALFORMED_RESPONSE_REASON
+                and not raw_response
+            ):
+                return APIResponse(
+                    question_number=question.number,
+                    model_name=self.config.name,
+                    raw_response="",
+                    timestamp=time.strftime("%Y-%m-%d %H:%M:%S"),
+                    success=False,
+                    error_message=_GOOGLE_MALFORMED_RESPONSE_ERROR,
+                    input_tokens=input_tokens,
+                    output_tokens=output_tokens,
+                    total_tokens=total_tokens,
+                    provider_stop_reason=stop_reason,
+                )
 
             has_generation = _has_response_or_token_usage(
                 raw_response,

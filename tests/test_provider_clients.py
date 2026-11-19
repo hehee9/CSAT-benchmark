@@ -696,6 +696,48 @@ def test_google_sdk_stream_preserves_text_usage_and_request_contents(monkeypatch
     assert calls == [{"model": "test-model", "contents": ["문항 본문"], "config": None}]
 
 
+def test_google_sdk_malformed_response_without_text_is_technical_failure(monkeypatch):
+    """@description Google SDK MALFORMED_RESPONSE 빈 응답을 기술 실패로 분류"""
+    config = _config("google", api_key="key-1")
+    client = google_provider.GoogleClient.__new__(google_provider.GoogleClient)
+    google_provider.APIClient.__init__(client, config)
+    client.use_vertex = False
+    client._current_key = "key-1"
+    client.use_new_sdk = True
+    client.model_id = config.model_id
+    client._uploaded_files = {}
+
+    class FakeModels:
+        def generate_content_stream(self, **kwargs):
+            return iter(
+                [
+                    SimpleNamespace(
+                        text="",
+                        usage_metadata=SimpleNamespace(
+                            prompt_token_count=12,
+                            candidates_token_count=2,
+                            thoughts_token_count=5,
+                            total_token_count=19,
+                        ),
+                        candidates=[SimpleNamespace(finish_reason="MALFORMED_RESPONSE")],
+                    )
+                ]
+            )
+
+    client.client = SimpleNamespace(models=FakeModels())
+    monkeypatch.setattr(google_provider.time, "strftime", lambda *_: "2026-01-01 00:00:00")
+
+    result = client.send_request(_question())
+
+    assert result.success is False
+    assert result.raw_response == ""
+    assert result.answer_status is None
+    assert result.provider_stop_reason == "MALFORMED_RESPONSE"
+    assert "MALFORMED_RESPONSE" in result.error_message
+    assert (result.input_tokens, result.output_tokens, result.total_tokens) == (12, 7, 19)
+    assert not result_is_completed(vars(result))
+
+
 def test_google_sdk_omits_images_for_text_only_model(tmp_path: Path, monkeypatch):
     """@description Google SDK 요청 본문의 이미지 생략·본문 유지 확인"""
     calls = []
@@ -966,3 +1008,65 @@ def test_google_rest_keeps_token_only_generation(monkeypatch):
     assert result.raw_response == ""
     assert result.answer_status == "no_answer"
     assert result.provider_stop_reason == "STOP"
+
+
+@pytest.mark.parametrize(
+    ("response_text", "expected_success"),
+    [("", False), ("응답", True)],
+)
+def test_google_rest_malformed_response_only_fails_without_answer_text(
+    response_text: str,
+    expected_success: bool,
+    monkeypatch,
+):
+    """@description Google REST MALFORMED_RESPONSE는 빈 본문에서만 기술 실패"""
+    candidate = {"finishReason": "MALFORMED_RESPONSE"}
+    if response_text:
+        candidate["content"] = {"parts": [{"text": response_text}]}
+    chunk = {
+        "candidates": [candidate],
+        "usageMetadata": {
+            "promptTokenCount": 12,
+            "candidatesTokenCount": 2,
+            "thoughtsTokenCount": 5,
+            "totalTokenCount": 19,
+        },
+    }
+
+    class FakeResponse:
+        status_code = 200
+        text = ""
+
+        def iter_lines(self):
+            return iter([f"data: {json.dumps(chunk)}".encode()])
+
+    monkeypatch.setattr(
+        google_provider.requests,
+        "post",
+        lambda *args, **kwargs: FakeResponse(),
+    )
+    monkeypatch.setattr(google_provider.time, "strftime", lambda *_: "2026-01-01 00:00:00")
+
+    config = _config("google", api_key="key-1", thinking_level="high")
+    client = google_provider.GoogleClient.__new__(google_provider.GoogleClient)
+    google_provider.APIClient.__init__(client, config)
+    client.use_vertex = False
+    client._current_key = "key-1"
+    client.model_id = config.model_id
+    client._uploaded_files = {}
+
+    result = client._send_rest_api_request(_question())
+
+    assert result.success is expected_success
+    assert result.raw_response == response_text
+    assert result.provider_stop_reason == "MALFORMED_RESPONSE"
+    assert (
+        result.input_tokens,
+        result.output_tokens,
+        result.total_tokens,
+    ) == (12, 7, 19)
+    if expected_success:
+        assert result.answer_status == "answered"
+    else:
+        assert result.answer_status is None
+        assert "MALFORMED_RESPONSE" in result.error_message

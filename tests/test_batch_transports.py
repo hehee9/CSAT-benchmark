@@ -526,6 +526,83 @@ def test_google_transport_preserves_rest_payload_status_download_and_parsing(tmp
     assert parsed[0]["total_tokens"] == 8
 
 
+def test_google_batch_malformed_empty_results_are_retryable_failures(tmp_path: Path):
+    """@description Gemini Batch 빈 MALFORMED_RESPONSE 실패와 텍스트 회귀 확인"""
+    config = _model_config("google")
+    custom_id = "run__model__target__a1__q4"
+    result_path = tmp_path / "malformed.json"
+    result_path.write_text(
+        json.dumps(
+            {
+                "dest": {
+                    "inlinedResponses": [
+                        {
+                            "metadata": {"custom_id": custom_id},
+                            "response": {
+                                "candidates": [{"finishReason": "MALFORMED_RESPONSE"}],
+                                "usageMetadata": {
+                                    "promptTokenCount": 12,
+                                    "thoughtsTokenCount": 5,
+                                },
+                            },
+                        },
+                        {
+                            "metadata": {"custom_id": "run__model__target__a1__q5"},
+                            "response": {
+                                "candidates": [
+                                    {
+                                        "finishReason": "MALFORMED_RESPONSE",
+                                        "content": {"parts": [{"text": "정상 답변"}]},
+                                    }
+                                ],
+                                "usageMetadata": {
+                                    "promptTokenCount": 8,
+                                    "candidatesTokenCount": 2,
+                                },
+                            },
+                        },
+                    ]
+                }
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    parsed = google.parse_results(result_path, config.name)
+    malformed = parsed[0]
+    text_response = parsed[1]
+    hard_parsed = google.parse_hard_results(result_path, config.name, custom_id)[0]
+
+    assert malformed["success"] is False
+    assert malformed["raw_response"] == ""
+    assert "MALFORMED_RESPONSE" in malformed["error_message"]
+    assert "answer_status" not in malformed
+    assert malformed["provider_stop_reason"] == "MALFORMED_RESPONSE"
+    assert (
+        malformed["input_tokens"],
+        malformed["output_tokens"],
+        malformed["total_tokens"],
+    ) == (12, 5, 17)
+    assert not result_is_completed(malformed)
+
+    assert hard_parsed["success"] is False
+    assert hard_parsed["raw_response"] == ""
+    assert "MALFORMED_RESPONSE" in hard_parsed["error_message"]
+    assert "answer_status" not in hard_parsed
+    assert hard_parsed["provider_stop_reason"] == "MALFORMED_RESPONSE"
+    assert (
+        hard_parsed["input_tokens"],
+        hard_parsed["output_tokens"],
+        hard_parsed["total_tokens"],
+    ) == (12, 5, 17)
+    assert not result_is_completed(hard_parsed)
+
+    assert text_response["success"] is True
+    assert text_response["raw_response"] == "정상 답변"
+    assert text_response["answer_status"] == "answered"
+
+
 def test_xai_transport_preserves_chunks_pagination_status_and_errors(tmp_path: Path):
     """@description xAI 청크 제출·페이지 순회·상태 매핑·성공/실패 파싱 확인"""
     config = _model_config("grok")

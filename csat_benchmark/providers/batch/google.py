@@ -11,6 +11,10 @@ from typing import Any, Callable, Dict, List, Optional, Sequence
 import requests
 
 from ...models import ModelConfig
+from ..google import (
+    _GOOGLE_MALFORMED_RESPONSE_ERROR,
+    _GOOGLE_MALFORMED_RESPONSE_REASON,
+)
 from .common import (
     EMPTY_RESPONSE_ERROR,
     _has_response_or_token_usage,
@@ -343,12 +347,15 @@ def parse_results(
         candidates = response_body.get("candidates", [])
         finish_reason = candidates[0].get("finishReason") if candidates else None
         prompt_feedback = response_body.get("promptFeedback") or {}
+        is_malformed_response = (
+            finish_reason == _GOOGLE_MALFORMED_RESPONSE_REASON and not raw_response
+        )
         is_refusal = bool(prompt_feedback.get("blockReason")) or finish_reason in {
             "SAFETY",
             "BLOCKLIST",
             "PROHIBITED_CONTENT",
         }
-        if is_refusal and not raw_response:
+        if is_refusal and not raw_response and not is_malformed_response:
             raw_response = json.dumps(
                 prompt_feedback or {"finishReason": finish_reason},
                 ensure_ascii=False,
@@ -359,19 +366,27 @@ def parse_results(
             usage_fields["output_tokens"],
             usage_fields["total_tokens"],
         )
-        results.append(
-            {
-                "request_id": custom_id,
-                "question_number": question_number,
-                "model_name": model_name,
-                "raw_response": raw_response,
-                "success": has_generation or is_refusal,
-                "error_message": None if has_generation or is_refusal else EMPTY_RESPONSE_ERROR,
-                "answer_status": "refusal" if is_refusal else "answered" if raw_response else "no_answer",
-                "provider_stop_reason": finish_reason,
-                **usage_fields,
-            }
-        )
+        if is_malformed_response:
+            success = False
+            error_message = _GOOGLE_MALFORMED_RESPONSE_ERROR
+        else:
+            success = has_generation or is_refusal
+            error_message = None if success else EMPTY_RESPONSE_ERROR
+        result = {
+            "request_id": custom_id,
+            "question_number": question_number,
+            "model_name": model_name,
+            "raw_response": raw_response,
+            "success": success,
+            "error_message": error_message,
+            "provider_stop_reason": finish_reason,
+            **usage_fields,
+        }
+        if not is_malformed_response:
+            result["answer_status"] = (
+                "refusal" if is_refusal else "answered" if raw_response else "no_answer"
+            )
+        results.append(result)
 
     results.sort(key=lambda item: item["question_number"])
     print(f"✅ Gemini 결과 {len(results)}개 파싱 완료")
@@ -425,16 +440,21 @@ def parse_hard_results(
         candidates = response_body.get("candidates", [])
         if candidates:
             finish_reason = candidates[0].get("finishReason")
-        results.append(
-            {
-                "question_number": 0,
-                "model_name": model_name,
-                "raw_response": extract_raw_response(response_body),
-                "success": True,
-                "provider_stop_reason": finish_reason,
-                **extract_google_usage_fields(response_body.get("usageMetadata")),
-            }
+        raw_response = extract_raw_response(response_body)
+        is_malformed_response = (
+            finish_reason == _GOOGLE_MALFORMED_RESPONSE_REASON and not raw_response
         )
+        result = {
+            "question_number": 0,
+            "model_name": model_name,
+            "raw_response": raw_response,
+            "success": not is_malformed_response,
+            "provider_stop_reason": finish_reason,
+            **extract_google_usage_fields(response_body.get("usageMetadata")),
+        }
+        if is_malformed_response:
+            result["error_message"] = _GOOGLE_MALFORMED_RESPONSE_ERROR
+        results.append(result)
 
     print(f"✅ Gemini hard 결과 {len(results)}개 파싱 완료")
     return results
