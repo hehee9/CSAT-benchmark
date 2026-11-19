@@ -689,6 +689,156 @@
       "total_tokens": 54781,
       "question_count": 3,
       "last_updated": "2026-11-19 11:57:24"
+    },
+    "Claude Fable 5.2 (high)": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 30483,
+          "output_tokens": 4056,
+          "total_tokens": 34539,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:20:45+0900"
+        },
+        "국어-언매": {
+          "input_tokens": 16624,
+          "output_tokens": 4931,
+          "total_tokens": 21555,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:20:45+0900"
+        },
+        "국어-화작": {
+          "input_tokens": 13202,
+          "output_tokens": 3008,
+          "total_tokens": 16210,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:20:45+0900"
+        }
+      },
+      "total_input_tokens": 60309,
+      "total_output_tokens": 11995,
+      "total_tokens": 72304,
+      "question_count": 3,
+      "last_updated": "2026-11-19T12:20:45+0900"
+    },
+    "Claude Sonnet 5.5 (high)": {
+      "sections": {
+        "국어-언매": {
+          "input_tokens": 16624,
+          "output_tokens": 9775,
+          "total_tokens": 26399,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:20:48+0900"
+        },
+        "국어-화작": {
+          "input_tokens": 13202,
+          "output_tokens": 3421,
+          "total_tokens": 16623,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:20:48+0900"
+        },
+        "국어-공통": {
+          "input_tokens": 30483,
+          "output_tokens": 7999,
+          "total_tokens": 38482,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:20:48+0900"
+        }
+      },
+      "total_input_tokens": 60309,
+      "total_output_tokens": 21195,
+      "total_tokens": 81504,
+      "question_count": 3,
+      "last_updated": "2026-11-19T12:20:48+0900"
+    },
+    "GLM-5.3 (high)": {
+      "sections": {
+        "국어-언매": {
+          "input_tokens": 8375,
+          "output_tokens": 28977,
+          "total_tokens": 37352,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:22:04+0900"
+        },
+        "국어-화작": {
+          "input_tokens": 8450,
+          "output_tokens": 5443,
+          "total_tokens": 13893,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:22:04+0900"
+        },
+        "국어-공통": {
+          "input_tokens": 23021,
+          "output_tokens": 6636,
+          "total_tokens": 29657,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:22:04+0900"
+        }
+      },
+      "total_input_tokens": 39846,
+      "total_output_tokens": 41056,
+      "total_tokens": 80902,
+      "question_count": 3,
+      "last_updated": "2026-11-19T12:22:04+0900"
+    },
+    "Claude Haiku 5.5 (high)": {
+      "sections": {
+        "국어-언매": {
+          "input_tokens": 16624,
+          "output_tokens": 29638,
+          "total_tokens": 46262,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:20:51+0900"
+        },
+        "국어-화작": {
+          "input_tokens": 13202,
+          "output_tokens": 17338,
+          "total_tokens": 30540,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:20:51+0900"
+        },
+        "국어-공통": {
+          "input_tokens": 30483,
+          "output_tokens": 23437,
+          "total_tokens": 53920,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:20:51+0900"
+        }
+      },
+      "total_input_tokens": 60309,
+      "total_output_tokens": 70413,
+      "total_tokens": 130722,
+      "question_count": 3,
+      "last_updated": "2026-11-19T12:20:51+0900"
+    },
+    "Claude Opus 5.5 (high)": {
+      "sections": {
+        "국어-언매": {
+          "input_tokens": 16624,
+          "output_tokens": 4110,
+          "total_tokens": 20734,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:20:47+0900"
+        },
+        "국어-화작": {
+          "input_tokens": 13202,
+          "output_tokens": 3054,
+          "total_tokens": 16256,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:20:47+0900"
+        },
+        "국어-공통": {
+          "input_tokens": 30483,
+          "output_tokens": 4361,
+          "total_tokens": 34844,
+          "question_count": 1,
+          "last_updated": "2026-11-19T12:20:47+0900"
+        }
+      },
+      "total_input_tokens": 60309,
+      "total_output_tokens": 11525,
+      "total_tokens": 71834,
+      "question_count": 3,
+      "last_updated": "2026-11-19T12:20:47+0900"
     }
   }
 }

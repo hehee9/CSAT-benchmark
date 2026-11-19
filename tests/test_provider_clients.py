@@ -738,6 +738,77 @@ def test_google_thinking_level_keeps_rest_route():
     assert client.send_request(_question()) is expected
 
 
+@pytest.mark.parametrize(
+    ("vertex_project", "vertex_location", "expected_url"),
+    [
+        (
+            "proj-x",
+            None,
+            "https://aiplatform.googleapis.com/v1beta1/projects/proj-x/locations/global/publishers/google/models/test-model:streamGenerateContent?alt=sse",
+        ),
+        (
+            "proj-x",
+            "us-central1",
+            "https://us-central1-aiplatform.googleapis.com/v1beta1/projects/proj-x/locations/us-central1/publishers/google/models/test-model:streamGenerateContent?alt=sse",
+        ),
+        (
+            None,
+            None,
+            "https://aiplatform.googleapis.com/v1beta1/publishers/google/models/test-model:streamGenerateContent?alt=sse",
+        ),
+    ],
+)
+def test_google_rest_uses_vertex_project_location_endpoint(
+    vertex_project,
+    vertex_location,
+    expected_url,
+    monkeypatch,
+):
+    """@description Vertex 프로젝트·리전별 REST 주소와 API 키 헤더 확인"""
+    calls = []
+
+    class FakeResponse:
+        status_code = 200
+        text = ""
+
+        def iter_lines(self):
+            chunk = {
+                "candidates": [
+                    {
+                        "content": {"parts": [{"text": "응답"}]},
+                        "finishReason": "STOP",
+                    }
+                ]
+            }
+            return iter([f"data: {json.dumps(chunk)}".encode()])
+
+    def fake_post(url, **kwargs):
+        calls.append((url, kwargs))
+        return FakeResponse()
+
+    monkeypatch.setattr(google_provider.requests, "post", fake_post)
+
+    config = _config(
+        "google",
+        api_key="key-1",
+        vertex_project=vertex_project,
+        vertex_location=vertex_location,
+    )
+    client = google_provider.GoogleClient.__new__(google_provider.GoogleClient)
+    google_provider.APIClient.__init__(client, config)
+    client.use_vertex = True
+    client._current_key = "key-1"
+    client.model_id = config.model_id
+    client._uploaded_files = {}
+
+    result = client._send_rest_api_request(_question())
+
+    assert result.success is True
+    assert len(calls) == 1
+    assert calls[0][0] == expected_url
+    assert calls[0][1]["headers"]["x-goog-api-key"] == "key-1"
+
+
 @pytest.mark.parametrize("wire_format", ["array", "sse"])
 def test_google_rest_filters_thought_parts_and_captures_stop_reason(
     wire_format: str,

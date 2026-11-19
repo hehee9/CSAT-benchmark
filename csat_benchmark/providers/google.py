@@ -502,8 +502,16 @@ class GoogleClient(APIClient):
         """@description Gemini REST API 스트리밍 요청 처리"""
         # 스트리밍 엔드포인트 사용(alt=sse 필수)
         if self.use_vertex:
-            # Vertex AI Express REST 엔드포인트
-            url = f"https://aiplatform.googleapis.com/v1beta1/publishers/google/models/{self.model_id}:streamGenerateContent?alt=sse"
+            if self.config.vertex_project:
+                location = self.config.vertex_location or "global"
+                host = (
+                    "aiplatform.googleapis.com" if location == "global"
+                    else f"{location}-aiplatform.googleapis.com"
+                )
+                url = f"https://{host}/v1beta1/projects/{self.config.vertex_project}/locations/{location}/publishers/google/models/{self.model_id}:streamGenerateContent?alt=sse"
+            else:
+                # Vertex AI Express REST 엔드포인트
+                url = f"https://aiplatform.googleapis.com/v1beta1/publishers/google/models/{self.model_id}:streamGenerateContent?alt=sse"
             headers = {
                 "Content-Type": "application/json",
                 "x-goog-api-key": self._current_key
