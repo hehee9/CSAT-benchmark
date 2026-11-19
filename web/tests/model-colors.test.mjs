@@ -31,14 +31,22 @@ try {
     assert.equal(getVendor(model).color, '#F9423A')
     assert.equal(getModelColor(model), '#F9423A')
   }
+  const midmModels = ['Mi:dm K 3.0 Pro', 'kt/midm-k-3.0-pro']
+  for (const model of midmModels) {
+    assert.equal(getVendor(model).id, 'kt')
+    assert.equal(getVendor(model).name, 'KT')
+    assert.equal(getVendor(model).color, '#E4002B')
+    assert.equal(getModelColor(model), '#E4002B')
+  }
   assert.equal(getVendor('Unknown').id, 'other')
   assert.equal(getModelColor('Unknown'), MODEL_COLORS.default)
-  const groups = groupModelsByVendor([...models, ...raonModels, 'GPT', 'Unknown'])
+  const groups = groupModelsByVendor([...models, ...raonModels, ...midmModels, 'GPT', 'Unknown'])
   assert.deepEqual(new Set(groups.typesafe), new Set(models))
   assert.deepEqual(new Set(groups.krafton), new Set(raonModels))
+  assert.deepEqual(new Set(groups.kt), new Set(midmModels))
   assert.deepEqual(groups.other, ['Unknown'])
   assert.equal(getSortedVendors(groups)[0].id, 'typesafe')
 } finally {
   await server.close()
 }
-console.log('model-colors: TypeSafe/KRAFTON classification, colors, grouping, and existing vendors passed')
+console.log('model-colors: TypeSafe/KRAFTON/KT classification, colors, grouping, and existing vendors passed')

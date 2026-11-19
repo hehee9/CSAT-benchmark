@@ -28,6 +28,7 @@ export const MODEL_COLORS = {
   Meta: '#0668E1',      // Meta - 파란색
   TypeSafe: '#F386A1',  // TypeSafe - 분홍색
   KRAFTON: '#F9423A',   // KRAFTON - 빨간색
+  KT: '#E4002B',        // KT - 진한 빨간색
   default: '#6B7280'    // 기타 - 회색
 }
 
@@ -54,6 +55,7 @@ export const VENDORS = [
   { id: 'meta', name: 'Meta', pattern: /^Muse Spark\b/i, color: MODEL_COLORS.Meta },
   { id: 'typesafe', name: 'TypeSafe', pattern: /jev|typesafe/i, color: MODEL_COLORS.TypeSafe },
   { id: 'krafton', name: 'KRAFTON', pattern: /raon/i, color: MODEL_COLORS.KRAFTON },
+  { id: 'kt', name: 'KT', pattern: /mi:?dm/i, color: MODEL_COLORS.KT },
   { id: 'other', name: '기타', pattern: null, color: MODEL_COLORS.default }
 ]
 
@@ -172,6 +174,9 @@ export function getModelColor(modelName) {
   }
   if (name.includes('raon')) {
     return MODEL_COLORS.KRAFTON
+  }
+  if (/mi:?dm/.test(name)) {
+    return MODEL_COLORS.KT
   }
 
   return MODEL_COLORS.default
