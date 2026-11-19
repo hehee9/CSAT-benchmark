@@ -708,6 +708,8 @@ function _getUsageSectionAliases(section) {
     _getLegacySectionKey(section),
     `${section.subject}-${section.section}`,
     `${section.group}-공통`,
+    // 2027 이후 공개 데이터는 탐구 토큰 키를 세부 과목명만으로 저장한다.
+    section.group === '탐구' ? section.subject : null,
     section.group === section.subject ? section.subject : null,
     section.section === section.subject ? section.section : null
   ].filter(Boolean)

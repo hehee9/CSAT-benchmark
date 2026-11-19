@@ -185,6 +185,25 @@ const englishCost = getCostData(
 assert.equal(englishCost[0].inputTokens, 40)
 assert.equal(englishCost[0].outputTokens, 40)
 
+const explorationCost = getCostData(
+  makeData(currentExam),
+  calculateAllModelScores(makeData(currentExam), ['시험 모델'], [], { exam: currentExam }),
+  {
+    '시험 모델': {
+      sections: {
+        '국어-공통': { input_tokens: 5, output_tokens: 5 },
+        '과목1': { input_tokens: 10, output_tokens: 10 },
+        '과목2': { input_tokens: 20, output_tokens: 20 }
+      }
+    }
+  },
+  ['탐구'],
+  { exam: currentExam }
+)
+assert.equal(explorationCost[0].inputTokens, 30)
+assert.equal(explorationCost[0].outputTokens, 30)
+assert.equal(explorationCost[0].totalTokens, 60)
+
 const mismatchedBasisCost = getCostData(
   makeData(currentExam),
   calculateAllModelScores(makeData(currentExam), ['시험 모델'], [], { exam: currentExam }),
