@@ -1,0 +1,604 @@
+{
+  "models": {
+    "Jev 1.14": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 25398,
+          "output_tokens": 1728,
+          "total_tokens": 27126,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:08:39"
+        },
+        "국어-화작": {
+          "input_tokens": 12567,
+          "output_tokens": 564,
+          "total_tokens": 13131,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:08:39"
+        },
+        "국어-언매": {
+          "input_tokens": 19851,
+          "output_tokens": 564,
+          "total_tokens": 20415,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:08:40"
+        }
+      },
+      "total_input_tokens": 57816,
+      "total_output_tokens": 2856,
+      "total_tokens": 60672,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:08:40"
+    },
+    "GPT-6 Luna Decisions": {
+      "sections": {
+        "국어-언매": {
+          "input_tokens": 12960,
+          "output_tokens": 0,
+          "total_tokens": 12960,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:01"
+        },
+        "국어-공통": {
+          "input_tokens": 23265,
+          "output_tokens": 0,
+          "total_tokens": 23265,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:08:40"
+        },
+        "국어-화작": {
+          "input_tokens": 9999,
+          "output_tokens": 0,
+          "total_tokens": 9999,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:08:45"
+        }
+      },
+      "total_input_tokens": 46224,
+      "total_output_tokens": 0,
+      "total_tokens": 46224,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:09:01"
+    },
+    "Gemini Decision 1": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 20386,
+          "output_tokens": 0,
+          "total_tokens": 20386,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:08:39"
+        },
+        "국어-화작": {
+          "input_tokens": 9808,
+          "output_tokens": 0,
+          "total_tokens": 9808,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:08:45"
+        },
+        "국어-언매": {
+          "input_tokens": 14420,
+          "output_tokens": 0,
+          "total_tokens": 14420,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:02"
+        }
+      },
+      "total_input_tokens": 44614,
+      "total_output_tokens": 0,
+      "total_tokens": 44614,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:09:02"
+    },
+    "Solar Decide": {
+      "sections": {
+        "국어-화작": {
+          "input_tokens": 56892,
+          "output_tokens": 11,
+          "total_tokens": 56903,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:08:58"
+        },
+        "국어-언매": {
+          "input_tokens": 60808,
+          "output_tokens": 11,
+          "total_tokens": 60819,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:01"
+        },
+        "국어-공통": {
+          "input_tokens": 441073,
+          "output_tokens": 34,
+          "total_tokens": 441107,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:11"
+        }
+      },
+      "total_input_tokens": 558773,
+      "total_output_tokens": 56,
+      "total_tokens": 558829,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:09:11"
+    },
+    "Qwen3.5 9B (Thinking)": {
+      "sections": {
+        "국어-화작": {
+          "input_tokens": 7330,
+          "output_tokens": 32255,
+          "total_tokens": 39585,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:12:21"
+        },
+        "국어-언매": {
+          "input_tokens": 10192,
+          "output_tokens": 16062,
+          "total_tokens": 26254,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:10:46"
+        },
+        "국어-공통": {
+          "input_tokens": 15868,
+          "output_tokens": 20643,
+          "total_tokens": 36511,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:11:08"
+        }
+      },
+      "total_input_tokens": 33390,
+      "total_output_tokens": 68960,
+      "total_tokens": 102350,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:12:21"
+    },
+    "Qwen3.8 27B (xhigh)": {
+      "sections": {
+        "국어-화작": {
+          "input_tokens": 7373,
+          "output_tokens": 9712,
+          "total_tokens": 17085,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:36"
+        },
+        "국어-언매": {
+          "input_tokens": 10239,
+          "output_tokens": 27974,
+          "total_tokens": 38213,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:11:35"
+        },
+        "국어-공통": {
+          "input_tokens": 15910,
+          "output_tokens": 41744,
+          "total_tokens": 57654,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:13:37"
+        }
+      },
+      "total_input_tokens": 33522,
+      "total_output_tokens": 79430,
+      "total_tokens": 112952,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:13:37"
+    },
+    "GPT-6.1 Terra (high)": {
+      "sections": {
+        "국어-언매": {
+          "input_tokens": 11579,
+          "output_tokens": 3393,
+          "total_tokens": 14972,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:35"
+        },
+        "국어-공통": {
+          "input_tokens": 17827,
+          "output_tokens": 2255,
+          "total_tokens": 20082,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:12"
+        },
+        "국어-화작": {
+          "input_tokens": 8227,
+          "output_tokens": 670,
+          "total_tokens": 8897,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:08:47"
+        }
+      },
+      "total_input_tokens": 37633,
+      "total_output_tokens": 6318,
+      "total_tokens": 43951,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:09:35"
+    },
+    "GPT-6 Luna (high)": {
+      "sections": {
+        "국어-화작": {
+          "input_tokens": 8227,
+          "output_tokens": 4467,
+          "total_tokens": 12694,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:29"
+        },
+        "국어-언매": {
+          "input_tokens": 11579,
+          "output_tokens": 17578,
+          "total_tokens": 29157,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:11:32"
+        },
+        "국어-공통": {
+          "input_tokens": 17827,
+          "output_tokens": 12980,
+          "total_tokens": 30807,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:10:43"
+        }
+      },
+      "total_input_tokens": 37633,
+      "total_output_tokens": 35025,
+      "total_tokens": 72658,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:11:32"
+    },
+    "Mi:dm K 3.0 Pro": {
+      "sections": {
+        "국어-언매": {
+          "input_tokens": 5773,
+          "output_tokens": 24072,
+          "total_tokens": 29845,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:10:55"
+        },
+        "국어-공통": {
+          "input_tokens": 13936,
+          "output_tokens": 60828,
+          "total_tokens": 74764,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:17:54"
+        },
+        "국어-화작": {
+          "input_tokens": 5473,
+          "output_tokens": 12443,
+          "total_tokens": 17916,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:57"
+        }
+      },
+      "total_input_tokens": 25182,
+      "total_output_tokens": 97343,
+      "total_tokens": 122525,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:17:54"
+    },
+    "GPT-6.2 Sol (high)": {
+      "sections": {
+        "국어-화작": {
+          "input_tokens": 8227,
+          "output_tokens": 862,
+          "total_tokens": 9089,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:08:46"
+        },
+        "국어-언매": {
+          "input_tokens": 11579,
+          "output_tokens": 1850,
+          "total_tokens": 13429,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:01"
+        },
+        "국어-공통": {
+          "input_tokens": 17827,
+          "output_tokens": 3108,
+          "total_tokens": 20935,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:12"
+        }
+      },
+      "total_input_tokens": 37633,
+      "total_output_tokens": 5820,
+      "total_tokens": 43453,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:09:12"
+    },
+    "Qwen4 Max (high)": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 15880,
+          "output_tokens": 8042,
+          "total_tokens": 23922,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:11:08"
+        },
+        "국어-화작": {
+          "input_tokens": 7343,
+          "output_tokens": 5076,
+          "total_tokens": 12419,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:10:10"
+        },
+        "국어-언매": {
+          "input_tokens": 10209,
+          "output_tokens": 7208,
+          "total_tokens": 17417,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:11:01"
+        }
+      },
+      "total_input_tokens": 33432,
+      "total_output_tokens": 20326,
+      "total_tokens": 53758,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:11:08"
+    },
+    "GPT-6 Luna (low)": {
+      "sections": {
+        "국어-화작": {
+          "input_tokens": 8227,
+          "output_tokens": 575,
+          "total_tokens": 8802,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:08:40"
+        },
+        "국어-언매": {
+          "input_tokens": 11579,
+          "output_tokens": 3118,
+          "total_tokens": 14697,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:15"
+        },
+        "국어-공통": {
+          "input_tokens": 17827,
+          "output_tokens": 2905,
+          "total_tokens": 20732,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:00"
+        }
+      },
+      "total_input_tokens": 37633,
+      "total_output_tokens": 6598,
+      "total_tokens": 44231,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:09:15"
+    },
+    "Solar Pro 4 (max)": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 12042,
+          "output_tokens": 2189,
+          "total_tokens": 14231,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:23:05"
+        },
+        "국어-화작": {
+          "input_tokens": 4557,
+          "output_tokens": 11907,
+          "total_tokens": 16464,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:25:25"
+        },
+        "국어-언매": {
+          "input_tokens": 4815,
+          "output_tokens": 23418,
+          "total_tokens": 28233,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:26:43"
+        }
+      },
+      "total_input_tokens": 21414,
+      "total_output_tokens": 37514,
+      "total_tokens": 58928,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:26:43"
+    },
+    "Solar Mini 4.5 Preview (max)": {
+      "sections": {
+        "국어-화작": {
+          "input_tokens": 4557,
+          "output_tokens": 22643,
+          "total_tokens": 27200,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:10:26"
+        },
+        "국어-언매": {
+          "input_tokens": 4815,
+          "output_tokens": 63828,
+          "total_tokens": 68643,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:13:31"
+        },
+        "국어-공통": {
+          "input_tokens": 12045,
+          "output_tokens": 33831,
+          "total_tokens": 45876,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:12:22"
+        }
+      },
+      "total_input_tokens": 21417,
+      "total_output_tokens": 120302,
+      "total_tokens": 141719,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:13:31"
+    },
+    "Kimi K3.1 Pro (high)": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 23837,
+          "output_tokens": 11140,
+          "total_tokens": 34977,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:14:25"
+        },
+        "국어-화작": {
+          "input_tokens": 10698,
+          "output_tokens": 4402,
+          "total_tokens": 15100,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:10:55"
+        },
+        "국어-언매": {
+          "input_tokens": 14121,
+          "output_tokens": 17763,
+          "total_tokens": 31884,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:17:46"
+        }
+      },
+      "total_input_tokens": 48656,
+      "total_output_tokens": 33305,
+      "total_tokens": 81961,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:17:46"
+    },
+    "GPT-6.2 Astra (high)": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 17827,
+          "output_tokens": 2540,
+          "total_tokens": 20367,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:26"
+        },
+        "국어-화작": {
+          "input_tokens": 8227,
+          "output_tokens": 778,
+          "total_tokens": 9005,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:08:49"
+        },
+        "국어-언매": {
+          "input_tokens": 11579,
+          "output_tokens": 2060,
+          "total_tokens": 13639,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:20"
+        }
+      },
+      "total_input_tokens": 37633,
+      "total_output_tokens": 5378,
+      "total_tokens": 43011,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:09:26"
+    },
+    "GLM-5.3 Flash (high)": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 23021,
+          "output_tokens": 26132,
+          "total_tokens": 49153,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:17:02"
+        },
+        "국어-화작": {
+          "input_tokens": 10291,
+          "output_tokens": 14188,
+          "total_tokens": 24479,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:13:16"
+        },
+        "국어-언매": {
+          "input_tokens": 13797,
+          "output_tokens": 24941,
+          "total_tokens": 38738,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:16:51"
+        }
+      },
+      "total_input_tokens": 47109,
+      "total_output_tokens": 65261,
+      "total_tokens": 112370,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:17:02"
+    },
+    "Qwen3.8 Flash (xhigh)": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 15919,
+          "output_tokens": 37216,
+          "total_tokens": 53135,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:20:22"
+        },
+        "국어-화작": {
+          "input_tokens": 7382,
+          "output_tokens": 17223,
+          "total_tokens": 24605,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:11:54"
+        },
+        "국어-언매": {
+          "input_tokens": 10248,
+          "output_tokens": 65930,
+          "total_tokens": 76178,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:22:08"
+        }
+      },
+      "total_input_tokens": 33549,
+      "total_output_tokens": 120369,
+      "total_tokens": 153918,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:22:08"
+    },
+    "K-EXAONE 2.5 (high)": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 12054,
+          "output_tokens": 26048,
+          "total_tokens": 38102,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:10:59"
+        },
+        "국어-화작": {
+          "input_tokens": 4487,
+          "output_tokens": 17176,
+          "total_tokens": 21663,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:10:02"
+        },
+        "국어-언매": {
+          "input_tokens": 4791,
+          "output_tokens": 57861,
+          "total_tokens": 62652,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:11:58"
+        }
+      },
+      "total_input_tokens": 21332,
+      "total_output_tokens": 101085,
+      "total_tokens": 122417,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:11:58"
+    },
+    "DeepSeek V4.1 Flash 1017 (high)": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 19637,
+          "output_tokens": 20286,
+          "total_tokens": 39923,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:10:39"
+        },
+        "국어-화작": {
+          "input_tokens": 8190,
+          "output_tokens": 13721,
+          "total_tokens": 21911,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:09:58"
+        },
+        "국어-언매": {
+          "input_tokens": 9857,
+          "output_tokens": 28968,
+          "total_tokens": 38825,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:13:15"
+        }
+      },
+      "total_input_tokens": 37684,
+      "total_output_tokens": 62975,
+      "total_tokens": 100659,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:13:15"
+    }
+  }
+}

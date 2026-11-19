@@ -1603,5 +1603,17 @@
     "knowledgeCutoff": null,
     "releaseDate": "2026-10-12",
     "productLine": "Muse Wonder"
+  },
+  "Gemini 4 Neon (high)": {
+    "knowledgeCutoff": null,
+    "accessTier": "paid",
+    "productLine": "Gemini Pro",
+    "description": {
+      "ko": "Google AI Pro 사용자용 모델 또는 그와 동급",
+      "en": "For Google AI Pro users or an equivalent model"
+    }
+  },
+  "Gemini Decision 1": {
+    "knowledgeCutoff": "2025-01"
   }
 }

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import random
 import threading
 from typing import Optional
 
@@ -22,12 +23,12 @@ class APIClient:
         self.config = config
         self.system_prompt = None
 
-        # API 키 로테이션 설정
+        # API 키 로테이션 설정(실행마다 같은 키부터 쓰지 않도록 시작 위치 무작위화)
         if isinstance(config.api_key, list):
             self._api_keys = config.api_key
         else:
             self._api_keys = [config.api_key]
-        self._key_index = 0
+        self._key_index = random.randrange(len(self._api_keys))
         self._key_lock = threading.Lock()
 
     def _get_next_api_key(self) -> str:
