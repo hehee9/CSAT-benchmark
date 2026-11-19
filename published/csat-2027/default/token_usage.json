@@ -2144,6 +2144,136 @@
       "total_tokens": 184301,
       "question_count": 8,
       "last_updated": "2026-11-19T12:22:02+0900"
+    },
+    "Gemma 4 E4B (Q4 local)": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 17002,
+          "output_tokens": 6182,
+          "total_tokens": 23184,
+          "question_count": 1,
+          "last_updated": "2026-11-19 18:03:24"
+        },
+        "국어-화작": {
+          "input_tokens": 6937,
+          "output_tokens": 8742,
+          "total_tokens": 15679,
+          "question_count": 1,
+          "last_updated": "2026-11-19 18:07:07"
+        },
+        "수학-확통": {
+          "input_tokens": 1686,
+          "output_tokens": 18474,
+          "total_tokens": 20160,
+          "question_count": 1,
+          "last_updated": "2026-11-19 18:27:04"
+        },
+        "영어-공통": {
+          "input_tokens": 12415,
+          "output_tokens": 9278,
+          "total_tokens": 21693,
+          "question_count": 1,
+          "last_updated": "2026-11-19 18:44:01"
+        },
+        "수학-공통": {
+          "input_tokens": 3711,
+          "output_tokens": 20753,
+          "total_tokens": 24464,
+          "question_count": 1,
+          "last_updated": "2026-11-19 18:19:36"
+        },
+        "수학-기하": {
+          "input_tokens": 2747,
+          "output_tokens": 21251,
+          "total_tokens": 23998,
+          "question_count": 1,
+          "last_updated": "2026-11-19 18:40:36"
+        },
+        "수학-미적": {
+          "input_tokens": 2180,
+          "output_tokens": 20152,
+          "total_tokens": 22332,
+          "question_count": 1,
+          "last_updated": "2026-11-19 18:33:30"
+        },
+        "국어-언매": {
+          "input_tokens": 8238,
+          "output_tokens": 9418,
+          "total_tokens": 17656,
+          "question_count": 1,
+          "last_updated": "2026-11-19 18:10:31"
+        }
+      },
+      "total_input_tokens": 54916,
+      "total_output_tokens": 114250,
+      "total_tokens": 169166,
+      "question_count": 8,
+      "last_updated": "2026-11-19 18:44:01"
+    },
+    "Gemma 4 E2B (Q8 local)": {
+      "sections": {
+        "수학-미적": {
+          "input_tokens": 2180,
+          "output_tokens": 18404,
+          "total_tokens": 20584,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:15:43"
+        },
+        "영어-공통": {
+          "input_tokens": 12415,
+          "output_tokens": 7650,
+          "total_tokens": 20065,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:40:47"
+        },
+        "국어-언매": {
+          "input_tokens": 8238,
+          "output_tokens": 6122,
+          "total_tokens": 14360,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:02:16"
+        },
+        "국어-공통": {
+          "input_tokens": 17002,
+          "output_tokens": 5907,
+          "total_tokens": 22909,
+          "question_count": 1,
+          "last_updated": "2026-11-19 16:59:38"
+        },
+        "국어-화작": {
+          "input_tokens": 6937,
+          "output_tokens": 6003,
+          "total_tokens": 12940,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:00:44"
+        },
+        "수학-확통": {
+          "input_tokens": 1686,
+          "output_tokens": 8785,
+          "total_tokens": 10471,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:10:23"
+        },
+        "수학-공통": {
+          "input_tokens": 3711,
+          "output_tokens": 21237,
+          "total_tokens": 24948,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:08:01"
+        },
+        "수학-기하": {
+          "input_tokens": 2747,
+          "output_tokens": 12615,
+          "total_tokens": 15362,
+          "question_count": 1,
+          "last_updated": "2026-11-19 17:19:05"
+        }
+      },
+      "total_input_tokens": 54916,
+      "total_output_tokens": 86723,
+      "total_tokens": 141639,
+      "question_count": 8,
+      "last_updated": "2026-11-19 17:40:47"
     }
   }
 }

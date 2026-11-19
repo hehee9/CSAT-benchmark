@@ -1621,5 +1621,11 @@
     "releaseDate": "2026-04-02",
     "accessTier": "not_applicable",
     "productLine": "Gemma E2B"
+  },
+  "Gemma 4 E4B (Q4 local)": {
+    "knowledgeCutoff": "2025-01",
+    "releaseDate": "2026-04-02",
+    "accessTier": "not_applicable",
+    "productLine": "Gemma E4B"
   }
 }
