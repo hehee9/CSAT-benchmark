@@ -129,15 +129,6 @@ export default function Footer() {
             <span>GitHub</span>
           </a>
           <a
-            href="https://ko-fi.com/hehee9"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
-          >
-            <span aria-hidden="true" className="text-lg leading-none">☕</span>
-            <span>{t('footer.supportTests')}</span>
-          </a>
-          <a
             href="mailto:gyugyum@gmail.com"
             aria-label={t('footer.contact')}
             title={t('footer.contact')}

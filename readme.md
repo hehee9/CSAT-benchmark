@@ -36,9 +36,9 @@
 
 ## 주요 과목 종합 성적
 
-![2026 수능 주요 과목 총점 합 비교](https://hehee9.github.io/CSAT-benchmark/images/전체.png)
+![2027 수능 주요 과목 총점 합 비교](https://hehee9.github.io/CSAT-benchmark/images/전체.png)
 
-> 📊 **평가 과목**: 국어, 수학, 영어, 한국사, 탐구(물리1, 화학1, 생명과학1, 사회문화) (총 450점 만점)
+> 📊 **평가 과목**: 국어, 수학, 영어, 한국사, 탐구(사회 탐구 9과목, 과학 탐구 8과목) (총 450점 만점)
 >
 > 📝 **계산 방식**:
 > - 국어: 공통 + 선택과목(화법과 작문, 언어와 매체) 평균
@@ -46,7 +46,7 @@
 > - 영어, 한국사: 전체 점수
 > - 탐구: 2과목 선택으로 환산 (탐구 과목 평균 × 2)
 
-![2026 수능 총점 최고/최저 조합 비교](https://hehee9.github.io/CSAT-benchmark/images/최고_최저.png)
+![2027 수능 총점 최고/최저 조합 비교](https://hehee9.github.io/CSAT-benchmark/images/최고_최저.png)
 
 > 📊 **평가 과목**: 위와 동일 (총 450점 만점)
 >
@@ -58,9 +58,9 @@
 
 ### 이미지 첨부 문제 vs 텍스트 문제 비교
 
-![2026 수능 이미지 있는 문제 득점률](https://hehee9.github.io/CSAT-benchmark/images/이미지O.png)
+![2027 수능 이미지 있는 문제 득점률](https://hehee9.github.io/CSAT-benchmark/images/이미지O.png)
 
-![2026 수능 이미지 없는 문제 득점률](https://hehee9.github.io/CSAT-benchmark/images/이미지X.png)
+![2027 수능 이미지 없는 문제 득점률](https://hehee9.github.io/CSAT-benchmark/images/이미지X.png)
 
 > 📊 **평가 범위**: 전체 과목 (국어, 수학, 영어, 한국사, 탐구)
 >
@@ -109,7 +109,7 @@
 - **원본 유지**: PDF 파일 자체나 전체 페이지 캡처는 제공하지 않음
 - 이는 모델이 순수하게 텍스트 이해 능력과 시각 자료 해석 능력을 활용하도록 하기 위함
 - **일반 모드**: 각 섹션(과목)의 모든 문제를 한 번에 풀이
-- **쉬움 모드**: 각 문제를 한 번씩 개별 풀이. 2026 수능에만 적용됨
+- **쉬움 모드**: 각 문제를 한 번씩 개별 풀이 (2026 수능에만 적용된 설정)
 
 기존의 고난도 모드는 일반 모드로, 일반 모드는 쉬움 모드로 변경되었습니다. LLM의 성능 상향 평준화에 따른 조치입니다.
 
@@ -118,11 +118,13 @@
 ## 테스트 모델
 
 - **OpenAI GPT 시리즈**
+  - GPT-6.2 Astra (high)
+  - GPT-6.2 Sol (high)
   - GPT-6.1 Sol (high / low)
   - GPT-6.1 Terra (high / none)
   - GPT-6 Astra (high / low)
   - GPT-6 Sol (high / none)
-  - GPT-6 Luna (high / none)
+  - GPT-6 Luna (high / low / none)
   - GPT-6 Luna Decisions
   - GPT-5.6 Sol Pro (high)
   - GPT-5.6 Sol (max* / high / none)
@@ -153,6 +155,7 @@
 
 - **Google Gemini 시리즈**
   - Gemini 4 Argon (high / low)
+  - Gemini Decision 1
   - Gemini 3.8 Flash (high / low)
   - Gemini 3.7 Flash (high / low)
   - Gemini 3.6 Flash (high / minimal)
@@ -213,6 +216,7 @@
   - DeepSeek V3.2 Exp (Non-Thinking)
 
 - **Moonshot AI Kimi 시리즈**
+  - Kimi K3.1 Pro (high)
   - Kimi K2.6 (Thinking / Non-Thinking)
   - Kimi K2.5 (Thinking / Non-Thinking)
 
@@ -227,7 +231,10 @@
   - GLM-5 (Thinking / Non-Thinking)
 
 - **Alibaba Cloud Qwen 시리즈**
+  - Qwen4 Max (high)
   - Qwen3.8 Max (xhigh)
+  - Qwen3.8 27B (xhigh)
+  - Qwen3.8 Flash (xhigh)
   - Qwen3.7 Max (Thinking / Non-Thinking)
   - Qwen3.6 Plus (Thinking / Non-Thinking)
   - Qwen3.6 27B (Thinking / Non-Thinking)
@@ -245,6 +252,7 @@
   - Kanana-o 9.8B
 
 - **Upstage Solar 시리즈**
+  - Solar Mini 4.5 Preview (max)
   - Solar Pro 4 (none / max)
   - Solar Mini 4 (none / max)
   - Solar Decide
@@ -252,11 +260,14 @@
   - Solar Pro 3 (high / low)
 
 - **Motif 시리즈**
-  - Motif 3 (Thinking)
+  - Motif 3 (Thinking / Non-Thinking)
   - Motif 12.7B (Thinking)
 
 - **KRAFTON Raon 시리즈**
   - Raon-1 mini preview
+
+- **KT Mi:dm 시리즈**
+  - Mi:dm K 3.0 Pro
 
 - **Typesafe Jev 시리즈**
   - Jev 1.14
@@ -270,45 +281,31 @@
 
 ## 국어 영역
 
-### 쉬움 모드 (100점 만점)
+### 2027 수능 (100점 만점)
 
-![국어 쉬움 모드](https://hehee9.github.io/CSAT-benchmark/images/쉬움_국어.png)
-
-### 일반 모드 (100점 만점)
-
-![국어 일반 모드](https://hehee9.github.io/CSAT-benchmark/images/국어.png)
+![국어 (2027 수능)](https://hehee9.github.io/CSAT-benchmark/images/국어.png)
 
 ---
 
 ## 수학 영역
 
-### 쉬움 모드 (100점 만점)
+### 2027 수능 (100점 만점)
 
-![수학 쉬움 모드](https://hehee9.github.io/CSAT-benchmark/images/쉬움_수학.png)
-
-### 일반 모드 (100점 만점)
-
-![수학 일반 모드](https://hehee9.github.io/CSAT-benchmark/images/수학.png)
+![수학 (2027 수능)](https://hehee9.github.io/CSAT-benchmark/images/수학.png)
 
 ---
 
 ## 영어 영역
 
-### 쉬움 모드 (100점 만점)
-![영어 쉬움 모드](https://hehee9.github.io/CSAT-benchmark/images/쉬움_영어.png)
-
-### 일반 모드 (100점 만점)
-![영어 일반 모드](https://hehee9.github.io/CSAT-benchmark/images/영어.png)
+### 2027 수능 (100점 만점)
+![영어 (2027 수능)](https://hehee9.github.io/CSAT-benchmark/images/영어.png)
 
 ---
 
 ## 한국사 영역
 
-### 쉬움 모드 (50점 만점)
-![한국사 쉬움 모드](https://hehee9.github.io/CSAT-benchmark/images/쉬움_한국사.png)
-
-### 일반 모드 (50점 만점)
-![한국사 일반 모드](https://hehee9.github.io/CSAT-benchmark/images/한국사.png)
+### 2027 수능 (50점 만점)
+![한국사 (2027 수능)](https://hehee9.github.io/CSAT-benchmark/images/한국사.png)
 
 ---
 
@@ -316,23 +313,19 @@
 
 ### 물리1
 
-![물리1 쉬움 모드](https://hehee9.github.io/CSAT-benchmark/images/쉬움_물리1.png)
-![물리1 일반 모드](https://hehee9.github.io/CSAT-benchmark/images/물리1.png)
+![물리1 (2027 수능)](https://hehee9.github.io/CSAT-benchmark/images/물리1.png)
 
 ### 화학1
 
-![화학1 쉬움 모드](https://hehee9.github.io/CSAT-benchmark/images/쉬움_화학1.png)
-![화학1 일반 모드](https://hehee9.github.io/CSAT-benchmark/images/화학1.png)
+![화학1 (2027 수능)](https://hehee9.github.io/CSAT-benchmark/images/화학1.png)
 
 ### 생명과학1
 
-![생명1 쉬움 모드](https://hehee9.github.io/CSAT-benchmark/images/쉬움_생명1.png)
-![생명1 일반 모드](https://hehee9.github.io/CSAT-benchmark/images/생명1.png)
+![생명1 (2027 수능)](https://hehee9.github.io/CSAT-benchmark/images/생명1.png)
 
 ### 사회문화
 
-![사회문화 쉬움 모드](https://hehee9.github.io/CSAT-benchmark/images/쉬움_사회문화.png)
-![사회문화 일반 모드](https://hehee9.github.io/CSAT-benchmark/images/사회문화.png)
+![사회문화 (2027 수능)](https://hehee9.github.io/CSAT-benchmark/images/사회문화.png)
 
 ---
 
@@ -361,16 +354,6 @@ API 비용(토큰 사용량)과 점수 간의 상관관계를 분석한 결과�
 ### 토큰 사용량
 
 ![토큰 사용량](https://hehee9.github.io/CSAT-benchmark/images/토큰_사용량.png)
-
----
-
-## 후원
-
-API를 통해 진행했으며, 토큰 사용량과 비용을 투명하게 공개하고 있습니다.
-
-새로운 모델이 출시될 때마다 전 과목을 테스트하기 때문에 적지 않은 API 비용이 발생합니다. 프로젝트 유지에 도움을 주고 싶으시다면 Ko-fi를 통해 후원해 주세요!
-
-[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/hehee9)
 
 ---
 

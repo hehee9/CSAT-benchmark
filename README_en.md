@@ -36,9 +36,9 @@ To run the benchmark directly, see the [usage guide](guides/usage.md).
 
 ## Overall Scores for Major Subjects
 
-![2026 CSAT total score comparison for major subjects](https://hehee9.github.io/CSAT-benchmark/images/전체.png)
+![2027 CSAT total score comparison for major subjects](https://hehee9.github.io/CSAT-benchmark/images/전체.png)
 
-> 📊 **Evaluated subjects**: Korean, Math, English, Korean History, Inquiry subjects (Physics I, Chemistry I, Life Science I, Society & Culture), for a total of 450 points.
+> 📊 **Evaluated subjects**: Korean, Math, English, Korean History, Inquiry subjects (9 social studies and 8 science subjects), for a total of 450 points.
 >
 > 📝 **Scoring method**:
 > - Korean: common section + average of electives (Speech & Writing, Language & Media)
@@ -46,7 +46,7 @@ To run the benchmark directly, see the [usage guide](guides/usage.md).
 > - English and Korean History: full score
 > - Inquiry: converted to a two-subject score (average inquiry subject score × 2)
 
-![2026 CSAT best/worst total score combination comparison](https://hehee9.github.io/CSAT-benchmark/images/최고_최저.png)
+![2027 CSAT best/worst total score combination comparison](https://hehee9.github.io/CSAT-benchmark/images/최고_최저.png)
 
 > 📊 **Evaluated subjects**: Same as above, for a total of 450 points.
 >
@@ -58,9 +58,9 @@ To run the benchmark directly, see the [usage guide](guides/usage.md).
 
 ### Image-attached Questions vs Text-only Questions
 
-![2026 CSAT score rate for questions with images](https://hehee9.github.io/CSAT-benchmark/images/이미지O.png)
+![2027 CSAT score rate for questions with images](https://hehee9.github.io/CSAT-benchmark/images/이미지O.png)
 
-![2026 CSAT score rate for questions without images](https://hehee9.github.io/CSAT-benchmark/images/이미지X.png)
+![2027 CSAT score rate for questions without images](https://hehee9.github.io/CSAT-benchmark/images/이미지X.png)
 
 > 📊 **Evaluation range**: All subjects (Korean, Math, English, Korean History, Inquiry)
 >
@@ -106,7 +106,7 @@ Therefore, **performance may differ from official website or app results.**
 - **Original preservation**: The PDF file itself or full-page screenshots were not provided.
 - This was done so that the models would use only text understanding and visual-material interpretation abilities.
 - **Normal Mode**: Every question in a section is solved in one request.
-- **Easy Mode**: Each question is solved once in its own request. This mode applies only to the 2026 CSAT.
+- **Easy Mode**: Each question is solved once in its own request (a setting used only for the 2026 CSAT).
 
 The former Hard mode has been renamed Normal, and the former Normal mode has been renamed Easy, as LLM performance has improved across models.
 
@@ -115,11 +115,13 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
 ## Tested Models
 
 - **OpenAI GPT series**
+  - GPT-6.2 Astra (high)
+  - GPT-6.2 Sol (high)
   - GPT-6.1 Sol (high / low)
   - GPT-6.1 Terra (high / none)
   - GPT-6 Astra (high / low)
   - GPT-6 Sol (high / none)
-  - GPT-6 Luna (high / none)
+  - GPT-6 Luna (high / low / none)
   - GPT-6 Luna Decisions
   - GPT-5.6 Sol Pro (high)
   - GPT-5.6 Sol (max* / high / none)
@@ -150,6 +152,7 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
 
 - **Google Gemini series**
   - Gemini 4 Argon (high / low)
+  - Gemini Decision 1
   - Gemini 3.8 Flash (high / low)
   - Gemini 3.7 Flash (high / low)
   - Gemini 3.6 Flash (high / minimal)
@@ -210,6 +213,7 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
   - DeepSeek V3.2 Exp (Non-Thinking)
 
 - **Moonshot AI Kimi series**
+  - Kimi K3.1 Pro (high)
   - Kimi K2.6 (Thinking / Non-Thinking)
   - Kimi K2.5 (Thinking / Non-Thinking)
 
@@ -224,7 +228,10 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
   - GLM-5 (Thinking / Non-Thinking)
 
 - **Alibaba Cloud Qwen series**
+  - Qwen4 Max (high)
   - Qwen3.8 Max (xhigh)
+  - Qwen3.8 27B (xhigh)
+  - Qwen3.8 Flash (xhigh)
   - Qwen3.7 Max (Thinking / Non-Thinking)
   - Qwen3.6 Plus (Thinking / Non-Thinking)
   - Qwen3.6 27B (Thinking / Non-Thinking)
@@ -242,6 +249,7 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
   - Kanana-o 9.8B
 
 - **Upstage Solar series**
+  - Solar Mini 4.5 Preview (max)
   - Solar Pro 4 (none / max)
   - Solar Mini 4 (none / max)
   - Solar Decide
@@ -249,11 +257,14 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
   - Solar Pro 3 (high / low)
 
 - **Motif series**
-  - Motif 3 (Thinking)
+  - Motif 3 (Thinking / Non-Thinking)
   - Motif 12.7B (Thinking)
 
 - **KRAFTON Raon series**
   - Raon-1 mini preview
+
+- **KT Mi:dm series**
+  - Mi:dm K 3.0 Pro
 
 - **Typesafe Jev series**
   - Jev 1.14
@@ -267,41 +278,29 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
 
 ## Korean Section
 
-### Easy Mode (100 points)
-![Korean easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_국어.png)
-
-### Normal Mode (100 points)
-![Korean normal mode](https://hehee9.github.io/CSAT-benchmark/images/국어.png)
+### 2027 CSAT (100 points)
+![Korean (2027 CSAT)](https://hehee9.github.io/CSAT-benchmark/images/국어.png)
 
 ---
 
 ## Math Section
 
-### Easy Mode (100 points)
-![Math easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_수학.png)
-
-### Normal Mode (100 points)
-![Math normal mode](https://hehee9.github.io/CSAT-benchmark/images/수학.png)
+### 2027 CSAT (100 points)
+![Math (2027 CSAT)](https://hehee9.github.io/CSAT-benchmark/images/수학.png)
 
 ---
 
 ## English Section
 
-### Easy Mode (100 points)
-![English easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_영어.png)
-
-### Normal Mode (100 points)
-![English normal mode](https://hehee9.github.io/CSAT-benchmark/images/영어.png)
+### 2027 CSAT (100 points)
+![English (2027 CSAT)](https://hehee9.github.io/CSAT-benchmark/images/영어.png)
 
 ---
 
 ## Korean History Section
 
-### Easy Mode (50 points)
-![Korean History easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_한국사.png)
-
-### Normal Mode (50 points)
-![Korean History normal mode](https://hehee9.github.io/CSAT-benchmark/images/한국사.png)
+### 2027 CSAT (50 points)
+![Korean History (2027 CSAT)](https://hehee9.github.io/CSAT-benchmark/images/한국사.png)
 
 ---
 
@@ -309,23 +308,19 @@ The former Hard mode has been renamed Normal, and the former Normal mode has bee
 
 ### Physics I
 
-![Physics I easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_물리1.png)
-![Physics I normal mode](https://hehee9.github.io/CSAT-benchmark/images/물리1.png)
+![Physics I (2027 CSAT)](https://hehee9.github.io/CSAT-benchmark/images/물리1.png)
 
 ### Chemistry I
 
-![Chemistry I easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_화학1.png)
-![Chemistry I normal mode](https://hehee9.github.io/CSAT-benchmark/images/화학1.png)
+![Chemistry I (2027 CSAT)](https://hehee9.github.io/CSAT-benchmark/images/화학1.png)
 
 ### Life Science I
 
-![Life Science I easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_생명1.png)
-![Life Science I normal mode](https://hehee9.github.io/CSAT-benchmark/images/생명1.png)
+![Life Science I (2027 CSAT)](https://hehee9.github.io/CSAT-benchmark/images/생명1.png)
 
 ### Society & Culture
 
-![Society & Culture easy mode](https://hehee9.github.io/CSAT-benchmark/images/쉬움_사회문화.png)
-![Society & Culture normal mode](https://hehee9.github.io/CSAT-benchmark/images/사회문화.png)
+![Society & Culture (2027 CSAT)](https://hehee9.github.io/CSAT-benchmark/images/사회문화.png)
 
 ---
 
@@ -354,16 +349,6 @@ For models without an official provider, the measurement is based on OpenRouter'
 ### Token Usage
 
 ![Token usage](https://hehee9.github.io/CSAT-benchmark/images/토큰_사용량.png)
-
----
-
-## Support
-
-Tests were conducted through APIs, and token usage and costs are transparently disclosed.
-
-Since every subject is tested each time a new model is released, significant API costs are incurred. If you'd like to help maintain this project, please consider supporting via Ko-fi!
-
-[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/hehee9)
 
 ---
 

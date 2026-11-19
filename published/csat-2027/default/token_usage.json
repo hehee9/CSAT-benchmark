@@ -599,6 +599,96 @@
       "total_tokens": 100659,
       "question_count": 3,
       "last_updated": "2026-11-19 11:13:15"
+    },
+    "Gemma 4 26B A4B (high)": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 17002,
+          "output_tokens": 21508,
+          "total_tokens": 38510,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:47:37"
+        },
+        "국어-언매": {
+          "input_tokens": 8031,
+          "output_tokens": 12570,
+          "total_tokens": 20601,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:30:16"
+        },
+        "국어-화작": {
+          "input_tokens": 6830,
+          "output_tokens": 11910,
+          "total_tokens": 18740,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:13:06"
+        }
+      },
+      "total_input_tokens": 31863,
+      "total_output_tokens": 45988,
+      "total_tokens": 77851,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:47:37"
+    },
+    "Raon-1 mini preview": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 11355,
+          "output_tokens": 57139,
+          "total_tokens": 68494,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:14:49"
+        },
+        "국어-언매": {
+          "input_tokens": 4553,
+          "output_tokens": 86259,
+          "total_tokens": 90812,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:24:47"
+        },
+        "국어-화작": {
+          "input_tokens": 4278,
+          "output_tokens": 30058,
+          "total_tokens": 34336,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:17:41"
+        }
+      },
+      "total_input_tokens": 20186,
+      "total_output_tokens": 173456,
+      "total_tokens": 193642,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:24:47"
+    },
+    "Gemma 4 31B (high)": {
+      "sections": {
+        "국어-공통": {
+          "input_tokens": 17002,
+          "output_tokens": 8438,
+          "total_tokens": 25440,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:47:08"
+        },
+        "국어-언매": {
+          "input_tokens": 8086,
+          "output_tokens": 7689,
+          "total_tokens": 15775,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:57:24"
+        },
+        "국어-화작": {
+          "input_tokens": 6830,
+          "output_tokens": 6736,
+          "total_tokens": 13566,
+          "question_count": 1,
+          "last_updated": "2026-11-19 11:29:11"
+        }
+      },
+      "total_input_tokens": 31918,
+      "total_output_tokens": 22863,
+      "total_tokens": 54781,
+      "question_count": 3,
+      "last_updated": "2026-11-19 11:57:24"
     }
   }
 }

@@ -20,7 +20,6 @@ const READINESS_POLL_INTERVAL_MS = 250
 const DIAGNOSTICS_DIR = path.join(webRoot, '.tmp', 'export-diagnostics')
 const GROUP_TIMEOUTS = {
   overview: 20000,
-  subjects: 25000,
   cost: 45000
 }
 const NO_DATA_PATTERNS = [
