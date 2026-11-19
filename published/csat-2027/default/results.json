@@ -13268,9 +13268,9 @@
     "subject": "국어",
     "section": "화작",
     "model_name": "Claude Fable 5.2 (high)",
-    "score": 22,
+    "score": 24,
     "total_points": 24,
-    "correct_count": 10,
+    "correct_count": 11,
     "total_questions": 11,
     "complete": true,
     "results": [
@@ -13294,11 +13294,11 @@
       },
       {
         "question_number": 37,
-        "extracted_answer": -1,
+        "extracted_answer": 5,
         "correct_answer": 5,
-        "is_correct": false,
+        "is_correct": true,
         "points": 2,
-        "answer_status": "no_answer",
+        "answer_status": "answered",
         "provider_stop_reason": "end_turn"
       },
       {
