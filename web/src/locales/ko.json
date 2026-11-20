@@ -225,6 +225,7 @@
   },
   "models": {
     "noVision": "멀티모달 미지원",
+    "noAnswer": "답안 미출력 (출력 한도 초과 등, 재시도 했음)",
     "nonStandard": "틀린 문항만 더 높은 추론으로 재실행",
     "postExamKnowledgeCutoff": "문제 학습 가능성 있음",
     "webServiceNoTools": "도구 차단한 웹 서비스 환경"

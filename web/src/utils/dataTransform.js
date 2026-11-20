@@ -227,6 +227,20 @@ function _selectSections(sections, subjectFilter) {
 }
 
 /**
+ * @brief 문항 결과가 답변한 문항인지 판별
+ * @param {Object} question - 문항 결과
+ * @return {boolean} 답변한 문항 여부
+ */
+function _hasAnsweredQuestion(question) {
+  if (Object.hasOwn(question, 'answer_status')) {
+    return question.answer_status === 'answered'
+  }
+
+  const answer = question.extracted_answer
+  return answer !== null && answer !== undefined && answer !== -1 && answer !== '-1'
+}
+
+/**
  * @brief 섹션 점수 레코드 생성
  * @param {Array} modelData - 모델별 결과 배열
  * @param {Object} section - 시험 섹션
@@ -243,7 +257,9 @@ function _createSectionScore(modelData, section) {
     name: section.group === '탐구' ? section.subject : section.section,
     score: entry?.score ?? 0,
     maxScore: section.max_points,
-    available: Boolean(entry)
+    available: Boolean(entry),
+    noAnswer: Boolean(entry && entry.score === 0 && Array.isArray(entry.results) &&
+      entry.results.length > 0 && !entry.results.some(_hasAnsweredQuestion))
   }
 }
 

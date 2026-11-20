@@ -59,13 +59,18 @@ const KOREAN_DETAIL_SECTION_LABELS = {
 
 /**
  * @brief 점수 셀
- * @param {Object} props - 점수와 만점
+ * @param {Object} props - 점수, 만점, 답변 없음 표시 여부
  */
-function ScoreCell({ score, maxScore, decimals = 1 }) {
+function ScoreCell({ score, maxScore, decimals = 1, noAnswer = false }) {
   if (score == null) return <span>-</span>
   const isPerfect = maxScore > 0 && score >= maxScore
   const displayScore = Number.isInteger(score) ? score : score.toFixed(decimals)
-  return <span className={`export-role-table-value ${isPerfect ? 'text-red-600 dark:text-red-400 font-bold' : ''}`}>{displayScore}</span>
+  const scoreClass = isPerfect
+    ? 'text-red-600 dark:text-red-400 font-bold'
+    : noAnswer
+      ? 'text-blue-600 dark:text-blue-400'
+      : ''
+  return <span className={`export-role-table-value ${scoreClass}`}>{displayScore}</span>
 }
 
 /**
@@ -350,6 +355,14 @@ export default function ScoreTable({ data, onRowClick, title, showDetail = false
     return 0
   }), [data, sortConfig, scoreBasis])
   const hasDetailColumns = showDetail && groups.some(group => _hasDetailColumns(group.group))
+  const detailSectionTargets = new Set(groups.flatMap(group =>
+    _hasDetailColumns(group.group) ? group.sections.map(section => section.target) : []
+  ))
+  const showNoAnswer = hasDetailColumns && sortedData.some(row =>
+    row.sectionScores?.some(sectionScore =>
+      sectionScore.noAnswer && detailSectionTargets.has(sectionScore.target)
+    )
+  )
 
   function handleSort(key) {
     setSortConfig(prev => ({ key, direction: prev.key === key && prev.direction === 'desc' ? 'asc' : 'desc' }))
@@ -471,9 +484,12 @@ export default function ScoreTable({ data, onRowClick, title, showDetail = false
                   {groups.flatMap(group => {
                     const detail = row.groupDetails?.find(item => item.group === group.group)
                     if (hasDetailColumns && _hasDetailColumns(group.group)) {
-                      return group.sections.map(section => (
-                        <td key={`section-${section.target}`} className="export-role-table-value px-[3px] py-2 text-center text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 whitespace-normal break-words"><ScoreCell score={row.sectionScores?.find(item => item.target === section.target)?.score} maxScore={section.max_points ?? section.maxScore} decimals={0} /></td>
-                      ))
+                      return group.sections.map(section => {
+                        const sectionScore = row.sectionScores?.find(item => item.target === section.target)
+                        return (
+                          <td key={`section-${section.target}`} className="export-role-table-value px-[3px] py-2 text-center text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 whitespace-normal break-words"><ScoreCell score={sectionScore?.score} maxScore={section.max_points ?? section.maxScore} decimals={0} noAnswer={sectionScore?.noAnswer} /></td>
+                        )
+                      })
                     }
                     return [
                       <td key={`group-${group.group}`} className={`export-role-table-value py-2 text-gray-800 dark:text-gray-200 ${hasDetailColumns ? 'px-[3px] text-center whitespace-normal break-words' : 'px-3 text-right'}`}><ScoreCell score={detail ? _getGroupScore(detail, scoreBasis) : null} maxScore={_getGroupMaxScore(group, scoreBasis)} /></td>
@@ -486,7 +502,7 @@ export default function ScoreTable({ data, onRowClick, title, showDetail = false
           </table>
         </div>
       )}
-      <BenchmarkNote modelNames={sortedData.map(row => row.model)} />
+      <BenchmarkNote modelNames={sortedData.map(row => row.model)} showNoAnswer={showNoAnswer} />
     </div>
   )
 }

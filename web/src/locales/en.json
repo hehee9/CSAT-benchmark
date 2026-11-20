@@ -227,6 +227,7 @@
   },
   "models": {
     "noVision": "No multimodal support",
+    "noAnswer": "No answer output (e.g., output limit exceeded; retried)",
     "nonStandard": "Only incorrect answers are retested with higher reasoning",
     "postExamKnowledgeCutoff": "Possible exposure to exam content",
     "webServiceNoTools": "Web service environment with tools disabled"

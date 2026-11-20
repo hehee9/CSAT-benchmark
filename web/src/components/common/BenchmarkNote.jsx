@@ -105,12 +105,13 @@ function _LegendSwatch({ type }) {
 export default function BenchmarkNote({
   className = 'mt-3 text-sm text-gray-500 dark:text-gray-400',
   modelNames = [],
-  modelMetadata
+  modelMetadata,
+  showNoAnswer = false
 }) {
   const { t } = useTranslation()
   const { exam, modelMetadata: contextModelMetadata } = useData()
   const flags = getAnyModelFlags(modelNames, modelMetadata ?? contextModelMetadata, exam?.exam_month)
-  if (!flags.hasNoVision && !flags.hasNonStandard && !flags.hasPostExamKnowledgeCutoff && !flags.hasWebServiceNoTools) return null
+  if (!showNoAnswer && !flags.hasNoVision && !flags.hasNonStandard && !flags.hasPostExamKnowledgeCutoff && !flags.hasWebServiceNoTools) return null
 
   return (
     <div className={`${className} export-role-note`}>
@@ -137,6 +138,12 @@ export default function BenchmarkNote({
           <span className="inline-flex items-center">
             <_LegendSwatch type="webServiceNoTools" />
             {t('models.webServiceNoTools')}
+          </span>
+        )}
+        {showNoAnswer && (
+          <span className="inline-flex items-center">
+            <span className="mr-1 text-blue-600 dark:text-blue-400">0</span>
+            {t('models.noAnswer')}
           </span>
         )}
       </div>
