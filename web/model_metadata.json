@@ -1689,5 +1689,11 @@
     "accessTier": "not_applicable",
     "productLine": "Gemma E4B",
     "quantization": "Q4_0 (QAT)"
+  },
+  "GPT-5 (high)": {
+    "knowledgeCutoff": "2024-09",
+    "releaseDate": "2025-08-07",
+    "accessTier": "free",
+    "productLine": "GPT Sol"
   }
 }
