@@ -8,6 +8,7 @@
  */
 
 import { getModelData } from './dataLoader'
+import { normalizePriceDiscount } from './priceDiscount'
 
 /** @brief 지원 점수 기준 */
 export const SCORE_BASIS = Object.freeze({
@@ -932,7 +933,8 @@ export function getCostData(data, overallScores, tokenUsage = {}, subjectFilter 
     if (!priceMap[entry.model_name] && entry.price) {
       priceMap[entry.model_name] = {
         input: entry.price.input,
-        output: entry.price.output
+        output: entry.price.output,
+        discount: normalizePriceDiscount(entry.price.discount)
       }
     }
   })
@@ -975,6 +977,7 @@ export function getCostData(data, overallScores, tokenUsage = {}, subjectFilter 
       scoreBasis: resolvedOptions.scoreBasis,
       inputPrice: price.input,
       outputPrice: price.output,
+      priceDiscount: storedPrice?.discount ?? null,
       inputTokens: filteredUsage.inputTokens,
       outputTokens: filteredUsage.outputTokens,
       totalCost,

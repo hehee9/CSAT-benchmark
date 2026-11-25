@@ -20,6 +20,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
 import { BenchmarkNote, ExportButton, NoWebSearchBadge, TestEnvCaption } from '@/components/common'
 import { formatModelDisplayName } from '@/utils/modelMeta'
+import { formatDiscountEndDate, getActivePriceDiscount } from '@/utils/priceDiscount'
 import {
   ANALYSIS_METRIC_IDS,
   DEFAULT_ANALYSIS_X,
@@ -607,6 +608,7 @@ function CustomTooltip({ active, payload, t, isRepeatedRun, locale }) {
   if (!active || !payload?.length) return null
 
   const data = payload[0].payload
+  const discount = getActivePriceDiscount(data.priceDiscount)
 
   return (
     <div className="w-max whitespace-nowrap bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
@@ -618,6 +620,12 @@ function CustomTooltip({ active, payload, t, isRepeatedRun, locale }) {
         <p className="text-gray-600 dark:text-gray-400">
           {t(isRepeatedRun ? 'table.averageCost' : 'cost.testCost')}: <span className="font-medium">{formatAnalysisMetricValue('cost', data.totalCost, locale)}</span>
         </p>
+        {discount && (
+          <p className="text-emerald-600 dark:text-emerald-400">
+            {t('cost.discountPrice')}: <span className="font-medium">${discount.input.toFixed(2)} / ${discount.output.toFixed(2)}</span>
+            {' '}({t('cost.discountUntil', { date: formatDiscountEndDate(discount.end) })})
+          </p>
+        )}
         <p className="text-gray-600 dark:text-gray-400">
           {t('token.total')}: <span className="font-medium">{formatAnalysisMetricValue('tokens', data.totalTokens, locale)}</span> {t('cost.tokens')}
         </p>

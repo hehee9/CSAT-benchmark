@@ -223,7 +223,11 @@
     "attemptTotal": "Overall Total",
     "attemptCost": "Cost",
     "showDetail": "Show Details",
-    "hideDetail": "Hide Details"
+    "hideDetail": "Hide Details",
+    "discount": "Sale",
+    "discountUntil": "until {{date}}",
+    "discountPrice": "Sale price",
+    "discountPeriod": "Sale {{start}} to {{end}} · costs use list price"
   },
   "models": {
     "noVision": "No multimodal support",

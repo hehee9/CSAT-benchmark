@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import mimetypes
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
@@ -22,6 +23,48 @@ EMPTY_RESPONSE_ERROR = "API returned neither response content nor token usage."
 SUPPORTED_API_TYPES = frozenset(
     {"openai", "anthropic", "google", "deepseek", "grok", "friendli", "vllm", "jev"}
 )
+_PRICE_DISCOUNT_KEYS = frozenset({"input", "output", "start", "end"})
+
+
+def _validate_price_discount(price: Any) -> None:
+    """@description 선택된 모델 가격의 할인 금액과 적용 기간 검증"""
+    if not isinstance(price, dict) or "discount" not in price:
+        return
+
+    discount = price["discount"]
+    if not isinstance(discount, dict) or set(discount) != _PRICE_DISCOUNT_KEYS:
+        raise ValueError("price.discount는 input, output, start, end 키만 포함해야 합니다.")
+
+    for field_name in ("input", "output"):
+        value = discount[field_name]
+        if (
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+            or not value >= 0
+        ):
+            raise ValueError(f"price.discount.{field_name}는 0 이상의 숫자여야 합니다.")
+
+    dates: dict[str, date] = {}
+    for field_name in ("start", "end"):
+        value = discount[field_name]
+        if not isinstance(value, str):
+            raise ValueError(
+                f"price.discount.{field_name}는 YYYY-MM-DD 형식의 날짜여야 합니다."
+            )
+        try:
+            parsed_date = date.fromisoformat(value)
+        except ValueError as error:
+            raise ValueError(
+                f"price.discount.{field_name}는 실제 YYYY-MM-DD 날짜여야 합니다."
+            ) from error
+        if parsed_date.isoformat() != value:
+            raise ValueError(
+                f"price.discount.{field_name}는 YYYY-MM-DD 형식이어야 합니다."
+            )
+        dates[field_name] = parsed_date
+
+    if dates["start"] > dates["end"]:
+        raise ValueError("price.discount.start는 end보다 늦을 수 없습니다.")
 
 
 def _has_response_or_token_usage(
@@ -120,7 +163,7 @@ class ModelConfig:
     thinking_budget_tokens: Optional[int] = None
     friendli_thinking: bool = False
     supports_vision: bool = True
-    price: Optional[Dict[str, float]] = None
+    price: Optional[Dict[str, Any]] = None
     extra_body: Optional[Dict[str, Any]] = None
     vertex_key: Optional[str] = None
     vertex_project: Optional[str] = None
@@ -145,6 +188,7 @@ class ModelConfig:
         value = self.concurrent_request_limit
         if isinstance(value, bool) or not isinstance(value, int) or value < 1:
             raise ValueError("concurrent_request_limit은 양의 정수여야 합니다.")
+        _validate_price_discount(self.price)
         self.knowledge_cutoff = validate_knowledge_cutoff(self.knowledge_cutoff)
         self.release_date = validate_release_date(self.release_date)
         self.access_tier = validate_access_tier(self.access_tier)

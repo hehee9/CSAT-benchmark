@@ -221,7 +221,11 @@
     "attemptTotal": "전체 합계",
     "attemptCost": "비용",
     "showDetail": "상세 정보 표시",
-    "hideDetail": "상세 정보 숨기기"
+    "hideDetail": "상세 정보 숨기기",
+    "discount": "할인",
+    "discountUntil": "{{date}}까지",
+    "discountPrice": "할인 단가",
+    "discountPeriod": "할인 기간 {{start}} ~ {{end}} · 비용은 정가 기준"
   },
   "models": {
     "noVision": "멀티모달 미지원",

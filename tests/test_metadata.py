@@ -225,6 +225,87 @@ def test_model_config_accepts_valid_release_date() -> None:
     ).release_date == "2026-01-05"
 
 
+def test_model_config_accepts_valid_price_discount() -> None:
+    """@brief 모델 가격의 유효한 기간 할인 설정 검증"""
+    discount = {
+        "input": 0.5,
+        "output": 1.25,
+        "start": "2026-01-01",
+        "end": "2026-01-31",
+    }
+    config = ModelConfig(
+        "모델",
+        "openai",
+        "key",
+        "mock",
+        price={"input": 1.0, "output": 2.0, "discount": discount},
+    )
+    assert config.price["discount"] == discount
+
+
+@pytest.mark.parametrize(
+    "discount",
+    [
+        {
+            "input": -0.1,
+            "output": 1.0,
+            "start": "2026-01-01",
+            "end": "2026-01-31",
+        },
+        {
+            "input": 1.0,
+            "output": -0.1,
+            "start": "2026-01-01",
+            "end": "2026-01-31",
+        },
+        {
+            "input": float("nan"),
+            "output": 1.0,
+            "start": "2026-01-01",
+            "end": "2026-01-31",
+        },
+        {
+            "input": True,
+            "output": 1.0,
+            "start": "2026-01-01",
+            "end": "2026-01-31",
+        },
+        {
+            "input": 1.0,
+            "output": 1.0,
+            "start": "2026-1-01",
+            "end": "2026-01-31",
+        },
+        {
+            "input": 1.0,
+            "output": 1.0,
+            "start": "2026-02-30",
+            "end": "2026-03-31",
+        },
+        {
+            "input": 1.0,
+            "output": 1.0,
+            "start": "2026-02-01",
+            "end": "2026-01-31",
+        },
+        {"input": 1.0, "output": 1.0, "start": "2026-01-01"},
+        {
+            "input": 1.0,
+            "output": 1.0,
+            "start": "2026-01-01",
+            "end": "2026-01-31",
+            "extra": 0,
+        },
+    ],
+)
+def test_model_config_rejects_invalid_price_discount(discount: object) -> None:
+    """@brief 잘못된 할인 금액, 날짜와 키 구성을 거부한다."""
+    with pytest.raises(ValueError, match="price.discount"):
+        ModelConfig(
+            "모델", "openai", "key", "mock", price={"input": 1.0, "discount": discount}
+        )
+
+
 def test_merge_model_metadata_sets_release_date_and_preserves_existing_values() -> None:
     """@brief 설정 출시일 반영과 누락·null 기존값 보존 검증"""
     merged = merge_model_metadata(
@@ -488,6 +569,29 @@ def test_display_messages_are_ignored_for_resume_comparison() -> None:
         "plan_message_en": "새 영어",
     }
     assert model_snapshot_for_resume(original) == model_snapshot_for_resume(updated)
+
+
+def test_price_discount_is_ignored_for_resume_comparison() -> None:
+    """@brief 재개 비교는 할인 변경을 제외하고 기본 가격은 유지한다."""
+    original = {"name": "모델", "price": {"input": 1.0, "output": 2.0}}
+    discounted = {
+        "name": "모델",
+        "price": {
+            "input": 1.0,
+            "output": 2.0,
+            "discount": {
+                "input": 0.5,
+                "output": 1.0,
+                "start": "2026-01-01",
+                "end": "2026-01-31",
+            },
+        },
+    }
+
+    assert model_snapshot_for_resume(original) == model_snapshot_for_resume(discounted)
+    assert discounted["price"]["discount"]["input"] == 0.5
+    changed_base_price = {"name": "모델", "price": {"input": 1.5, "output": 2.0}}
+    assert model_snapshot_for_resume(original) != model_snapshot_for_resume(changed_base_price)
 
 
 def test_metadata_cli_is_credential_free_and_does_not_construct_sync_manager(

@@ -376,6 +376,26 @@ def test_single_run_flat_public_and_excel_round_trip(tmp_path: Path):
     assert token["models"]["모의 모델"]["last_updated"] == "2026-09-08T00:00:00+00:00"
 
 
+def test_publish_preserves_price_discount(tmp_path: Path) -> None:
+    """@brief 공개 결과 행에 모델 가격의 할인 정보를 보존한다."""
+    exam = _make_exam(tmp_path)
+    run = _make_run(exam, mode="default", input_mode="section")
+    discount = {
+        "input": 0.5,
+        "output": 1.25,
+        "start": "2026-01-01",
+        "end": "2026-01-31",
+    }
+    run["selected_models"][0]["price"]["discount"] = discount
+    index = canonical_results_path(exam, "default")
+    save_run(run, index)
+    save_verified(grade_run(index, exam, _SectionVerifier()), index)
+
+    paths = publish_run(exam, index, index, output_dir=tmp_path / "published")
+    public = json.loads(paths["results"].read_text(encoding="utf-8"))
+    assert public[0]["price"]["discount"] == discount
+
+
 def test_atomic_json_writer_preserves_format_and_removes_temp_files(tmp_path: Path, monkeypatch):
     """@description 원자적 JSON 저장의 기존 바이트 형식과 unchanged 생략 확인"""
     path = tmp_path / "public.json"

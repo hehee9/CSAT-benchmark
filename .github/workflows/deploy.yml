@@ -16,15 +16,12 @@ concurrency:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-24.04
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -84,6 +81,37 @@ jobs:
         with:
           path: docs
 
-      - name: Deploy to GitHub Pages
-        id: deployment
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy1.outputs.page_url || steps.deploy2.outputs.page_url || steps.deploy3.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      # Retry artifact lookup because GitHub's artifact listing can lag (actions/deploy-pages#451).
+      - name: Deploy to GitHub Pages (attempt 1)
+        id: deploy1
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+
+      - name: Wait before retrying deployment
+        if: steps.deploy1.outcome == 'failure'
+        run: sleep 15
+
+      - name: Deploy to GitHub Pages (attempt 2)
+        id: deploy2
+        if: steps.deploy1.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+
+      - name: Wait before final deployment attempt
+        if: steps.deploy2.outcome == 'failure'
+        run: sleep 45
+
+      - name: Deploy to GitHub Pages (attempt 3)
+        id: deploy3
+        if: steps.deploy2.outcome == 'failure'
         uses: actions/deploy-pages@v5

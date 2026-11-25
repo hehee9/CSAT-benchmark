@@ -92,6 +92,9 @@ def model_snapshot_for_resume(snapshot: Mapping[str, Any]) -> Dict[str, Any]:
     if not isinstance(snapshot, Mapping):
         raise TypeError("모델 스냅샷은 매핑이어야 합니다.")
     comparable = copy.deepcopy(dict(snapshot))
+    price = comparable.get("price")
+    if isinstance(price, dict):
+        price.pop("discount", None)
     comparable.pop("knowledge_cutoff", None)
     comparable.pop("release_date", None)
     comparable.pop("access_tier", None)

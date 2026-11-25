@@ -10,6 +10,7 @@ import { useExportImage, README_EXPORT_WIDTH } from '@/hooks/useExportImage'
 import { BenchmarkNote, ExportButton, ModelNameButton, NoWebSearchBadge, TestEnvCaption } from '@/components/common'
 import { formatModelDisplayName } from '@/utils/modelMeta'
 import { formatAnalysisMetricValue } from '@/utils/analysisMetrics'
+import { formatDiscountEndDate, getActivePriceDiscount } from '@/utils/priceDiscount'
 
 /**
  * @brief 정렬 아이콘 컴포넌트
@@ -62,6 +63,30 @@ function _getAttemptCost(row, detail) {
  */
 function _formatAttemptCost(value) {
   return value === null || value === undefined ? '-' : `$${value.toFixed(4)}`
+}
+
+/**
+ * @brief 적용 중인 할인 단가를 정가 아래 보조 줄로 표시
+ * @param {Object} props - 모델 비용 데이터와 단가 종류
+ * @param {Object} props.row - getCostData() 행
+ * @param {'input'|'output'} props.kind - 입력 칸에는 '할인' 표기, 출력 칸에는 종료일 표기
+ * @param {function} props.t - 번역 함수
+ */
+function DiscountPriceLine({ row, kind, t }) {
+  const discount = getActivePriceDiscount(row.priceDiscount)
+  if (!discount) return null
+
+  const price = `$${discount[kind].toFixed(2)}`
+  return (
+    <div
+      className="mt-0.5 text-[0.8em] leading-tight font-medium text-emerald-600 dark:text-emerald-400 whitespace-nowrap"
+      title={t('cost.discountPeriod', { start: discount.start, end: discount.end })}
+    >
+      {kind === 'input'
+        ? `${t('cost.discount')} ${price}`
+        : `${price} · ${t('cost.discountUntil', { date: formatDiscountEndDate(discount.end) })}`}
+    </div>
+  )
 }
 
 /**
@@ -197,8 +222,8 @@ export default function CostTable({ data, title, showDetail = false, onToggleDet
     const displayData = withTokens // 토큰 정보 있는 모델만 표시
 
     const rows = [
-      { key: 'inputPrice', label: t('table.inputPrice'), format: (v) => isRepeatedRun ? (v == null ? '-' : `$${v.toFixed(2)}`) : (v ? `$${v.toFixed(2)}` : '-') },
-      { key: 'outputPrice', label: t('table.outputPrice'), format: (v) => isRepeatedRun ? (v == null ? '-' : `$${v.toFixed(2)}`) : (v ? `$${v.toFixed(2)}` : '-') },
+      { key: 'inputPrice', label: t('table.inputPrice'), format: (v) => isRepeatedRun ? (v == null ? '-' : `$${v.toFixed(2)}`) : (v ? `$${v.toFixed(2)}` : '-'), discountKind: 'input' },
+      { key: 'outputPrice', label: t('table.outputPrice'), format: (v) => isRepeatedRun ? (v == null ? '-' : `$${v.toFixed(2)}`) : (v ? `$${v.toFixed(2)}` : '-'), discountKind: 'output' },
       { key: 'inputTokens', label: isRepeatedRun ? t('table.inputTokensAverage') : t('table.inputTokens'), format: (v) => isRepeatedRun ? (v == null ? '-' : `${(v / 1000).toFixed(1)}K`) : (v > 0 ? `${(v / 1000).toFixed(1)}K` : '-') },
       { key: 'outputTokens', label: isRepeatedRun ? t('table.outputTokensAverage') : t('table.outputTokens'), format: (v) => isRepeatedRun ? (v == null ? '-' : `${(v / 1000).toFixed(1)}K`) : (v > 0 ? `${(v / 1000).toFixed(1)}K` : '-') },
       { key: 'totalCost', label: isRepeatedRun ? t('table.averageCost') : t('table.totalCost'), format: (v) => isRepeatedRun ? (v == null ? '-' : `$${v.toFixed(4)}`) : (v > 0 ? `$${v.toFixed(4)}` : '-') },
@@ -260,6 +285,7 @@ export default function CostTable({ data, title, showDetail = false, onToggleDet
                       }`}
                     >
                       {row.format(d[row.key])}
+                      {row.discountKind && <DiscountPriceLine row={d} kind={row.discountKind} t={t} />}
                     </td>
                   ))}
                 </tr>
@@ -346,11 +372,13 @@ export default function CostTable({ data, title, showDetail = false, onToggleDet
                   {isRepeatedRun
                     ? (row.inputPrice == null ? '-' : `$${row.inputPrice.toFixed(2)}`)
                     : `$${row.inputPrice?.toFixed(2) ?? '-'}`}
+                  <DiscountPriceLine row={row} kind="input" t={t} />
                 </td>
                 <td className="px-3 py-2 text-right text-gray-600 dark:text-gray-400">
                   {isRepeatedRun
                     ? (row.outputPrice == null ? '-' : `$${row.outputPrice.toFixed(2)}`)
                     : `$${row.outputPrice?.toFixed(2) ?? '-'}`}
+                  <DiscountPriceLine row={row} kind="output" t={t} />
                 </td>
                 <td className="px-3 py-2 text-right text-gray-500 dark:text-gray-500">
                   {isRepeatedRun
@@ -409,11 +437,13 @@ export default function CostTable({ data, title, showDetail = false, onToggleDet
                       {isRepeatedRun
                         ? (row.inputPrice == null ? '-' : `$${row.inputPrice.toFixed(2)}`)
                         : `$${row.inputPrice?.toFixed(2) ?? '-'}`}
+                      <DiscountPriceLine row={row} kind="input" t={t} />
                     </td>
                     <td className="px-3 py-2 text-right text-gray-600 dark:text-gray-400">
                       {isRepeatedRun
                         ? (row.outputPrice == null ? '-' : `$${row.outputPrice.toFixed(2)}`)
                         : `$${row.outputPrice?.toFixed(2) ?? '-'}`}
+                      <DiscountPriceLine row={row} kind="output" t={t} />
                     </td>
                     <td className="px-3 py-2 text-right text-gray-500 dark:text-gray-500">-</td>
                     <td className="px-3 py-2 text-right text-gray-500 dark:text-gray-500">-</td>
