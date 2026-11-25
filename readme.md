@@ -349,7 +349,7 @@ API 비용(토큰 사용량)과 점수 간의 상관관계를 분석한 결과�
 | Gemma 4 E4B | 0.1 | 0.2 |
 | Gemma 4 E2B | 0.04 | 0.08 |
 | Motif 12.7B (Thinking) | 0.1 | 0.2 |
-| Raon-1 mini preview | 0.1 | 0.4 |
+| Raon-1 mini (preview) | 0.1 | 0.4 |
 
 ※ 1,000,000토큰 당 달러 기준입니다.
 

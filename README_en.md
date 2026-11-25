@@ -344,7 +344,7 @@ For models without an official provider, the measurement is based on OpenRouter'
 | Gemma 4 E4B | 0.1 | 0.2 |
 | Gemma 4 E2B | 0.04 | 0.08 |
 | Motif 12.7B (Thinking) | 0.1 | 0.2 |
-| Raon-1 mini preview | 0.1 | 0.4 |
+| Raon-1 mini (preview) | 0.1 | 0.4 |
 
 ※ Prices are in USD per 1,000,000 tokens.
 

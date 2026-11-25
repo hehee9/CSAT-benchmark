@@ -7003,8 +7003,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -7120,8 +7126,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -7237,8 +7249,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -17047,8 +17065,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -17164,8 +17188,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -17281,8 +17311,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -17605,8 +17641,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -17722,8 +17764,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -17839,8 +17887,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -26859,8 +26913,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -26949,8 +27009,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -27039,8 +27105,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -27129,8 +27201,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -31719,8 +31797,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -31809,8 +31893,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -31899,8 +31989,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -31989,8 +32085,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -32205,8 +32307,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -32295,8 +32403,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -32385,8 +32499,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -32475,8 +32595,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -38222,8 +38348,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -42452,8 +42584,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -42875,8 +43013,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -94202,8 +94346,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -94400,8 +94550,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -94598,8 +94754,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -94796,8 +94958,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -94994,8 +95162,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -95192,8 +95366,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -95390,8 +95570,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -95588,8 +95774,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -95786,8 +95978,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -95984,8 +96182,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -96182,8 +96386,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -96380,8 +96590,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -96578,8 +96794,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -96776,8 +96998,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -96974,8 +97202,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -97172,8 +97406,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -97370,8 +97610,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -97568,8 +97814,14 @@
       }
     ],
     "price": {
-      "input": 0,
-      "output": 0
+      "input": 0.1,
+      "output": 0.4,
+      "discount": {
+        "input": 0.01,
+        "output": 0.04,
+        "start": "2026-11-23",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -122714,8 +122966,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -122912,8 +123170,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -123110,8 +123374,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -123308,8 +123578,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -123506,8 +123782,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -123704,8 +123986,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -123902,8 +124190,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -124100,8 +124394,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -124298,8 +124598,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -124496,8 +124802,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -124694,8 +125006,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -124892,8 +125210,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -125090,8 +125414,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -125288,8 +125618,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -125486,8 +125822,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -125684,8 +126026,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -125882,8 +126230,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -126080,8 +126434,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-10-13",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -126278,8 +126638,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -126476,8 +126842,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -126674,8 +127046,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -126872,8 +127250,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -127070,8 +127454,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -127268,8 +127658,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -127466,8 +127862,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -127664,8 +128066,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -127862,8 +128270,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -128060,8 +128474,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -128258,8 +128678,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -128456,8 +128882,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -128654,8 +129086,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -128852,8 +129290,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -129050,8 +129494,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -129248,8 +129698,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -129446,8 +129902,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -129644,8 +130106,14 @@
       }
     ],
     "price": {
-      "input": 2.0,
-      "output": 10.0
+      "input": 4,
+      "output": 20,
+      "discount": {
+        "input": 2,
+        "output": 10,
+        "start": "2026-11-10",
+        "end": "2026-11-30"
+      }
     }
   },
   {
@@ -186040,6 +186508,5037 @@
     "price": {
       "input": 1.25,
       "output": 10.0
+    }
+  },
+  {
+    "sheet_name": "국어-공통",
+    "target": "국어/공통",
+    "subject": "국어",
+    "section": "공통",
+    "model_name": "Raon-1 mini (high)",
+    "score": 67,
+    "total_points": 76,
+    "correct_count": 30,
+    "total_questions": 34,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 5,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 2,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 4,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 21,
+        "extracted_answer": 3,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 22,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 23,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 31,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 32,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 33,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 34,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "국어-언매",
+    "target": "국어/언매",
+    "subject": "국어",
+    "section": "언매",
+    "model_name": "Raon-1 mini (high)",
+    "score": 20,
+    "total_points": 24,
+    "correct_count": 9,
+    "total_questions": 11,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 35,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 36,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 37,
+        "extracted_answer": 2,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 38,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 39,
+        "extracted_answer": 5,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 40,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 41,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 42,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 43,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 44,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 45,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "국어-화작",
+    "target": "국어/화작",
+    "subject": "국어",
+    "section": "화작",
+    "model_name": "Raon-1 mini (high)",
+    "score": 21,
+    "total_points": 24,
+    "correct_count": 10,
+    "total_questions": 11,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 35,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 36,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 37,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 38,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 39,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 40,
+        "extracted_answer": 4,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 41,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 42,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 43,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 44,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 45,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "수학-공통",
+    "target": "수학/공통",
+    "subject": "수학",
+    "section": "공통",
+    "model_name": "Raon-1 mini (high)",
+    "score": 71,
+    "total_points": 74,
+    "correct_count": 21,
+    "total_questions": 22,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 3,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 20,
+        "correct_answer": 20,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 31,
+        "correct_answer": 31,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 169,
+        "correct_answer": 169,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 21,
+        "extracted_answer": 135,
+        "correct_answer": 135,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 22,
+        "extracted_answer": 98,
+        "correct_answer": 98,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "수학-기하",
+    "target": "수학/기하",
+    "subject": "수학",
+    "section": "기하",
+    "model_name": "Raon-1 mini (high)",
+    "score": 26,
+    "total_points": 26,
+    "correct_count": 8,
+    "total_questions": 8,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 23,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 45,
+        "correct_answer": 45,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 223,
+        "correct_answer": 223,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "수학-미적",
+    "target": "수학/미적",
+    "subject": "수학",
+    "section": "미적",
+    "model_name": "Raon-1 mini (high)",
+    "score": 23,
+    "total_points": 26,
+    "correct_count": 7,
+    "total_questions": 8,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 23,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 2,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 12,
+        "correct_answer": 12,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 75,
+        "correct_answer": 75,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "수학-확통",
+    "target": "수학/확통",
+    "subject": "수학",
+    "section": "확통",
+    "model_name": "Raon-1 mini (high)",
+    "score": 26,
+    "total_points": 26,
+    "correct_count": 8,
+    "total_questions": 8,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 23,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 41,
+        "correct_answer": 41,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 15,
+        "correct_answer": 15,
+        "is_correct": true,
+        "points": 4,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "영어",
+    "target": "영어/전체",
+    "subject": "영어",
+    "section": "영어",
+    "model_name": "Raon-1 mini (high)",
+    "score": 93,
+    "total_points": 100,
+    "correct_count": 42,
+    "total_questions": 45,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 2,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 21,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 22,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 23,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 24,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 25,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 26,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 27,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 28,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 29,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 30,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 31,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 32,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 33,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 34,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 35,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 36,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 37,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 38,
+        "extracted_answer": 1,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 39,
+        "extracted_answer": 1,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 40,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 41,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 42,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 43,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 44,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 45,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "경제",
+    "target": "탐구/경제",
+    "subject": "경제",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 44,
+    "total_points": 50,
+    "correct_count": 18,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 2,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 1,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "동아시아사",
+    "target": "탐구/동아시아사",
+    "subject": "동아시아사",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 42,
+    "total_points": 50,
+    "correct_count": 17,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 2,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 2,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 5,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "물리1",
+    "target": "탐구/물리1",
+    "subject": "물리1",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 23,
+    "total_points": 50,
+    "correct_count": 9,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 3,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 4,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 5,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 5,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 1,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 3,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 3,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 5,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 3,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 5,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 5,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "물리2",
+    "target": "탐구/물리2",
+    "subject": "물리2",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 30,
+    "total_points": 50,
+    "correct_count": 12,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 2,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 5,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 4,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 4,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 2,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 4,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 2,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "사회문화",
+    "target": "탐구/사회문화",
+    "subject": "사회문화",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 38,
+    "total_points": 50,
+    "correct_count": 15,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 3,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 3,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 1,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 3,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 2,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "생명1",
+    "target": "탐구/생명1",
+    "subject": "생명1",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 36,
+    "total_points": 50,
+    "correct_count": 14,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 4,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 4,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 5,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 3,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 3,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 4,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "생명2",
+    "target": "탐구/생명2",
+    "subject": "생명2",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 0,
+    "total_points": 50,
+    "correct_count": 0,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": null,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": null,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": null,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": null,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": null,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": null,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": null,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": null,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": null,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": null,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": null,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": null,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": null,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": null,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": null,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": null,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": null,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": null,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": null,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": null,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "생활과윤리",
+    "target": "탐구/생활과윤리",
+    "subject": "생활과윤리",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 45,
+    "total_points": 50,
+    "correct_count": 18,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 5,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 2,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "세계사",
+    "target": "탐구/세계사",
+    "subject": "세계사",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 45,
+    "total_points": 50,
+    "correct_count": 18,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 2,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "세계지리",
+    "target": "탐구/세계지리",
+    "subject": "세계지리",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 33,
+    "total_points": 50,
+    "correct_count": 13,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 4,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 4,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 5,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 5,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 2,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 4,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 2,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "윤리와사상",
+    "target": "탐구/윤리와사상",
+    "subject": "윤리와사상",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 24,
+    "total_points": 50,
+    "correct_count": 10,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 3,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 2,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 2,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 1,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 5,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 1,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 1,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": -1,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "no_answer",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": -1,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "no_answer",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": -1,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "no_answer",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "정치와법",
+    "target": "탐구/정치와법",
+    "subject": "정치와법",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 30,
+    "total_points": 50,
+    "correct_count": 12,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 4,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 1,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": -1,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "no_answer",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": -1,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "no_answer",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": -1,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "no_answer",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": -1,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "no_answer",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": -1,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "no_answer",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": -1,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "no_answer",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "지구1",
+    "target": "탐구/지구1",
+    "subject": "지구1",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 21,
+    "total_points": 50,
+    "correct_count": 8,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 5,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 3,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 4,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 3,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 4,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 3,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 3,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 5,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 5,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 3,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 5,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 4,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "지구2",
+    "target": "탐구/지구2",
+    "subject": "지구2",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 20,
+    "total_points": 50,
+    "correct_count": 8,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 2,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 4,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 5,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 2,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 4,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 3,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 4,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 3,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 5,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 3,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 5,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 5,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "한국지리",
+    "target": "탐구/한국지리",
+    "subject": "한국지리",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 21,
+    "total_points": 50,
+    "correct_count": 9,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 3,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 2,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 2,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 2,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 3,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 3,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 2,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 5,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 5,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 2,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 5,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "화학1",
+    "target": "탐구/화학1",
+    "subject": "화학1",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 0,
+    "total_points": 50,
+    "correct_count": 0,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": null,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": null,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": null,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": null,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": null,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": null,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": null,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": null,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": null,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": null,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": null,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": null,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": null,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": null,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": null,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": null,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": null,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": null,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": null,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": null,
+        "correct_answer": 2,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "parse_failed",
+        "provider_stop_reason": "length"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "화학2",
+    "target": "탐구/화학2",
+    "subject": "화학2",
+    "section": "탐구",
+    "model_name": "Raon-1 mini (high)",
+    "score": 35,
+    "total_points": 50,
+    "correct_count": 14,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 4,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 4,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 3,
+        "correct_answer": 4,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 5,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 3,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 2,
+        "correct_answer": 1,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
+    }
+  },
+  {
+    "sheet_name": "한국사",
+    "target": "한국사/전체",
+    "subject": "한국사",
+    "section": "한국사",
+    "model_name": "Raon-1 mini (high)",
+    "score": 45,
+    "total_points": 50,
+    "correct_count": 18,
+    "total_questions": 20,
+    "complete": true,
+    "results": [
+      {
+        "question_number": 1,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 2,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 3,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 4,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 5,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 6,
+        "extracted_answer": 1,
+        "correct_answer": 5,
+        "is_correct": false,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 7,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 8,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 9,
+        "extracted_answer": 1,
+        "correct_answer": 1,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 10,
+        "extracted_answer": 2,
+        "correct_answer": 2,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 11,
+        "extracted_answer": 1,
+        "correct_answer": 3,
+        "is_correct": false,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 12,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 13,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 14,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 15,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 16,
+        "extracted_answer": 4,
+        "correct_answer": 4,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 17,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 18,
+        "extracted_answer": 5,
+        "correct_answer": 5,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 19,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 2,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      },
+      {
+        "question_number": 20,
+        "extracted_answer": 3,
+        "correct_answer": 3,
+        "is_correct": true,
+        "points": 3,
+        "answer_status": "answered",
+        "provider_stop_reason": "stop"
+      }
+    ],
+    "price": {
+      "input": 0.1,
+      "output": 0.4
     }
   }
 ]

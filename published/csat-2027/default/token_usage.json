@@ -7066,6 +7066,197 @@
       "total_tokens": 1204338,
       "question_count": 26,
       "last_updated": "2026-11-20 21:04:22"
+    },
+    "Raon-1 mini (high)": {
+      "sections": {
+        "사회문화": {
+          "input_tokens": 4926,
+          "output_tokens": 79693,
+          "total_tokens": 84619,
+          "question_count": 1,
+          "last_updated": "2026-11-25 17:03:55"
+        },
+        "한국사-공통": {
+          "input_tokens": 3356,
+          "output_tokens": 46385,
+          "total_tokens": 49741,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:37:08"
+        },
+        "국어-공통": {
+          "input_tokens": 11355,
+          "output_tokens": 52939,
+          "total_tokens": 64294,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:27:25"
+        },
+        "물리2": {
+          "input_tokens": 4521,
+          "output_tokens": 98169,
+          "total_tokens": 102690,
+          "question_count": 1,
+          "last_updated": "2026-11-25 17:17:57"
+        },
+        "지구1": {
+          "input_tokens": 4094,
+          "output_tokens": 117955,
+          "total_tokens": 122049,
+          "question_count": 1,
+          "last_updated": "2026-11-25 17:38:19"
+        },
+        "수학-미적": {
+          "input_tokens": 1119,
+          "output_tokens": 55442,
+          "total_tokens": 56561,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:34:24"
+        },
+        "세계사": {
+          "input_tokens": 3649,
+          "output_tokens": 39195,
+          "total_tokens": 42844,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:51:04"
+        },
+        "수학-기하": {
+          "input_tokens": 1139,
+          "output_tokens": 49554,
+          "total_tokens": 50693,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:34:38"
+        },
+        "생명1": {
+          "input_tokens": 4900,
+          "output_tokens": 88912,
+          "total_tokens": 93812,
+          "question_count": 1,
+          "last_updated": "2026-11-25 17:23:33"
+        },
+        "화학1": {
+          "input_tokens": 5028,
+          "output_tokens": 128000,
+          "total_tokens": 133028,
+          "question_count": 1,
+          "last_updated": "2026-11-25 17:21:59"
+        },
+        "세계지리": {
+          "input_tokens": 4609,
+          "output_tokens": 66328,
+          "total_tokens": 70937,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:47:30"
+        },
+        "지구2": {
+          "input_tokens": 3578,
+          "output_tokens": 62993,
+          "total_tokens": 66571,
+          "question_count": 1,
+          "last_updated": "2026-11-25 17:31:30"
+        },
+        "윤리와사상": {
+          "input_tokens": 3829,
+          "output_tokens": 58408,
+          "total_tokens": 62237,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:44:52"
+        },
+        "국어-언매": {
+          "input_tokens": 4553,
+          "output_tokens": 71707,
+          "total_tokens": 76260,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:29:30"
+        },
+        "화학2": {
+          "input_tokens": 5058,
+          "output_tokens": 94154,
+          "total_tokens": 99212,
+          "question_count": 1,
+          "last_updated": "2026-11-25 17:19:35"
+        },
+        "한국지리": {
+          "input_tokens": 4377,
+          "output_tokens": 120849,
+          "total_tokens": 125226,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:48:52"
+        },
+        "생활과윤리": {
+          "input_tokens": 3635,
+          "output_tokens": 52342,
+          "total_tokens": 55977,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:43:51"
+        },
+        "물리1": {
+          "input_tokens": 4237,
+          "output_tokens": 83470,
+          "total_tokens": 87707,
+          "question_count": 1,
+          "last_updated": "2026-11-25 17:09:24"
+        },
+        "영어-공통": {
+          "input_tokens": 8694,
+          "output_tokens": 37129,
+          "total_tokens": 45823,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:34:16"
+        },
+        "국어-화작": {
+          "input_tokens": 4278,
+          "output_tokens": 31056,
+          "total_tokens": 35334,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:23:21"
+        },
+        "정치와법": {
+          "input_tokens": 5356,
+          "output_tokens": 86429,
+          "total_tokens": 91785,
+          "question_count": 1,
+          "last_updated": "2026-11-25 17:02:10"
+        },
+        "수학-공통": {
+          "input_tokens": 2655,
+          "output_tokens": 77365,
+          "total_tokens": 80020,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:28:34"
+        },
+        "생명2": {
+          "input_tokens": 5048,
+          "output_tokens": 128000,
+          "total_tokens": 133048,
+          "question_count": 1,
+          "last_updated": "2026-11-25 17:36:31"
+        },
+        "경제": {
+          "input_tokens": 4773,
+          "output_tokens": 120767,
+          "total_tokens": 125540,
+          "question_count": 1,
+          "last_updated": "2026-11-25 17:05:09"
+        },
+        "동아시아사": {
+          "input_tokens": 3932,
+          "output_tokens": 83687,
+          "total_tokens": 87619,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:56:42"
+        },
+        "수학-확통": {
+          "input_tokens": 1045,
+          "output_tokens": 34911,
+          "total_tokens": 35956,
+          "question_count": 1,
+          "last_updated": "2026-11-25 16:28:16"
+        }
+      },
+      "total_input_tokens": 113744,
+      "total_output_tokens": 1965839,
+      "total_tokens": 2079583,
+      "question_count": 26,
+      "last_updated": "2026-11-25 17:38:19"
     }
   }
 }

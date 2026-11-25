@@ -1547,7 +1547,7 @@
     }
   },
   "Gemini 4 Hydrogen (high)": {
-    "knowledgeCutoff": "2026-03",
+    "knowledgeCutoff": null,
     "releaseDate": "2026-11-12",
     "accessTier": "paid",
     "productLine": "Gemini Flash",
@@ -1567,13 +1567,13 @@
     }
   },
   "Gemini 4 Carbon (high)": {
-    "knowledgeCutoff": "2026-03",
+    "knowledgeCutoff": null,
     "releaseDate": "2026-11-10",
     "accessTier": "paid",
     "productLine": "Gemini Pro",
     "description": {
-      "ko": "Google AI Ultra 사용자용 모델 또는 그와 동급",
-      "en": "For Google AI Ultra users or an equivalent model"
+      "ko": "Google AI Pro 사용자용 모델 또는 그와 동급",
+      "en": "For Google AI Pro users or an equivalent model"
     }
   },
   "Gemini 4 Carbon (low)": {
@@ -1600,8 +1600,8 @@
     "supportsVision": false
   },
   "Solar Mini 4.5 Preview (max)": {
-    "knowledgeCutoff": "2026-08",
-    "releaseDate": "2026-11-23",
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-11-14",
     "accessTier": "free",
     "productLine": "Solar Mini",
     "supportsVision": false
@@ -1665,7 +1665,7 @@
     "productLine": "Muse Wonder"
   },
   "Gemini 4 Neon (high)": {
-    "knowledgeCutoff": "2026-03",
+    "knowledgeCutoff": null,
     "releaseDate": "2026-11-18",
     "accessTier": "paid",
     "productLine": "Gemini Pro",
@@ -1707,5 +1707,13 @@
     "releaseDate": "2025-08-07",
     "accessTier": "free",
     "productLine": "GPT Sol"
+  },
+  "Raon-1 mini (high)": {
+    "knowledgeCutoff": null,
+    "releaseDate": "2026-11-24",
+    "accessTier": "not_applicable",
+    "productLine": "Raon mini",
+    "quantization": "MXFP8",
+    "supportsVision": false
   }
 }
